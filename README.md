@@ -21,3 +21,7 @@ cmake --build --preset conan-release
 
 5. If you need `compile_commands.json` for LSP or other,
 it is located in `build/Release/compile_commands.json` and is regenerated when CMake is configured.
+
+## Building (production)
+
+Use `Dockerfile`.

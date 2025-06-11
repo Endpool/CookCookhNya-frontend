@@ -11,7 +11,7 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 message(STATUS "${CMAKE_PROJECT_NAME} Build Type: ${CMAKE_BUILD_TYPE}")
 
-# Set the version for sticker_searcher
+# project version
 set(PROJECT_VERSION 0.1.0)
 message(STATUS "${CMAKE_PROJECT_NAME} version: ${PROJECT_VERSION}")
 
