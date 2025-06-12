@@ -34,7 +34,7 @@ class HelloWorldProvider {
         if (!res)
             throw std::runtime_error(std::format("Error getting request: {}", static_cast<int>(res.error())));
         if (res->status != httplib::StatusCode::OK_200)
-            throw std::runtime_error(std::format("Error getting request: {}", res->body));
+            throw std::runtime_error(std::format("Error getting request ({}): {}", res->status, res->body));
         return std::move(res->body);
     }
 };
