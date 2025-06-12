@@ -30,7 +30,7 @@ class HelloWorldProvider {
     explicit HelloWorldProvider(const std::string& apiUrl) : api{apiUrl} {}
 
     [[nodiscard]] std::string getHelloWorld() const {
-        auto res = api.Get("/");
+        auto res = api.Get("/hello");
         if (!res)
             throw std::runtime_error(std::format("Error getting request: {}", static_cast<int>(res.error())));
         if (res->status != httplib::StatusCode::OK_200)
