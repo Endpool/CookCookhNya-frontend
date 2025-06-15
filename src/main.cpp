@@ -16,7 +16,7 @@
 
 #include "utils.hpp"
 
-using State = std::variant<std::monostate>;
+#include "states.hpp"
 
 namespace {
 
