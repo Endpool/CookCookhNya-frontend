@@ -25,8 +25,6 @@ using namespace tg_stater;
 
 using CallbackQueryRef = const CallbackQuery&;
 
-struct NoState{}No;
-
 class HelloWorldProvider {
     mutable httplib::Client api;
 
@@ -42,7 +40,7 @@ class HelloWorldProvider {
         return std::move(res->body);
     }
 
-    int* getStorages() {
+    int* getStorages() const {
         int storages[] = {1,2,3,4,5};
         return storages;
     }
@@ -51,7 +49,7 @@ class HelloWorldProvider {
 void helloWorld(const Message& m, const Api& bot, const HelloWorldProvider& hwp) {
     bot.sendMessage(m.chat->id, hwp.getHelloWorld());
 }
-
+using helloWorldHandler = Handler<Events::Message{}, helloWorld, HandlerTypes::AnyState{}>;
 
 inline void handleNoState(const Message& m, const Api& bot) {
     if (m.text.starts_with("/start"))
@@ -64,9 +62,10 @@ inline void handleNoState(const Message& m, const Api& bot) {
 using noStateHandler = Handler<Events::AnyMessage{}, handleNoState, HandlerTypes::NoState{}>;
 
 
-using helloWorldHandler = Handler<Events::Message{}, helloWorld, HandlerTypes::AnyState{}>;
 
-void viewStorages (const Message& m, const Api& bot, const HelloWorldProvider& hwp){
+void viewStorages (const Message& m, const Api& bot, CallbackQueryRef cq, const HelloWorldProvider& hwp){
+    auto storages = hwp.getStorages();
+
 
 }
 
