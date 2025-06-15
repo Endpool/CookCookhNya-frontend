@@ -23,6 +23,10 @@ namespace {
 using namespace TgBot;
 using namespace tg_stater;
 
+using CallbackQueryRef = const CallbackQuery&;
+
+struct NoState{}No;
+
 class HelloWorldProvider {
     mutable httplib::Client api;
 
@@ -37,13 +41,36 @@ class HelloWorldProvider {
             throw std::runtime_error(std::format("Error getting request: {}", res->body));
         return std::move(res->body);
     }
+
+    int* getStorages() {
+        int storages[] = {1,2,3,4,5};
+        return storages;
+    }
 };
 
 void helloWorld(const Message& m, const Api& bot, const HelloWorldProvider& hwp) {
     bot.sendMessage(m.chat->id, hwp.getHelloWorld());
 }
 
+
+inline void handleNoState(const Message& m, const Api& bot) {
+    if (m.text.starts_with("/start"))
+        return;
+    // No need to check if bot is in group chat
+    // if (detail::filterPublicMessage(m, bot))
+    //     return;
+    bot.sendMessage(m.chat->id, "Use /start please");
+};
+using noStateHandler = Handler<Events::AnyMessage{}, handleNoState, HandlerTypes::NoState{}>;
+
+
 using helloWorldHandler = Handler<Events::Message{}, helloWorld, HandlerTypes::AnyState{}>;
+
+void viewStorages (const Message& m, const Api& bot, const HelloWorldProvider& hwp){
+
+}
+
+
 
 } // namespace
 
