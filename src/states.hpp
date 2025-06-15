@@ -1,13 +1,22 @@
 #pragma once
 
+#include "types.hpp"
+
+#include <tg_stater/state_storage/common.hpp>
+#include <tg_stater/state_storage/memory.hpp>
+
 #include <string>
 #include <string_view>
 #include <utility>
 #include <variant>
 #include <vector>
+
+namespace states {
+
 namespace detail {
     struct UserStoragesIdMixin {
-        int id;
+        int storageId;
+        UserStoragesIdMixin(int storageId) : storageId{storageId} {} // NOLINT(*-explicit-*)
     };
 }
 
@@ -35,3 +44,7 @@ using State = std::variant<StorageList,
                             IngredientsView,
                             IngredientsAddition,
                             IngredientsDeletion>;
+
+using StateManager = tg_stater::StateProxy<tg_stater::MemoryStateStorage<State>>;
+
+} // namespace states
