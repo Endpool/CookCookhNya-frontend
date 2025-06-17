@@ -69,7 +69,7 @@ inline void packMemberViewButtonCallback(PackMemberView& state, CallbackQueryRef
 }
 using packMemberViewButtonHandler = Handler<Events::CallbackQuery{}, packMemberViewButtonCallback, PackMemberView{}>;
 
-inline void addMember(MemberAddition& state, MessageRef m, BotRef bot, SMRef stateManager) {
+inline void addMember(MemberAddition& state, MessageRef m, BotRef bot, SMRef stateManager) { // for adding
     auto chatId = m.chat->id;
     auto userId = m.from->id;
     auto memberId = utils::parseSafe<UserId>(m.text.data());
