@@ -38,8 +38,7 @@ inline void storageViewButtonCallback(StorageView& state, CallbackQueryRef cq, B
         renderIngredientsList(userId, chatId, bot);
     } else if (cq.data == "members") {
         stateManager.put(PackMemberView{state.storageId});
-        bool isCreator = StorageRepository::isCreator(state.storageId, userId);
-        renderMemberList(state.storageId, userId, chatId, bot, isCreator);
+        renderMemberList(state.storageId, userId, chatId, bot);
     } else if (cq.data == "back") {
         stateManager.put(StorageList{});
         renderStorageList(userId, chatId, bot);
@@ -51,17 +50,9 @@ inline void packMemberViewButtonCallback(PackMemberView& state, CallbackQueryRef
     bot.answerCallbackQuery(cq.id);
     auto chatId = cq.message->chat->id;
     auto userId = cq.from->id;
-    bool isCreator = StorageRepository::isCreator(state.storageId, userId);
-    if (!isCreator) {
-        bot.sendMessage(chatId, "Only the creator can modify members");
-        return;
-    }
-    if (cq.data == "add_member") {
-        stateManager.put(MemberAddition{state.storageId});
-        renderMemberAdditionPrompt(chatId, bot);
-    } else if (cq.data == "delete_member") {
-        stateManager.put(MemberDeletion{state.storageId});
-        renderMemberDeletionPrompt(chatId, bot);
+    if (cq.data == "add_delete_member") {
+        stateManager.put(MembersAdditionDeletion{state.storageId});
+        renderMemberAdditionDeletionPrompt(chatId, bot);
     } else if (cq.data == "back") {
         stateManager.put(StorageView{state.storageId});
         renderStorageView(StorageId{state.storageId}, userId, chatId, bot);
@@ -69,13 +60,13 @@ inline void packMemberViewButtonCallback(PackMemberView& state, CallbackQueryRef
 }
 using packMemberViewButtonHandler = Handler<Events::CallbackQuery{}, packMemberViewButtonCallback, PackMemberView{}>;
 
-inline void addMember(MemberAddition& state, MessageRef m, BotRef bot, SMRef stateManager) { // for adding
+inline void addDeleteMember(memberAdditionDeletionHandler& state, MessageRef m, BotRef bot, SMRef stateManager) { 
     auto chatId = m.chat->id;
     auto userId = m.from->id;
     auto memberId = utils::parseSafe<UserId>(m.text.data());
     if (!memberId) {
         bot.sendMessage(chatId, "Invalid user ID");
-        renderMemberAdditionPrompt(chatId, bot);
+        renderMemberAdditionDeletionPrompt(chatId, bot);
         return;
     }
     if (MemberRepository::addMember(state.storageId, *memberId)) {
@@ -84,29 +75,9 @@ inline void addMember(MemberAddition& state, MessageRef m, BotRef bot, SMRef sta
         bot.sendMessage(chatId, "Member already added");
     }
     stateManager.put(PackMemberView{state.storageId});
-    bool isCreator = StorageRepository::isCreator(state.storageId, userId);
-    renderMemberList(state.storageId, userId, chatId, bot, isCreator);
+    renderMemberList(state.storageId, userId, chatId, bot);
 }
-using memberAdditionHandler = Handler<Events::Message{}, addMember, MemberAddition{}>;
+using memberAdditionDeletionHandler = Handler<Events::Message{}, addMember, MembersAdditionDeletion{}>;
 
-inline void deleteMember(MemberDeletion& state, MessageRef m, BotRef bot, SMRef stateManager) {
-    auto chatId = m.chat->id;
-    auto userId = m.from->id;
-    auto memberId = utils::parseSafe<UserId>(m.text.data());
-    if (!memberId) {
-        bot.sendMessage(chatId, "Invalid user ID");
-        renderMemberDeletionPrompt(chatId, bot);
-        return;
-    }
-    if (MemberRepository::deleteMember(state.storageId, *memberId)) {
-        bot.sendMessage(chatId, "Member removed successfully");
-    } else {
-        bot.sendMessage(chatId, "Failed to remove member or not found");
-    }
-    stateManager.put(PackMemberView{state.storageId});
-    bool isCreator = StorageRepository::isCreator(state.storageId, userId);
-    renderMemberList(state.storageId, userId, chatId, bot, isCreator);
-}
-using memberDeletionHandler = Handler<Events::Message{}, deleteMember, MemberDeletion{}>;
 
 } // namespace handlers
