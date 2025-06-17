@@ -1,13 +1,11 @@
-
 #include "types.hpp"
-#include <string>
-
-
 #include "utils.hpp"
 #include "states.hpp"
 #include "handlers.hpp"
+
 #include <tg_stater/bot.hpp>
 
+#include <string>
 
 int main() {
     using namespace tg_stater;
@@ -16,7 +14,7 @@ int main() {
     helloWorldHandler, 
     noStateHandler, 
     startHandler,
-    StorageListButtonHandler,//
+    StorageListButtonHandler,
     StorageCreateHandler,
     StorageCreateButtonHandler,
     storgeDeleteHandler, 
