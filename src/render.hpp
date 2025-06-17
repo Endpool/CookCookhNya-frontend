@@ -1,3 +1,4 @@
+#pragma once
 #include "utils.hpp"
 #include "types.hpp"
 #include <tgbot/types/CallbackQuery.h>
@@ -36,9 +37,9 @@ namespace detail {
 
 
 
-inline void renderStorageView(UserId userId, ChatId chatId, BotRef bot) {
+inline void renderStoragesView(UserId userId, ChatId chatId, BotRef bot) {
     //auto packs = StickerPackRepository::getUserPacks(userId); - get from id
-    char storageData[1000];
+    //char storageData[1000] = {""};
     auto currentStor = backendEx.getUserStorages(userId);
     InlineKeyboard keyboard(1 + ((currentStor.size() + 1) / 2)); // ceiling
     keyboard[0].reserve(2);
@@ -48,8 +49,9 @@ inline void renderStorageView(UserId userId, ChatId chatId, BotRef bot) {
         if (i % 2 == 0)
             keyboard[1 + (i / 2)].reserve(2);
         
-        sprintf(storageData, "storage %d", currentStor[i].getId()); // Create uniqie data for storage (one of storages) button
-        keyboard[1 + (i / 2)].push_back(::detail::makeCallbackButton(currentStor[i].getName(), storageData));
+        //sprintf(storageData, "storage %d", currentStor[i].getId(userId)); // Create uniqie data for storage (one of storages) button
+        // it also saves the id of storage
+        keyboard[1 + (i / 2)].push_back(::detail::makeCallbackButton(*currentStor[i].getName(), std::to_string(currentStor[i].getId(userId))));
     }
 
 
@@ -70,3 +72,22 @@ inline void renderStorageDelete (ChatId chatId, BotRef bot){ //BackendProvider b
     bot.sendMessage(chatId, "Enter storage name to delete", nullptr, nullptr, ::detail::makeKeyboardMarkup(std::move(keyboard)));
 }
 
+
+inline void renderStorageView(int storageId, uint64_t userId, ChatId chatId, BotRef bot) {
+    auto storage = backendExStorage.getStorage(userId, storageId);
+    unsigned int buttonRows = 3;
+    
+    InlineKeyboard keyboard(buttonRows);
+    keyboard[0].reserve(3);
+    keyboard[0].push_back(::detail::makeCallbackButton("Explore", "explore"));
+    keyboard[0].push_back(::detail::makeCallbackButton("Members", "members"));
+    keyboard[0].push_back(::detail::makeCallbackButton("Back", "back"));
+
+    bot.sendMessage(chatId,
+                    std::format("Storage \"{}\"",
+                                *storage.getName()),
+                    nullptr,
+                    nullptr,
+                    ::detail::makeKeyboardMarkup(std::move(keyboard)),
+                    "MarkdownV2");
+}

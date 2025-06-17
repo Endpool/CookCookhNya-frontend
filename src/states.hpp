@@ -14,6 +14,7 @@ namespace states {
 namespace detail {
     struct UserStoragesIdMixin {
         int id;
+        UserStoragesIdMixin(int storageId) : id{storageId} {} // NOLINT(*-explicit-*)
     };
 }
 
@@ -21,8 +22,8 @@ struct StorageList {};
 struct StorageMemberView : detail::UserStoragesIdMixin {};
 struct StorageCreationEnterName {};
 struct StorageWrongNameToDelete {};
-struct StorageDeletionEnterName:detail::UserStoragesIdMixin {};
-
+struct StorageDeletionEnterName {};
+struct StorageView : detail::UserStoragesIdMixin {};
 struct PackMemberView : detail::UserStoragesIdMixin {};
 struct MemberAddition : detail::UserStoragesIdMixin {};
 struct MemberDeletion : detail::UserStoragesIdMixin {};
@@ -40,7 +41,9 @@ using State = std::variant<StorageList,
                             MemberDeletion,
                             IngredientsView,
                             IngredientsAddition,
-                            IngredientsDeletion>;
+                            IngredientsDeletion,
+                            StorageView,
+                            StorageWrongNameToDelete>;
 
 using StateManager = tg_stater::StateProxy<tg_stater::MemoryStateStorage<State>>;
 }

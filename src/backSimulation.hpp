@@ -1,4 +1,4 @@
-
+#pragma once
 #include <format>
 #include <memory>
 #include <ranges>
@@ -13,19 +13,27 @@ class storage {
         storage(int storageId, std::string name, std::vector<std::string> content){
             this->storageId = storageId;
             this->name = name; 
-            std::copy(content.begin(), content.begin()+content.size(), this->content.begin());
+            this->content = content; 
         }
-        std::vector<std::string> getContent(){
+        storage(int storageId){
+            this->storageId = storageId;
+        }
+        std::vector<std::string> getContent(std::int64_t userId){
             return content;
         }
-        int getId(){
+        // Function which simulates look for storage (we should known user and Id of the storage)
+        // However may be implemented without userId - depends on what backend will need
+        storage getStorage(std::int64_t userId, int storageId){  
+            return storage(1);
+        }
+        int getId(std::int64_t userId){
             return storageId;
         }
-        std::string getName(){
-            return name;
+        std::string* getName(){
+            return &name;
         }
 };
-
+storage backendExStorage = storage(1, "asd", {"asd", "asdf"});
 class storages {
     int groupId = 0;
     std::vector<storage> content = {storage(1, "", {""})};

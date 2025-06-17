@@ -1,6 +1,6 @@
 #include <cstdio>
 #include <httplib.h>
-#include <tg_stater/bot.hpp>
+
 #include <tg_stater/dependencies.hpp>
 #include <tg_stater/handler/event.hpp>
 #include <tg_stater/handler/handler.hpp>
