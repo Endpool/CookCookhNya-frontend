@@ -7,7 +7,6 @@
 #include <tgbot/types/CallbackQuery.h>
 #include <tgbot/types/InlineKeyboardButton.h>
 #include <tgbot/types/Message.h>
-#include <uuid.h>
 
 #include <format>
 #include <iterator>
@@ -17,6 +16,51 @@
 #include <string_view>
 #include <utility>
 #include <vector>
+
+namespace StorageRepositoryClass{
+    class Storage {
+        public:
+            StorageId storageId = 0;
+            std::vector<std::string> content;
+            std::string name;
+            UserId ownerId = 0;
+            std::vector<int> membersId;
+
+            Storage(int storageId, std::string name, std::vector<std::string> content, int ownerId, std::vector<int> membersId){
+                this->storageId = storageId;
+                this->name = name; 
+                std::copy(content.begin(), content.begin()+content.size(), this->content.begin());
+                std::copy(membersId.begin(), membersId.begin()+membersId.size(), this->membersId.begin());
+                this->ownerId = ownerId;
+            }
+
+            Storage(){
+                this->storageId = 0;
+                this->name = "Null"; 
+                this->content = {"null"};
+                this->ownerId = 0;
+                this->membersId = {1};
+            }
+        
+            bool addMember(StorageId storageId, UserId userId){
+                return true;
+            }
+
+            static Storage getNull(){
+                return Storage{};
+            }
+
+            static Storage get(StorageId storageId){
+                return getNull();
+            }
+
+            std::vector<StorageId> getMembers(StorageId storageId){
+                std::vector<StorageId> members = {1, 2};
+                return members;
+            }
+
+    };
+} // temporarily
 
 namespace render {
 
@@ -40,8 +84,9 @@ inline std::shared_ptr<InlineKeyboardMarkup> makeKeyboardMarkup(InlineKeyboard&&
 } // namespace detail
 
 
-inline void renderMemberList(const StorageId& storageId, ChatId chatId, BotRef bot) {
-    auto storage = StorageRepository::get(storageId);
+inline void renderMemberList(const StorageId& storageId, UserId userId, ChatId chatId, BotRef bot) {
+    // auto storage = StorageRepository::get(storageId); 
+    auto storage = StorageRepositoryClass::Storage::getNull(); // temporarily
     bool isOwner = storage.ownerId == userId;
     unsigned int buttonRows = isOwner ? 2 : 1;
 
@@ -52,7 +97,7 @@ inline void renderMemberList(const StorageId& storageId, ChatId chatId, BotRef b
     }
 
     std::string list;
-    for (auto [i, id] : std::views::enumerate(StorageSharingRepository::getMembers(storageId)))
+    for (auto [i, id] : std::views::enumerate(storage.getMembers(storageId)))
         std::format_to(std::back_inserter(list), "{}. \'{}\'", i + 1, id);
     bot.sendMessage(chatId,
                     std::format("Here is the member list of \"{}\" storage.",
@@ -63,7 +108,8 @@ inline void renderMemberList(const StorageId& storageId, ChatId chatId, BotRef b
 }
 
 inline void renderMemberAdditionDeletionPrompt(const StorageId& storageId, ChatId chatId, BotRef bot) {
-    auto storage = StorageRepository::get(storageId);
+    // auto storage = StorageRepository::get(storageId);
+    auto storage = StorageRepositoryClass::Storage::getNull(); // temporarily
     unsigned int buttonRows = 1;
 
     InlineKeyboard keyboard(1);
@@ -78,7 +124,8 @@ inline void renderMemberAdditionDeletionPrompt(const StorageId& storageId, ChatI
 
 
 inline void renderStorageView(StorageId storageId, UserId userId, ChatId chatId, BotRef bot) {
-    auto storage = StorageRepository::get(storageId);
+    // auto storage = StorageRepository::get(storageId);
+    auto storage = StorageRepositoryClass::Storage::getNull(); // temporarily
     unsigned int buttonRows = 3;
     
     InlineKeyboard keyboard(buttonRows);
@@ -96,5 +143,13 @@ inline void renderStorageView(StorageId storageId, UserId userId, ChatId chatId,
                     "MarkdownV2");
 } 
 
+
+inline void renderIngredientsList(StorageId storageId, UserId userId, ChatId chatId, BotRef bot) {
+    return;
+}
+
+inline void renderStorageList(UserId userId, ChatId chatId, BotRef bot) {
+    return;
+}
 
 } // namespace render

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "render.hpp"
-#include "settings.hpp"
 #include "states.hpp"
 #include "types.hpp"
 #include "utils.hpp"
@@ -11,7 +10,6 @@
 #include <tg_stater/handler/type.hpp>
 #include <tgbot/types/CallbackQuery.h>
 #include <tgbot/types/Message.h>
-#include <uuid.h>
 
 #include <memory>
 #include <string>
@@ -28,6 +26,15 @@ using namespace render;
 using MessageRef = const Message&;
 using CallbackQueryRef = const CallbackQuery&;
 using SMRef = const StateManager&;
+
+
+constexpr char startCmd[] = "start";
+inline void start(MessageRef m, BotRef bot, SMRef stateManager) {
+    stateManager.put(StorageView{0});
+    renderStorageList(m.from->id, m.chat->id, bot);
+    std::cerr<< "hello.";
+};
+using startHandler = Handler<Events::Command{startCmd}, start, AnyState{}>;
 
 inline void storageViewButtonCallback(StorageView& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager) {
     bot.answerCallbackQuery(cq.id);
@@ -52,24 +59,25 @@ inline void storageMemberViewButtonCallback(StorageMemberView& state, CallbackQu
     auto userId = cq.from->id;
     if (cq.data == "add_delete_member") {
         stateManager.put(MembersAdditionDeletion{state.storageId});
-        renderMemberAdditionDeletionPrompt(storageId, chatId, bot);
+        renderMemberAdditionDeletionPrompt(state.storageId, chatId, bot);
     } else if (cq.data == "back") {
-        stateManager.put(StorageList{state.storageId});
-        renderStorageList(state.storageId, userId, chatId, bot);
+        stateManager.put(StorageView{state.storageId});
+        renderStorageList(userId, chatId, bot);
     }
 }
 using storageMemberViewButtonHandler = Handler<Events::CallbackQuery{}, storageMemberViewButtonCallback>;
 
-inline void addDeleteMember(memberAdditionDeletionHandler& state, MessageRef m, BotRef bot, SMRef stateManager) { 
+inline void addDeleteMember(MembersAdditionDeletion& state, MessageRef m, BotRef bot, SMRef stateManager) { 
     auto chatId = m.chat->id;
     auto userId = m.from->id;
     auto memberId = utils::parseSafe<UserId>(m.text.data());
+    auto storage = StorageRepositoryClass::Storage::get(state.storageId);
     if (!memberId) {
         bot.sendMessage(chatId, "Invalid user ID");
-        renderMemberAdditionDeletionPrompt(chatId, bot);
+        renderMemberAdditionDeletionPrompt(state.storageId, chatId, bot);
         return;
     }
-    if (MemberRepository::addMember(state.storageId, *memberId)) {
+    if (storage.addMember(state.storageId, *memberId)) {
         bot.sendMessage(chatId, "Member added successfully");
     } else {
         bot.sendMessage(chatId, "Member already added");
@@ -77,17 +85,17 @@ inline void addDeleteMember(memberAdditionDeletionHandler& state, MessageRef m, 
     stateManager.put(StorageMemberView{state.storageId});
     renderMemberList(state.storageId, userId, chatId, bot);
 }
-using memberAdditionDeletionHandler = Handler<Events::Message{}, addDeleteMember>;
+using memberAdditionDeletionMessageHandler = Handler<Events::Message{}, addDeleteMember>;
 
-inline void cancelAddDeleteMember(memberAdditionDeletionHandler& state, MessageRef m, BotRef bot, SMRef stateManager) { 
+inline void cancelAddDeleteMember(MembersAdditionDeletion& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager) { 
     bot.answerCallbackQuery(cq.id);
     auto chatId = cq.message->chat->id;
     auto userId = cq.from->id;
     if (cq.data == "member_add_delete_cancel") {
         stateManager.put(StorageMemberView{state.storageId});
         renderMemberList(state.storageId, userId, chatId, bot);
+    }
 }
-using memberAdditionDeletionHandler = Handler<Events::CallbackQuery{}, cancelAddDeleteMember>;
-
+using cancelAddDeleteMemberHandler = Handler<Events::CallbackQuery{}, cancelAddDeleteMember>;
 
 } // namespace handlers

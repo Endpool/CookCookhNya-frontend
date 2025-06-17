@@ -7,6 +7,8 @@
 
 #include <vector>
 
+using UserId = int;
+using StorageId = int;
 using ChatId = tg_stater::ChatIdT;
 using MessageId = decltype(TgBot::Message::messageId);
 
