@@ -46,7 +46,7 @@ inline void storageViewButtonCallback(StorageView& state, CallbackQueryRef cq, B
 }
 using storageViewButtonHandler = Handler<Events::CallbackQuery{}, storageViewButtonCallback>;
 
-inline void StorageMemberViewButtonCallback(StorageMemberView& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager) {
+inline void storageMemberViewButtonCallback(StorageMemberView& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager) {
     bot.answerCallbackQuery(cq.id);
     auto chatId = cq.message->chat->id;
     auto userId = cq.from->id;
