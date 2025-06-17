@@ -39,7 +39,8 @@ inline std::shared_ptr<InlineKeyboardMarkup> makeKeyboardMarkup(InlineKeyboard&&
 
 } // namespace detail
 
-inline void renderMemberAdditionDeletionPrompt(const StorageId& storageId, ChatId chatId, BotRef bot) {
+
+inline void renderMemberList(const StorageId& storageId, ChatId chatId, BotRef bot) {
     auto storage = StorageRepository::get(storageId);
     bool isOwner = storage.ownerId == userId;
     unsigned int buttonRows = isOwner ? 2 : 1;
@@ -51,19 +52,33 @@ inline void renderMemberAdditionDeletionPrompt(const StorageId& storageId, ChatI
     }
 
     std::string list;
-    for (auto [i, id] : std::views::enumerate(PackSharingRepository::getMembers(storageId)))
-        std::format_to(std::back_inserter(list), "{}. {}", i + 1, id);
+    for (auto [i, id] : std::views::enumerate(StorageSharingRepository::getMembers(storageId)))
+        std::format_to(std::back_inserter(list), "{}. \'{}\'", i + 1, id);
     bot.sendMessage(chatId,
-                    std::format("Here is the member list of \"{}\" storage."
-                                "Send a Telegram ID to add/remove from the list.\n{}",
+                    std::format("Here is the member list of \"{}\" storage.",
                                 list),
                     nullptr,
                     nullptr,
                     detail::makeKeyboardMarkup(std::move(keyboard)));
 }
 
+inline void renderMemberAdditionDeletionPrompt(const StorageId& storageId, ChatId chatId, BotRef bot) {
+    auto storage = StorageRepository::get(storageId);
+    unsigned int buttonRows = 1;
+
+    InlineKeyboard keyboard(1);
+    keyboard[0].push_back(detail::makeCallbackButton("Cancel", "member_add_delete_cancel"));
+
+    bot.sendMessage(chatId,
+                    std::format("Send a Telegram ID to add/remove from the list."),
+                    nullptr,
+                    nullptr,
+                    detail::makeKeyboardMarkup(std::move(keyboard)));
+}
+
+
 inline void renderStorageView(StorageId storageId, UserId userId, ChatId chatId, BotRef bot) {
-    auto storage = StorageRepository::get(packId);
+    auto storage = StorageRepository::get(storageId);
     unsigned int buttonRows = 3;
     
     InlineKeyboard keyboard(buttonRows);
@@ -74,8 +89,7 @@ inline void renderStorageView(StorageId storageId, UserId userId, ChatId chatId,
 
     bot.sendMessage(chatId,
                     std::format("Storage \"{}\"",
-                                pack.name,
-                                uuids::to_string(packId),
+                                storage.name),
                     nullptr,
                     nullptr,
                     detail::makeKeyboardMarkup(std::move(keyboard)),

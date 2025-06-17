@@ -21,11 +21,10 @@ namespace detail {
 }
 
 struct StorageList {};
-struct StorageView : detail::UserStoragesIdMixin {};
 struct StorageCreation {};
-
 struct StorageDeletion:detail::UserStoragesIdMixin {};
 
+struct StorageView : detail::UserStoragesIdMixin {};
 struct StorageMemberView : detail::UserStoragesIdMixin {};
 struct MembersAdditionDeletion : detail::UserStoragesIdMixin {};
 struct IngredientsView : detail::UserStoragesIdMixin {};
