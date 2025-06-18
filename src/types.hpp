@@ -9,8 +9,6 @@
 
 namespace cookcookhnya {
 
-using StorageId = int;
-
 using UserId = tg_stater::UserIdT;
 using ChatId = tg_stater::ChatIdT;
 using MessageId = decltype(TgBot::Message::messageId);

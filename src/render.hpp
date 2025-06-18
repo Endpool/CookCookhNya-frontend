@@ -1,6 +1,7 @@
 #pragma once
 
 #include "backSimulation.hpp"
+#include "backend/models/storage.hpp"
 #include "types.hpp"
 #include "utils.hpp"
 
@@ -19,6 +20,8 @@
 #include <vector>
 
 namespace cookcookhnya {
+
+using StorageId = api::models::storage::StorageId;
 
 namespace StorageRepositoryClass {
 
