@@ -34,7 +34,7 @@ add_executable(main
 
 # setup
 target_include_directories(main PRIVATE
-    ${CMAKE_SOURCE_DIR}/include
+    ${CMAKE_SOURCE_DIR}/src
 )
 
 target_link_libraries(main PRIVATE
