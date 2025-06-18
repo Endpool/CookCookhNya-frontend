@@ -4,6 +4,7 @@
 #include "types.hpp"
 #include "utils.hpp"
 
+#include <cstdio>
 #include <tgbot/Api.h>
 #include <tgbot/types/CallbackQuery.h>
 #include <tgbot/types/InlineKeyboardButton.h>
@@ -112,21 +113,20 @@ inline void renderStorageList(UserId userId, ChatId chatId, BotRef bot) {
 
 inline void renderStorageView(StorageId storageId, UserId userId, ChatId chatId, BotRef bot) {
     // auto storage = StorageRepository::get(storageId);
-    auto storage = StorageRepositoryClass::Storage::getNull(); // temporarily
+    //auto storage = StorageRepositoryClass::Storage::getNull(); // temporarily
     unsigned int buttonRows = 3;
-
-    InlineKeyboard keyboard(buttonRows);
-    keyboard[0].reserve(2);
+    auto ad = backendEx.getUserStorages(userId)[0]; //temp simulation of backend
+    InlineKeyboard keyboard(1);
+    keyboard[0].reserve(3);
     keyboard[0].push_back(detail::makeCallbackButton("Explore", "explore"));
     keyboard[0].push_back(detail::makeCallbackButton("Members", "members"));
     keyboard[0].push_back(detail::makeCallbackButton("Back", "back"));
 
     bot.sendMessage(chatId,
-                    std::format("Storage \"{}\"", storage.name),
+                    *ad.getName(),
                     nullptr,
                     nullptr,
-                    detail::makeKeyboardMarkup(std::move(keyboard)),
-                    "MarkdownV2");
+                    detail::makeKeyboardMarkup(std::move(keyboard)));
 }
 
 inline void renderMemberList(const StorageId& storageId, UserId userId, ChatId chatId, BotRef bot) {
@@ -167,7 +167,14 @@ inline void renderMemberAdditionDeletionPrompt(const StorageId& storageId, ChatI
 }
 
 inline void renderIngredientsList(StorageId storageId, UserId userId, ChatId chatId, BotRef bot) {
-    return;
+    auto ad = backendEx.getUserStorages(userId)[0];
+    std::string resultStr ="";
+    for (int i=0;i<ad.getContent(123).size();i++){
+        resultStr += std::format("{} \n", ad.getContent(123)[i]);
+    }
+        bot.sendMessage(chatId,
+                    resultStr);
+
 }
 
 inline void renderStorageCreate(ChatId chatId, BotRef bot) { // BackendProvider bkn

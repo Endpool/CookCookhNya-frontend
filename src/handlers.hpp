@@ -78,6 +78,7 @@ inline void storageListButtonCallback(StorageList&,
 
     stateManager.put(StorageView{id});
     renderStorageView(id, cq.from->id, chatId, bot); // If nor buttons were pressed then user pressed on their storages
+    return;
 }
 using StorageListButtonHandler = Handler<Events::CallbackQuery{}, storageListButtonCallback>;
 
@@ -86,10 +87,10 @@ inline void storageViewButtonCallback(StorageView& state, CallbackQueryRef cq, B
     auto chatId = cq.message->chat->id;
     auto userId = cq.from->id;
     if (cq.data == "explore") {
-        stateManager.put(IngredientsView{state.storageId});
+        //stateManager.put(IngredientsView{state.storageId}); No need to go in this state
         renderIngredientsList(state.storageId, userId, chatId, bot);
     } else if (cq.data == "members") {
-        stateManager.put(StorageMemberView{state.storageId});
+        //stateManager.put(StorageMemberView{state.storageId});
         renderMemberList(state.storageId, userId, chatId, bot);
     } else if (cq.data == "back") {
         stateManager.put(StorageList{});
@@ -165,7 +166,7 @@ using StorageCreateButtonHandler = Handler<Events::CallbackQuery{}, cancelStorag
 inline bool deleteStorage(StorageDeletionEnterName&,
                           MessageRef m,
                           BotRef bot,
-                          SMRef stateManager) { // BackendProvider bkn
+                          SMRef stateManager) { 
     if (backendEx.deleteStorage(m.from->id, m.text)) {
         stateManager.put(StorageList{});
         renderStorageList(m.from->id, m.chat->id, bot);
