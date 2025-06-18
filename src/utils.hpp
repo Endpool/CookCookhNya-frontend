@@ -1,15 +1,15 @@
 #pragma once
 
-#include <cstring>
-#include <memory>
 #include <cstdlib>
+#include <cstring>
 #include <format>
+#include <memory>
 #include <stdexcept>
 #include <utility>
 
-namespace utils {
+namespace cookcookhnya::utils {
 
-const char* getenvWithError(const char* key) noexcept(false) ;
+const char* getenvWithError(const char* key) noexcept(false);
 
 template <typename T>
 std::optional<T> parseSafe(const char* s) {
@@ -23,5 +23,5 @@ template <typename T>
 std::shared_ptr<T> make_shared(T&& t) {
     return std::make_shared<std::remove_cv_t<T>>(std::forward<T>(t));
 }
-  
-} // namespace utils
+
+} // namespace cookcookhnya::utils

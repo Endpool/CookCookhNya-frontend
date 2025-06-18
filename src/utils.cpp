@@ -1,10 +1,10 @@
-#include <utils.hpp>
+#include "utils.hpp"
 
 #include <cstdlib>
 #include <format>
 #include <stdexcept>
 
-namespace utils {
+namespace cookcookhnya::utils {
 
 const char* getenvWithError(const char* key) noexcept(false) {
     const char* value = std::getenv(key);
@@ -13,4 +13,4 @@ const char* getenvWithError(const char* key) noexcept(false) {
     return value;
 }
 
-} // namespace utils
+} // namespace cookcookhnya::utils
