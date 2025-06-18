@@ -2,6 +2,7 @@
 
 #include "backend/api/base.hpp"
 #include "backend/models/storage.hpp"
+#include "types.hpp"
 
 #include <httplib.h>
 
@@ -15,9 +16,10 @@ class StoragesApi : ApiBase {
     explicit StoragesApi(httplib::Client& api);
 
   public:
-    [[nodiscard]] std::vector<models::storage::StorageSummary> getStoragesList() const;
-    [[nodiscard]] models::storage::StorageDetails get(models::storage::StorageId id) const;
-    models::storage::StorageId create(const models::storage::StorageCreateBody& body) const; // NOLINT(*-nodiscard)
+    [[nodiscard]] std::vector<models::storage::StorageSummary> getStoragesList(UserId userId) const;
+    [[nodiscard]] models::storage::StorageDetails get(UserId userId, models::storage::StorageId id) const;
+    models::storage::StorageId create(UserId userId, // NOLINT(*-nodiscard)
+                                      const models::storage::StorageCreateBody& body) const;
 };
 
 } // namespace cookcookhnya::api
