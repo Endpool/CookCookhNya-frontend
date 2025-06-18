@@ -12,11 +12,6 @@ jobs:
       steps:
         - name: Checkout code
           uses: actions/checkout@v3
-          with:
-            submodules: true
-            
-        - name: Update submodules explicitly
-          run: git submodule update --init --recursive
         
         - name: Cache Conan dependencies
           uses: actions/cache@v3
@@ -51,7 +46,7 @@ jobs:
             echo "$HOME/.local/bin" >> $GITHUB_PATH
         
         - name: Set up Conan profile
-          working-directory: Frontend
+          working-directory: .
           run: |
             mkdir -p $HOME/.conan2/profiles
             conan profile detect --name=default --force
@@ -60,7 +55,7 @@ jobs:
         
         - name: Install tgbotstater dependency
           if: steps.conan-cache.outputs.cache-hit != 'true'
-          working-directory: Frontend
+          working-directory: .
           run: |
             mkdir -p /tmp/deps
             cd /tmp/deps
@@ -71,23 +66,23 @@ jobs:
         
         - name: Install project dependencies
           if: steps.conan-cache.outputs.cache-hit != 'true'
-          working-directory: Frontend
+          working-directory: .
           run: |
             conan install . --build=missing -s compiler.cppstd=20
         
         - name: Configure CMake
-          working-directory: Frontend
+          working-directory: .
           run: |
             mkdir -p build/Release
             cmake --preset=conan-release -DCMAKE_CXX_STANDARD=20
         
         - name: Build project
-          working-directory: Frontend
+          working-directory: .
           run: |
             cmake --build --preset=conan-release
         
         - name: Verify compilation database
-          working-directory: Frontend
+          working-directory: .
           run: |
             if [ ! -f build/Release/compile_commands.json ]; then
               echo "Generating compilation database..."
@@ -96,13 +91,13 @@ jobs:
             ls -la build/Release/compile_commands.json
         
         - name: Run clang-format checks
-          working-directory: Frontend
+          working-directory: .
           run: |
             find src include -type f \( -name '*.hpp' -or -name '*.cpp' \) \
               -exec clang-format-15 --dry-run --Werror {} \+
         
         - name: Run clang-tidy
-          working-directory: Frontend
+          working-directory: .
           run: |
             cd build/Release
             run-clang-tidy-15 -j$(nproc) -quiet
