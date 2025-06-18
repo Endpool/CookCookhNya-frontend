@@ -16,11 +16,11 @@ std::vector<StorageSummary> StoragesApi::getStoragesList(UserId userId) const {
 }
 
 StorageDetails StoragesApi::get(UserId userId, StorageId id) const {
-    return getJsonAuthed<StorageDetails>(userId, std::format("/my/storages/{}", id));
+    return getJsonAuthed<StorageDetails>(userId, std::format("/my/storages/{}/name", id));
 }
 
 StorageId StoragesApi::create(UserId userId, const StorageCreateBody& body) const {
-    return postJsonAuthed<StorageId>(userId, "/my/storages/create", body);
+    return postJsonAuthed<StorageId>(userId, "/my/storages", body);
 }
 
 } // namespace cookcookhnya::api

@@ -15,7 +15,7 @@ StorageSummary tag_invoke(json::value_to_tag<StorageSummary> /*tag*/, const json
 
 StorageDetails tag_invoke(json::value_to_tag<StorageDetails> /*tag*/, const json::value& j) {
     return {
-        .name = value_to<decltype(StorageSummary::name)>(j.at("name")),
+        .name = value_to<decltype(StorageDetails::name)>(j),
     };
 }
 
