@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
-project(CookCookhNya-backend)
+project(CookCookhNya-frontend)
 
 # Set the default build type
 if(NOT CMAKE_BUILD_TYPE)
@@ -26,11 +26,15 @@ endif()
 # dependencies
 find_package(TgBotStater REQUIRED)
 find_package(httplib REQUIRED)
+find_package(Boost REQUIRED COMPONENTS json)
 
 # main program
 add_executable(main
     src/main.cpp
     src/utils.cpp
+    src/backend/models/storage.cpp
+    src/backend/api/base.cpp
+    src/backend/api/storages.cpp
 )
 
 # setup
@@ -39,6 +43,7 @@ target_include_directories(main PRIVATE
 )
 
 target_link_libraries(main PRIVATE
-    ${tgbotstater_LIBRARIES}
-    ${httplib_LIBRARIES}
+    tgbotstater::tgbotstater
+    httplib::httplib
+    boost::boost
 )
