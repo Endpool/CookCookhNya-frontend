@@ -16,6 +16,7 @@
 #include <ranges>
 #include <string>
 #include <string_view>
+#include <tgbot/types/User.h>
 #include <utility>
 #include <vector>
 
@@ -94,9 +95,15 @@ inline void renderStorageList(UserId userId, ChatId chatId, BotRef bot) {
     // char storageData[1000] = {""};
     auto currentStor = backendEx.getUserStorages(userId);
     InlineKeyboard keyboard(1 + ((currentStor.size() + 1) / 2)); // ceiling
-    keyboard[0].reserve(2);
-    keyboard[0].push_back(detail::makeCallbackButton("Add new storage", "StorageViewCreate"));
-    keyboard[0].push_back(detail::makeCallbackButton("Delete existing storage", "StorageViewDelete"));
+    if (currentStor.size()!=0){
+        keyboard[0].reserve(2);
+        keyboard[0].push_back(detail::makeCallbackButton("Add new storage", "StorageViewCreate"));
+        keyboard[0].push_back(detail::makeCallbackButton("Delete existing storage", "StorageViewDelete"));
+    } else {
+        keyboard[0].reserve(1);
+        keyboard[0].push_back(detail::makeCallbackButton("Add new storage", "StorageViewCreate"));
+    }
+
     for (uint32_t i = 0; i < currentStor.size(); i++) {
         if (i % 2 == 0)
             keyboard[1 + (i / 2)].reserve(2);
@@ -178,6 +185,7 @@ inline void renderIngredientsList(StorageId storageId, UserId userId, ChatId cha
 }
 
 inline void renderStorageCreate(ChatId chatId, BotRef bot) { // BackendProvider bkn
+    
     // Here is connection to backend using chatId
     InlineKeyboard keyboard(1);
     keyboard[0].push_back(detail::makeCallbackButton("Cancel", "StorageCreateCancel"));
@@ -185,13 +193,27 @@ inline void renderStorageCreate(ChatId chatId, BotRef bot) { // BackendProvider 
         chatId, "Enter storage name to create", nullptr, nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
 }
 
-inline void renderStorageDelete(ChatId chatId, BotRef bot) { // BackendProvider bkn
+inline void renderStorageDelete(ChatId chatId, BotRef bot, UserId userId) { // BackendProvider bkn
     // Here is connection to backend using chatId
-    InlineKeyboard keyboard(1);
+    auto currentStor = backendEx.getUserStorages(userId);
+    InlineKeyboard keyboard(1 + ((currentStor.size() + 1) / 2)); // ceiling
+    keyboard[0].reserve(1);
     keyboard[0].push_back(detail::makeCallbackButton("Cancel", "StorageDeleteCancel"));
+    for (uint32_t i = 0; i < currentStor.size(); i++) {
+        if (i % 2 == 0)
+            keyboard[1 + (i / 2)].reserve(2);
+
+        // sprintf(storageData, "storage %d", currentStor[i].getId(userId)); // Create uniqie data for storage (one of
+        // storages) button
+        //  it also saves the id of storage
+        keyboard[1 + (i / 2)].push_back(
+            detail::makeCallbackButton(*currentStor[i].getName(), std::to_string(currentStor[i].getId(userId))));
+    }
+
     bot.sendMessage(
-        chatId, "Enter storage name to delete", nullptr, nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
+        chatId, "Choose storage to delete", nullptr, nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
 }
+
 
 } // namespace render
 

@@ -58,9 +58,9 @@ class storages {
             content.push_back(storage(userId, name, {}));
         }
 
-        bool deleteStorage(std::int64_t userId, std::string name){
+        bool deleteStorage(std::int64_t userId, int id){
             for (int i=0;i < content.size();i++){
-                if (*content[i].getName()==name){
+                if (content[i].getId(123)==id){
                     // Deletes the second through third elements (vec[1], vec[2])
                     content.erase(std::next(content.begin(), i), std::next(content.begin(), i+1));
                 }
