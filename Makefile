@@ -16,10 +16,10 @@ cmake-debug cmake-release: cmake-%: conan-%
 	cmake --preset=conan-$* $(CMAKE_FLAGS)
 
 build/Debug/CMakeCache.txt: conanfile.txt
-	rm build/Debug/CMakeCache.txt
+	rm -f build/Debug/CMakeCache.txt
 	$(MAKE) cmake-debug
 build/Release/CMakeCache.txt: conanfile.txt
-	rm build/Release/CMakeCache.txt
+	rm -f build/Release/CMakeCache.txt
 	$(MAKE) cmake-release
 
 # Build using cmake
