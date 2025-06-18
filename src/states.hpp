@@ -14,22 +14,22 @@
 namespace states {
 
 namespace detail {
-    struct UserStoragesIdMixin {
-        int storageId;
-        UserStoragesIdMixin(int storageId) : storageId{storageId} {} // NOLINT(*-explicit-*)
-    };
+struct UserStoragesIdMixin {
+    int storageId;
+    UserStoragesIdMixin(int storageId) : storageId{storageId} {} // NOLINT(*-explicit-*)
+};
 }
 
 struct StorageList {};
-  
+
 struct StorageCreation {};
-struct StorageDeletion:detail::UserStoragesIdMixin {};
+struct StorageDeletion : detail::UserStoragesIdMixin {};
 struct StorageCreationEnterName {};
 struct StorageWrongNameToDelete {};
 struct StorageDeletionEnterName {};
 
 struct StorageView : detail::UserStoragesIdMixin {};
-  
+
 struct StorageMemberView : detail::UserStoragesIdMixin {};
 struct MembersAdditionDeletion : detail::UserStoragesIdMixin {};
 struct PackMemberView : detail::UserStoragesIdMixin {};
@@ -37,9 +37,8 @@ struct MemberAddition : detail::UserStoragesIdMixin {};
 struct MemberDeletion : detail::UserStoragesIdMixin {};
 
 struct IngredientsView : detail::UserStoragesIdMixin {};
-struct IngredientsAddition : detail::UserStoragesIdMixin{};
-struct IngredientsDeletion : detail::UserStoragesIdMixin{};
-
+struct IngredientsAddition : detail::UserStoragesIdMixin {};
+struct IngredientsDeletion : detail::UserStoragesIdMixin {};
 
 using State = std::variant<StorageList,
                            StorageCreation,

@@ -1,15 +1,15 @@
 #pragma once
 
-#include <cstring>
-#include <memory>
 #include <cstdlib>
+#include <cstring>
 #include <format>
+#include <memory>
 #include <stdexcept>
 #include <utility>
 
 namespace utils {
 
-const char* getenvWithError(const char* key) noexcept(false) ;
+const char* getenvWithError(const char* key) noexcept(false);
 
 template <typename T>
 std::optional<T> parseSafe(const char* s) {
