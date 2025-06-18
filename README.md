@@ -32,3 +32,11 @@ It's better to use `Dockerfile`. If you need to build locally, follow these step
 ```bash
 make build-release
 ```
+
+## Run
+
+```bash
+make start-debug
+# or
+make start-release
+```
