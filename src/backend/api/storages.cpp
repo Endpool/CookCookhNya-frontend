@@ -1,6 +1,7 @@
 #include "backend/api/storages.hpp"
 
 #include "backend/models/storage.hpp"
+#include "types.hpp"
 
 #include <format>
 #include <vector>
@@ -25,6 +26,10 @@ StorageId StoragesApi::create(UserId userId, const StorageCreateBody& body) cons
 
 void StoragesApi::delete_(UserId userId, StorageId id) const {
     jsonDeleteAuthed<void>(userId, std::format("/my/storages/{}", id));
+}
+
+std::vector<UserId> StoragesApi::getStorageMembers(UserId userId, StorageId id) const {
+    return jsonGetAuthed<std::vector<UserId>>(userId, std::format("/my/storages/{}/members", id));
 }
 
 } // namespace cookcookhnya::api

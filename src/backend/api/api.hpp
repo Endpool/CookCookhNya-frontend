@@ -18,6 +18,10 @@ class ApiClient {
     [[nodiscard]] const StoragesApi& getStorages() const {
         return storages;
     }
+
+    operator const StoragesApi&() const { // NOLINT(*-explicit-*)
+        return storages;
+    }
 };
 
 } // namespace cookcookhnya::api
