@@ -17,6 +17,7 @@ class StoragesApi : ApiBase {
   public:
     [[nodiscard]] std::vector<models::storage::StorageSummary> getStoragesList() const;
     [[nodiscard]] models::storage::StorageDetails get(models::storage::StorageId id) const;
+    models::storage::StorageId create(const models::storage::StorageCreateBody& body) const; // NOLINT(*-nodiscard)
 };
 
 } // namespace cookcookhnya::api

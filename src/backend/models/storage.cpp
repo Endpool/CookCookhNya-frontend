@@ -19,4 +19,8 @@ StorageDetails tag_invoke(json::value_to_tag<StorageDetails> /*tag*/, const json
     };
 }
 
+void tag_invoke(boost::json::value_from_tag /*tag*/, boost::json::value& j, const StorageCreateBody& body) {
+    j = {{"name", body.name}};
+}
+
 } // namespace cookcookhnya::api::models::storage
