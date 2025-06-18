@@ -11,15 +11,18 @@
 namespace cookcookhnya::api {
 
 class StoragesApi : ApiBase {
+    using StorageId = models::storage::StorageId;
+
     friend class ApiClient;
 
     explicit StoragesApi(httplib::Client& api);
 
   public:
     [[nodiscard]] std::vector<models::storage::StorageSummary> getStoragesList(UserId userId) const;
-    [[nodiscard]] models::storage::StorageDetails get(UserId userId, models::storage::StorageId id) const;
-    models::storage::StorageId create(UserId userId, // NOLINT(*-nodiscard)
+    [[nodiscard]] models::storage::StorageDetails get(UserId userId, StorageId id) const;
+    StorageId create(UserId userId, // NOLINT(*-nodiscard)
                                       const models::storage::StorageCreateBody& body) const;
+    void delete_(UserId userId, StorageId id) const;
 };
 
 } // namespace cookcookhnya::api
