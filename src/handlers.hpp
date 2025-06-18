@@ -11,16 +11,11 @@
 #include <tgbot/types/CallbackQuery.h>
 #include <tgbot/types/Message.h>
 
-#include <format>
 #include <iostream>
-#include <memory>
 #include <sstream>
-#include <stdexcept>
 #include <string>
-#include <utility>
-#include <vector>
 
-namespace handlers {
+namespace cookcookhnya::handlers {
 
 using namespace TgBot;
 using namespace tg_stater;
@@ -43,7 +38,7 @@ inline bool filterPublicMessage(MessageRef m, BotRef bot) {
 
 constexpr char startCmd[] = "start";
 inline void start(MessageRef m, BotRef bot, SMRef stateManager) {
-    stateManager.put(StorageView{0});
+    stateManager.put(StorageList{});
     renderStorageList(m.from->id, m.chat->id, bot);
     std::cerr << "hello.";
 };
@@ -59,8 +54,7 @@ using noStateHandler = Handler<Events::AnyMessage{}, handleNoState, HandlerTypes
 inline void storageListButtonCallback(StorageList&,
                                       CallbackQueryRef cq,
                                       const Api& bot,
-                                      SMRef stateManager,
-                                      const HelloWorldProvider& hwp) { // BackendProvider bkn
+                                      SMRef stateManager) { // BackendProvider bkn
     bot.answerCallbackQuery(cq.id);
     // std::string temp = (cq.data.substr(7)); // 7 Because string created on render of button is "storage *idNumber*"
     std::stringstream temp;
@@ -85,28 +79,7 @@ inline void storageListButtonCallback(StorageList&,
     stateManager.put(StorageView{id});
     renderStorageView(id, cq.from->id, chatId, bot); // If nor buttons were pressed then user pressed on their storages
 }
-using StorageListButtonHandler = Han
-
-    void
-    helloWorld(MessageRef m, BotRef bot, const HelloWorldProvider& hwp) {
-    bot.sendMessage(m.chat->id, hwp.getHelloWorld());
-}
-using helloWorldHandler = Handler<Events::Message{}, helloWorld, HandlerTypes::AnyState{}>;
-
-inline void handleNoState(MessageRef m, BotRef bot) {
-    if (m.text.starts_with("/start"))
-        return;
-    bot.sendMessage(m.chat->id, "Use /start please");
-};
-using noStateHandler = Handler<Events::AnyMessage{}, handleNoState, HandlerTypes::NoState{}>;
-
-constexpr char startCmd[] = "start";
-inline void start(MessageRef m, BotRef bot, SMRef stateManager) {
-    stateManager.put(StorageList{});
-    renderStoragesView(m.from->id, m.chat->id, bot);
-};
-using startHandler = Handler<Events::Command{startCmd}, start, HandlerTypes::AnyState{}>;
-dler<Events::CallbackQuery{}, storageListButtonCallback>;
+using StorageListButtonHandler = Handler<Events::CallbackQuery{}, storageListButtonCallback>;
 
 inline void storageViewButtonCallback(StorageView& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager) {
     bot.answerCallbackQuery(cq.id);
@@ -175,7 +148,7 @@ inline void
 createStorage(StorageCreationEnterName&, MessageRef m, BotRef bot, SMRef stateManager) { // BackendProvider bkn
     backendEx.createStorage(m.from->id, m.text);
     stateManager.put(StorageList{});
-    renderStoragesView(m.from->id, m.chat->id, bot);
+    renderStorageList(m.from->id, m.chat->id, bot);
 };
 using StorageCreateHandler = Handler<Events::Message{}, createStorage>;
 
@@ -184,7 +157,7 @@ inline void cancelStorageCreation(StorageCreationEnterName&, CallbackQueryRef cq
     if (cq.data == "StorageCreateCancel") { // Here compare with data in button which was pressed (data was put in
                                             // renderStorageCreate)
         stateManager.put(StorageList{});
-        renderStoragesView(cq.from->id, cq.message->chat->id, bot);
+        renderStorageList(cq.from->id, cq.message->chat->id, bot);
     }
 };
 using StorageCreateButtonHandler = Handler<Events::CallbackQuery{}, cancelStorageCreation>;
@@ -192,11 +165,10 @@ using StorageCreateButtonHandler = Handler<Events::CallbackQuery{}, cancelStorag
 inline bool deleteStorage(StorageDeletionEnterName&,
                           MessageRef m,
                           BotRef bot,
-                          SMRef stateManager,
-                          const HelloWorldProvider& hwp) { // BackendProvider bkn
+                          SMRef stateManager) { // BackendProvider bkn
     if (backendEx.deleteStorage(m.from->id, m.text)) {
         stateManager.put(StorageList{});
-        renderStoragesView(m.from->id, m.chat->id, bot);
+        renderStorageList(m.from->id, m.chat->id, bot);
         return true;
     } else {
         bot.sendMessage(m.chat->id, "You entered wrong name");
@@ -209,9 +181,9 @@ inline void cancelStorageDeletion(StorageDeletionEnterName&, CallbackQueryRef cq
     bot.answerCallbackQuery(cq.id);
     if (cq.data == "cancel") {
         stateManager.put(StorageList{});
-        renderStoragesView(cq.from->id, cq.message->chat->id, bot);
+        renderStorageList(cq.from->id, cq.message->chat->id, bot);
     }
 };
 using StorageDeleteButtonHandler = Handler<Events::CallbackQuery{}, cancelStorageDeletion>;
 
-} // namespace handlers
+} // namespace cookcookhnya::handlers

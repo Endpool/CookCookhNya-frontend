@@ -1,24 +1,20 @@
 #pragma once
 
-#include "types.hpp"
-
 #include <tg_stater/state_storage/common.hpp>
 #include <tg_stater/state_storage/memory.hpp>
 
-#include <string>
-#include <string_view>
-#include <utility>
 #include <variant>
-#include <vector>
 
-namespace states {
+namespace cookcookhnya::states {
 
 namespace detail {
+
 struct UserStoragesIdMixin {
     int storageId;
     UserStoragesIdMixin(int storageId) : storageId{storageId} {} // NOLINT(*-explicit-*)
 };
-}
+
+} // namespace detail
 
 struct StorageList {};
 
@@ -57,3 +53,5 @@ using State = std::variant<StorageList,
                            IngredientsDeletion>;
 
 using StateManager = tg_stater::StateProxy<tg_stater::MemoryStateStorage<State>>;
+
+} // namespace cookcookhnya::states

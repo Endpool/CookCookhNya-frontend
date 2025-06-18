@@ -1,9 +1,13 @@
 #pragma once
+
 #include <format>
 #include <memory>
 #include <ranges>
 #include <string>
 #include <vector>
+
+namespace cookcookhnya {
+
 // Simulation of backend
 class storage {
     int storageId = 0;
@@ -34,7 +38,9 @@ class storage {
         return &name;
     }
 };
+
 storage backendExStorage = storage(1, "asd", {"asd", "asdf"});
+
 class storages {
     int groupId = 0;
     std::vector<storage> content = {storage(1, "", {""})};
@@ -62,3 +68,5 @@ class storages {
 };
 
 storages backendEx = storages(1);
+
+} // namespace cookcookhnya

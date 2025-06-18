@@ -18,7 +18,10 @@
 #include <utility>
 #include <vector>
 
+namespace cookcookhnya {
+
 namespace StorageRepositoryClass {
+
 class Storage {
   public:
     StorageId storageId = 0;
@@ -91,8 +94,8 @@ inline void renderStorageList(UserId userId, ChatId chatId, BotRef bot) {
     auto currentStor = backendEx.getUserStorages(userId);
     InlineKeyboard keyboard(1 + ((currentStor.size() + 1) / 2)); // ceiling
     keyboard[0].reserve(2);
-    keyboard[0].push_back(::detail::makeCallbackButton("Add new storage", "StorageViewCreate"));
-    keyboard[0].push_back(::detail::makeCallbackButton("Delete existing storage", "StorageViewDelete"));
+    keyboard[0].push_back(detail::makeCallbackButton("Add new storage", "StorageViewCreate"));
+    keyboard[0].push_back(detail::makeCallbackButton("Delete existing storage", "StorageViewDelete"));
     for (uint32_t i = 0; i < currentStor.size(); i++) {
         if (i % 2 == 0)
             keyboard[1 + (i / 2)].reserve(2);
@@ -101,10 +104,10 @@ inline void renderStorageList(UserId userId, ChatId chatId, BotRef bot) {
         // storages) button
         //  it also saves the id of storage
         keyboard[1 + (i / 2)].push_back(
-            ::detail::makeCallbackButton(*currentStor[i].getName(), std::to_string(currentStor[i].getId(userId))));
+            detail::makeCallbackButton(*currentStor[i].getName(), std::to_string(currentStor[i].getId(userId))));
     }
 
-    bot.sendMessage(chatId, "Your storages:", nullptr, nullptr, ::detail::makeKeyboardMarkup(std::move(keyboard)));
+    bot.sendMessage(chatId, "Your storages:", nullptr, nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
 }
 
 inline void renderStorageView(StorageId storageId, UserId userId, ChatId chatId, BotRef bot) {
@@ -170,17 +173,19 @@ inline void renderIngredientsList(StorageId storageId, UserId userId, ChatId cha
 inline void renderStorageCreate(ChatId chatId, BotRef bot) { // BackendProvider bkn
     // Here is connection to backend using chatId
     InlineKeyboard keyboard(1);
-    keyboard[0].push_back(::detail::makeCallbackButton("Cancel", "StorageCreateCancel"));
+    keyboard[0].push_back(detail::makeCallbackButton("Cancel", "StorageCreateCancel"));
     bot.sendMessage(
-        chatId, "Enter storage name to create", nullptr, nullptr, ::detail::makeKeyboardMarkup(std::move(keyboard)));
+        chatId, "Enter storage name to create", nullptr, nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
 }
 
 inline void renderStorageDelete(ChatId chatId, BotRef bot) { // BackendProvider bkn
     // Here is connection to backend using chatId
     InlineKeyboard keyboard(1);
-    keyboard[0].push_back(::detail::makeCallbackButton("Cancel", "StorageDeleteCancel"));
+    keyboard[0].push_back(detail::makeCallbackButton("Cancel", "StorageDeleteCancel"));
     bot.sendMessage(
-        chatId, "Enter storage name to delete", nullptr, nullptr, ::detail::makeKeyboardMarkup(std::move(keyboard)));
+        chatId, "Enter storage name to delete", nullptr, nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
 }
 
 } // namespace render
+
+} // namespace cookcookhnya
