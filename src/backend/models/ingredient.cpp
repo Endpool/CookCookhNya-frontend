@@ -9,7 +9,7 @@ namespace json = boost::json;
 
 Ingredient tag_invoke(json::value_to_tag<Ingredient> /*tag*/, const json::value& j) {
     return {
-        .id = value_to<decltype(Ingredient::id)>(j.at("ingredientId")),
+        .id = value_to<decltype(Ingredient::id)>(j.at("id")),
         .name = value_to<decltype(Ingredient::name)>(j.at("name")),
     };
 }
