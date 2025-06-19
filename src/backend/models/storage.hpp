@@ -1,13 +1,13 @@
 #pragma once
 
+#include "backend/id_types.hpp"
+
 #include <boost/json/conversion.hpp>
 #include <boost/json/value.hpp>
 
 #include <string>
 
 namespace cookcookhnya::api::models::storage {
-
-using StorageId = long;
 
 struct StorageSummary {
     StorageId id;
