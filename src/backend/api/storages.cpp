@@ -30,4 +30,17 @@ std::vector<UserId> StoragesApi::getStorageMembers(UserId userId, StorageId id) 
     return jsonGetAuthed<std::vector<UserId>>(userId, std::format("/my/storages/{}/members", id));
 }
 
+void StoragesApi::addMember(UserId userId, StorageId id, UserId memberId) const {
+    //jsonGetAuthed<void>(userId, std::format("/my/storages/{}", id));
+}
+
+void StoragesApi::deleteMember(UserId userId, StorageId id, UserId memberId) const {
+    //jsonGetAuthed<void>(userId, std::format("/my/storages/{}", id));
+}
+
+bool StoragesApi::memberOf(UserId userId, StorageId id, UserId memberId) const {
+    //return jsonGetAuthed<bool>(userId, std::format("/my/storages/{}", id));
+    return true;
+}
+
 } // namespace cookcookhnya::api

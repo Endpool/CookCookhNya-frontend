@@ -1,6 +1,8 @@
 #pragma once
 
+
 #include "backend/id_types.hpp"
+#include "types.hpp"
 
 #include <boost/json/conversion.hpp>
 #include <boost/json/value.hpp>
@@ -12,12 +14,15 @@ namespace cookcookhnya::api::models::storage {
 struct StorageSummary {
     StorageId id;
     std::string name;
+    UserId ownerId;
 
     friend StorageSummary tag_invoke(boost::json::value_to_tag<StorageSummary>, const boost::json::value& j);
 };
 
 struct StorageDetails {
     std::string name;
+    StorageId id;
+    UserId ownerId;
 
     friend StorageDetails tag_invoke(boost::json::value_to_tag<StorageDetails>, const boost::json::value& j);
 };

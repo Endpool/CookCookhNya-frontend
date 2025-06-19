@@ -11,6 +11,7 @@ StorageSummary tag_invoke(json::value_to_tag<StorageSummary> /*tag*/, const json
     return {
         .id = value_to<decltype(StorageSummary::id)>(j.at("id")),
         .name = value_to<decltype(StorageSummary::name)>(j.at("name")),
+        .ownerId = value_to<decltype(StorageSummary::ownerId)>(j.at("ownerId")),
     };
 }
 

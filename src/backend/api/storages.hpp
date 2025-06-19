@@ -23,6 +23,9 @@ class StoragesApi : ApiBase {
                      const models::storage::StorageCreateBody& body) const;
     void delete_(UserId userId, StorageId id) const;
     [[nodiscard]] std::vector<UserId> getStorageMembers(UserId userId, StorageId id) const;
+    void addMember(UserId userId, StorageId id, UserId memberId) const;
+    void deleteMember(UserId userId, StorageId id, UserId memberId) const;
+    [[nodiscard]] bool memberOf(UserId userId, StorageId id, UserId memberId) const;
 };
 
 } // namespace cookcookhnya::api
