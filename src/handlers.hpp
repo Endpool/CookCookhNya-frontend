@@ -10,6 +10,7 @@
 #include <tg_stater/handler/type.hpp>
 #include <tgbot/types/CallbackQuery.h>
 #include <tgbot/types/Message.h>
+#include <backend/api/storages.hpp>
 
 #include <iostream>
 #include <sstream>
@@ -23,7 +24,9 @@ using NoState = HandlerTypes::NoState;
 using AnyState = HandlerTypes::AnyState;
 using namespace states;
 using namespace render;
+using namespace cookcookhnya::api;
 
+using BackendApiRef = const StoragesApi&;
 using MessageRef = const Message&;
 using CallbackQueryRef = const CallbackQuery&;
 using SMRef = const StateManager&;
@@ -40,7 +43,7 @@ constexpr char startCmd[] = "start";
 inline void start(MessageRef m, BotRef bot, SMRef stateManager) {
     stateManager.put(StorageList{});
     renderStorageList(m.from->id, m.chat->id, bot);
-    std::cerr << "hello.";
+    std::cerr << "start caught";
 };
 using startHandler = Handler<Events::Command{startCmd}, start, AnyState{}>;
 
@@ -87,10 +90,10 @@ inline void storageViewButtonCallback(StorageView& state, CallbackQueryRef cq, B
     auto chatId = cq.message->chat->id;
     auto userId = cq.from->id;
     if (cq.data == "explore") {
-        //stateManager.put(IngredientsView{state.storageId}); No need to go in this state
+        //stateManager.put(IngredientsView{state.storageId}); temporarily not available
         renderIngredientsList(state.storageId, userId, chatId, bot);
     } else if (cq.data == "members") {
-        //stateManager.put(StorageMemberView{state.storageId});
+        stateManager.put(StorageMemberView{state.storageId});
         renderMemberList(state.storageId, userId, chatId, bot);
     } else if (cq.data == "back") {
         stateManager.put(StorageList{});
@@ -114,20 +117,22 @@ storageMemberViewButtonCallback(StorageMemberView& state, CallbackQueryRef cq, B
 }
 using storageMemberViewButtonHandler = Handler<Events::CallbackQuery{}, storageMemberViewButtonCallback>;
 
-inline void addDeleteMember(MembersAdditionDeletion& state, MessageRef m, BotRef bot, SMRef stateManager) {
+inline void addDeleteMember(MembersAdditionDeletion& state, MessageRef m, BotRef bot, SMRef stateManager, BackendApiRef api) {
     auto chatId = m.chat->id;
     auto userId = m.from->id;
     auto memberId = utils::parseSafe<UserId>(m.text.data());
-    auto storage = StorageRepositoryClass::Storage::get(state.storageId);
+    auto storage = api.get(userId, state.storageId);
     if (!memberId) {
         bot.sendMessage(chatId, "Invalid user ID");
         renderMemberAdditionDeletionPrompt(state.storageId, chatId, bot);
         return;
     }
-    if (storage.addMember(state.storageId, *memberId)) {
-        bot.sendMessage(chatId, "Member added successfully");
+    if (api.memberOf(userId, state.storageId, *memberId)){
+        api.deleteMember(userId, state.storageId, *memberId);
+        bot.sendMessage(chatId, "Member deleted successfully");
     } else {
-        bot.sendMessage(chatId, "Member already added");
+        api.addMember(userId, state.storageId, *memberId);
+        bot.sendMessage(chatId, "Member added successfully");
     }
     stateManager.put(StorageMemberView{state.storageId});
     renderMemberList(state.storageId, userId, chatId, bot);
