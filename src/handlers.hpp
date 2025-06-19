@@ -80,7 +80,7 @@ inline void storageListButtonCallback(StorageList&,
     }
 
     stateManager.put(StorageView{id});
-    renderStorageView(id, cq.from->id, chatId, bot); // If nor buttons were pressed then user pressed on their storages
+    renderStorageView(id, cq.from->id, chatId, bot, api); // If nor buttons were pressed then user pressed on their storages
 }
 using StorageListButtonHandler = Handler<Events::CallbackQuery{}, storageListButtonCallback>;
 
@@ -93,7 +93,7 @@ inline void storageViewButtonCallback(StorageView& state, CallbackQueryRef cq, B
         renderIngredientsList(state.storageId, userId, chatId, bot);
     } else if (cq.data == "members") {
         stateManager.put(StorageMemberView{state.storageId});
-        renderMemberList(state.storageId, userId, chatId, bot);
+        renderMemberList(state.storageId, userId, chatId, bot, api);
     } else if (cq.data == "back") {
         stateManager.put(StorageList{});
         renderStorageList(userId, chatId, bot, api);
@@ -108,7 +108,7 @@ storageMemberViewButtonCallback(StorageMemberView& state, CallbackQueryRef cq, B
     auto userId = cq.from->id;
     if (cq.data == "add_delete_member") {
         stateManager.put(MembersAdditionDeletion{state.storageId});
-        renderMemberAdditionDeletionPrompt(state.storageId, chatId, bot);
+        renderMemberAdditionDeletionPrompt(state.storageId, userId, chatId, bot, api);
     } else if (cq.data == "back") {
         stateManager.put(StorageView{state.storageId});
         renderStorageList(userId, chatId, bot, api);
@@ -123,7 +123,7 @@ inline void addDeleteMember(MembersAdditionDeletion& state, MessageRef m, BotRef
     auto storage = api.get(userId, state.storageId);
     if (!memberId) {
         bot.sendMessage(chatId, "Invalid user ID");
-        renderMemberAdditionDeletionPrompt(state.storageId, chatId, bot);
+        renderMemberAdditionDeletionPrompt(state.storageId, userId, chatId, bot, api);
         return;
     }
     if (api.memberOf(userId, state.storageId, *memberId)){
@@ -134,17 +134,17 @@ inline void addDeleteMember(MembersAdditionDeletion& state, MessageRef m, BotRef
         bot.sendMessage(chatId, "Member added successfully");
     }
     stateManager.put(StorageMemberView{state.storageId});
-    renderMemberList(state.storageId, userId, chatId, bot);
+    renderMemberList(state.storageId, userId, chatId, bot, api);
 }
 using memberAdditionDeletionMessageHandler = Handler<Events::Message{}, addDeleteMember>;
 
-inline void cancelAddDeleteMember(MembersAdditionDeletion& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager) {
+inline void cancelAddDeleteMember(MembersAdditionDeletion& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, BackendApiRef api) {
     bot.answerCallbackQuery(cq.id);
     auto chatId = cq.message->chat->id;
     auto userId = cq.from->id;
     if (cq.data == "member_add_delete_cancel") {
         stateManager.put(StorageMemberView{state.storageId});
-        renderMemberList(state.storageId, userId, chatId, bot);
+        renderMemberList(state.storageId, userId, chatId, bot, api);
     }
 }
 using cancelAddDeleteMemberHandler = Handler<Events::CallbackQuery{}, cancelAddDeleteMember>;

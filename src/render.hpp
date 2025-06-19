@@ -76,11 +76,9 @@ inline void renderStorageList(UserId userId, ChatId chatId, BotRef bot, BackendA
     bot.sendMessage(chatId, "Your storages:", nullptr, nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
 }
 
-inline void renderStorageView(StorageId storageId, UserId userId, ChatId chatId, BotRef bot) {
-    // auto storage = StorageRepository::get(storageId);
-    //auto storage = StorageRepositoryClass::Storage::getNull(); // temporarily
+inline void renderStorageView(StorageId storageId, UserId userId, ChatId chatId, BotRef bot, BackendApiRef api) {
+    auto storage = api.get(userId, storageId);
     unsigned int buttonRows = 3;
-    auto ad = backendEx.getUserStorages(userId)[0]; //temp simulation of backend
     InlineKeyboard keyboard(1);
     keyboard[0].reserve(3);
     keyboard[0].push_back(detail::makeCallbackButton("Explore", "explore"));
@@ -88,15 +86,14 @@ inline void renderStorageView(StorageId storageId, UserId userId, ChatId chatId,
     keyboard[0].push_back(detail::makeCallbackButton("Back", "back"));
 
     bot.sendMessage(chatId,
-                    *ad.getName(),
+                    storage.name,
                     nullptr,
                     nullptr,
                     detail::makeKeyboardMarkup(std::move(keyboard)));
 }
 
-inline void renderMemberList(const StorageId& storageId, UserId userId, ChatId chatId, BotRef bot) {
-    // auto storage = StorageRepository::get(storageId);
-    auto storage = StorageRepositoryClass::Storage::getNull(); // temporarily
+inline void renderMemberList(const StorageId& storageId, UserId userId, ChatId chatId, BotRef bot, BackendApiRef api) {
+    auto storage = api.get(userId, storageId);
     bool isOwner = storage.ownerId == userId;
     unsigned int buttonRows = isOwner ? 2 : 1;
 
@@ -107,7 +104,7 @@ inline void renderMemberList(const StorageId& storageId, UserId userId, ChatId c
     }
 
     std::string list;
-    for (auto [i, id] : std::views::enumerate(storage.getMembers(storageId)))
+    for (auto [i, id] : std::views::enumerate(api.getStorageMembers(userId, storageId)))
         std::format_to(std::back_inserter(list), "{}. \'{}\'", i + 1, id);
     bot.sendMessage(chatId,
                     std::format("Here is the member list of \"{}\" storage.", list),
@@ -116,9 +113,8 @@ inline void renderMemberList(const StorageId& storageId, UserId userId, ChatId c
                     detail::makeKeyboardMarkup(std::move(keyboard)));
 }
 
-inline void renderMemberAdditionDeletionPrompt(const StorageId& storageId, ChatId chatId, BotRef bot) {
-    // auto storage = StorageRepository::get(storageId);
-    auto storage = StorageRepositoryClass::Storage::getNull(); // temporarily
+inline void renderMemberAdditionDeletionPrompt(const StorageId& storageId, UserId userId, ChatId chatId, BotRef bot, BackendApiRef api) {
+    auto storage = api.get(userId, storageId);
     unsigned int buttonRows = 1;
 
     InlineKeyboard keyboard(1);
@@ -132,14 +128,15 @@ inline void renderMemberAdditionDeletionPrompt(const StorageId& storageId, ChatI
 }
 
 inline void renderIngredientsList(StorageId storageId, UserId userId, ChatId chatId, BotRef bot) {
-    auto ad = backendEx.getUserStorages(userId)[0];
-    std::string resultStr ="";
-    for (int i=0;i<ad.getContent(123).size();i++){
-        resultStr += std::format("{} \n", ad.getContent(123)[i]);
-    }
-        bot.sendMessage(chatId,
-                    resultStr);
+    // auto ad = backendEx.getUserStorages(userId)[0];
+    // std::string resultStr ="";
+    // for (int i=0;i<ad.getContent(123).size();i++){
+    //     resultStr += std::format("{} \n", ad.getContent(123)[i]);
+    // }
+    //     bot.sendMessage(chatId,
+    //                 resultStr);
 
+    return;
 }
 
 inline void renderStorageCreate(ChatId chatId, BotRef bot, UserId userId) { // BackendProvider bkn
