@@ -38,9 +38,5 @@ void StoragesApi::deleteMember(UserId userId, StorageId id, UserId memberId) con
     //jsonGetAuthed<void>(userId, std::format("/my/storages/{}", id));
 }
 
-bool StoragesApi::memberOf(UserId userId, StorageId id, UserId memberId) const {
-    //return jsonGetAuthed<bool>(userId, std::format("/my/storages/{}", id));
-    return true;
-}
 
 } // namespace cookcookhnya::api

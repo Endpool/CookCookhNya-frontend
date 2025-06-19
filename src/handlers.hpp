@@ -6,6 +6,8 @@
 #include "types.hpp"
 #include "utils.hpp"
 
+#include <algorithm>
+#include <iterator>
 #include <tg_stater/handler/event.hpp>
 #include <tg_stater/handler/handler.hpp>
 #include <tg_stater/handler/type.hpp>
@@ -126,7 +128,9 @@ inline void addDeleteMember(MembersAdditionDeletion& state, MessageRef m, BotRef
         renderMemberAdditionDeletionPrompt(state.storageId, userId, chatId, bot, api);
         return;
     }
-    if (api.memberOf(userId, state.storageId, *memberId)){
+    auto members = api.getStorageMembers(userId, state.storageId);
+    bool isMemberof = std::ranges::find(members, *memberId) != members.end();
+    if (isMemberof){
         api.deleteMember(userId, state.storageId, *memberId);
         bot.sendMessage(chatId, "Member deleted successfully");
     } else {

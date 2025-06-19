@@ -14,7 +14,6 @@ namespace cookcookhnya::api::models::storage {
 struct StorageSummary {
     StorageId id;
     std::string name;
-    UserId ownerId;
 
     friend StorageSummary tag_invoke(boost::json::value_to_tag<StorageSummary>, const boost::json::value& j);
 };
