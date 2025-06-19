@@ -10,7 +10,7 @@
 #include <tg_stater/handler/type.hpp>
 #include <tgbot/types/CallbackQuery.h>
 #include <tgbot/types/Message.h>
-
+#include <backend/api/storages.hpp>
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -23,7 +23,9 @@ using NoState = HandlerTypes::NoState;
 using AnyState = HandlerTypes::AnyState;
 using namespace states;
 using namespace render;
+using namespace cookcookhnya::api;
 
+using BackendApiRef = const StoragesApi&;
 using MessageRef = const Message&;
 using CallbackQueryRef = const CallbackQuery&;
 using SMRef = const StateManager&;
