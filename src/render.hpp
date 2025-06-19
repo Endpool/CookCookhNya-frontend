@@ -1,19 +1,17 @@
 #pragma once
 
-
 #include "backend/id_types.hpp"
 #include "backend/models/storage.hpp"
-
 #include "types.hpp"
 #include "utils.hpp"
 
-#include <cstdio>
 #include <tgbot/Api.h>
 #include <tgbot/types/CallbackQuery.h>
 #include <tgbot/types/InlineKeyboardButton.h>
 #include <tgbot/types/Message.h>
 #include <backend/api/storages.hpp>
 
+#include <cstdio>
 #include <format>
 #include <iterator>
 #include <memory>
@@ -28,9 +26,8 @@ namespace cookcookhnya {
 
 using StorageId = api::StorageId;
 
-
-
 namespace render {
+  
 using namespace TgBot;
 using namespace cookcookhnya::api;
 
