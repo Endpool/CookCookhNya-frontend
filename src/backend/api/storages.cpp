@@ -10,8 +10,6 @@ namespace cookcookhnya::api {
 
 using namespace models::storage;
 
-StoragesApi::StoragesApi(httplib::Client& api) : ApiBase{api} {}
-
 std::vector<StorageSummary> StoragesApi::getStoragesList(UserId userId) const {
     return jsonGetAuthed<std::vector<StorageSummary>>(userId, "/my/storages");
 }

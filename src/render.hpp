@@ -1,7 +1,9 @@
 #pragma once
 
 
+#include "backend/id_types.hpp"
 #include "backend/models/storage.hpp"
+
 #include "types.hpp"
 #include "utils.hpp"
 
@@ -24,7 +26,7 @@
 
 namespace cookcookhnya {
 
-using StorageId = api::models::storage::StorageId;
+using StorageId = api::StorageId;
 
 
 
