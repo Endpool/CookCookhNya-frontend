@@ -9,7 +9,7 @@ namespace json = boost::json;
 
 StorageSummary tag_invoke(json::value_to_tag<StorageSummary> /*tag*/, const json::value& j) {
     return {
-        .id = value_to<decltype(StorageSummary::id)>(j.at("id")),
+        .id = value_to<decltype(StorageSummary::id)>(j.at("storageId")),
         .name = value_to<decltype(StorageSummary::name)>(j.at("name")),
         .ownerId = value_to<decltype(StorageSummary::ownerId)>(j.at("ownerId")),
     };
