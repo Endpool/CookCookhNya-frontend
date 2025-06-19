@@ -1,5 +1,6 @@
 #include "backend/models/storage.hpp"
 
+#include <boost/json/conversion.hpp>
 #include <boost/json/value_to.hpp>
 
 namespace cookcookhnya::api::models::storage {

@@ -14,7 +14,7 @@ namespace cookcookhnya::api {
 class StoragesApi : ApiBase {
     friend class ApiClient;
 
-    explicit StoragesApi(httplib::Client& api);
+    explicit StoragesApi(httplib::Client& api) : ApiBase{api} {}
 
   public:
     [[nodiscard]] std::vector<models::storage::StorageSummary> getStoragesList(UserId userId) const;
