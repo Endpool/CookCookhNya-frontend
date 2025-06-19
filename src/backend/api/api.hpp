@@ -5,6 +5,7 @@
 #include <httplib.h>
 
 #include <string>
+#include <utility>
 
 namespace cookcookhnya::api {
 
@@ -14,6 +15,17 @@ class ApiClient {
 
   public:
     explicit ApiClient(const std::string& apiAddress) : api{apiAddress}, storages{api} {}
+    ApiClient(const ApiClient&) = delete;
+    ApiClient(ApiClient&& other) noexcept : api{std::move(other.api)}, storages{api} {}
+    ApiClient& operator=(const ApiClient&) = delete;
+    ApiClient& operator=(ApiClient&& other) noexcept {
+        if (&other == this)
+            return *this;
+        api = std::move(other.api);
+        storages = StoragesApi{api};
+        return *this;
+    }
+    ~ApiClient() = default;
 
     [[nodiscard]] const StoragesApi& getStorages() const {
         return storages;

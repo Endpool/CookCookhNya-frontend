@@ -33,7 +33,7 @@ class ApiBase {
 
     template <typename JsonOut>
     [[nodiscard]] JsonOut jsonGetAuthed(UserId userId, const std::string& path) const {
-        return jsonGet<JsonOut>(path, {{"Authorization", std::to_string(userId)}});
+        return jsonGet<JsonOut>(path, {{"Authorization", "Bearer " + std::to_string(userId)}});
     }
 
     template <typename JsonOut, typename JsonIn>
@@ -48,7 +48,20 @@ class ApiBase {
 
     template <typename JsonOut, typename JsonIn>
     JsonOut jsonPostWithJsonAuthed(UserId userId, const std::string& path, JsonIn&& body) const {
-        return jsonPostWithJson<JsonOut>(path, std::forward<JsonIn>(body), {{"Authorization", std::to_string(userId)}});
+        return jsonPostWithJson<JsonOut>(
+            path, std::forward<JsonIn>(body), {{"Authorization", "Bearer " + std::to_string(userId)}});
+    }
+
+    template <typename JsonOut>
+    JsonOut jsonPut(const std::string& path, const httplib::Headers& headers = {}) const {
+        httplib::Result response = api.get().Put(path, headers, httplib::Params{});
+        assertSuccess(response);
+        if constexpr (!std::is_void_v<JsonOut>)
+            return boost::json::value_to<JsonOut>(boost::json::parse(response->body));
+    }
+    template <typename JsonOut>
+    JsonOut jsonPutAuthed(UserId userId, const std::string& path) const {
+        return jsonPut<JsonOut>(path, {{"Authorization", "Bearer " + std::to_string(userId)}});
     }
 
     template <typename JsonOut>
@@ -72,7 +85,7 @@ class ApiBase {
     }
     template <typename JsonOut>
     JsonOut jsonDeleteAuthed(UserId userId, const std::string& path) const {
-        return jsonDelete<JsonOut>(path, {{"Authorization", std::to_string(userId)}});
+        return jsonDelete<JsonOut>(path, {{"Authorization", "Bearer " + std::to_string(userId)}});
     }
 };
 

@@ -15,11 +15,11 @@ std::vector<StorageSummary> StoragesApi::getStoragesList(UserId userId) const {
 }
 
 StorageDetails StoragesApi::get(UserId userId, StorageId id) const {
-    return jsonGetAuthed<StorageDetails>(userId, std::format("/my/storages/{}/name", id));
+    return jsonGetAuthed<StorageDetails>(userId, std::format("/my/storages/{}", id));
 }
 
 StorageId StoragesApi::create(UserId userId, const StorageCreateBody& body) const {
-    return jsonPostWithJsonAuthed<StorageId>(userId, "/my/storages", body);
+    return jsonPostWithJsonAuthed<StorageCreateResponse>(userId, "/my/storages", body).id;
 }
 
 void StoragesApi::delete_(UserId userId, StorageId id) const {
@@ -29,5 +29,14 @@ void StoragesApi::delete_(UserId userId, StorageId id) const {
 std::vector<UserId> StoragesApi::getStorageMembers(UserId userId, StorageId id) const {
     return jsonGetAuthed<std::vector<UserId>>(userId, std::format("/my/storages/{}/members", id));
 }
+
+void StoragesApi::addMember(UserId userId, StorageId id, UserId memberId) const {
+    //jsonGetAuthed<void>(userId, std::format("/my/storages/{}", id));
+}
+
+void StoragesApi::deleteMember(UserId userId, StorageId id, UserId memberId) const {
+    //jsonGetAuthed<void>(userId, std::format("/my/storages/{}", id));
+}
+
 
 } // namespace cookcookhnya::api
