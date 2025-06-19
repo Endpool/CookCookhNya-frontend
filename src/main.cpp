@@ -13,16 +13,15 @@ int main() {
 
     Setup<State>::Stater<noStateHandler,
                          startHandler,
+                         StorageCreateButtonHandler,
+                         storgeDeleteHandler,
+                         StorageDeleteButtonHandler,
                          StorageListButtonHandler,
                          StorageCreateHandler,
-                         StorageCreateButtonHandler,
-                         storgeDeleteHandler,
-                         StorageDeleteButtonHandler,
-                         StorageCreateButtonHandler,
-                         storgeDeleteHandler,
-                         StorageDeleteButtonHandler,
-                         StorageListButtonHandler,
-                         StorageCreateHandler>
+                         storageViewButtonHandler,
+                         storageMemberViewButtonHandler,
+                         memberAdditionDeletionMessageHandler,
+                         cancelAddDeleteMemberHandler>
         bot{};
 
     bot.start(TgBot::Bot{utils::getenvWithError("BOT_TOKEN")});
