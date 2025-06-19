@@ -146,7 +146,7 @@ inline void renderStorageCreate(ChatId chatId, BotRef bot, UserId userId) { // B
     InlineKeyboard keyboard(1);
     keyboard[0].push_back(detail::makeCallbackButton("Cancel", "StorageCreateCancel"));
     bot.sendMessage(
-        chatId, "Enter storage name to create", nullptr, nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
+        chatId, "Enter new storage name", nullptr, nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
 }
 
 inline void renderStorageDelete(ChatId chatId, BotRef bot, UserId userId,  BackendApiRef api) {
