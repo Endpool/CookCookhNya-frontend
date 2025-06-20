@@ -58,7 +58,7 @@ jobs:
       
       - name: Install tgbotstater dependency
         if: steps.conan-cache.outputs.cache-hit != 'true'
-        working-directory: /tmp/deps
+        working-directory: .
         run: |
           mkdir -p /tmp/deps
           cd /tmp/deps
