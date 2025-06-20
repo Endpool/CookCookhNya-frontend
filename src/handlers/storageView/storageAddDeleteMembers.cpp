@@ -1,6 +1,6 @@
 #include "storageAddDeleteMembers.hpp"
 
-#include "../../render/storageView/storageMembersRender.hpp"
+#include "render/storageView/storageMembersRender.hpp"
 
 namespace cookcookhnya::handlers::storageAddDeleteMembers {
 using namespace cookcookhnya::forHandlers;

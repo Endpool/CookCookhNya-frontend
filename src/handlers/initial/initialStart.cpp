@@ -1,6 +1,6 @@
 #include "initialStart.hpp"
 
-#include "../../render/storageList/storageListRender.hpp"
+#include "render/storageList/storageListRender.hpp"
 
 namespace cookcookhnya::handlers::init {
 using namespace cookcookhnya::forHandlers;

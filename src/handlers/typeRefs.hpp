@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../utils.hpp"
-#include "../states.hpp"
+#include "utils.hpp"
+#include "states.hpp"
 #include <backend/api/storages.hpp>
 #include <tg_stater/handler/event.hpp>
 #include <tg_stater/handler/handler.hpp>

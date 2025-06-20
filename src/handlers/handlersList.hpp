@@ -1,13 +1,21 @@
 #pragma once
 
 // Add here all new namespaces and handlers declarations
-#include "storageList/storageListCreate.hpp"
-#include "storageList/storageListDelete.hpp"
-#include "storageList/storageListView.hpp"
-#include "storageView/storageView.hpp"
-#include "storageView/storageViewMembers.hpp"
-#include "storageView/storageAddDeleteMembers.hpp"
 #include "initial/initialStart.hpp"
+
+#include "storageList/storageListCreate.hpp"
+
+
+#include "storageList/storageListDelete.hpp"
+
+#include "storageList/storageListView.hpp"
+
+#include "storageView/storageAddDeleteMembers.hpp"
+
+#include "storageView/storageView.hpp"
+
+#include "storageView/storageViewMembers.hpp"
+
 
 namespace cookcookhnya::handlers {
     using namespace cookcookhnya::handlers::storageListCreate;

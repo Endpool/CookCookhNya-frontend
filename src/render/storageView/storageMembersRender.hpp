@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../typeForRender.hpp"
+#include "render/typeForRender.hpp"
 
 namespace cookcookhnya::render::viewStorageMembers{
 using namespace cookcookhnya::render;

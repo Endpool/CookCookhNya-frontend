@@ -1,5 +1,5 @@
 #include "storageListCreate.hpp"
-#include "../../render/storageList/storageListRender.hpp"
+#include "render/storageList/storageListRender.hpp"
 
 namespace cookcookhnya::handlers::storageListCreate {
 

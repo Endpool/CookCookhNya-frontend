@@ -1,7 +1,7 @@
 #include "storageListView.hpp"
-#include "../../render/storageList/createStorageRender.hpp"
-#include "../../render/storageList/deleteStorageRender.hpp"
-#include "../../render/storageView/storageViewRender.hpp"
+#include "render/storageList/createStorageRender.hpp"
+#include "render/storageList/deleteStorageRender.hpp"
+#include "render/storageView/storageViewRender.hpp"
 
 namespace cookcookhnya::handlers::storageListView {
     

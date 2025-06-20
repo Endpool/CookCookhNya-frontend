@@ -1,7 +1,7 @@
 #include "storageView.hpp"
-#include "../../render/ingredientsView/ingredientsRender.hpp"
-#include "../../render/storageList/storageListRender.hpp"
-#include "../../render/storageView/storageMembersRender.hpp"
+#include "render/storageList/storageListRender.hpp"
+#include "render/ingredientsView/ingredientsRender.hpp"
+#include "render/storageView/storageMembersRender.hpp"
 
 namespace cookcookhnya::handlers::storageView {
 using namespace cookcookhnya::forHandlers;
