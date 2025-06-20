@@ -2,8 +2,8 @@
 
 #include "../typeForRender.hpp"
 
-namespace render::viewIngredients{
+namespace cookcookhnya::render::viewIngredients{
 using namespace cookcookhnya::render;
 
-extern void renderIngredientsList(StorageId storageId, UserId userId, ChatId chatId, BotRef bot);
-} // namespace render::viewIngredients
+void renderIngredientsList(StorageId storageId, UserId userId, ChatId chatId, BotRef bot);
+} // namespace cookcookhnya::render::viewIngredients

@@ -1,6 +1,6 @@
 #include "storageListRender.hpp"
 
-namespace render::storageList {
+namespace cookcookhnya::render::storageList {
 using namespace cookcookhnya::render;
 void renderStorageList(UserId userId, ChatId chatId, BotRef bot, BackendApiRef api) {
 
@@ -25,4 +25,4 @@ void renderStorageList(UserId userId, ChatId chatId, BotRef bot, BackendApiRef a
 
     bot.sendMessage(chatId, "Your storages:", nullptr, nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
 }
-} // namespace cookcookhnya::render
+}  // namespace cookcookhnya::render::storageList

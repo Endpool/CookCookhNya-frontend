@@ -2,10 +2,10 @@
 
 #include "../typeRefs.hpp"
 
-namespace handlers::storageListCreate {
+namespace cookcookhnya::handlers::storageListCreate {
 using namespace cookcookhnya::forHandlers;
 
-extern void createStorage(StorageCreationEnterName&, MessageRef m, BotRef bot, SMRef stateManager, BackendApiRef api);
+void createStorage(StorageCreationEnterName&, MessageRef m, BotRef bot, SMRef stateManager, BackendApiRef api);
 
-extern void cancelStorageCreation(StorageCreationEnterName&, CallbackQueryRef cq, BotRef bot, SMRef stateManager, BackendApiRef api);
-} // namespace handlers::storageListCreate
+void cancelStorageCreation(StorageCreationEnterName&, CallbackQueryRef cq, BotRef bot, SMRef stateManager, BackendApiRef api);
+} // namespace cookcookhnya::handlers::storageListCreate

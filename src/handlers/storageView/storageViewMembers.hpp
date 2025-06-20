@@ -2,8 +2,8 @@
 
 #include "../typeRefs.hpp"
 
-namespace handlers::storageViewMembers {
+namespace cookcookhnya::handlers::storageViewMembers {
 using namespace cookcookhnya::forHandlers;
 
-extern void storageMemberViewButtonCallback(StorageMemberView& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager,  BackendApiRef api);
-}  // namespace handlers::storageViewMembers
+void storageMemberViewButtonCallback(StorageMemberView& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager,  BackendApiRef api);
+} // namespace cookcookhnya::handlers::storageViewMembers

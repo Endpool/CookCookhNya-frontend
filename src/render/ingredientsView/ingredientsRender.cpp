@@ -1,6 +1,6 @@
 #include "ingredientsRender.hpp"
 
-namespace render::viewIngredients{
+namespace cookcookhnya::render::viewIngredients{
 using namespace cookcookhnya::render;
 
 void renderIngredientsList(StorageId storageId, UserId userId, ChatId chatId, BotRef bot) {
@@ -12,6 +12,5 @@ void renderIngredientsList(StorageId storageId, UserId userId, ChatId chatId, Bo
     //     bot.sendMessage(chatId,
     //                 resultStr);
 
-    return;
 }
-}  // namespace render::viewIngredients
+}  // namespace cookcookhnya::render::viewIngredients

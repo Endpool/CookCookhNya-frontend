@@ -2,9 +2,9 @@
 
 #include "../../render/storageList/storageListRender.hpp"
 
-namespace handlers::init {
+namespace cookcookhnya::handlers::init {
 using namespace cookcookhnya::forHandlers;
-using namespace render::storageList;
+using namespace cookcookhnya::render::storageList;
 
 void start(MessageRef m, BotRef bot, SMRef stateManager, BackendApiRef api) {
     stateManager.put(StorageList{});
@@ -17,4 +17,4 @@ void handleNoState(MessageRef m, BotRef bot) {
         return;
     bot.sendMessage(m.chat->id, "Use /start please");
 };
-}  // namespace handlers::init
+}  // namespace cookcookhnya::handlers::init

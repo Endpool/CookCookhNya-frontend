@@ -1,9 +1,9 @@
 #include "storageListDelete.hpp"
 #include "../../render/storageList/storageListRender.hpp"
 
-namespace handlers::storageListDelete {
+namespace cookcookhnya::handlers::storageListDelete {
 
-using namespace render::storageList;
+using namespace cookcookhnya::render::storageList;
 using namespace cookcookhnya::forHandlers;
 
 void deleteStorage(StorageDeletionEnterName&,
@@ -28,4 +28,4 @@ void cancelStorageDeletion(StorageDeletionEnterName&, CallbackQueryRef cq, BotRe
     }
 };
 
-}  // namespace handlers::storageListDelete
+}  // namespace cookcookhnya::handlers::storageListDelete

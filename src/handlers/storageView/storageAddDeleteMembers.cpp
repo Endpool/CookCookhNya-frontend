@@ -2,9 +2,9 @@
 
 #include "../../render/storageView/storageMembersRender.hpp"
 
-namespace handlers::storageAddDeleteMembers {
+namespace cookcookhnya::handlers::storageAddDeleteMembers {
 using namespace cookcookhnya::forHandlers;
-using namespace render::viewStorageMembers;
+using namespace cookcookhnya::render::viewStorageMembers;
 
 void addDeleteMember(MembersAdditionDeletion& state, MessageRef m, BotRef bot, SMRef stateManager, BackendApiRef api) {
     auto chatId = m.chat->id;
@@ -38,4 +38,4 @@ void cancelAddDeleteMember(MembersAdditionDeletion& state, CallbackQueryRef cq, 
         renderMemberList(state.storageId, userId, chatId, bot, api);
     }
 };
-} // namespace handlers::storageAddDeleteMembers
+}  // namespace cookcookhnya::handlers::storageAddDeleteMembers

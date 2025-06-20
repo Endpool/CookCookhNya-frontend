@@ -2,8 +2,8 @@
 
 #include "../typeForRender.hpp"
 
-namespace render::createStorage{
+namespace cookcookhnya::render::createStorage{
 using namespace cookcookhnya::render;
 
-extern void renderStorageCreate(ChatId chatId, BotRef bot, UserId userId);
-} // namespace render::createStorage
+void renderStorageCreate(ChatId chatId, BotRef bot);
+} // namespace cookcookhnya::render::createStorage

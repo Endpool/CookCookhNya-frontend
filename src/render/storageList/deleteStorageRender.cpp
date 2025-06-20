@@ -1,6 +1,6 @@
 #include "deleteStorageRender.hpp"
 
-namespace render::deleteStorage {
+namespace cookcookhnya::render::deleteStorage {
 using namespace cookcookhnya::render;
 
 void renderStorageDelete(ChatId chatId, BotRef bot, UserId userId,  BackendApiRef api) {
@@ -18,4 +18,4 @@ void renderStorageDelete(ChatId chatId, BotRef bot, UserId userId,  BackendApiRe
         chatId, "Choose storage to delete", nullptr, nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
 };
 
-} // namespace render::deleteStorage
+}  // namespace cookcookhnya::render::deleteStorage

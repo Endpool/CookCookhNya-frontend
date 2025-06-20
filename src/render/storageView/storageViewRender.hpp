@@ -2,8 +2,8 @@
 
 #include "../typeForRender.hpp"
 
-namespace render::viewStorage{
+namespace cookcookhnya::render::viewStorage{
 using namespace cookcookhnya::render;
 
-extern void renderStorageView(StorageId storageId, UserId userId, ChatId chatId, BotRef bot, BackendApiRef api);
-} // namespace render::viewStorage
+void renderStorageView(StorageId storageId, UserId userId, ChatId chatId, BotRef bot, BackendApiRef api);
+} // namespace cookcookhnya::render::viewStorage

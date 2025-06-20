@@ -1,6 +1,6 @@
 #include "storageViewRender.hpp"
 
-namespace render::viewStorage{
+namespace cookcookhnya::render::viewStorage{
 using namespace cookcookhnya::render;
 
 void renderStorageView(StorageId storageId, UserId userId, ChatId chatId, BotRef bot, BackendApiRef api) {
@@ -19,4 +19,4 @@ void renderStorageView(StorageId storageId, UserId userId, ChatId chatId, BotRef
                     detail::makeKeyboardMarkup(std::move(keyboard)));
 }
 
-} // namespace render::viewStorage
+}  // namespace cookcookhnya::render::viewStorage

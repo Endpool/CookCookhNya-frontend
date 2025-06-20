@@ -3,10 +3,10 @@
 #include "../../render/storageList/storageListRender.hpp"
 #include "../../render/storageView/storageMembersRender.hpp"
 
-namespace handlers::storageViewMembers {
+namespace cookcookhnya::handlers::storageViewMembers {
 using namespace cookcookhnya::forHandlers;
-using namespace render::viewStorageMembers;
-using namespace render::storageList;
+using namespace cookcookhnya::render::viewStorageMembers;
+using namespace cookcookhnya::render::storageList;
 
 void storageMemberViewButtonCallback(StorageMemberView& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager,  BackendApiRef api) {
     bot.answerCallbackQuery(cq.id);
@@ -21,4 +21,4 @@ void storageMemberViewButtonCallback(StorageMemberView& state, CallbackQueryRef 
     }
 };
 
-}  // namespace handlers::storageViewMembers
+}  // namespace cookcookhnya::handlers::storageViewMembers

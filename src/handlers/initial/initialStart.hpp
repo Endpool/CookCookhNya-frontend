@@ -2,10 +2,10 @@
 
 #include "../typeRefs.hpp"
 
-namespace handlers::init {
+namespace cookcookhnya::handlers::init {
 using namespace cookcookhnya::forHandlers;
 
-extern void start(MessageRef m, BotRef bot, SMRef stateManager, BackendApiRef api);
+void start(MessageRef m, BotRef bot, SMRef stateManager, BackendApiRef api);
 
-extern void handleNoState(MessageRef m, BotRef bot);
-} // namespace handlers::init
+void handleNoState(MessageRef m, BotRef bot);
+} // namespace cookcookhnya::handlers::init

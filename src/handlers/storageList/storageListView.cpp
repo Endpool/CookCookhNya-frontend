@@ -3,12 +3,12 @@
 #include "../../render/storageList/deleteStorageRender.hpp"
 #include "../../render/storageView/storageViewRender.hpp"
 
-namespace handlers::storageListView {
+namespace cookcookhnya::handlers::storageListView {
     
 using namespace cookcookhnya::forHandlers;
-using namespace render::createStorage;
-using namespace render::deleteStorage;
-using namespace render::viewStorage;
+using namespace cookcookhnya::render::createStorage;
+using namespace cookcookhnya::render::deleteStorage;
+using namespace cookcookhnya::render::viewStorage;
 
 void storageListButtonCallback(StorageList&,
                                       CallbackQueryRef cq,
@@ -25,7 +25,7 @@ void storageListButtonCallback(StorageList&,
     if (cq.data == "StorageViewCreate") {
         stateManager.put(StorageCreationEnterName{}); // Go to function create storage, while cancel button is handled
                                                       // on cancel storage creation
-        renderStorageCreate(chatId, bot, cq.from->id);             // Bot here prints menu of storage creation ADD USER ID
+        renderStorageCreate(chatId, bot);             // Bot here prints menu of storage creation ADD USER ID
         return;
     }
 
@@ -39,4 +39,4 @@ void storageListButtonCallback(StorageList&,
     renderStorageView(id, cq.from->id, chatId, bot, api); // If nor buttons were pressed then user pressed on their storages
 }
 
-}  // namespace handlers::storageListView
+}  // namespace cookcookhnya::handlers::storageListView
