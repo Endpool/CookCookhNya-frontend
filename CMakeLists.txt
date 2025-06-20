@@ -35,6 +35,19 @@ add_executable(main
     src/backend/models/storage.cpp
     src/backend/api/base.cpp
     src/backend/api/storages.cpp
+    src/handlers/initial/initialStart.cpp
+    src/handlers/storageList/storageListCreate.cpp
+    src/handlers/storageList/storageListDelete.cpp
+    src/handlers/storageList/storageListView.cpp
+    src/handlers/storageView/storageAddDeleteMembers.cpp
+    src/handlers/storageView/storageView.cpp
+    src/handlers/storageView/storageViewMembers.cpp
+    src/render/ingredientsView/ingredientsRender.cpp
+    src/render/storageList/createStorageRender.cpp
+    src/render/storageList/deleteStorageRender.cpp
+    src/render/storageList/storageListRender.cpp
+    src/render/storageView/storageMembersRender.cpp
+    src/render/storageView/storageViewRender.cpp
 )
 
 # setup
