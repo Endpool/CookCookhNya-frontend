@@ -47,7 +47,7 @@ jobs:
           echo "$HOME/.local/bin" >> $GITHUB_PATH
       
       - name: Set up Conan profile
-        working-directory: Frontend
+        working-directory: .
         run: |
           mkdir -p $HOME/.conan2/profiles
           conan profile detect --name=default --force
@@ -55,23 +55,23 @@ jobs:
           cat $HOME/.conan2/profiles/default
       
       - name: Install project dependencies
-        working-directory: Frontend
+        working-directory: .
         run: |
           conan install . --build=missing
       
       - name: Configure CMake
-        working-directory: Frontend
+        working-directory: .
         run: |
           mkdir -p build/Release
           cmake --preset=conan-release
       
       - name: Build project
-        working-directory: Frontend
+        working-directory: .
         run: |
           cmake --build --preset=conan-release
       
       - name: Verify compilation database
-        working-directory: Frontend
+        working-directory: .
         run: |
           if [ ! -f build/Release/compile_commands.json ]; then
             echo "Generating compilation database..."
@@ -86,13 +86,13 @@ jobs:
           cmake --version
       
       - name: Run clang-format checks
-        working-directory: Frontend
+        working-directory: .
         run: |
           find src include -type f \( -name '*.hpp' -or -name '*.cpp' \) \
             -exec clang-format --dry-run --Werror {} \;
       
       - name: Run clang-tidy
-        working-directory: Frontend
+        working-directory: .
         run: |
           cd build/Release
           run-clang-tidy -j$(nproc) -quiet
