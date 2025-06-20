@@ -1,9 +1,0 @@
-#pragma once
-
-#include "render/typeForRender.hpp"
-
-namespace cookcookhnya::render::viewStorage{
-using namespace cookcookhnya::render;
-
-void renderStorageView(StorageId storageId, UserId userId, ChatId chatId, BotRef bot, BackendApiRef api);
-} // namespace cookcookhnya::render::viewStorage

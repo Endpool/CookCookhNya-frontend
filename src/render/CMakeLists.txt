@@ -1,8 +1,8 @@
 target_sources(main PRIVATE
-    src/render/ingredientsView/ingredientsRender.cpp
-    src/render/storageList/createStorageRender.cpp
-    src/render/storageList/deleteStorageRender.cpp
-    src/render/storageList/storageListRender.cpp
-    src/render/storageView/storageMembersRender.cpp
-    src/render/storageView/storageViewRender.cpp
+    src/render/ingredients_view/ingredients_render.cpp
+    src/render/storage_list/create_storage_render.cpp
+    src/render/storage_list/delete_storage_render.cpp
+    src/render/storage_list/storage_list_render.cpp
+    src/render/storage_view/storage_members_render.cpp
+    src/render/storage_view/storage_view_render.cpp
 )
