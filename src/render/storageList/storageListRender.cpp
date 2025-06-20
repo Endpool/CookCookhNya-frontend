@@ -1,6 +1,6 @@
 #include "storageListRender.hpp"
 
-namespace cookcookhnya::render {
+namespace render::storageList {
 using namespace cookcookhnya::render;
 void renderStorageList(UserId userId, ChatId chatId, BotRef bot, BackendApiRef api) {
 
