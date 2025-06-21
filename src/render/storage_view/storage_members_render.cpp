@@ -1,4 +1,6 @@
 #include "storage_members_render.hpp"
+#include <ranges>
+
 
 namespace cookcookhnya::render::viewStorageMembers {
 using namespace cookcookhnya::render;
@@ -15,7 +17,7 @@ void renderMemberList(const StorageId& storageId, UserId userId, ChatId chatId, 
     }
 
     std::string list;
-    for (auto [i, id] : std::views::enumerate(api.getStorageMembers(userId, storageId)))
+    for (auto [i, id] : std::ranges::views::enumerate(api.getStorageMembers(userId, storageId)))
         std::format_to(std::back_inserter(list), "{}. \'{}\'", i + 1, id);
     bot.sendMessage(chatId,
                     std::format("Here is the member list of \"{}\" storage.", list),
