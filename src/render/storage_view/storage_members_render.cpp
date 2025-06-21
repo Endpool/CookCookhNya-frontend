@@ -1,6 +1,6 @@
 #include "storage_members_render.hpp"
 
-namespace cookcookhnya::render::viewStorageMembers{
+namespace cookcookhnya::render::viewStorageMembers {
 using namespace cookcookhnya::render;
 
 void renderMemberList(const StorageId& storageId, UserId userId, ChatId chatId, BotRef bot, BackendApiRef api) {
@@ -24,7 +24,8 @@ void renderMemberList(const StorageId& storageId, UserId userId, ChatId chatId, 
                     detail::makeKeyboardMarkup(std::move(keyboard)));
 };
 
-void renderMemberAdditionDeletionPrompt(const StorageId& storageId, UserId userId, ChatId chatId, BotRef bot, BackendApiRef api) {
+void renderMemberAdditionDeletionPrompt(
+    const StorageId& storageId, UserId userId, ChatId chatId, BotRef bot, BackendApiRef api) {
     auto storage = api.get(userId, storageId);
     unsigned int buttonRows = 1;
 
@@ -38,4 +39,4 @@ void renderMemberAdditionDeletionPrompt(const StorageId& storageId, UserId userI
                     detail::makeKeyboardMarkup(std::move(keyboard)));
 };
 
-}  // namespace cookcookhnya::render::viewStorageMembers
+} // namespace cookcookhnya::render::viewStorageMembers

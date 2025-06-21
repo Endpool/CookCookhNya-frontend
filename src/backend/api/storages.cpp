@@ -31,12 +31,11 @@ std::vector<UserId> StoragesApi::getStorageMembers(UserId userId, StorageId id) 
 }
 
 void StoragesApi::addMember(UserId userId, StorageId id, UserId memberId) const {
-    //jsonGetAuthed<void>(userId, std::format("/my/storages/{}", id));
+    // jsonGetAuthed<void>(userId, std::format("/my/storages/{}", id));
 }
 
 void StoragesApi::deleteMember(UserId userId, StorageId id, UserId memberId) const {
-    //jsonGetAuthed<void>(userId, std::format("/my/storages/{}", id));
+    // jsonGetAuthed<void>(userId, std::format("/my/storages/{}", id));
 }
-
 
 } // namespace cookcookhnya::api

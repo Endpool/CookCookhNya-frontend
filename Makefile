@@ -38,6 +38,8 @@ gdb: build-debug
 start-release: build-release
 	set -a && source .env && ./build/Release/main
 
-.PHONY: format-commit
+.PHONY: format-commit format-all
 format-commit:
 	find $$(git diff-index --cached --name-only --diff-filter=AM HEAD) \( -name '*.cpp' -o -name '*.hpp' \) -exec clang-format -i {} \;
+format-all:
+	find src \( -name '*.cpp' -o -name '*.hpp' \) -exec clang-format -i {} \;

@@ -3,8 +3,9 @@
 namespace cookcookhnya::render::deleteStorage {
 using namespace cookcookhnya::render;
 
-void renderStorageDelete(ChatId chatId, BotRef bot, UserId userId,  BackendApiRef api) {
-    auto currentStor = api.getStoragesList(userId); // Take all storages from backend so user could choose which to delete
+void renderStorageDelete(ChatId chatId, BotRef bot, UserId userId, BackendApiRef api) {
+    auto currentStor =
+        api.getStoragesList(userId); // Take all storages from backend so user could choose which to delete
     InlineKeyboard keyboard(1 + ((currentStor.size() + 1) / 2)); // ceiling
     keyboard[0].reserve(1);
     keyboard[0].push_back(detail::makeCallbackButton("Cancel", "StorageDeleteCancel"));
@@ -18,4 +19,4 @@ void renderStorageDelete(ChatId chatId, BotRef bot, UserId userId,  BackendApiRe
         chatId, "Choose storage to delete", nullptr, nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
 };
 
-}  // namespace cookcookhnya::render::deleteStorage
+} // namespace cookcookhnya::render::deleteStorage

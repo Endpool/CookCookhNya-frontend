@@ -1,6 +1,6 @@
 #include "storage_view.hpp"
-#include "render/storage_list/storage_list_render.hpp"
 #include "render/ingredients_view/ingredients_render.hpp"
+#include "render/storage_list/storage_list_render.hpp"
 #include "render/storage_view/storage_members_render.hpp"
 
 namespace cookcookhnya::handlers::storageView {
@@ -9,12 +9,13 @@ using namespace cookcookhnya::render::viewIngredients;
 using namespace cookcookhnya::render::viewStorageMembers;
 using namespace cookcookhnya::render::storageList;
 
-void storageViewButtonCallback(StorageView& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, BackendApiRef api) {
+void storageViewButtonCallback(
+    StorageView& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, BackendApiRef api) {
     bot.answerCallbackQuery(cq.id);
     auto chatId = cq.message->chat->id;
     auto userId = cq.from->id;
     if (cq.data == "explore") {
-        //stateManager.put(IngredientsView{state.storageId}); temporarily not available
+        // stateManager.put(IngredientsView{state.storageId}); temporarily not available
         renderIngredientsList(state.storageId, userId, chatId, bot);
     } else if (cq.data == "members") {
         stateManager.put(StorageMemberView{state.storageId});
@@ -24,4 +25,4 @@ void storageViewButtonCallback(StorageView& state, CallbackQueryRef cq, BotRef b
         renderStorageList(userId, chatId, bot, api);
     }
 }
-}  // namespace cookcookhnya::handlers::storageView
+} // namespace cookcookhnya::handlers::storageView

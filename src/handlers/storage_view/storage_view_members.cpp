@@ -8,7 +8,8 @@ using namespace cookcookhnya::forHandlers;
 using namespace cookcookhnya::render::viewStorageMembers;
 using namespace cookcookhnya::render::storageList;
 
-void storageMemberViewButtonCallback(StorageMemberView& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager,  BackendApiRef api) {
+void storageMemberViewButtonCallback(
+    StorageMemberView& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, BackendApiRef api) {
     bot.answerCallbackQuery(cq.id);
     auto chatId = cq.message->chat->id;
     auto userId = cq.from->id;
@@ -21,4 +22,4 @@ void storageMemberViewButtonCallback(StorageMemberView& state, CallbackQueryRef 
     }
 };
 
-}  // namespace cookcookhnya::handlers::storageViewMembers
+} // namespace cookcookhnya::handlers::storageViewMembers

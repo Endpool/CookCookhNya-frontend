@@ -7,7 +7,7 @@ void renderStorageList(UserId userId, ChatId chatId, BotRef bot, BackendApiRef a
     auto currentStor = api.getStoragesList(userId); // Take storages of user from backend
 
     InlineKeyboard keyboard(1 + ((currentStor.size() + 1) / 2)); // ceiling
-    if (currentStor.size()!=0){
+    if (currentStor.size() != 0) {
         keyboard[0].reserve(2);
         keyboard[0].push_back(detail::makeCallbackButton("Add new storage", "StorageViewCreate"));
         keyboard[0].push_back(detail::makeCallbackButton("Delete existing storage", "StorageViewDelete"));
@@ -25,4 +25,4 @@ void renderStorageList(UserId userId, ChatId chatId, BotRef bot, BackendApiRef a
 
     bot.sendMessage(chatId, "Your storages:", nullptr, nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
 }
-}  // namespace cookcookhnya::render::storageList
+} // namespace cookcookhnya::render::storageList

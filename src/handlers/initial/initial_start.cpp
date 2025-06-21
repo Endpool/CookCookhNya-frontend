@@ -17,4 +17,4 @@ void handleNoState(MessageRef m, BotRef bot) {
         return;
     bot.sendMessage(m.chat->id, "Use /start please");
 };
-}  // namespace cookcookhnya::handlers::init
+} // namespace cookcookhnya::handlers::init

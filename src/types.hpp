@@ -13,7 +13,6 @@ using UserId = tg_stater::UserIdT;
 using ChatId = tg_stater::ChatIdT;
 using MessageId = decltype(TgBot::Message::messageId);
 
-
 using InlineKeyboard = std::vector<std::vector<TgBot::InlineKeyboardButton::Ptr>>;
 
 } // namespace cookcookhnya

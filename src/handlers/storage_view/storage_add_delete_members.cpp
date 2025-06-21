@@ -18,7 +18,7 @@ void addDeleteMember(MembersAdditionDeletion& state, MessageRef m, BotRef bot, S
     }
     auto members = api.getStorageMembers(userId, state.storageId);
     bool isMemberof = std::ranges::find(members, *memberId) != members.end();
-    if (isMemberof){
+    if (isMemberof) {
         api.deleteMember(userId, state.storageId, *memberId);
         bot.sendMessage(chatId, "Member deleted successfully");
     } else {
@@ -29,7 +29,8 @@ void addDeleteMember(MembersAdditionDeletion& state, MessageRef m, BotRef bot, S
     renderMemberList(state.storageId, userId, chatId, bot, api);
 };
 
-void cancelAddDeleteMember(MembersAdditionDeletion& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, BackendApiRef api) {
+void cancelAddDeleteMember(
+    MembersAdditionDeletion& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, BackendApiRef api) {
     bot.answerCallbackQuery(cq.id);
     auto chatId = cq.message->chat->id;
     auto userId = cq.from->id;
@@ -38,4 +39,4 @@ void cancelAddDeleteMember(MembersAdditionDeletion& state, CallbackQueryRef cq, 
         renderMemberList(state.storageId, userId, chatId, bot, api);
     }
 };
-}  // namespace cookcookhnya::handlers::storageAddDeleteMembers
+} // namespace cookcookhnya::handlers::storageAddDeleteMembers

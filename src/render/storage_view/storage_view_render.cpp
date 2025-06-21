@@ -1,6 +1,6 @@
 #include "storage_view_render.hpp"
 
-namespace cookcookhnya::render::viewStorage{
+namespace cookcookhnya::render::viewStorage {
 using namespace cookcookhnya::render;
 
 void renderStorageView(StorageId storageId, UserId userId, ChatId chatId, BotRef bot, BackendApiRef api) {
@@ -12,11 +12,7 @@ void renderStorageView(StorageId storageId, UserId userId, ChatId chatId, BotRef
     keyboard[0].push_back(detail::makeCallbackButton("Members", "members"));
     keyboard[0].push_back(detail::makeCallbackButton("Back", "back"));
 
-    bot.sendMessage(chatId,
-                    storage.name,
-                    nullptr,
-                    nullptr,
-                    detail::makeKeyboardMarkup(std::move(keyboard)));
+    bot.sendMessage(chatId, storage.name, nullptr, nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
 }
 
-}  // namespace cookcookhnya::render::viewStorage
+} // namespace cookcookhnya::render::viewStorage

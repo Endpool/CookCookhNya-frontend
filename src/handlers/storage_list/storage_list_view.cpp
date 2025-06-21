@@ -10,10 +10,8 @@ using namespace cookcookhnya::render::createStorage;
 using namespace cookcookhnya::render::deleteStorage;
 using namespace cookcookhnya::render::viewStorage;
 
-void storageListButtonCallback(StorageList&,
-                                      CallbackQueryRef cq,
-                                      const Api& bot,
-                                      SMRef stateManager, BackendApiRef api) {
+void storageListButtonCallback(
+    StorageList&, CallbackQueryRef cq, const Api& bot, SMRef stateManager, BackendApiRef api) {
     bot.answerCallbackQuery(cq.id);
 
     std::stringstream temp; // Convert string to int
@@ -31,12 +29,14 @@ void storageListButtonCallback(StorageList&,
 
     if (cq.data == "StorageViewDelete") {
         stateManager.put(StorageDeletionEnterName{});
-        renderStorageDelete(chatId, bot, cq.from->id, api); // Need for api, so it could put the list of storages to delete
+        renderStorageDelete(
+            chatId, bot, cq.from->id, api); // Need for api, so it could put the list of storages to delete
         return;
     }
 
     stateManager.put(StorageView{id});
-    renderStorageView(id, cq.from->id, chatId, bot, api); // If nor buttons were pressed then user pressed on their storages
+    renderStorageView(
+        id, cq.from->id, chatId, bot, api); // If nor buttons were pressed then user pressed on their storages
 }
 
-}  // namespace cookcookhnya::handlers::storageListView
+} // namespace cookcookhnya::handlers::storageListView
