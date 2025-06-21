@@ -1,10 +1,13 @@
 #pragma once
 
+#include <charconv>
 #include <cstdlib>
 #include <cstring>
 #include <format>
 #include <memory>
+#include <optional>
 #include <stdexcept>
+#include <system_error>
 #include <utility>
 
 namespace cookcookhnya::utils {

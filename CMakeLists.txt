@@ -18,9 +18,10 @@ message(STATUS "${CMAKE_PROJECT_NAME} version: ${PROJECT_VERSION}")
 # options
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+add_compile_options(-Wall -Wextra)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
-if(${CMAKE_BUILD_TYPE} EQUAL "Debug")
-    add_compile_options(-ftime-report -Wall -Wextra)
+if(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
+    # add_compile_options(-ftime-report)
 endif()
 
 # dependencies
@@ -32,10 +33,10 @@ find_package(Boost REQUIRED COMPONENTS json)
 add_executable(main
     src/main.cpp
     src/utils.cpp
-    src/backend/models/storage.cpp
-    src/backend/api/base.cpp
-    src/backend/api/storages.cpp
 )
+include(src/backend/CMakeLists.txt)
+include(src/handlers/CMakeLists.txt)
+include(src/render/CMakeLists.txt)
 
 # setup
 target_include_directories(main PRIVATE

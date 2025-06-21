@@ -63,18 +63,18 @@ class ApiBase {
     JsonOut jsonPutAuthed(UserId userId, const std::string& path) const {
         return jsonPut<JsonOut>(path, {{"Authorization", "Bearer " + std::to_string(userId)}});
     }
-
-    template <typename JsonOut>
-    JsonOut jsonPut(const std::string& path, const httplib::Headers& headers = {}) const {
-        httplib::Result response = api.get().Put(path, headers, httplib::Params{});
-        assertSuccess(response);
-        if constexpr (!std::is_void_v<JsonOut>)
-            return boost::json::value_to<JsonOut>(boost::json::parse(response->body));
-    }
-    template <typename JsonOut>
-    JsonOut jsonPutAuthed(UserId userId, const std::string& path) const {
-        return jsonPut<JsonOut>(path, {{"Authorization", std::to_string(userId)}});
-    }
+    // Here is repeating declarations of functions - probably bug during merge
+    // template <typename JsonOut>
+    // JsonOut jsonPut(const std::string& path, const httplib::Headers& headers = {}) const {
+    //     httplib::Result response = api.get().Put(path, headers, httplib::Params{});
+    //     assertSuccess(response);
+    //     if constexpr (!std::is_void_v<JsonOut>)
+    //         return boost::json::value_to<JsonOut>(boost::json::parse(response->body));
+    // }
+    // template <typename JsonOut>
+    // JsonOut jsonPutAuthed(UserId userId, const std::string& path) const {
+    //     return jsonPut<JsonOut>(path, {{"Authorization", std::to_string(userId)}});
+    // }
 
     template <typename JsonOut>
     JsonOut jsonDelete(const std::string& path, const httplib::Headers& headers = {}) const {
