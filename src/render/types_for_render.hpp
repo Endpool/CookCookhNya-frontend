@@ -2,7 +2,7 @@
 
 #include "backend/id_types.hpp"
 #include "utils.hpp"
-
+#include <ranges>
 #include <backend/api/storages.hpp>
 #include <tgbot/Api.h>
 #include <tgbot/types/CallbackQuery.h>
