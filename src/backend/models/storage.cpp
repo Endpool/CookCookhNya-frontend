@@ -27,7 +27,7 @@ void tag_invoke(boost::json::value_from_tag /*tag*/, boost::json::value& j, cons
 
 StorageCreateResponse tag_invoke(boost::json::value_to_tag<StorageCreateResponse> /*tag*/,
                                  const boost::json::value& j) {
-    return {.id = value_to<decltype(StorageSummary::id)>(j.at("storageId"))};
+    return {.id = value_to<decltype(StorageSummary::id)>(j.at("id"))};
 }
 
 } // namespace cookcookhnya::api::models::storage
