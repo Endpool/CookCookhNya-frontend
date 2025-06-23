@@ -19,7 +19,7 @@ using namespace cookcookhnya::handlers::storageAddDeleteMembers;
 using namespace cookcookhnya::handlers::init;
 
 // Const for handle no state and start
-constexpr char startCmd[] = "start";
+constexpr char startCmd[] = "start"; // NOLINT(*c-arrays)
 
 // StorageListCreate
 using StorageCreateHandler = Handler<Events::Message{}, createStorage>;
