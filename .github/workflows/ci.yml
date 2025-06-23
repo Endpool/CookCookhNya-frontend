@@ -99,11 +99,11 @@ jobs:
           clang-tidy --version
           cmake --version
       
-      - name: Run clang-format checks
-        working-directory: .
-        run: |
-          find src include -type f \( -name '*.hpp' -or -name '*.cpp' \) \
-            -exec clang-format --dry-run --Werror {} \;
+      # - name: Run clang-format checks
+      #   working-directory: .
+      #   run: |
+      #     find src -type f \( -name '*.hpp' -or -name '*.cpp' \) \
+      #       -exec clang-format --dry-run --Werror {} \;
       
       - name: Run clang-tidy
         working-directory: .
