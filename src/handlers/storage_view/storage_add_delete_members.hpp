@@ -5,8 +5,8 @@
 namespace cookcookhnya::handlers::storageAddDeleteMembers {
 using namespace cookcookhnya::forHandlers;
 
-void addDeleteMember(MembersAdditionDeletion& state, MessageRef m, BotRef bot, SMRef stateManager, BackendApiRef api);
+void addDeleteMember(MembersAdditionDeletion& state, MessageRef m, BotRef bot, SMRef stateManager, StorageApiRef storageApi);
 
 void cancelAddDeleteMember(
-    MembersAdditionDeletion& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, BackendApiRef api);
+    MembersAdditionDeletion& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, StorageApiRef storageApi);
 } // namespace cookcookhnya::handlers::storageAddDeleteMembers

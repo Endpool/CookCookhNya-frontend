@@ -5,8 +5,8 @@
 namespace cookcookhnya::handlers::storageListCreate {
 using namespace cookcookhnya::forHandlers;
 
-void createStorage(StorageCreationEnterName&, MessageRef m, BotRef bot, SMRef stateManager, BackendApiRef api);
+void createStorage(StorageCreationEnterName&, MessageRef m, BotRef bot, SMRef stateManager, StorageApiRef api);
 
 void cancelStorageCreation(
-    StorageCreationEnterName&, CallbackQueryRef cq, BotRef bot, SMRef stateManager, BackendApiRef api);
+    StorageCreationEnterName&, CallbackQueryRef cq, BotRef bot, SMRef stateManager, StorageApiRef storageApi);
 } // namespace cookcookhnya::handlers::storageListCreate

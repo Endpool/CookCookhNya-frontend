@@ -5,5 +5,5 @@
 namespace cookcookhnya::render::viewStorage {
 using namespace cookcookhnya::render;
 
-void renderStorageView(StorageId storageId, UserId userId, ChatId chatId, BotRef bot, BackendApiRef api);
+void renderStorageView(StorageId storageId, UserId userId, ChatId chatId, BotRef bot, StorageApiRef storageApi);
 } // namespace cookcookhnya::render::viewStorage

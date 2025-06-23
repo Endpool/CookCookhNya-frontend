@@ -1,10 +1,11 @@
 #include "storage_list_render.hpp"
+#include "render/types_for_render.hpp"
 
 namespace cookcookhnya::render::storageList {
 using namespace cookcookhnya::render;
-void renderStorageList(UserId userId, ChatId chatId, BotRef bot, BackendApiRef api) {
+void renderStorageList(UserId userId, ChatId chatId, BotRef bot, StorageApiRef storageApi) {
 
-    auto currentStor = api.getStoragesList(userId); // Take storages of user from backend
+    auto currentStor = storageApi.getStoragesList(userId); // Take storages of user from backend
 
     InlineKeyboard keyboard(1 + ((currentStor.size() + 1) / 2)); // ceiling
     if (currentStor.size() != 0) {
