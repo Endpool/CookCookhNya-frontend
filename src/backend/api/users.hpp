@@ -15,7 +15,7 @@ class UsersApi : ApiBase {
 
   public:
     void updateInfo(UserId userId, // NOLINT(*-nodiscard)
-                    const models::user::UserUpdateInfoBody& body) const;
+                    const models::user::UpdateUserInfoBody& body) const;
 };
 
 } // namespace cookcookhnya::api

@@ -7,7 +7,7 @@ namespace cookcookhnya::api::models::user {
 
 namespace json = boost::json;
 
-void tag_invoke(json::value_from_tag /*tag*/, json::value& j, const UserUpdateInfoBody& body) {
+void tag_invoke(json::value_from_tag /*tag*/, json::value& j, const UpdateUserInfoBody& body) {
     if (body.alias)
         j = {{"alias", *body.alias}, {"fullName", body.fullname}};
     else
