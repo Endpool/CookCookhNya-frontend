@@ -27,7 +27,6 @@ void start(MessageRef m, BotRef bot, SMRef stateManager, ApiClientRef api) {
     api.getUsers().updateInfo(
         m.from->id,
         models::user::UserUpdateInfoBody{.alias = std::move(m.from->username), .fullname = std::move(fullname)});
-    std::cerr << "start handled";
 };
 
 void handleNoState(MessageRef m, BotRef bot) {
