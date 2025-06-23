@@ -52,29 +52,21 @@ class ApiBase {
             path, std::forward<JsonIn>(body), {{"Authorization", "Bearer " + std::to_string(userId)}});
     }
 
-    template <typename JsonOut>
-    JsonOut jsonPut(const std::string& path, const httplib::Headers& headers = {}) const {
-        httplib::Result response = api.get().Put(path, headers, httplib::Params{});
+    template <typename JsonOut, typename JsonIn>
+    JsonOut jsonPutWithJson(const std::string& path, JsonIn&& body, const httplib::Headers& headers = {}) const {
+        using namespace boost::json;
+        std::string rawBody = serialize(value_from(std::forward<JsonIn>(body)));
+        httplib::Result response = api.get().Put(path, headers, rawBody, "application/json");
         assertSuccess(response);
         if constexpr (!std::is_void_v<JsonOut>)
-            return boost::json::value_to<JsonOut>(boost::json::parse(response->body));
+            return value_to<JsonOut>(parse(response->body));
     }
-    template <typename JsonOut>
-    JsonOut jsonPutAuthed(UserId userId, const std::string& path) const {
-        return jsonPut<JsonOut>(path, {{"Authorization", "Bearer " + std::to_string(userId)}});
+
+    template <typename JsonOut, typename JsonIn>
+    JsonOut jsonPutWithJsonAuthed(UserId userId, const std::string& path, JsonIn&& body) const {
+        return jsonPutWithJson<JsonOut>(
+            path, std::forward<JsonIn>(body), {{"Authorization", "Bearer " + std::to_string(userId)}});
     }
-    // Here is repeating declarations of functions - probably bug during merge
-    // template <typename JsonOut>
-    // JsonOut jsonPut(const std::string& path, const httplib::Headers& headers = {}) const {
-    //     httplib::Result response = api.get().Put(path, headers, httplib::Params{});
-    //     assertSuccess(response);
-    //     if constexpr (!std::is_void_v<JsonOut>)
-    //         return boost::json::value_to<JsonOut>(boost::json::parse(response->body));
-    // }
-    // template <typename JsonOut>
-    // JsonOut jsonPutAuthed(UserId userId, const std::string& path) const {
-    //     return jsonPut<JsonOut>(path, {{"Authorization", std::to_string(userId)}});
-    // }
 
     template <typename JsonOut>
     JsonOut jsonDelete(const std::string& path, const httplib::Headers& headers = {}) const {

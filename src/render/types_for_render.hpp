@@ -1,7 +1,10 @@
 #pragma once
 
+#include "backend/api/users.hpp"
+
 #include "backend/id_types.hpp"
 #include "utils.hpp"
+
 #include <backend/api/storages.hpp>
 #include <tgbot/Api.h>
 #include <tgbot/types/CallbackQuery.h>
@@ -20,7 +23,8 @@ using namespace cookcookhnya::api;
 using InlineKeyboard = std::vector<std::vector<TgBot::InlineKeyboardButton::Ptr>>;
 using MessageRef = const Message&;
 using BotRef = const Api&;
-using BackendApiRef = const StoragesApi&;
+using StorageApiRef = const StoragesApi&;
+using UserApiRef = const UsersApi&;
 using UserId = tg_stater::UserIdT;
 using ChatId = tg_stater::ChatIdT;
 using MessageId = decltype(TgBot::Message::messageId);

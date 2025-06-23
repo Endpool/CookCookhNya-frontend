@@ -28,7 +28,6 @@ struct StorageCreateBody {
     std::string name;
 
     friend void tag_invoke(boost::json::value_from_tag, boost::json::value& j, const StorageCreateBody& body);
-    friend void tag_invoke(boost::json::value_from_tag, boost::json::value& j, StorageCreateBody&& body);
 };
 
 struct StorageCreateResponse {
