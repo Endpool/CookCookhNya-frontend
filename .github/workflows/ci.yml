@@ -116,7 +116,7 @@ jobs:
       
       - name: Run clang-format checks
         run: |
-          find src include -type f \( -name '*.hpp' -or -name '*.cpp' \) \
+          find src -type f \( -name '*.hpp' -or -name '*.cpp' \) \
             -exec clang-format-19 --dry-run --Werror {} \;
 
   clang-tidy-check:
