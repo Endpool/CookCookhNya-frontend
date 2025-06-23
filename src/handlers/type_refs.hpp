@@ -1,5 +1,6 @@
 #pragma once
 
+#include "backend/api/api.hpp"
 #include "backend/api/storages.hpp"
 #include "backend/api/users.hpp"
 #include "states.hpp"
@@ -20,6 +21,7 @@ using namespace tg_stater;
 using namespace states;
 using namespace cookcookhnya::api;
 
+using ApiClientRef = const ApiClient&;
 using StorageApiRef = const StoragesApi&;
 using UserApiRef = const UsersApi&;
 using MessageRef = const Message&;

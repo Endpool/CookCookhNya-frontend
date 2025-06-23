@@ -6,7 +6,6 @@
 
 #include <httplib.h>
 
-
 namespace cookcookhnya::api {
 
 class UsersApi : ApiBase {
@@ -15,8 +14,8 @@ class UsersApi : ApiBase {
     explicit UsersApi(httplib::Client& api) : ApiBase{api} {}
 
   public:
-    void create(UserId userId, // NOLINT(*-nodiscard)
-                     const models::user::UserCreateBody& body) const;
+    void updateInfo(UserId userId, // NOLINT(*-nodiscard)
+                    const models::user::UserUpdateInfoBody& body) const;
 };
 
 } // namespace cookcookhnya::api

@@ -6,7 +6,7 @@ namespace cookcookhnya::handlers::init {
 
 using namespace cookcookhnya::forHandlers;
 
-void start(MessageRef m, BotRef bot, SMRef stateManager, UserApiRef userApi, StorageApiRef storageApi);
+void start(MessageRef m, BotRef bot, SMRef stateManager, ApiClientRef api);
 
 void handleNoState(MessageRef m, BotRef bot);
 
