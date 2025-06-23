@@ -5,7 +5,7 @@ on:
     branches:
       - main
       - dev
-
+      - ci
 jobs:
   build:  # Prepares dependencies and compilation database
     runs-on: ubuntu-latest
