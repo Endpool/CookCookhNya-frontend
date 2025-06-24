@@ -2,7 +2,9 @@
 
 #include "backend/models/user.hpp"
 #include "handlers/common.hpp"
+#include "render/recipes_suggestion/recipes_suggestion_render.hpp"
 #include "render/storage_list/storage_list_render.hpp"
+#include "states.hpp"
 
 #include <optional>
 #include <string>
@@ -10,11 +12,13 @@
 
 namespace cookcookhnya::handlers::init {
 
-using namespace render::storage_list;
+using namespace render::recipes_suggestion;
 
 void start(MessageRef m, BotRef bot, SMRef stateManager, ApiClientRef api) {
-    stateManager.put(StorageList{});
-    renderStorageList(m.from->id, m.chat->id, bot, api);
+    // stateManager.put(StorageList{});
+    // renderStorageList(m.from->id, m.chat->id, bot, api);
+    renderRecipesSuggestion({1}, 1, m.chat->id, bot, api);
+    stateManager.put(SuggestedRecipeList{.pageNo = 1, .storageIds = {1, 2, 3}});
 
     std::string fullname = m.from->firstName;
     if (!m.from->lastName.empty()) {

@@ -19,11 +19,11 @@ void storageViewButtonCallback(
         // stateManager.put(IngredientsView{state.storageId}); temporarily not available
         // renderIngredientsList(state.storageId, userId, chatId, bot);
     } else if (cq.data == "members") {
-        stateManager.put(StorageMemberView{state.storageId});
         renderMemberList(state.storageId, userId, chatId, bot, storageApi);
+        stateManager.put(StorageMemberView{state.storageId});
     } else if (cq.data == "back") {
-        stateManager.put(StorageList{});
         renderStorageList(userId, chatId, bot, storageApi);
+        stateManager.put(StorageList{});
     }
 }
 

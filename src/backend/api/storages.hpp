@@ -24,6 +24,9 @@ class StoragesApi : ApiBase {
     [[nodiscard]] std::vector<UserId> getStorageMembers(UserId userId, StorageId id) const;
     void addMember(UserId userId, StorageId id, UserId memberId) const;
     void deleteMember(UserId userId, StorageId id, UserId memberId) const;
+
+    // Will be in it's own API
+    [[nodiscard]] std::vector<std::string> getRecipes(std::vector<StorageId> storages, int pageSize, int pageNo) const;
 };
 
 } // namespace cookcookhnya::api

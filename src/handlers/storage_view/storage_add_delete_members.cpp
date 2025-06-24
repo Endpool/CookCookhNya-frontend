@@ -28,8 +28,8 @@ void addDeleteMember(
         storageApi.addMember(userId, state.storageId, *memberId);
         bot.sendMessage(chatId, "Member added successfully");
     }
-    stateManager.put(StorageMemberView{state.storageId});
     renderMemberList(state.storageId, userId, chatId, bot, storageApi);
+    stateManager.put(StorageMemberView{state.storageId});
 };
 
 void cancelAddDeleteMember(
