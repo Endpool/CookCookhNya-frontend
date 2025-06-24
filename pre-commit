@@ -11,8 +11,9 @@ fi
 # Redirect output to stderr.
 exec 1>&2
 
-if ! find $(git diff-index --cached --name-only --diff-filter=AM $against) \( -name '*.cpp' -o -name '*.hpp' \) -exec bash -c 'echo -n $0 $@ | xargs -d" " -I% bash -c "clang-format --dry-run -Werror % 2> /dev/null || { echo Format % before commiting ; false ; }"' {} \+ ; then
-    echo "Format the files and add changes to commit"
+if ! find $(git diff-index --cached --name-only --diff-filter=AM $against) \( -name '*.cpp' -o -name '*.hpp' \) -exec bash -c 'echo -n $0 $@ | xargs -d" " -I% bash -c "clang-format --dry-run -Werror % 2> /dev/null"' {} \+ ; then
+    find $(git diff-index --cached --name-only --diff-filter=AM $against) \( -name '*.cpp' -o -name '*.hpp' \) -exec bash -c 'echo -n $0 $@ | xargs -d" " -I% bash -c "clang-format --dry-run -Werror % 2> /dev/null || echo Formatting %... && clang-format -i % && git add %"' {} \+
+    echo "Files have been formatted. Retry the commit."
     exit 1
 fi
 

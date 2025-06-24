@@ -1,7 +1,8 @@
 #include "delete_storage_render.hpp"
 
-namespace cookcookhnya::render::deleteStorage {
-using namespace cookcookhnya::render;
+#include "render/common.hpp"
+
+namespace cookcookhnya::render::delete_storage {
 
 void renderStorageDelete(ChatId chatId, BotRef bot, UserId userId, StorageApiRef storageApi) {
     auto currentStor =
@@ -19,4 +20,4 @@ void renderStorageDelete(ChatId chatId, BotRef bot, UserId userId, StorageApiRef
         chatId, "Choose storage to delete", nullptr, nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
 };
 
-} // namespace cookcookhnya::render::deleteStorage
+} // namespace cookcookhnya::render::delete_storage

@@ -4,10 +4,10 @@
 #include "render/storage_view/storage_members_render.hpp"
 #include "render/storage_view/storage_view_render.hpp"
 
-namespace cookcookhnya::handlers::storageViewMembers {
-using namespace cookcookhnya::forHandlers;
-using namespace cookcookhnya::render::viewStorageMembers;
-using namespace cookcookhnya::render::viewStorage;
+namespace cookcookhnya::handlers::storage_view_members {
+
+using namespace render::view_storage_members;
+using namespace render::storage_list;
 
 void storageMemberViewButtonCallback(
     StorageMemberView& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, StorageApiRef storageApi) {
@@ -23,4 +23,4 @@ void storageMemberViewButtonCallback(
     }
 };
 
-} // namespace cookcookhnya::handlers::storageViewMembers
+} // namespace cookcookhnya::handlers::storage_view_members

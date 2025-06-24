@@ -1,9 +1,9 @@
 #pragma once
 
-#include "render/types_for_render.hpp"
+#include "render/common.hpp"
 
-namespace cookcookhnya::render::createStorage {
-using namespace cookcookhnya::render;
+namespace cookcookhnya::render::create_storage {
 
 void renderStorageCreate(ChatId chatId, BotRef bot);
-} // namespace cookcookhnya::render::createStorage
+
+} // namespace cookcookhnya::render::create_storage

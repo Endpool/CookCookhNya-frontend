@@ -1,8 +1,8 @@
 #include "storage_view_render.hpp"
-#include "render/types_for_render.hpp"
 
-namespace cookcookhnya::render::viewStorage {
-using namespace cookcookhnya::render;
+#include "render/common.hpp"
+
+namespace cookcookhnya::render::view_storage {
 
 void renderStorageView(StorageId storageId, UserId userId, ChatId chatId, BotRef bot, StorageApiRef storageApi) {
     auto storage = storageApi.get(userId, storageId);
@@ -18,4 +18,4 @@ void renderStorageView(StorageId storageId, UserId userId, ChatId chatId, BotRef
     bot.sendMessage(chatId, storage.name, nullptr, nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
 }
 
-} // namespace cookcookhnya::render::viewStorage
+} // namespace cookcookhnya::render::view_storage

@@ -1,12 +1,13 @@
 #pragma once
 
-#include "handlers/type_refs.hpp"
+#include "handlers/common.hpp"
 
-namespace cookcookhnya::handlers::storageListDelete {
-using namespace cookcookhnya::forHandlers;
+namespace cookcookhnya::handlers::storage_delete {
 
-void deleteStorage(StorageDeletionEnterName&, CallbackQueryRef cq, BotRef bot, SMRef stateManager, StorageApiRef storageApi);
+void deleteStorage(
+    StorageDeletionEnterName&, CallbackQueryRef cq, BotRef bot, SMRef stateManager, StorageApiRef storageApi);
 
 void cancelStorageDeletion(
     StorageDeletionEnterName&, CallbackQueryRef cq, BotRef bot, SMRef stateManager, StorageApiRef storageApi);
-} // namespace cookcookhnya::handlers::storageListDelete
+
+} // namespace cookcookhnya::handlers::storage_delete

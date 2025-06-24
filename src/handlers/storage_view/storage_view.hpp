@@ -1,10 +1,10 @@
 #pragma once
 
-#include "handlers/type_refs.hpp"
+#include "handlers/common.hpp"
 
-namespace cookcookhnya::handlers::storageView {
-using namespace cookcookhnya::forHandlers;
+namespace cookcookhnya::handlers::storage_view {
 
 void storageViewButtonCallback(
     StorageView& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, StorageApiRef storageApi);
-} // namespace cookcookhnya::handlers::storageView
+
+} // namespace cookcookhnya::handlers::storage_view
