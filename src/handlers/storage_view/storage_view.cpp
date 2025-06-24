@@ -1,8 +1,6 @@
 #include "storage_view.hpp"
 
-#include "backend/id_types.hpp"
 #include "handlers/common.hpp"
-#include "render/ingredients_view/ingredients_render.hpp"
 #include "render/storage_list/storage_list_render.hpp"
 #include "render/storage_view/ingredients/list.hpp"
 #include "render/storage_view/storage_members_render.hpp"
@@ -25,10 +23,10 @@ void storageViewButtonCallback(
         stateManager.put(StorageIngredientsList{state.storageId});
         renderIngredientsList(state.storageId, userId, chatId, bot, api);
     } else if (cq.data == "storage_view_members") {
-        renderMemberList(state.storageId, userId, chatId, bot, storageApi);
+        renderMemberList(state.storageId, userId, chatId, bot, api);
         stateManager.put(StorageMemberView{state.storageId});
     } else if (cq.data == "storage_view_back") {
-        renderStorageList(userId, chatId, bot, storageApi);
+        renderStorageList(userId, chatId, bot, api);
         stateManager.put(StorageList{});
     } else if (cq.data == "storage_view_what_to_cook") {
         // renderRecipesSuggetion();

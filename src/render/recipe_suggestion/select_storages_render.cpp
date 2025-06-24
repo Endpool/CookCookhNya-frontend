@@ -6,6 +6,8 @@
 
 namespace cookcookhnya::render::select_storages {
 
+using namespace tg_types;
+
 MessageId renderStoragesSelect(UserId userId, ChatId chatId, BotRef bot, StorageApiRef storageApi) {
     auto storages = storageApi.getStoragesList(userId);
 

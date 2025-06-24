@@ -34,6 +34,7 @@ using states::StorageIngredientsList;
 using states::StorageIngredientsSearch;
 
 using states::StorageSelection;
+using states::SuggestedRecipeList;
 
 // Type aliases
 using ApiClientRef = const api::ApiClient&;
