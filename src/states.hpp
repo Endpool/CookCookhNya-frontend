@@ -9,9 +9,9 @@ namespace cookcookhnya::states {
 
 namespace detail {
 
-struct UserStoragesIdMixin {
+struct StorageIdMixin {
     int storageId;
-    UserStoragesIdMixin(int storageId) : storageId{storageId} {} // NOLINT(*-explicit-*)
+    StorageIdMixin(int storageId) : storageId{storageId} {} // NOLINT(*-explicit-*)
 };
 
 } // namespace detail
@@ -19,22 +19,22 @@ struct UserStoragesIdMixin {
 struct StorageList {};
 
 struct StorageCreation {};
-struct StorageDeletion : detail::UserStoragesIdMixin {};
+struct StorageDeletion : detail::StorageIdMixin {};
 struct StorageCreationEnterName {};
 struct StorageWrongNameToDelete {};
 struct StorageDeletionEnterName {};
 
-struct StorageView : detail::UserStoragesIdMixin {};
+struct StorageView : detail::StorageIdMixin {};
 
-struct StorageMemberView : detail::UserStoragesIdMixin {};
-struct MembersAdditionDeletion : detail::UserStoragesIdMixin {};
-struct PackMemberView : detail::UserStoragesIdMixin {};
-struct MemberAddition : detail::UserStoragesIdMixin {};
-struct MemberDeletion : detail::UserStoragesIdMixin {};
+struct StorageMemberView : detail::StorageIdMixin {};
+struct MembersAdditionDeletion : detail::StorageIdMixin {};
+struct PackMemberView : detail::StorageIdMixin {};
+struct MemberAddition : detail::StorageIdMixin {};
+struct MemberDeletion : detail::StorageIdMixin {};
 
-struct IngredientsView : detail::UserStoragesIdMixin {};
-struct IngredientsAddition : detail::UserStoragesIdMixin {};
-struct IngredientsDeletion : detail::UserStoragesIdMixin {};
+struct IngredientsView : detail::StorageIdMixin {};
+struct IngredientsAddition : detail::StorageIdMixin {};
+struct IngredientsDeletion : detail::StorageIdMixin {};
 
 using State = std::variant<StorageList,
                            StorageCreation,

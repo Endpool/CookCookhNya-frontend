@@ -2,7 +2,6 @@
 
 #include "backend/api/base.hpp"
 #include "backend/models/user.hpp"
-#include "types.hpp"
 
 #include <httplib.h>
 

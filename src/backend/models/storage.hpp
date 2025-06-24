@@ -1,7 +1,7 @@
 #pragma once
 
 #include "backend/id_types.hpp"
-#include "types.hpp"
+#include "tg_types.hpp"
 
 #include <boost/json/conversion.hpp>
 #include <boost/json/value.hpp>
@@ -19,7 +19,7 @@ struct StorageSummary {
 
 struct StorageDetails {
     std::string name;
-    UserId ownerId;
+    tg_types::UserId ownerId;
 
     friend StorageDetails tag_invoke(boost::json::value_to_tag<StorageDetails>, const boost::json::value& j);
 };

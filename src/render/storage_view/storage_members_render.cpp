@@ -1,10 +1,10 @@
 #include "storage_members_render.hpp"
-#include "render/types_for_render.hpp"
+
+#include "render/common.hpp"
+
 #include <ranges>
 
-
-namespace cookcookhnya::render::viewStorageMembers {
-using namespace cookcookhnya::render;
+namespace cookcookhnya::render::view_storage_members {
 
 void renderMemberList(const StorageId& storageId, UserId userId, ChatId chatId, BotRef bot, StorageApiRef storageApi) {
     auto storage = storageApi.get(userId, storageId);
@@ -42,4 +42,4 @@ void renderMemberAdditionDeletionPrompt(
                     detail::makeKeyboardMarkup(std::move(keyboard)));
 };
 
-} // namespace cookcookhnya::render::viewStorageMembers
+} // namespace cookcookhnya::render::view_storage_members

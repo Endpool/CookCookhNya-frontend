@@ -1,10 +1,9 @@
 #pragma once
 
-#include "render/types_for_render.hpp"
+#include "render/common.hpp"
 
-namespace cookcookhnya::render::deleteStorage {
-using namespace cookcookhnya::render;
+namespace cookcookhnya::render::delete_storage {
 
 void renderStorageDelete(ChatId chatId, BotRef bot, UserId userId, StorageApiRef storageApi);
 
-} // namespace cookcookhnya::render::deleteStorage
+} // namespace cookcookhnya::render::delete_storage

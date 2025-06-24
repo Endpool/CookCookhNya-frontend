@@ -1,10 +1,8 @@
 #pragma once
 
-#include "handlers/type_refs.hpp"
+#include "handlers/common.hpp"
 
 namespace cookcookhnya::handlers::init {
-
-using namespace cookcookhnya::forHandlers;
 
 void start(MessageRef m, BotRef bot, SMRef stateManager, ApiClientRef api);
 

@@ -1,6 +1,6 @@
 #pragma once
 
-// Add here all new namespaces and handlers declarations
+// Handler callbacks
 #include "initial/initial_start.hpp"
 #include "storage_list/storage_list_create.hpp"
 #include "storage_list/storage_list_delete.hpp"
@@ -9,28 +9,40 @@
 #include "storage_view/storage_view.hpp"
 #include "storage_view/storage_view_members.hpp"
 
-namespace cookcookhnya::handlers {
-using namespace cookcookhnya::handlers::storageListCreate;
-using namespace cookcookhnya::handlers::storageView;
-using namespace cookcookhnya::handlers::storageListView;
-using namespace cookcookhnya::handlers::storageListDelete;
-using namespace cookcookhnya::handlers::storageViewMembers;
-using namespace cookcookhnya::handlers::storageAddDeleteMembers;
-using namespace cookcookhnya::handlers::init;
+#include "handlers/common.hpp"
 
-// Const for handle no state and start
-constexpr char startCmd[] = "start"; // NOLINT(*c-arrays)
+#include <tg_stater/handler/event.hpp>
+#include <tg_stater/handler/handler.hpp>
+
+namespace cookcookhnya::handlers {
+
+using namespace cookcookhnya::handlers::init;
+using namespace cookcookhnya::handlers::storage_create;
+using namespace cookcookhnya::handlers::storage_delete;
+using namespace cookcookhnya::handlers::storage_list_view;
+using namespace cookcookhnya::handlers::storage_view;
+using namespace cookcookhnya::handlers::storage_view_members;
+using namespace cookcookhnya::handlers::storage_add_delete_members;
+
+using namespace tg_stater;
+
+namespace bot_handlers {
+
+// Init
+constexpr char startCmd[] = "start";                                        // NOLINT(*c-arrays)
+using startHandler = Handler<Events::Command{startCmd}, start, AnyState{}>; // NOLINT(*decay)
+using noStateHandler = Handler<Events::AnyMessage{}, handleNoState, NoState{}>;
 
 // StorageListCreate
-using StorageCreateHandler = Handler<Events::Message{}, createStorage>;
-using StorageCreateButtonHandler = Handler<Events::CallbackQuery{}, cancelStorageCreation>;
+using storageCreateHandler = Handler<Events::Message{}, createStorage>;
+using storageCreateButtonHandler = Handler<Events::CallbackQuery{}, cancelStorageCreation>;
 
 // StorageListDelete
 using storgeDeleteHandler = Handler<Events::CallbackQuery{}, deleteStorage>;
-using StorageDeleteButtonHandler = Handler<Events::CallbackQuery{}, cancelStorageDeletion>;
+using storageDeleteButtonHandler = Handler<Events::CallbackQuery{}, cancelStorageDeletion>;
 
 // StorageListView
-using StorageListButtonHandler = Handler<Events::CallbackQuery{}, storageListButtonCallback>;
+using storageListButtonHandler = Handler<Events::CallbackQuery{}, storageListButtonCallback>;
 
 // StorageView
 using storageViewButtonHandler = Handler<Events::CallbackQuery{}, storageViewButtonCallback>;
@@ -42,8 +54,6 @@ using storageMemberViewButtonHandler = Handler<Events::CallbackQuery{}, storageM
 using memberAdditionDeletionMessageHandler = Handler<Events::Message{}, addDeleteMember>;
 using cancelAddDeleteMemberHandler = Handler<Events::CallbackQuery{}, cancelAddDeleteMember>;
 
-// Init
-using startHandler = Handler<Events::Command{startCmd}, start, AnyState{}>;
-using noStateHandler = Handler<Events::AnyMessage{}, handleNoState, HandlerTypes::NoState{}>;
-} // namespace cookcookhnya::handlers
+} // namespace bot_handlers
 
+} // namespace cookcookhnya::handlers

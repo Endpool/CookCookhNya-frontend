@@ -1,6 +1,6 @@
 #pragma once
 
-#include "types.hpp"
+#include "tg_types.hpp"
 
 #include <boost/json/parse.hpp>
 #include <boost/json/serialize.hpp>
@@ -17,6 +17,8 @@ namespace cookcookhnya::api {
 
 class ApiBase {
   protected:
+    using UserId = tg_types::UserId;
+
     std::reference_wrapper<httplib::Client> api; // NOLINT(*-non-private-member-*)
 
     explicit ApiBase(httplib::Client& api);

@@ -1,18 +1,18 @@
 #include "storage_list_view.hpp"
-#include "handlers/type_refs.hpp"
+
+#include "handlers/common.hpp"
 #include "render/storage_list/create_storage_render.hpp"
 #include "render/storage_list/delete_storage_render.hpp"
 #include "render/storage_view/storage_view_render.hpp"
 
-namespace cookcookhnya::handlers::storageListView {
+namespace cookcookhnya::handlers::storage_list_view {
 
-using namespace cookcookhnya::forHandlers;
-using namespace cookcookhnya::render::createStorage;
-using namespace cookcookhnya::render::deleteStorage;
-using namespace cookcookhnya::render::viewStorage;
+using namespace render::create_storage;
+using namespace render::delete_storage;
+using namespace render::view_storage;
 
 void storageListButtonCallback(
-    StorageList&, CallbackQueryRef cq, const Api& bot, SMRef stateManager, StorageApiRef storageApi) {
+    StorageList& /*unused*/, CallbackQueryRef cq, BotRef& bot, SMRef stateManager, StorageApiRef storageApi) {
     bot.answerCallbackQuery(cq.id);
 
     std::stringstream temp; // Convert string to int
@@ -40,4 +40,4 @@ void storageListButtonCallback(
         id, cq.from->id, chatId, bot, storageApi); // If nor buttons were pressed then user pressed on their storages
 }
 
-} // namespace cookcookhnya::handlers::storageListView
+} // namespace cookcookhnya::handlers::storage_list_view
