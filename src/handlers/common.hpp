@@ -33,6 +33,8 @@ using states::StorageMemberView;
 using states::StorageIngredientsList;
 using states::StorageIngredientsSearch;
 
+using states::StorageSelection;
+
 // Type aliases
 using ApiClientRef = const api::ApiClient&;
 using UserApiRef = const api::UsersApi&;
