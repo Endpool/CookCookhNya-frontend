@@ -30,11 +30,4 @@ struct StorageCreateBody {
     friend void tag_invoke(boost::json::value_from_tag, boost::json::value& j, const StorageCreateBody& body);
 };
 
-struct StorageCreateResponse {
-    StorageId id;
-
-    friend StorageCreateResponse tag_invoke(boost::json::value_to_tag<StorageCreateResponse>,
-                                            const boost::json::value& j);
-};
-
 } // namespace cookcookhnya::api::models::storage

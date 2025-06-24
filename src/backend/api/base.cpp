@@ -3,7 +3,6 @@
 #include <httplib.h>
 
 #include <format>
-#include <functional>
 #include <stdexcept>
 
 namespace cookcookhnya::api {

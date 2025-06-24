@@ -3,7 +3,6 @@
 #include "backend/api/base.hpp"
 #include "backend/id_types.hpp"
 #include "backend/models/ingredient.hpp"
-#include "types.hpp"
 
 #include <httplib.h>
 
@@ -19,8 +18,11 @@ class IngredientsApi : ApiBase {
   public:
     [[nodiscard]] std::vector<models::ingredient::Ingredient> getStorageIngredients(UserId user,
                                                                                     StorageId storage) const;
-    void put(UserId user, StorageId storage, IngredientId id) const;
-    void delete_(UserId user, StorageId storage, IngredientId id) const;
+    void putToStorage(UserId user, StorageId storage, IngredientId id) const;
+    void deleteFromStorage(UserId user, StorageId storage, IngredientId id) const;
+    // [[nodiscard]] std::vector<models::ingredient::Ingredient> getAllIngredients() const;
+    [[nodiscard]] std::vector<models::ingredient::Ingredient> getAllIngredients() const;
+    [[nodiscard]] models::ingredient::Ingredient get(IngredientId id) const;
 };
 
 } // namespace cookcookhnya::api
