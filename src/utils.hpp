@@ -1,12 +1,9 @@
 #pragma once
 
 #include <charconv>
-#include <cstdlib>
-#include <cstring>
-#include <format>
 #include <memory>
 #include <optional>
-#include <stdexcept>
+#include <string_view>
 #include <system_error>
 #include <utility>
 
@@ -15,9 +12,9 @@ namespace cookcookhnya::utils {
 const char* getenvWithError(const char* key) noexcept(false);
 
 template <typename T>
-std::optional<T> parseSafe(const char* s) {
+std::optional<T> parseSafe(std::string_view s) {
     T value;
-    if (std::from_chars(s, s + std::strlen(s), value).ec == std::errc{})
+    if (std::from_chars(s.data(), s.data() + s.size(), value).ec == std::errc{})
         return value;
     return std::nullopt;
 }

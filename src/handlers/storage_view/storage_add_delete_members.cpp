@@ -11,7 +11,7 @@ void addDeleteMember(
     MembersAdditionDeletion& state, MessageRef m, BotRef bot, SMRef stateManager, StorageApiRef storageApi) {
     auto chatId = m.chat->id;
     auto userId = m.from->id;
-    auto memberId = cookcookhnya::utils::parseSafe<UserId>(m.text.data());
+    auto memberId = utils::parseSafe<UserId>(m.text);
     auto storage = storageApi.get(userId, state.storageId);
     if (!memberId) {
         bot.sendMessage(chatId, "Invalid user ID");
