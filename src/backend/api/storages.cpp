@@ -37,23 +37,4 @@ void StoragesApi::deleteMember(UserId /*unused*/, StorageId /*unused*/, UserId /
     // jsonGetAuthed<void>(userId, std::format("/my/storages/{}", id));
 }
 
-std::vector<std::string> StoragesApi::getRecipes(std::vector<StorageId> /*unused*/, int /*unused*/, int pageNo) const {
-    // jsonGetAuthed<void>(userId, std::format("/my/storages/{}", id));
-    if (pageNo == 1) {
-        return {
-            "asfgggfd",
-            "as",
-            "fd",
-            "d",
-            "d",
-            "asfgggfd",
-            "as",
-            "fd",
-            "d",
-            "d",
-        };
-    }
-    return {"asd"};
-}
-
 } // namespace cookcookhnya::api

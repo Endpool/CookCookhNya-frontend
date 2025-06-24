@@ -3,7 +3,6 @@
 #include "backend/api/base.hpp"
 #include "backend/id_types.hpp"
 #include "backend/models/ingredient.hpp"
-#include "types.hpp"
 
 #include <httplib.h>
 

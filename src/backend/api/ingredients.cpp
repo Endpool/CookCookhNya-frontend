@@ -1,7 +1,6 @@
 #include "backend/api/ingredients.hpp"
 
 #include "backend/models/ingredient.hpp"
-#include "types.hpp"
 
 #include <format>
 #include <vector>

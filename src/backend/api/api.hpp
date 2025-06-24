@@ -1,5 +1,6 @@
 #pragma once
 
+#include "backend/api/recipes.hpp"
 #include "backend/api/storages.hpp"
 #include "backend/api/users.hpp"
 
@@ -14,11 +15,12 @@ class ApiClient {
     httplib::Client api;
     StoragesApi storages;
     UsersApi users;
+    RecipesApi recipes;
 
   public:
-    explicit ApiClient(const std::string& apiAddress) : api{apiAddress}, storages{api}, users{api} {}
+    explicit ApiClient(const std::string& apiAddress) : api{apiAddress}, storages{api}, users{api}, recipes{api} {}
     ApiClient(const ApiClient&) = delete;
-    ApiClient(ApiClient&& other) noexcept : api{std::move(other.api)}, storages{api}, users{api} {}
+    ApiClient(ApiClient&& other) noexcept : api{std::move(other.api)}, storages{api}, users{api}, recipes{api} {}
     ApiClient& operator=(const ApiClient&) = delete;
     ApiClient& operator=(ApiClient&& other) noexcept {
         if (&other == this)
@@ -36,6 +38,14 @@ class ApiClient {
 
     operator const StoragesApi&() const { // NOLINT(*-explicit-*)
         return storages;
+    }
+
+    [[nodiscard]] const RecipesApi& getRecipeList() const {
+        return recipes;
+    }
+
+    operator const RecipesApi&() const { // NOLINT(*-explicit-*)
+        return recipes;
     }
 
     [[nodiscard]] const UsersApi& getUsers() const {
