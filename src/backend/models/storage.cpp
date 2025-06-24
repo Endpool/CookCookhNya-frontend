@@ -25,8 +25,4 @@ void tag_invoke(json::value_from_tag /*tag*/, json::value& j, const StorageCreat
     j = {{"name", body.name}};
 }
 
-StorageCreateResponse tag_invoke(json::value_to_tag<StorageCreateResponse> /*tag*/, const json::value& j) {
-    return {.id = value_to<decltype(StorageSummary::id)>(j.at("id"))};
-}
-
 } // namespace cookcookhnya::api::models::storage
