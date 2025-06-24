@@ -20,12 +20,12 @@ auto makeKeyboard(IngredientsApiRef api) {
     using namespace std::views;
     std::vector<Ingredient> ingredients = api.getAllIngredients();
     InlineKeyboard keyboard{1 + ingredients.size()};
-    keyboard[0].push_back(detail::makeCallbackButton("Back", "back"));
-    for (auto [row, i] : zip(drop(keyboard, 1), ingredients)) {
+    for (auto [row, i] : zip(keyboard, ingredients)) {
         row.reserve(2);
         row.push_back(detail::makeCallbackButton("Put " + i.name, '+' + std::to_string(i.id)));
         row.push_back(detail::makeCallbackButton("Remove " + std::move(i.name), '-' + std::to_string(i.id)));
     }
+    keyboard[ingredients.size()].push_back(detail::makeCallbackButton("Back", "back"));
     return detail::makeKeyboardMarkup(std::move(keyboard));
 }
 
