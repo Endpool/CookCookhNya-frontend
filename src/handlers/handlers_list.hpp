@@ -2,6 +2,7 @@
 
 // Handler callbacks
 #include "initial/initial_start.hpp"
+#include "recipe_suggestion/storages_select.hpp"
 #include "storage_list/storage_list_create.hpp"
 #include "storage_list/storage_list_delete.hpp"
 #include "storage_list/storage_list_view.hpp"
@@ -23,6 +24,7 @@ using namespace cookcookhnya::handlers::storage_list_view;
 using namespace cookcookhnya::handlers::storage_view;
 using namespace cookcookhnya::handlers::storage_view_members;
 using namespace cookcookhnya::handlers::storage_add_delete_members;
+using namespace cookcookhnya::handlers::storages_select;
 
 using namespace tg_stater;
 
@@ -53,6 +55,9 @@ using storageMemberViewButtonHandler = Handler<Events::CallbackQuery{}, storageM
 // storageAddDeleteMembers
 using memberAdditionDeletionMessageHandler = Handler<Events::Message{}, addDeleteMember>;
 using cancelAddDeleteMemberHandler = Handler<Events::CallbackQuery{}, cancelAddDeleteMember>;
+
+// storageSelection
+using storagesSelectionHandler = Handler<Events::CallbackQuery{}, selectStorages>;
 
 } // namespace bot_handlers
 

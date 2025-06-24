@@ -24,7 +24,7 @@ void cancelStorageCreation(StorageCreationEnterName& /*unused*/,
                            SMRef stateManager,
                            StorageApiRef storageApi) {
     bot.answerCallbackQuery(cq.id);
-    if (cq.data == "StorageCreateCancel") { // Here compare with data in button which was pressed (data was put in
+    if (cq.data == "cancel_storage_creation") { // Here compare with data in button which was pressed (data was put in
                                             // renderStorageCreate)
         stateManager.put(StorageList{});
         renderStorageList(cq.from->id, cq.message->chat->id, bot, storageApi);

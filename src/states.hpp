@@ -1,9 +1,12 @@
 #pragma once
 
+#include "backend/id_types.hpp"
+#include "tg_types.hpp"
 #include <tg_stater/state_storage/common.hpp>
 #include <tg_stater/state_storage/memory.hpp>
 
 #include <variant>
+#include <vector>
 
 namespace cookcookhnya::states {
 
@@ -36,6 +39,10 @@ struct IngredientsView : detail::StorageIdMixin {};
 struct IngredientsAddition : detail::StorageIdMixin {};
 struct IngredientsDeletion : detail::StorageIdMixin {};
 
+struct StorageSelection {std::vector<api::StorageId> storageIds; tg_types::MessageId messageId;};
+struct SuggestedRecipeList {std::vector<api::StorageId> storageIds;};
+
+
 using State = std::variant<StorageList,
                            StorageCreation,
                            StorageDeletion,
@@ -50,7 +57,9 @@ using State = std::variant<StorageList,
                            MemberDeletion,
                            IngredientsView,
                            IngredientsAddition,
-                           IngredientsDeletion>;
+                           IngredientsDeletion,
+                           StorageSelection, 
+                           SuggestedRecipeList>;
 
 using StateManager = tg_stater::StateProxy<tg_stater::MemoryStateStorage<State>>;
 

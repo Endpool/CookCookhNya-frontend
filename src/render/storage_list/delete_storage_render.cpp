@@ -9,7 +9,7 @@ void renderStorageDelete(ChatId chatId, BotRef bot, UserId userId, StorageApiRef
         storageApi.getStoragesList(userId); // Take all storages from backend so user could choose which to delete
     InlineKeyboard keyboard(1 + ((currentStor.size() + 1) / 2)); // ceiling
     keyboard[0].reserve(1);
-    keyboard[0].push_back(detail::makeCallbackButton("Cancel", "StorageDeleteCancel"));
+    keyboard[0].push_back(detail::makeCallbackButton("Cancel", "cancel_storage_deletion"));
     for (uint32_t i = 0; i < currentStor.size(); i++) {
         if (i % 2 == 0)
             keyboard[1 + (i / 2)].reserve(2);

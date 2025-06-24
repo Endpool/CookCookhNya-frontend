@@ -8,14 +8,20 @@ void renderStorageList(UserId userId, ChatId chatId, BotRef bot, StorageApiRef s
 
     auto currentStor = storageApi.getStoragesList(userId); // Take storages of user from backend
 
-    InlineKeyboard keyboard(1 + ((currentStor.size() + 1) / 2)); // ceiling
-    if (currentStor.size() != 0) {
+    unsigned long buttonRows = 0;
+    if (!currentStor.empty()){
+        buttonRows = (currentStor.size() + 1) / 2 + 2;
+    } else {
+        buttonRows = 1;
+    }
+    InlineKeyboard keyboard(buttonRows); // ceiling
+    if (!currentStor.empty()) {
         keyboard[0].reserve(2);
-        keyboard[0].push_back(detail::makeCallbackButton("Add new storage", "StorageViewCreate"));
-        keyboard[0].push_back(detail::makeCallbackButton("Delete existing storage", "StorageViewDelete"));
+        keyboard[0].push_back(detail::makeCallbackButton("Create new storage", "storage_view_creation"));
+        keyboard[0].push_back(detail::makeCallbackButton("Delete existing storage", "storage_view_deletion"));
     } else {
         keyboard[0].reserve(1);
-        keyboard[0].push_back(detail::makeCallbackButton("Add new storage", "StorageViewCreate"));
+        keyboard[0].push_back(detail::makeCallbackButton("Create new storage", "storage_view_creation"));
     }
 
     for (uint32_t i = 0; i < currentStor.size(); i++) {
@@ -23,6 +29,9 @@ void renderStorageList(UserId userId, ChatId chatId, BotRef bot, StorageApiRef s
             keyboard[1 + (i / 2)].reserve(2);
         keyboard[1 + (i / 2)].push_back(
             detail::makeCallbackButton(currentStor[i].name, std::to_string(currentStor[i].id)));
+    }
+    if (!currentStor.empty()){
+        keyboard[((currentStor.size() + 1) / 2) + 1].push_back(detail::makeCallbackButton("What To Cook", "storage_view_what_to_cook")); // StorageViewWhatToCook
     }
 
     bot.sendMessage(chatId, "Your storages:", nullptr, nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));

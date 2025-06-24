@@ -15,13 +15,13 @@ void storageViewButtonCallback(
     bot.answerCallbackQuery(cq.id);
     auto chatId = cq.message->chat->id;
     auto userId = cq.from->id;
-    if (cq.data == "explore") {
+    if (cq.data == "storage_view_explore") {
         // stateManager.put(IngredientsView{state.storageId}); temporarily not available
         // renderIngredientsList(state.storageId, userId, chatId, bot);
-    } else if (cq.data == "members") {
+    } else if (cq.data == "storage_view_members") {
         stateManager.put(StorageMemberView{state.storageId});
         renderMemberList(state.storageId, userId, chatId, bot, storageApi);
-    } else if (cq.data == "back") {
+    } else if (cq.data == "storage_view_back") {
         stateManager.put(StorageList{});
         renderStorageList(userId, chatId, bot, storageApi);
     }
