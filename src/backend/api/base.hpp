@@ -27,16 +27,19 @@ class ApiBase {
 
     // GET
     template <typename JsonOut>
-    [[nodiscard]] JsonOut jsonGet(const std::string& path, const httplib::Headers& headers = {}) const {
-        httplib::Result response = api.get().Get(path, headers);
+    [[nodiscard]] JsonOut
+    jsonGet(const std::string& path, const httplib::Headers& headers = {}, const httplib::Params& params = {}) const {
+
+        httplib::Result response = api.get().Get(path, params, headers);
         assertSuccess(response);
         if constexpr (!std::is_void_v<JsonOut>)
             return boost::json::value_to<JsonOut>(boost::json::parse(response->body));
     }
 
     template <typename JsonOut>
-    [[nodiscard]] JsonOut jsonGetAuthed(UserId userId, const std::string& path) const {
-        return jsonGet<JsonOut>(path, {{"Authorization", "Bearer " + std::to_string(userId)}});
+    [[nodiscard]] JsonOut
+    jsonGetAuthed(UserId userId, const std::string& path, const httplib::Params& params = {}) const {
+        return jsonGet<JsonOut>(path, {{"Authorization", "Bearer " + std::to_string(userId)}}, params);
     }
 
     // POST

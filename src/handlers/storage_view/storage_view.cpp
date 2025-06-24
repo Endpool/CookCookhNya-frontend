@@ -1,6 +1,7 @@
 #include "storage_view.hpp"
 
 #include "handlers/common.hpp"
+#include "render/recipes_suggestion/recipes_suggestion_render.hpp"
 #include "render/storage_list/storage_list_render.hpp"
 #include "render/storage_view/ingredients/list.hpp"
 #include "render/storage_view/storage_members_render.hpp"
@@ -13,6 +14,7 @@ namespace cookcookhnya::handlers::storage_view {
 using namespace render::storage::ingredients;
 using namespace render::storage::member_list;
 using namespace render::storage_list;
+using namespace render::recipes_suggestion;
 
 void storageViewButtonCallback(
     StorageView& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
@@ -29,8 +31,8 @@ void storageViewButtonCallback(
         renderStorageList(userId, chatId, bot, api);
         stateManager.put(StorageList{});
     } else if (cq.data == "storage_view_what_to_cook") {
-        // renderRecipesSuggetion();
-        stateManager.put(SuggestedRecipeList{std::vector{state.storageId}});
+        renderRecipesSuggestion({state.storageId}, 1, userId, chatId, bot, api);
+        stateManager.put(SuggestedRecipeList{.pageNo = 1, .storageIds = std::vector{state.storageId}});
         return;
     }
 }

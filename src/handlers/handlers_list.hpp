@@ -2,7 +2,8 @@
 
 // Handler callbacks
 #include "initial/initial_start.hpp"
-#include "recipe_suggestion/storages_select.hpp"
+#include "recipes_suggestion/recipes_suggestion_list.hpp"
+#include "recipes_suggestion/storages_select.hpp"
 #include "storage_list/storage_list_create.hpp"
 #include "storage_list/storage_list_delete.hpp"
 #include "storage_list/storage_list_view.hpp"
@@ -28,6 +29,7 @@ using namespace storage_view_members;
 using namespace storage_add_delete_members;
 using namespace storage::ingredients;
 using namespace storages_select;
+using namespace recipes_suggestion;
 
 using namespace tg_stater;
 
@@ -61,6 +63,8 @@ using cancelAddDeleteMemberHandler = Handler<Events::CallbackQuery{}, cancelAddD
 
 // StorageSelection
 using storagesSelectionHandler = Handler<Events::CallbackQuery{}, selectStorages>;
+// SuggestedRecipeList
+using recipesSuggestionListHandler = Handler<Events::CallbackQuery{}, changePageAndBack>;
 
 // StorageIngredientsList
 using storageIngredientsListButtonHandler = Handler<Events::CallbackQuery{}, storageIngredientsListButtonCallback>;

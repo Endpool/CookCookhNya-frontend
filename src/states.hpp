@@ -3,6 +3,7 @@
 #include "backend/id_types.hpp"
 #include "tg_types.hpp"
 
+#include <cstddef>
 #include <tg_stater/state_storage/common.hpp>
 #include <tg_stater/state_storage/memory.hpp>
 
@@ -10,9 +11,9 @@
 #include <vector>
 
 namespace cookcookhnya::states {
+using namespace api;
 
 namespace detail {
-
 struct StorageIdMixin {
     api::StorageId storageId;
     StorageIdMixin(api::StorageId storageId) : storageId{storageId} {} // NOLINT(*-explicit-*)
@@ -27,7 +28,6 @@ struct StorageDeletion : detail::StorageIdMixin {};
 struct StorageCreationEnterName {};
 struct StorageWrongNameToDelete {};
 struct StorageDeletionEnterName {};
-
 struct StorageView : detail::StorageIdMixin {};
 
 struct StorageMemberView : detail::StorageIdMixin {};
@@ -46,6 +46,7 @@ struct StorageSelection {
     tg_types::MessageId messageId;
 };
 struct SuggestedRecipeList {
+    std::size_t pageNo;
     std::vector<api::StorageId> storageIds;
 };
 

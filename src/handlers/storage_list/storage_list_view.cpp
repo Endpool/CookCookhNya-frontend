@@ -2,7 +2,7 @@
 
 #include "backend/id_types.hpp"
 #include "handlers/common.hpp"
-#include "render/recipe_suggestion/select_storages_render.hpp"
+#include "render/recipes_suggestion/select_storages_render.hpp"
 #include "render/storage_list/create_storage_render.hpp"
 #include "render/storage_list/delete_storage_render.hpp"
 #include "render/storage_view/storage_view_render.hpp"

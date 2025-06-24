@@ -25,6 +25,7 @@ int main() {
                                                   memberAdditionDeletionMessageHandler,
                                                   cancelAddDeleteMemberHandler,
                                                   storagesSelectionHandler,
+                                                  recipesSuggestionListHandler,
                                                   storageIngredientsListButtonHandler,
                                                   storageIngredientsSearchButtonHandler>
         bot{{}, {ApiClient{utils::getenvWithError("API_URL")}}};

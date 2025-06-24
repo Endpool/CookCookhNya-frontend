@@ -1,17 +1,18 @@
 #pragma once
 
 #include "backend/api/ingredients.hpp"
+#include "backend/api/recipes.hpp"
 #include "backend/api/storages.hpp"
 #include "backend/api/users.hpp"
 #include "backend/id_types.hpp"
 #include "tg_types.hpp"
 #include "utils.hpp"
 
-#include <initializer_list>
 #include <tgbot/Api.h>
 #include <tgbot/types/InlineKeyboardButton.h>
 #include <tgbot/types/Message.h>
 
+#include <initializer_list>
 #include <memory>
 #include <string_view>
 #include <utility>
@@ -24,6 +25,7 @@ using StorageId = api::StorageId;
 using UserApiRef = const api::UsersApi&;
 using StorageApiRef = const api::StoragesApi&;
 using IngredientsApiRef = const api::IngredientsApi&;
+using RecipesApiRef = const api::RecipesApi&;
 
 using UserId = tg_types::UserId;
 using ChatId = tg_types::ChatId;
