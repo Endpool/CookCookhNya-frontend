@@ -5,8 +5,7 @@ runs:
       - name: Setup C++ tools
         uses: aminya/setup-cpp@v1
         with:
-          compiler: clang
-          compiler_version: '19'
+          compiler: clang-19
           clangtidy: true
           clangformat: true
           cmake: true
