@@ -17,12 +17,12 @@
 namespace cookcookhnya::handlers {
 
 using namespace cookcookhnya::handlers::init;
-using namespace cookcookhnya::handlers::storageListCreate;
-using namespace cookcookhnya::handlers::storageView;
-using namespace cookcookhnya::handlers::storageListView;
-using namespace cookcookhnya::handlers::storageListDelete;
-using namespace cookcookhnya::handlers::storageViewMembers;
-using namespace cookcookhnya::handlers::storageAddDeleteMembers;
+using namespace cookcookhnya::handlers::storage_create;
+using namespace cookcookhnya::handlers::storage_delete;
+using namespace cookcookhnya::handlers::storage_list_view;
+using namespace cookcookhnya::handlers::storage_view;
+using namespace cookcookhnya::handlers::storage_view_members;
+using namespace cookcookhnya::handlers::storage_add_delete_members;
 
 using namespace tg_stater;
 

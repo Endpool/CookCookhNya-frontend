@@ -1,14 +1,17 @@
 #include "storage_list_delete.hpp"
+
 #include "handlers/type_refs.hpp"
 #include "render/storage_list/storage_list_render.hpp"
 
-namespace cookcookhnya::handlers::storageListDelete {
+namespace cookcookhnya::handlers::storage_delete {
 
-using namespace cookcookhnya::render::storageList;
-using namespace cookcookhnya::handlers;
+using namespace render::storageList;
 
-void deleteStorage(
-    StorageDeletionEnterName&, CallbackQueryRef cq, BotRef bot, SMRef stateManager, StorageApiRef storageApi) {
+void deleteStorage(StorageDeletionEnterName& /*unused*/,
+                   CallbackQueryRef cq,
+                   BotRef bot,
+                   SMRef stateManager,
+                   StorageApiRef storageApi) {
 
     std::stringstream temp;
     temp << cq.data;
@@ -19,8 +22,11 @@ void deleteStorage(
     renderStorageList(cq.from->id, cq.message->chat->id, bot, storageApi);
 };
 
-void cancelStorageDeletion(
-    StorageDeletionEnterName&, CallbackQueryRef cq, BotRef bot, SMRef stateManager, StorageApiRef storageApi) {
+void cancelStorageDeletion(StorageDeletionEnterName& /*unused*/,
+                           CallbackQueryRef cq,
+                           BotRef bot,
+                           SMRef stateManager,
+                           StorageApiRef storageApi) {
     bot.answerCallbackQuery(cq.id);
     if (cq.data == "cancel") {
         stateManager.put(StorageList{});
@@ -28,4 +34,4 @@ void cancelStorageDeletion(
     }
 };
 
-} // namespace cookcookhnya::handlers::storageListDelete
+} // namespace cookcookhnya::handlers::storage_delete

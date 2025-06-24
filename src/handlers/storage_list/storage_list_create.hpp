@@ -2,11 +2,11 @@
 
 #include "handlers/type_refs.hpp"
 
-namespace cookcookhnya::handlers::storageListCreate {
-using namespace cookcookhnya::handlers;
+namespace cookcookhnya::handlers::storage_create {
 
 void createStorage(StorageCreationEnterName&, MessageRef m, BotRef bot, SMRef stateManager, StorageApiRef storageApi);
 
 void cancelStorageCreation(
     StorageCreationEnterName&, CallbackQueryRef cq, BotRef bot, SMRef stateManager, StorageApiRef storageApi);
-} // namespace cookcookhnya::handlers::storageListCreate
+
+} // namespace cookcookhnya::handlers::storage_create

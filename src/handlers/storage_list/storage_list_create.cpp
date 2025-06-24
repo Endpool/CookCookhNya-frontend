@@ -1,24 +1,27 @@
 #include "storage_list_create.hpp"
+
 #include "handlers/type_refs.hpp"
 #include "render/storage_list/storage_list_render.hpp"
 
-namespace cookcookhnya::handlers::storageListCreate {
+namespace cookcookhnya::handlers::storage_create {
 
-using namespace cookcookhnya::render::storageList;
-using namespace cookcookhnya::handlers;
+using namespace render::storageList;
 
-void createStorage(StorageCreationEnterName&,
+void createStorage(StorageCreationEnterName& /*unused*/,
                    MessageRef m,
                    BotRef bot,
                    SMRef stateManager,
-                   StorageApiRef storageApi) {                                 // BackendProvider bkn
+                   StorageApiRef storageApi) {                                 // BackendProvider bkn (Max: bkn?)
     storageApi.create(m.from->id, models::storage::StorageCreateBody{m.text}); // Create storage body with new name
     stateManager.put(StorageList{});
     renderStorageList(m.from->id, m.chat->id, bot, storageApi);
 };
 
-void cancelStorageCreation(
-    StorageCreationEnterName&, CallbackQueryRef cq, BotRef bot, SMRef stateManager, StorageApiRef storageApi) {
+void cancelStorageCreation(StorageCreationEnterName& /*unused*/,
+                           CallbackQueryRef cq,
+                           BotRef bot,
+                           SMRef stateManager,
+                           StorageApiRef storageApi) {
     bot.answerCallbackQuery(cq.id);
     if (cq.data == "StorageCreateCancel") { // Here compare with data in button which was pressed (data was put in
                                             // renderStorageCreate)
@@ -27,4 +30,4 @@ void cancelStorageCreation(
     }
 };
 
-} // namespace cookcookhnya::handlers::storageListCreate
+} // namespace cookcookhnya::handlers::storage_create

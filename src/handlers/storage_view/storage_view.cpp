@@ -1,13 +1,14 @@
 #include "storage_view.hpp"
+
 #include "render/ingredients_view/ingredients_render.hpp"
 #include "render/storage_list/storage_list_render.hpp"
 #include "render/storage_view/storage_members_render.hpp"
 
-namespace cookcookhnya::handlers::storageView {
-using namespace cookcookhnya::handlers;
-using namespace cookcookhnya::render::viewIngredients;
-using namespace cookcookhnya::render::viewStorageMembers;
-using namespace cookcookhnya::render::storageList;
+namespace cookcookhnya::handlers::storage_view {
+
+using namespace render::viewIngredients;
+using namespace render::viewStorageMembers;
+using namespace render::storageList;
 
 void storageViewButtonCallback(
     StorageView& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, StorageApiRef storageApi) {
@@ -25,4 +26,5 @@ void storageViewButtonCallback(
         renderStorageList(userId, chatId, bot, storageApi);
     }
 }
-} // namespace cookcookhnya::handlers::storageView
+
+} // namespace cookcookhnya::handlers::storage_view

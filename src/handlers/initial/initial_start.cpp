@@ -8,8 +8,8 @@
 #include <utility>
 
 namespace cookcookhnya::handlers::init {
-using namespace cookcookhnya::handlers;
-using namespace cookcookhnya::render::storageList;
+
+using namespace render::storageList;
 
 void start(MessageRef m, BotRef bot, SMRef stateManager, ApiClientRef api) {
     stateManager.put(StorageList{});
@@ -35,4 +35,5 @@ void handleNoState(MessageRef m, BotRef bot) {
         return;
     bot.sendMessage(m.chat->id, "Use /start please");
 };
+
 } // namespace cookcookhnya::handlers::init

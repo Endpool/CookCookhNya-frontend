@@ -3,9 +3,9 @@
 #include "handlers/type_refs.hpp"
 #include "render/storage_view/storage_members_render.hpp"
 
-namespace cookcookhnya::handlers::storageAddDeleteMembers {
-using namespace cookcookhnya::handlers;
-using namespace cookcookhnya::render::viewStorageMembers;
+namespace cookcookhnya::handlers::storage_add_delete_members {
+
+using namespace render::viewStorageMembers;
 
 void addDeleteMember(
     MembersAdditionDeletion& state, MessageRef m, BotRef bot, SMRef stateManager, StorageApiRef storageApi) {
@@ -41,4 +41,5 @@ void cancelAddDeleteMember(
         renderMemberList(state.storageId, userId, chatId, bot, storageApi);
     }
 };
-} // namespace cookcookhnya::handlers::storageAddDeleteMembers
+
+} // namespace cookcookhnya::handlers::storage_add_delete_members
