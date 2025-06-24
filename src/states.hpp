@@ -1,8 +1,12 @@
 #pragma once
 
-#include <backend/id_types.hpp>
+#include "backend/id_types.hpp"
+#include "tg_types.hpp"
+
+#include <cstddef>
 #include <tg_stater/state_storage/common.hpp>
 #include <tg_stater/state_storage/memory.hpp>
+
 #include <variant>
 #include <vector>
 
@@ -11,8 +15,8 @@ using namespace api;
 
 namespace detail {
 struct StorageIdMixin {
-    StorageId storageId;
-    StorageIdMixin(int storageId) : storageId{storageId} {} // NOLINT(*-explicit-*)
+    api::StorageId storageId;
+    StorageIdMixin(api::StorageId storageId) : storageId{storageId} {} // NOLINT(*-explicit-*)
 };
 
 } // namespace detail
@@ -26,24 +30,25 @@ struct StorageWrongNameToDelete {};
 struct StorageDeletionEnterName {};
 struct StorageView : detail::StorageIdMixin {};
 
-struct StorageSelection {
-    std::vector<StorageId> storageIds;
-};
-
-struct SuggestedRecipeList {
-    int pageNo; // DONT FORGET TO INIT FROM AMIRKHAN
-    std::vector<StorageId> storageIds;
-};
-
 struct StorageMemberView : detail::StorageIdMixin {};
 struct MembersAdditionDeletion : detail::StorageIdMixin {};
 struct PackMemberView : detail::StorageIdMixin {};
 struct MemberAddition : detail::StorageIdMixin {};
 struct MemberDeletion : detail::StorageIdMixin {};
 
-struct IngredientsView : detail::StorageIdMixin {};
-struct IngredientsAddition : detail::StorageIdMixin {};
-struct IngredientsDeletion : detail::StorageIdMixin {};
+struct StorageIngredientsList : detail::StorageIdMixin {};
+struct StorageIngredientsSearch : detail::StorageIdMixin {
+    tg_types::MessageId message;
+};
+
+struct StorageSelection {
+    std::vector<api::StorageId> storageIds;
+    tg_types::MessageId messageId;
+};
+struct SuggestedRecipeList {
+    std::size_t pageNo;
+    std::vector<api::StorageId> storageIds;
+};
 
 using State = std::variant<StorageList,
                            StorageCreation,
@@ -57,9 +62,8 @@ using State = std::variant<StorageList,
                            PackMemberView,
                            MemberAddition,
                            MemberDeletion,
-                           IngredientsView,
-                           IngredientsAddition,
-                           IngredientsDeletion,
+                           StorageIngredientsList,
+                           StorageIngredientsSearch,
                            StorageSelection,
                            SuggestedRecipeList>;
 

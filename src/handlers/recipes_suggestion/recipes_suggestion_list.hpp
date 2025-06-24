@@ -2,7 +2,8 @@
 
 #include "handlers/common.hpp"
 
-namespace cookcookhnya::handlers::recipies_suggestion {
+namespace cookcookhnya::handlers::recipes_suggestion {
+
 /*
  * @brief  Back: check the number of storages passed to state.
  * If more then one then return to storage list choose if one then go to the storage view.
@@ -11,6 +12,6 @@ namespace cookcookhnya::handlers::recipies_suggestion {
  * ChangePage: move to next of prev page checking if page is valid
  */
 void changePageAndBack(
-    SuggestedRecipeList& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, RecipesApiRef recipesApi);
+    SuggestedRecipeList& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api);
 
-} // namespace cookcookhnya::handlers::recipies_suggestion
+} // namespace cookcookhnya::handlers::recipes_suggestion

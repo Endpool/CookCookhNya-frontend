@@ -3,6 +3,7 @@
 #include <charconv>
 #include <memory>
 #include <optional>
+#include <string>
 #include <string_view>
 #include <system_error>
 #include <utility>
@@ -18,6 +19,8 @@ std::optional<T> parseSafe(std::string_view s) {
         return value;
     return std::nullopt;
 }
+
+std::string utf8str(std::u8string_view sv);
 
 template <typename T>
 std::shared_ptr<T> make_shared(T&& t) {

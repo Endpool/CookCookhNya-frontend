@@ -2,9 +2,6 @@ name: ci pipeline for frontend
 
 on:
   push:
-    branches:
-      - main
-      - dev
 
 jobs:
   build:  
@@ -14,91 +11,14 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      
-      - name: Setup C++ tools
-        uses: aminya/setup-cpp@v1
-        with:
-          compiler: clang
-          compiler_version: '19'
-          clangtidy: true
-          clangformat: true
-          cmake: true
-      
-      - name: Cache Conan dependencies
-        uses: actions/cache@v3
-        id: conan-cache
-        with:
-          path: |
-            ~/.conan2
-            /tmp/deps
-          key: ${{ runner.os }}-conan-cpp23-${{ hashFiles('Frontend/conanfile.txt') }}-tgbotstater-0.3.5
-          restore-keys: |
-            ${{ runner.os }}-conan-cpp23-
-      
-      - name: Install system dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            parallel \
-            python3-pip \
-            build-essential \
-            wget \
-            tar
-      
-      - name: Install Conan via pip
-        run: |
-          python3 -m pip install --user conan==2.15.1
-          echo "$HOME/.local/bin" >> $GITHUB_PATH
-      
-      - name: Set up Conan profile
-        working-directory: .
-        run: |
-          mkdir -p $HOME/.conan2/profiles
-          conan profile detect --name=default --force
-          sed -i 's/compiler.cppstd=.*/compiler.cppstd=23/' $HOME/.conan2/profiles/default
-          cat $HOME/.conan2/profiles/default
-      
-      - name: Install tgbotstater dependency
-        if: steps.conan-cache.outputs.cache-hit != 'true'
-        working-directory: .
-        run: |
-          mkdir -p /tmp/deps
-          cd /tmp/deps
-          wget https://github.com/Makcal/TgBotStater/archive/refs/tags/v0.3.5.tar.gz
-          tar -xf v0.3.5.tar.gz
-          cd TgBotStater-0.3.5
-          conan create . --build=missing
-      
-      - name: Install project dependencies
-        working-directory: .
-        run: |
-          conan install . --build=missing
-      
-      - name: Configure CMake
-        working-directory: .
-        run: |
-          mkdir -p build/Release
-          cmake --preset=conan-release
-      
+
+      - name: Build dependencies
+        uses: ./.github/actions/build_deps
+
       - name: Build project
         working-directory: .
         run: |
-          cmake --build --preset=conan-release
-      
-      - name: Verify compilation database
-        working-directory: .
-        run: |
-          if [ ! -f build/Release/compile_commands.json ]; then
-            echo "Generating compilation database..."
-            cmake --build --preset=conan-release --target clang-tidy
-          fi
-          ls -la build/Release/compile_commands.json
-      
-      - name: Upload compilation database
-        uses: actions/upload-artifact@v4
-        with:
-          name: compilation-db
-          path: build/Release/compile_commands.json
+          make build-release
 
   clang-format-check:
     runs-on: ubuntu-latest
@@ -106,13 +26,13 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Install clang-format
         run: |
           sudo apt-get update
           sudo apt-get install -y clang-format-19
           echo "/usr/lib/llvm-19/bin" >> $GITHUB_PATH
-      
+
       - name: Run clang-format checks
         run: |
           find src -type f \( -name '*.hpp' -or -name '*.cpp' \) \
@@ -124,20 +44,17 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
+      - name: Build dependencies
+        uses: ./.github/actions/build_deps
+
       - name: Install clang-tidy
         run: |
           sudo apt-get update
           sudo apt-get install -y clang-tidy-19
           echo "/usr/lib/llvm-19/bin" >> $GITHUB_PATH
-      
-      - name: Download compilation database
-        uses: actions/download-artifact@v4
-        with:
-          name: compilation-db
-          path: build/Release/
-      
+
       - name: Run clang-tidy
         run: |
-          cd build/Release
-          /usr/lib/llvm-19/bin/run-clang-tidy -j$(nproc) -quiet
+          cp build/Release/compile_commands.json .
+          run-clang-tidy -j$(nproc) -quiet -warnings-as-errors='*'

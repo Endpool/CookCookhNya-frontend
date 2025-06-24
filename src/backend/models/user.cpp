@@ -1,7 +1,6 @@
 #include "backend/models/user.hpp"
 
 #include <boost/json/conversion.hpp>
-#include <boost/json/value_to.hpp>
 
 namespace cookcookhnya::api::models::user {
 

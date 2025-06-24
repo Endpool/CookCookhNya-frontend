@@ -1,7 +1,8 @@
-#pragma once
-
 #include "recipes_suggestion_render.hpp"
+
 #include "render/common.hpp"
+#include "tg_types.hpp"
+
 #include <format>
 #include <string>
 #include <vector>
@@ -124,7 +125,7 @@ void editSuggestionMessage(std::vector<StorageId> const& storages,
                            int pageNo,
                            UserId userId,
                            ChatId chatId,
-                           MessageId messageId,
+                           tg_types::MessageId messageId,
                            BotRef bot,
                            RecipesApiRef recipesApi) {
     std::string pageInfo = std::format("Page number {} \nRecipes we have chosen just for you:", pageNo);

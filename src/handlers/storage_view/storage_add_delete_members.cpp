@@ -6,7 +6,7 @@
 
 namespace cookcookhnya::handlers::storage_add_delete_members {
 
-using namespace render::view_storage_members;
+using namespace render::storage::member_list;
 
 void addDeleteMember(
     MembersAdditionDeletion& state, MessageRef m, BotRef bot, SMRef stateManager, StorageApiRef storageApi) {
@@ -37,9 +37,9 @@ void cancelAddDeleteMember(
     bot.answerCallbackQuery(cq.id);
     auto chatId = cq.message->chat->id;
     auto userId = cq.from->id;
-    if (cq.data == "member_add_delete_cancel") {
-        stateManager.put(StorageMemberView{state.storageId});
+    if (cq.data == "cancel_member_addition_deletion") {
         renderMemberList(state.storageId, userId, chatId, bot, storageApi);
+        stateManager.put(StorageMemberView{state.storageId});
     }
 };
 

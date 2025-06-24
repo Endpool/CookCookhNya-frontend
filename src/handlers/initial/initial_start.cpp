@@ -14,8 +14,8 @@ namespace cookcookhnya::handlers::init {
 using namespace render::storage_list;
 
 void start(MessageRef m, BotRef bot, SMRef stateManager, ApiClientRef api) {
-    stateManager.put(StorageList{});
     renderStorageList(m.from->id, m.chat->id, bot, api);
+    stateManager.put(StorageList{});
 
     std::string fullname = m.from->firstName;
     if (!m.from->lastName.empty()) {

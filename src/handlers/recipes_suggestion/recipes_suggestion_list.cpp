@@ -1,13 +1,21 @@
 #include "recipes_suggestion_list.hpp"
+
 #include "handlers/common.hpp"
 #include "render/recipes_suggestion/recipes_suggestion_render.hpp"
+#include "render/recipes_suggestion/select_storages_render.hpp"
 #include "states.hpp"
 
-namespace cookcookhnya::handlers::recipies_suggestion {
+#include <sstream>
+#include <string>
+#include <utility>
+
+namespace cookcookhnya::handlers::recipes_suggestion {
+
 using namespace render::recipes_suggestion;
+using namespace render::select_storages;
 
 void changePageAndBack(
-    SuggestedRecipeList& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, RecipesApiRef recipesApi) {
+    SuggestedRecipeList& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
 
     auto chatId = cq.message->chat->id;
     auto messageId = cq.message->messageId;
@@ -23,9 +31,10 @@ void changePageAndBack(
         int numOfStorages = 0;
         temp >> numOfStorages;
         if (numOfStorages > 1) {
-            stateManager.put(
-                StorageSelection{state.storageIds}); // Go to storages selection saving the storages which were chosen
-            //  RENDER FROM AMIRKHAN render_storages_select()
+            // Go to storages selection saving the storages which were chosen
+            auto message = renderStoragesSelect(userId, chatId, bot, api);
+            updateStorageSelect(state.storageIds, message, userId, chatId, bot, api);
+            stateManager.put(StorageSelection{.storageIds = std::move(state.storageIds), .messageId = message});
         } else {
             stateManager.put(StorageView{state.storageIds[0]}); // Go to the only one storage (idk what's wrong with
                                                                 // linter), index is 0 as the object is only one
@@ -45,12 +54,7 @@ void changePageAndBack(
     temp << data;
     temp >> pageNo;
 
-    editSuggestionMessage(state.storageIds,
-                          pageNo,
-                          userId,
-                          chatId,
-                          messageId,
-                          bot,
-                          recipesApi); // Message is 100% exists as it was rendered by some another method
+    // Message is 100% exists as it was rendered by some another method
+    editSuggestionMessage(state.storageIds, pageNo, userId, chatId, messageId, bot, api);
 }
-} // namespace cookcookhnya::handlers::recipies_suggestion
+} // namespace cookcookhnya::handlers::recipes_suggestion

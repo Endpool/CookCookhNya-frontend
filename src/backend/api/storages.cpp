@@ -1,5 +1,6 @@
 #include "backend/api/storages.hpp"
 
+#include "backend/id_types.hpp"
 #include "backend/models/storage.hpp"
 
 #include <format>
@@ -18,7 +19,7 @@ StorageDetails StoragesApi::get(UserId userId, StorageId id) const {
 }
 
 StorageId StoragesApi::create(UserId userId, const StorageCreateBody& body) const {
-    return jsonPostWithJsonAuthed<StorageCreateResponse>(userId, "/my/storages", body).id;
+    return jsonPostWithJsonAuthed<StorageId>(userId, "/my/storages", body);
 }
 
 void StoragesApi::delete_(UserId userId, StorageId id) const {
@@ -29,12 +30,12 @@ std::vector<StoragesApi::UserId> StoragesApi::getStorageMembers(UserId userId, S
     return jsonGetAuthed<std::vector<UserId>>(userId, std::format("/my/storages/{}/members", id));
 }
 
-void StoragesApi::addMember(UserId /*unused*/, StorageId /*unused*/, UserId /*unused*/) const {
-    // jsonGetAuthed<void>(userId, std::format("/my/storages/{}", id));
+void StoragesApi::addMember(UserId userId, StorageId id, UserId memberId) const {
+    jsonPutAuthed<void>(userId, std::format("/my/storages/{}/members/{}", id, memberId));
 }
 
-void StoragesApi::deleteMember(UserId /*unused*/, StorageId /*unused*/, UserId /*unused*/) const {
-    // jsonGetAuthed<void>(userId, std::format("/my/storages/{}", id));
+void StoragesApi::deleteMember(UserId userId, StorageId id, UserId memberId) const {
+    jsonDeleteAuthed<void>(userId, std::format("/my/storages/{}/members/{}", id, memberId));
 }
 
 } // namespace cookcookhnya::api
