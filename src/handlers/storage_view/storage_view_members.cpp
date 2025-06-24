@@ -1,13 +1,12 @@
 #include "storage_view_members.hpp"
 
-#include "render/storage_list/storage_list_render.hpp"
 #include "render/storage_view/storage_members_render.hpp"
 #include "render/storage_view/storage_view_render.hpp"
 
 namespace cookcookhnya::handlers::storage_view_members {
 
 using namespace render::view_storage_members;
-using namespace render::storage_list;
+using namespace render::view_storage;
 
 void storageMemberViewButtonCallback(
     StorageMemberView& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, StorageApiRef storageApi) {
