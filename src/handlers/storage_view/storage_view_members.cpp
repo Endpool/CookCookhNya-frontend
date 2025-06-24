@@ -2,6 +2,7 @@
 
 #include "render/storage_list/storage_list_render.hpp"
 #include "render/storage_view/storage_members_render.hpp"
+#include "render/storage_view/storage_view_render.hpp"
 
 namespace cookcookhnya::handlers::storage_view_members {
 
@@ -16,9 +17,9 @@ void storageMemberViewButtonCallback(
     if (cq.data == "add_delete_member") {
         stateManager.put(MembersAdditionDeletion{state.storageId});
         renderMemberAdditionDeletionPrompt(state.storageId, userId, chatId, bot, storageApi);
-    } else if (cq.data == "back") {
+    } else if (cq.data == "back_to_view_storage") {
         stateManager.put(StorageView{state.storageId});
-        renderStorageList(userId, chatId, bot, storageApi);
+        renderStorageView(state.storageId, userId, chatId, bot, storageApi);
     }
 };
 
