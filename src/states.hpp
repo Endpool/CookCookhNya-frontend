@@ -32,9 +32,8 @@ struct PackMemberView : detail::StorageIdMixin {};
 struct MemberAddition : detail::StorageIdMixin {};
 struct MemberDeletion : detail::StorageIdMixin {};
 
-struct IngredientsView : detail::StorageIdMixin {};
-struct IngredientsAddition : detail::StorageIdMixin {};
-struct IngredientsDeletion : detail::StorageIdMixin {};
+struct StorageIngredientsView : detail::StorageIdMixin {};
+struct StorageIngredientsEdit : detail::StorageIdMixin {};
 
 using State = std::variant<StorageList,
                            StorageCreation,
@@ -48,9 +47,8 @@ using State = std::variant<StorageList,
                            PackMemberView,
                            MemberAddition,
                            MemberDeletion,
-                           IngredientsView,
-                           IngredientsAddition,
-                           IngredientsDeletion>;
+                           StorageIngredientsView,
+                           StorageIngredientsEdit>;
 
 using StateManager = tg_stater::StateProxy<tg_stater::MemoryStateStorage<State>>;
 

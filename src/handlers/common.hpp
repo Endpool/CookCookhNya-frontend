@@ -1,6 +1,7 @@
 #pragma once
 
 #include "backend/api/api.hpp"
+#include "backend/api/ingredients.hpp"
 #include "backend/api/storages.hpp"
 #include "backend/api/users.hpp"
 #include "states.hpp"
@@ -15,8 +16,9 @@ namespace cookcookhnya::handlers {
 using namespace states;
 
 using ApiClientRef = const api::ApiClient&;
-using StorageApiRef = const api::StoragesApi&;
 using UserApiRef = const api::UsersApi&;
+using StorageApiRef = const api::StoragesApi&;
+using IngredientsApiRef = const api::IngredientsApi&;
 
 using BotRef = const TgBot::Api&;
 using SMRef = const states::StateManager&;

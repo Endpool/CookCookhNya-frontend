@@ -21,4 +21,8 @@ void IngredientsApi::delete_(UserId user, StorageId storage, IngredientId id) co
     jsonDeleteAuthed<void>(user, std::format("/my/storages/{}/ingredients/{}", storage, id));
 }
 
+std::vector<Ingredient> IngredientsApi::getAllIngredients() const {
+    return jsonGet<std::vector<Ingredient>>("/ingredients");
+}
+
 } // namespace cookcookhnya::api

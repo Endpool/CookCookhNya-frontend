@@ -20,6 +20,7 @@ class IngredientsApi : ApiBase {
                                                                                     StorageId storage) const;
     void put(UserId user, StorageId storage, IngredientId id) const;
     void delete_(UserId user, StorageId storage, IngredientId id) const;
+    [[nodiscard]] std::vector<models::ingredient::Ingredient> getAllIngredients() const;
 };
 
 } // namespace cookcookhnya::api
