@@ -1,5 +1,6 @@
 #pragma once
 
+#include "backend/api/ingredients.hpp"
 #include "backend/api/storages.hpp"
 #include "backend/api/users.hpp"
 #include "backend/id_types.hpp"
@@ -18,8 +19,9 @@ namespace cookcookhnya::render {
 
 // API
 using StorageId = api::StorageId;
-using StorageApiRef = const api::StoragesApi&;
 using UserApiRef = const api::UsersApi&;
+using StorageApiRef = const api::StoragesApi&;
+using IngredientsApiRef = const api::IngredientsApi&;
 
 using UserId = tg_types::UserId;
 using ChatId = tg_types::ChatId;
