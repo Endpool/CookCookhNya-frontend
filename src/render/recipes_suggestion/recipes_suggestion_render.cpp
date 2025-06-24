@@ -4,17 +4,19 @@
 #include "render/common.hpp"
 #include <format>
 #include <string>
-#include <utility>
 #include <vector>
 
 namespace cookcookhnya::render::recipes_suggestion {
 
-InlineKeyboard constructMarkup(std::vector<StorageId> storages, int pageNo, UserId userId, RecipesApiRef recipesApi) {
+InlineKeyboard
+constructMarkup(std::vector<StorageId> const& storages, int pageNo, UserId userId, RecipesApiRef recipesApi) {
     // CONSTANT AND SAME (STATIC) FOR EVERY USER (static const doesn't actually matter in this function was added
     // because of logic of that variable)
     static const int numOfRecipesOnPage = 10;
-    auto recipesList = recipesApi.getRecipeList(
-        userId, numOfRecipesOnPage, pageNo, std::move(storages)); // Take storages of user from backend
+
+    auto recipesList =
+        recipesApi.getRecipeList(userId, numOfRecipesOnPage, pageNo, storages); // Take storages of user from backend
+
     int amountOfRecipes = recipesList.recipesFound;
     bool ifMaxPage = amountOfRecipes - (numOfRecipesOnPage * pageNo) <= 0;
     // ONLY ONE CASE: WHEN First page has all recipes already
@@ -102,8 +104,12 @@ InlineKeyboard constructMarkup(std::vector<StorageId> storages, int pageNo, User
     return keyboard;
 }
 
-void renderRecipesSuggestion(
-    std::vector<StorageId> storages, int pageNo, UserId userId, ChatId chatId, BotRef bot, RecipesApiRef recipesApi) {
+void renderRecipesSuggestion(std::vector<StorageId> const& storages,
+                             int pageNo,
+                             UserId userId,
+                             ChatId chatId,
+                             BotRef bot,
+                             RecipesApiRef recipesApi) {
 
     std::string pageInfo = std::format("Page number {} \nRecipes we have chosen just for you:", pageNo);
 
@@ -111,10 +117,10 @@ void renderRecipesSuggestion(
                     pageInfo,
                     nullptr,
                     nullptr,
-                    detail::makeKeyboardMarkup(constructMarkup(std::move(storages), pageNo, userId, recipesApi)));
+                    detail::makeKeyboardMarkup(constructMarkup(storages, pageNo, userId, recipesApi)));
 }
 
-void editSuggestionMessage(std::vector<StorageId> storages,
+void editSuggestionMessage(std::vector<StorageId> const& storages,
                            int pageNo,
                            UserId userId,
                            ChatId chatId,
@@ -129,7 +135,7 @@ void editSuggestionMessage(std::vector<StorageId> storages,
                         "",
                         "",
                         nullptr,
-                        detail::makeKeyboardMarkup(constructMarkup(std::move(storages), pageNo, userId, recipesApi)));
+                        detail::makeKeyboardMarkup(constructMarkup(storages, pageNo, userId, recipesApi)));
 }
 
 } // namespace cookcookhnya::render::recipes_suggestion

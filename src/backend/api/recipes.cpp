@@ -9,7 +9,8 @@ namespace cookcookhnya::api {
 
 using namespace models::recipe;
 
-RecipesSummary RecipesApi::getRecipeList(UserId userId, int size, int offset, std::vector<StorageId> storageId) const {
+RecipesSummary
+RecipesApi::getRecipeList(UserId userId, int size, int offset, std::vector<StorageId> const& storageId) const {
     std::multimap<std::string, std::string> multimap = {{"size", std::to_string(size)},
                                                         {"offset", std::to_string(offset)}};
     for (auto temp : storageId) {

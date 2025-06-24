@@ -17,7 +17,7 @@ class RecipesApi : ApiBase {
 
   public:
     [[nodiscard]] models::recipe::RecipesSummary
-    getRecipeList(UserId userId, int size, int offset, std::vector<StorageId> storageId) const;
+    getRecipeList(UserId userId, int size, int offset, std::vector<StorageId> const& storageId) const;
     // Functions below is for future
     /*RecipeId create(UserId userId, // NOLINT(*-nodiscard)
                      const models::recipe::RecipeCreateBody& body) const;

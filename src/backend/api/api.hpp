@@ -28,6 +28,7 @@ class ApiClient {
         api = std::move(other.api);
         storages = StoragesApi{api};
         users = UsersApi{api};
+        recipes = RecipesApi{api};
         return *this;
     }
     ~ApiClient() = default;
@@ -40,7 +41,7 @@ class ApiClient {
         return storages;
     }
 
-    [[nodiscard]] const RecipesApi& getRecipeList() const {
+    [[nodiscard]] const RecipesApi& getRecipes() const {
         return recipes;
     }
 
