@@ -15,7 +15,6 @@ using render::select_storages::updateStorageSelect;
 using render::storage_list::renderStorageList;
 
 void selectStorages(StorageSelection& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, StorageApiRef storageApi){
-    std::cerr << "in handler/storages_select.cpp\n";
     bot.answerCallbackQuery(cq.id);
     auto chatId = cq.message->chat->id;
     auto userId = cq.from->id;
@@ -31,12 +30,13 @@ void selectStorages(StorageSelection& state, CallbackQueryRef cq, BotRef bot, SM
         stateManager.put(StorageList{});
         return;
     }
-    auto cqStorageId = utils::parseSafe<api::StorageId>(cq.data.substr(3, cq.data.length() - 3));
+    auto cqStorageId = utils::parseSafe<api::StorageId>(cq.data.substr(4, cq.data.length() - 4));
     if (cq.data.starts_with("in")){
         auto it = std::ranges::find(selected_storages, *cqStorageId);
         selected_storages.erase(it);
         updateStorageSelect(selected_storages, messageId, userId, chatId, bot, storageApi);
         stateManager.put(StorageSelection{.storageIds=selected_storages, .messageId=messageId});
+        
         return;
     }
     if (cq.data.starts_with("out")){

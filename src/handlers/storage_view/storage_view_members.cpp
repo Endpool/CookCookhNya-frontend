@@ -14,11 +14,11 @@ void storageMemberViewButtonCallback(
     auto chatId = cq.message->chat->id;
     auto userId = cq.from->id;
     if (cq.data == "add_delete_member") {
-        stateManager.put(MembersAdditionDeletion{state.storageId});
         renderMemberAdditionDeletionPrompt(state.storageId, userId, chatId, bot, storageApi);
+        stateManager.put(MembersAdditionDeletion{state.storageId});
     } else if (cq.data == "back_to_view_storage") {
-        stateManager.put(StorageView{state.storageId});
         renderStorageView(state.storageId, userId, chatId, bot, storageApi);
+        stateManager.put(StorageView{state.storageId});
     }
 };
 

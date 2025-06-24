@@ -14,8 +14,8 @@ void createStorage(StorageCreationEnterName& /*unused*/,
                    SMRef stateManager,
                    StorageApiRef storageApi) {                                      // BackendProvider bkn (Max: bkn?)
     storageApi.create(m.from->id, api::models::storage::StorageCreateBody{m.text}); // Create storage body with new name
-    stateManager.put(StorageList{});
     renderStorageList(m.from->id, m.chat->id, bot, storageApi);
+    stateManager.put(StorageList{});
 };
 
 void cancelStorageCreation(StorageCreationEnterName& /*unused*/,
@@ -24,10 +24,9 @@ void cancelStorageCreation(StorageCreationEnterName& /*unused*/,
                            SMRef stateManager,
                            StorageApiRef storageApi) {
     bot.answerCallbackQuery(cq.id);
-    if (cq.data == "cancel_storage_creation") { // Here compare with data in button which was pressed (data was put in
-                                            // renderStorageCreate)
-        stateManager.put(StorageList{});
+    if (cq.data == "cancel_storage_creation") { 
         renderStorageList(cq.from->id, cq.message->chat->id, bot, storageApi);
+        stateManager.put(StorageList{});
     }
 };
 

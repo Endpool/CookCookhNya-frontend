@@ -30,8 +30,8 @@ void cancelStorageDeletion(StorageDeletionEnterName& /*unused*/,
                            StorageApiRef storageApi) {
     bot.answerCallbackQuery(cq.id);
     if (cq.data == "cancel") {
-        stateManager.put(StorageList{});
         renderStorageList(cq.from->id, cq.message->chat->id, bot, storageApi);
+        stateManager.put(StorageList{});
     }
 };
 

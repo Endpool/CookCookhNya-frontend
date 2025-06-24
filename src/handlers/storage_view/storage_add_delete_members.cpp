@@ -28,8 +28,8 @@ void addDeleteMember(
         storageApi.addMember(userId, state.storageId, *memberId);
         bot.sendMessage(chatId, "Member added successfully");
     }
-    stateManager.put(StorageMemberView{state.storageId});
     renderMemberList(state.storageId, userId, chatId, bot, storageApi);
+    stateManager.put(StorageMemberView{state.storageId});
 };
 
 void cancelAddDeleteMember(
@@ -37,9 +37,9 @@ void cancelAddDeleteMember(
     bot.answerCallbackQuery(cq.id);
     auto chatId = cq.message->chat->id;
     auto userId = cq.from->id;
-    if (cq.data == "member_add_delete_cancel") {
-        stateManager.put(StorageMemberView{state.storageId});
+    if (cq.data == "cancel_member_addition_deletion") {
         renderMemberList(state.storageId, userId, chatId, bot, storageApi);
+        stateManager.put(StorageMemberView{state.storageId});
     }
 };
 

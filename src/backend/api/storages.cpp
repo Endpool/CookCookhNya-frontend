@@ -29,12 +29,12 @@ std::vector<StoragesApi::UserId> StoragesApi::getStorageMembers(UserId userId, S
     return jsonGetAuthed<std::vector<UserId>>(userId, std::format("/my/storages/{}/members", id));
 }
 
-void StoragesApi::addMember(UserId /*unused*/, StorageId /*unused*/, UserId /*unused*/) const {
-    // jsonGetAuthed<void>(userId, std::format("/my/storages/{}", id));
+void StoragesApi::addMember(UserId userId, StorageId id, UserId memberId) const {
+    jsonPutAuthed<void>(userId, std::format("/my/storages/{}/members/{}", id, memberId));
 }
 
-void StoragesApi::deleteMember(UserId /*unused*/, StorageId /*unused*/, UserId /*unused*/) const {
-    // jsonGetAuthed<void>(userId, std::format("/my/storages/{}", id));
+void StoragesApi::deleteMember(UserId userId, StorageId id, UserId memberId) const {
+    jsonDeleteAuthed<void>(userId, std::format("/my/storages/{}/members/{}", id, memberId));
 }
 
 } // namespace cookcookhnya::api

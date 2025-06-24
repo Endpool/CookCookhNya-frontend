@@ -27,20 +27,20 @@ void storageListButtonCallback(
     temp >> id;
 
     auto chatId = cq.message->chat->id;
-    if (cq.data == "storage_view_creation") {
+    if (cq.data == "storage_list_creation") {
         renderStorageCreate(chatId, bot);
         stateManager.put(StorageCreationEnterName{}); // Go to function create storage, while cancel button is handled
                                                       // on cancel storage creation
         return;
     }
 
-    if (cq.data == "storage_view_deletion") {
+    if (cq.data == "storage_list_deletion") {
         renderStorageDelete(
             chatId, bot, cq.from->id, storageApi); // Need for api, so it could put the list of storages to delete
         stateManager.put(StorageDeletionEnterName{});
         return;
     }
-    if (cq.data == "storage_view_what_to_cook") {
+    if (cq.data == "storage_list_what_to_cook") {
         auto messageId = renderStoragesSelect(cq.from->id, chatId, bot, storageApi);
         stateManager.put(StorageSelection{.storageIds=std::vector<api::StorageId> {}, .messageId=messageId});
         return;

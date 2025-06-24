@@ -39,7 +39,7 @@ void renderMemberAdditionDeletionPrompt(
     unsigned int buttonRows = 1;
 
     InlineKeyboard keyboard(buttonRows);
-    keyboard[0].push_back(detail::makeCallbackButton("Cancel", "member_add_delete_cancel"));
+    keyboard[0].push_back(detail::makeCallbackButton("Cancel", "cancel_member_addition_deletion"));
 
     bot.sendMessage(chatId,
                     std::format("Send a Telegram ID to add/remove from the list."),
