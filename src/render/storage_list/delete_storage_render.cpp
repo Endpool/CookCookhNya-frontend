@@ -1,7 +1,8 @@
 #include "delete_storage_render.hpp"
 
+#include "render/common.hpp"
+
 namespace cookcookhnya::render::deleteStorage {
-using namespace cookcookhnya::render;
 
 void renderStorageDelete(ChatId chatId, BotRef bot, UserId userId, StorageApiRef storageApi) {
     auto currentStor =

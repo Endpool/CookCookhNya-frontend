@@ -1,7 +1,6 @@
 #include "backend/api/users.hpp"
 
 #include "backend/models/user.hpp"
-#include "types.hpp"
 
 namespace cookcookhnya::api {
 

@@ -1,8 +1,9 @@
 #include "storage_list_render.hpp"
-#include "render/types_for_render.hpp"
+
+#include "render/common.hpp"
 
 namespace cookcookhnya::render::storageList {
-using namespace cookcookhnya::render;
+
 void renderStorageList(UserId userId, ChatId chatId, BotRef bot, StorageApiRef storageApi) {
 
     auto currentStor = storageApi.getStoragesList(userId); // Take storages of user from backend
@@ -26,4 +27,5 @@ void renderStorageList(UserId userId, ChatId chatId, BotRef bot, StorageApiRef s
 
     bot.sendMessage(chatId, "Your storages:", nullptr, nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
 }
+
 } // namespace cookcookhnya::render::storageList

@@ -1,8 +1,8 @@
 #include "storage_view_render.hpp"
-#include "render/types_for_render.hpp"
+
+#include "render/common.hpp"
 
 namespace cookcookhnya::render::viewStorage {
-using namespace cookcookhnya::render;
 
 void renderStorageView(StorageId storageId, UserId userId, ChatId chatId, BotRef bot, StorageApiRef storageApi) {
     auto storage = storageApi.get(userId, storageId);

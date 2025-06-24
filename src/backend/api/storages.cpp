@@ -1,7 +1,6 @@
 #include "backend/api/storages.hpp"
 
 #include "backend/models/storage.hpp"
-#include "types.hpp"
 
 #include <format>
 #include <vector>
@@ -26,15 +25,15 @@ void StoragesApi::delete_(UserId userId, StorageId id) const {
     jsonDeleteAuthed<void>(userId, std::format("/my/storages/{}", id));
 }
 
-std::vector<UserId> StoragesApi::getStorageMembers(UserId userId, StorageId id) const {
+std::vector<StoragesApi::UserId> StoragesApi::getStorageMembers(UserId userId, StorageId id) const {
     return jsonGetAuthed<std::vector<UserId>>(userId, std::format("/my/storages/{}/members", id));
 }
 
-void StoragesApi::addMember(UserId userId, StorageId id, UserId memberId) const {
+void StoragesApi::addMember(UserId /*unused*/, StorageId /*unused*/, UserId /*unused*/) const {
     // jsonGetAuthed<void>(userId, std::format("/my/storages/{}", id));
 }
 
-void StoragesApi::deleteMember(UserId userId, StorageId id, UserId memberId) const {
+void StoragesApi::deleteMember(UserId /*unused*/, StorageId /*unused*/, UserId /*unused*/) const {
     // jsonGetAuthed<void>(userId, std::format("/my/storages/{}", id));
 }
 

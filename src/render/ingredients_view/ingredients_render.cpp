@@ -1,9 +1,10 @@
 #include "ingredients_render.hpp"
 
-namespace cookcookhnya::render::viewIngredients {
-using namespace cookcookhnya::render;
+#include "render/common.hpp"
 
-void renderIngredientsList(StorageId storageId, UserId userId, ChatId chatId, BotRef bot) {
+namespace cookcookhnya::render::viewIngredients {
+
+void renderIngredientsList(StorageId /*unused*/, UserId /*unused*/, ChatId /*unused*/, BotRef /*unused*/) {
     // auto ad = backendEx.getUserStorages(userId)[0];
     // std::string resultStr ="";
     // for (int i=0;i<ad.getContent(123).size();i++){
@@ -12,4 +13,5 @@ void renderIngredientsList(StorageId storageId, UserId userId, ChatId chatId, Bo
     //     bot.sendMessage(chatId,
     //                 resultStr);
 }
+
 } // namespace cookcookhnya::render::viewIngredients
