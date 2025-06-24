@@ -1,5 +1,6 @@
 #pragma once
 
+#include "backend/api/recipes.hpp"
 #include "backend/api/storages.hpp"
 #include "backend/api/users.hpp"
 #include "backend/id_types.hpp"
@@ -22,6 +23,7 @@ using namespace tg_types;
 using StorageId = api::StorageId;
 using StorageApiRef = const api::StoragesApi&;
 using UserApiRef = const api::UsersApi&;
+using RecipesApiRef = const api::RecipesApi&;
 
 using UserId = tg_types::UserId;
 using ChatId = tg_types::ChatId;

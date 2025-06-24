@@ -1,6 +1,7 @@
 #pragma once
 
 #include "backend/api/api.hpp"
+#include "backend/api/recipes.hpp"
 #include "backend/api/storages.hpp"
 #include "backend/api/users.hpp"
 #include "states.hpp"
@@ -17,6 +18,7 @@ using namespace states;
 using ApiClientRef = const api::ApiClient&;
 using StorageApiRef = const api::StoragesApi&;
 using UserApiRef = const api::UsersApi&;
+using RecipesApiRef = const api::RecipesApi&;
 
 using BotRef = const TgBot::Api&;
 using SMRef = const states::StateManager&;

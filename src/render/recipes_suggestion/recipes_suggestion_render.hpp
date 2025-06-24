@@ -6,16 +6,17 @@ namespace cookcookhnya::render::recipes_suggestion {
 /*
 @brief shared function between render and edit of suggestion message
 */
-InlineKeyboard constructMarkup(std::vector<StorageId> storages, int pageNo, StorageApiRef storageApi);
+InlineKeyboard constructMarkup(std::vector<StorageId> storages, int pageNo, UserId userId, RecipesApiRef recipesApi);
 
 void renderRecipesSuggestion(
-    std::vector<StorageId> storages, int pageNo, ChatId chatId, BotRef bot, StorageApiRef storageApi);
+    std::vector<StorageId> storages, int pageNo, UserId userId, ChatId chatId, BotRef bot, RecipesApiRef recipesApi);
 
 void editSuggestionMessage(std::vector<StorageId> storages,
                            int pageNo,
+                           UserId userId,
                            ChatId chatId,
                            MessageId messageId,
                            BotRef bot,
-                           StorageApiRef storageApi);
+                           RecipesApiRef recipesApi);
 
 } // namespace cookcookhnya::render::recipes_suggestion

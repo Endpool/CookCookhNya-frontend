@@ -15,7 +15,7 @@ RecipesSummary RecipesApi::getRecipeList(UserId userId, int size, int offset, st
     for (auto temp : storageId) {
         multimap.insert({"storageId", std::to_string(temp)});
     }
-    return jsonGetAuthed<RecipesSummary>(userId, "/my/recipes", multimap);
+    return jsonGetAuthed<RecipesSummary>(userId, "/recipes", multimap);
 }
 
 } // namespace cookcookhnya::api

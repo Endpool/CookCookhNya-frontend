@@ -11,6 +11,6 @@ namespace cookcookhnya::handlers::recipies_suggestion {
  * ChangePage: move to next of prev page checking if page is valid
  */
 void changePageAndBack(
-    SuggestedRecipeList& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, StorageApiRef storageApi);
+    SuggestedRecipeList& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, RecipesApiRef recipesApi);
 
 } // namespace cookcookhnya::handlers::recipies_suggestion

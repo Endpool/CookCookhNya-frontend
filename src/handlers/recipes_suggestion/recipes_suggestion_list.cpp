@@ -1,17 +1,18 @@
 #include "recipes_suggestion_list.hpp"
+#include "handlers/common.hpp"
 #include "render/recipes_suggestion/recipes_suggestion_render.hpp"
 #include "states.hpp"
 
 namespace cookcookhnya::handlers::recipies_suggestion {
 using namespace render::recipes_suggestion;
 
-void changePageAndBack(SuggestedRecipeList& state,
-                       CallbackQueryRef cq,
-                       BotRef bot,
-                       SMRef stateManager,
-                       StorageApiRef storageApi) { // MUST BE RECIPES API
+void changePageAndBack(
+    SuggestedRecipeList& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, RecipesApiRef recipesApi) {
+
     auto chatId = cq.message->chat->id;
     auto messageId = cq.message->messageId;
+    auto userId = cq.from->id;
+
     std::string delimiter = " ";
     auto data = cq.data;
     std::stringstream temp; // To convert string to int
@@ -26,7 +27,8 @@ void changePageAndBack(SuggestedRecipeList& state,
                 StorageSelection{state.storageIds}); // Go to storages selection saving the storages which were chosen
             //  RENDER FROM AMIRKHAN render_storages_select()
         } else {
-            stateManager.put(StorageView{state.storageIds[0]}); // Go to the storage (idk what's wrong with linter)
+            stateManager.put(StorageView{state.storageIds[0]}); // Go to the only one storage (idk what's wrong with
+                                                                // linter), index is 0 as the object is only one
         }
         return;
     }
@@ -45,9 +47,10 @@ void changePageAndBack(SuggestedRecipeList& state,
 
     editSuggestionMessage(state.storageIds,
                           pageNo,
+                          userId,
                           chatId,
                           messageId,
                           bot,
-                          storageApi); // Message is 100% exists as it was rendered by some another method
+                          recipesApi); // Message is 100% exists as it was rendered by some another method
 }
 } // namespace cookcookhnya::handlers::recipies_suggestion
