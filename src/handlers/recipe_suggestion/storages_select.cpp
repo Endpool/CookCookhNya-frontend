@@ -6,7 +6,6 @@
 #include "render/storage_list/storage_list_render.hpp"
 #include "states.hpp"
 #include "utils.hpp"
-#include <iostream>
 #include <vector>
 
 namespace cookcookhnya::handlers::storages_select {

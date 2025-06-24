@@ -2,6 +2,7 @@
 
 #include "render/common.hpp"
 #include "tg_types.hpp"
+#include "utils.hpp"
 
 namespace cookcookhnya::render::select_storages {
 
@@ -18,11 +19,16 @@ MessageId renderStoragesSelect(UserId userId, ChatId chatId, BotRef bot, Storage
             detail::makeCallbackButton("🔴" + storages[i].name, "out_" + std::to_string(storages[i].id)));
     }
     keyboard[buttonRows - 1].reserve(2);
-    keyboard[buttonRows - 1].push_back(detail::makeCallbackButton("Confirm", "confirm_storages_selection"));
-    keyboard[buttonRows - 1].push_back(detail::makeCallbackButton("Back", "cancel_storages_selection"));
+    keyboard[buttonRows - 1].push_back(
+        detail::makeCallbackButton(utils::utf8str(u8"Подтвердить"), "confirm_storages_selection"));
+    keyboard[buttonRows - 1].push_back(
+        detail::makeCallbackButton(utils::utf8str(u8"Назад"), "cancel_storages_selection"));
 
-    auto message = bot.sendMessage(
-        chatId, "Consider ingredients from:", nullptr, nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
+    auto message = bot.sendMessage(chatId,
+                                   utils::utf8str(u8"Брать ингредиенты из:"),
+                                   nullptr,
+                                   nullptr,
+                                   detail::makeKeyboardMarkup(std::move(keyboard)));
     return message->messageId;
 }
 
@@ -49,8 +55,10 @@ void updateStorageSelect(std::vector<StorageId> selected_storages,
         }
     }
     keyboard[buttonRows - 1].reserve(2);
-    keyboard[buttonRows - 1].push_back(detail::makeCallbackButton("Confirm", "confirm_storages_selection"));
-    keyboard[buttonRows - 1].push_back(detail::makeCallbackButton("Back", "cancel_storages_selection"));
+    keyboard[buttonRows - 1].push_back(
+        detail::makeCallbackButton(utils::utf8str(u8"Подтвердить"), "confirm_storages_selection"));
+    keyboard[buttonRows - 1].push_back(
+        detail::makeCallbackButton(utils::utf8str(u8"Назад"), "cancel_storages_selection"));
 
     bot.editMessageReplyMarkup(chatId, messageId, "", detail::makeKeyboardMarkup(std::move(keyboard)));
 }
