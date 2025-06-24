@@ -7,6 +7,7 @@
 #include <tg_stater/state_storage/memory.hpp>
 
 #include <variant>
+#include <vector>
 
 namespace cookcookhnya::states {
 
@@ -40,6 +41,14 @@ struct StorageIngredientsSearch : detail::StorageIdMixin {
     tg_types::MessageId message;
 };
 
+struct StorageSelection {
+    std::vector<api::StorageId> storageIds;
+    tg_types::MessageId messageId;
+};
+struct SuggestedRecipeList {
+    std::vector<api::StorageId> storageIds;
+};
+
 using State = std::variant<StorageList,
                            StorageCreation,
                            StorageDeletion,
@@ -53,7 +62,9 @@ using State = std::variant<StorageList,
                            MemberAddition,
                            MemberDeletion,
                            StorageIngredientsList,
-                           StorageIngredientsSearch>;
+                           StorageIngredientsSearch,
+                           StorageSelection,
+                           SuggestedRecipeList>;
 
 using StateManager = tg_stater::StateProxy<tg_stater::MemoryStateStorage<State>>;
 

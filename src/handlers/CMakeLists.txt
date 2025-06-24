@@ -8,4 +8,5 @@ target_sources(main PRIVATE
     src/handlers/storage_view/storage_view_members.cpp
     src/handlers/storage_view/ingredients/list.cpp
     src/handlers/storage_view/ingredients/search.cpp
+    src/handlers/recipe_suggestion/storages_select.cpp
 )
