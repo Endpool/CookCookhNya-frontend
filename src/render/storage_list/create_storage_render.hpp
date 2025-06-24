@@ -2,8 +2,8 @@
 
 #include "render/common.hpp"
 
-namespace cookcookhnya::render::createStorage {
+namespace cookcookhnya::render::create_storage {
 
 void renderStorageCreate(ChatId chatId, BotRef bot);
 
-} // namespace cookcookhnya::render::createStorage
+} // namespace cookcookhnya::render::create_storage

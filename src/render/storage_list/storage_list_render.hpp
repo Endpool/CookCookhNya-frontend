@@ -2,8 +2,8 @@
 
 #include "render/common.hpp"
 
-namespace cookcookhnya::render::storageList {
+namespace cookcookhnya::render::storage_list {
 
 void renderStorageList(UserId userId, ChatId chatId, BotRef bot, StorageApiRef storageApi);
 
-} // namespace cookcookhnya::render::storageList
+} // namespace cookcookhnya::render::storage_list

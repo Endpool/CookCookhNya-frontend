@@ -5,8 +5,8 @@
 
 namespace cookcookhnya::handlers::storage_view_members {
 
-using namespace render::viewStorageMembers;
-using namespace render::storageList;
+using namespace render::view_storage_members;
+using namespace render::storage_list;
 
 void storageMemberViewButtonCallback(
     StorageMemberView& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, StorageApiRef storageApi) {

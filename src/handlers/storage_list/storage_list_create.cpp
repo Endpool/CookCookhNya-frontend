@@ -6,7 +6,7 @@
 
 namespace cookcookhnya::handlers::storage_create {
 
-using namespace render::storageList;
+using namespace render::storage_list;
 
 void createStorage(StorageCreationEnterName& /*unused*/,
                    MessageRef m,

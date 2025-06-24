@@ -6,7 +6,7 @@
 
 namespace cookcookhnya::handlers::storage_delete {
 
-using namespace render::storageList;
+using namespace render::storage_list;
 
 void deleteStorage(StorageDeletionEnterName& /*unused*/,
                    CallbackQueryRef cq,

@@ -2,7 +2,7 @@
 
 #include "render/common.hpp"
 
-namespace cookcookhnya::render::viewIngredients {
+namespace cookcookhnya::render::view_ingredients {
 
 void renderIngredientsList(StorageId /*unused*/, UserId /*unused*/, ChatId /*unused*/, BotRef /*unused*/) {
     // auto ad = backendEx.getUserStorages(userId)[0];
@@ -14,4 +14,4 @@ void renderIngredientsList(StorageId /*unused*/, UserId /*unused*/, ChatId /*unu
     //                 resultStr);
 }
 
-} // namespace cookcookhnya::render::viewIngredients
+} // namespace cookcookhnya::render::view_ingredients

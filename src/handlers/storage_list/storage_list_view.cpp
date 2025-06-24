@@ -7,9 +7,9 @@
 
 namespace cookcookhnya::handlers::storage_list_view {
 
-using namespace render::createStorage;
-using namespace render::deleteStorage;
-using namespace render::viewStorage;
+using namespace render::create_storage;
+using namespace render::delete_storage;
+using namespace render::view_storage;
 
 void storageListButtonCallback(
     StorageList& /*unused*/, CallbackQueryRef cq, BotRef& bot, SMRef stateManager, StorageApiRef storageApi) {
