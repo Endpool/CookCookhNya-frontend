@@ -9,7 +9,7 @@
 #include "storage_view/storage_view.hpp"
 #include "storage_view/storage_view_members.hpp"
 
-#include "handlers/type_refs.hpp"
+#include "handlers/common.hpp"
 
 #include <tg_stater/handler/event.hpp>
 #include <tg_stater/handler/handler.hpp>

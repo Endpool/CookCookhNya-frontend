@@ -1,6 +1,7 @@
 #include "initial_start.hpp"
 
-#include "handlers/type_refs.hpp"
+#include "backend/models/user.hpp"
+#include "handlers/common.hpp"
 #include "render/storage_list/storage_list_render.hpp"
 
 #include <optional>
@@ -27,7 +28,7 @@ void start(MessageRef m, BotRef bot, SMRef stateManager, ApiClientRef api) {
 
     api.getUsers().updateInfo(
         m.from->id,
-        models::user::UpdateUserInfoBody{.alias = std::move(m.from->username), .fullname = std::move(fullname)});
+        api::models::user::UpdateUserInfoBody{.alias = std::move(m.from->username), .fullname = std::move(fullname)});
 };
 
 void handleNoState(MessageRef m, BotRef bot) {

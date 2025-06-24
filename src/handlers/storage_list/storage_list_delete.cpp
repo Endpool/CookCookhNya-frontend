@@ -1,6 +1,7 @@
 #include "storage_list_delete.hpp"
 
-#include "handlers/type_refs.hpp"
+#include "backend/id_types.hpp"
+#include "handlers/common.hpp"
 #include "render/storage_list/storage_list_render.hpp"
 
 namespace cookcookhnya::handlers::storage_delete {
@@ -15,7 +16,7 @@ void deleteStorage(StorageDeletionEnterName& /*unused*/,
 
     std::stringstream temp;
     temp << cq.data;
-    StorageId id = 0;
+    api::StorageId id = 0;
     temp >> id;                          // Probably dangerous (However can be okay as storageId is long int)
     storageApi.delete_(cq.from->id, id); // delete by a userid and id of their storage
     stateManager.put(StorageList{});     // As button was pressed return to storage list view

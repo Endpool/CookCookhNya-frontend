@@ -1,6 +1,6 @@
 #include "storage_list_view.hpp"
 
-#include "handlers/type_refs.hpp"
+#include "handlers/common.hpp"
 #include "render/storage_list/create_storage_render.hpp"
 #include "render/storage_list/delete_storage_render.hpp"
 #include "render/storage_view/storage_view_render.hpp"
@@ -12,7 +12,7 @@ using namespace render::deleteStorage;
 using namespace render::viewStorage;
 
 void storageListButtonCallback(
-    StorageList& /*unused*/, CallbackQueryRef cq, const Api& bot, SMRef stateManager, StorageApiRef storageApi) {
+    StorageList& /*unused*/, CallbackQueryRef cq, BotRef& bot, SMRef stateManager, StorageApiRef storageApi) {
     bot.answerCallbackQuery(cq.id);
 
     std::stringstream temp; // Convert string to int

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "handlers/type_refs.hpp"
+#include "handlers/common.hpp"
 
 namespace cookcookhnya::handlers::storage_view {
 

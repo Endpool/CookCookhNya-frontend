@@ -1,6 +1,7 @@
 #include "storage_list_create.hpp"
 
-#include "handlers/type_refs.hpp"
+#include "backend/models/storage.hpp"
+#include "handlers/common.hpp"
 #include "render/storage_list/storage_list_render.hpp"
 
 namespace cookcookhnya::handlers::storage_create {
@@ -11,8 +12,8 @@ void createStorage(StorageCreationEnterName& /*unused*/,
                    MessageRef m,
                    BotRef bot,
                    SMRef stateManager,
-                   StorageApiRef storageApi) {                                 // BackendProvider bkn (Max: bkn?)
-    storageApi.create(m.from->id, models::storage::StorageCreateBody{m.text}); // Create storage body with new name
+                   StorageApiRef storageApi) {                                      // BackendProvider bkn (Max: bkn?)
+    storageApi.create(m.from->id, api::models::storage::StorageCreateBody{m.text}); // Create storage body with new name
     stateManager.put(StorageList{});
     renderStorageList(m.from->id, m.chat->id, bot, storageApi);
 };

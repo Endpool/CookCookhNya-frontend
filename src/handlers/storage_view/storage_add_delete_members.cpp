@@ -1,7 +1,8 @@
 #include "storage_add_delete_members.hpp"
 
-#include "handlers/type_refs.hpp"
+#include "handlers/common.hpp"
 #include "render/storage_view/storage_members_render.hpp"
+#include "tg_types.hpp"
 
 namespace cookcookhnya::handlers::storage_add_delete_members {
 
@@ -11,7 +12,7 @@ void addDeleteMember(
     MembersAdditionDeletion& state, MessageRef m, BotRef bot, SMRef stateManager, StorageApiRef storageApi) {
     auto chatId = m.chat->id;
     auto userId = m.from->id;
-    auto memberId = utils::parseSafe<UserId>(m.text);
+    auto memberId = utils::parseSafe<tg_types::UserId>(m.text);
     auto storage = storageApi.get(userId, state.storageId);
     if (!memberId) {
         bot.sendMessage(chatId, "Invalid user ID");
