@@ -6,6 +6,8 @@
 #include "storage_list/storage_list_create.hpp"
 #include "storage_list/storage_list_delete.hpp"
 #include "storage_list/storage_list_view.hpp"
+#include "storage_view/ingredients/list.hpp"
+#include "storage_view/ingredients/search.hpp"
 #include "storage_view/storage_add_delete_members.hpp"
 #include "storage_view/storage_view.hpp"
 #include "storage_view/storage_view_members.hpp"
@@ -17,14 +19,15 @@
 
 namespace cookcookhnya::handlers {
 
-using namespace cookcookhnya::handlers::init;
-using namespace cookcookhnya::handlers::storage_create;
-using namespace cookcookhnya::handlers::storage_delete;
-using namespace cookcookhnya::handlers::storage_list_view;
-using namespace cookcookhnya::handlers::storage_view;
-using namespace cookcookhnya::handlers::storage_view_members;
-using namespace cookcookhnya::handlers::storage_add_delete_members;
-using namespace cookcookhnya::handlers::storages_select;
+using namespace init;
+using namespace storage_create;
+using namespace storage_delete;
+using namespace storage_list_view;
+using namespace storage_view;
+using namespace storage_view_members;
+using namespace storage_add_delete_members;
+using namespace storage::ingredients;
+using namespace storages_select;
 
 using namespace tg_stater;
 
@@ -52,12 +55,16 @@ using storageViewButtonHandler = Handler<Events::CallbackQuery{}, storageViewBut
 // StorageViewMembers
 using storageMemberViewButtonHandler = Handler<Events::CallbackQuery{}, storageMemberViewButtonCallback>;
 
-// storageAddDeleteMembers
+// StorageAddDeleteMembers
 using memberAdditionDeletionMessageHandler = Handler<Events::Message{}, addDeleteMember>;
 using cancelAddDeleteMemberHandler = Handler<Events::CallbackQuery{}, cancelAddDeleteMember>;
 
-// storageSelection
+// StorageSelection
 using storagesSelectionHandler = Handler<Events::CallbackQuery{}, selectStorages>;
+
+// StorageIngredientsList
+using storageIngredientsListButtonHandler = Handler<Events::CallbackQuery{}, storageIngredientsListButtonCallback>;
+using storageIngredientsSearchButtonHandler = Handler<Events::CallbackQuery{}, storageIngredientsSearchButtonCallback>;
 
 } // namespace bot_handlers
 

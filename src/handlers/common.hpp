@@ -1,6 +1,7 @@
 #pragma once
 
 #include "backend/api/api.hpp"
+#include "backend/api/ingredients.hpp"
 #include "backend/api/storages.hpp"
 #include "backend/api/users.hpp"
 #include "states.hpp"
@@ -12,11 +13,31 @@
 
 namespace cookcookhnya::handlers {
 
-using namespace states;
+// Reimports of states
+using states::StorageList;
 
+using states::StorageCreation;
+using states::StorageCreationEnterName;
+using states::StorageDeletion;
+using states::StorageDeletionEnterName;
+using states::StorageWrongNameToDelete;
+
+using states::StorageView;
+
+using states::MemberAddition;
+using states::MemberDeletion;
+using states::MembersAdditionDeletion;
+using states::PackMemberView;
+using states::StorageMemberView;
+
+using states::StorageIngredientsList;
+using states::StorageIngredientsSearch;
+
+// Type aliases
 using ApiClientRef = const api::ApiClient&;
-using StorageApiRef = const api::StoragesApi&;
 using UserApiRef = const api::UsersApi&;
+using StorageApiRef = const api::StoragesApi&;
+using IngredientsApiRef = const api::IngredientsApi&;
 
 using BotRef = const TgBot::Api&;
 using SMRef = const states::StateManager&;

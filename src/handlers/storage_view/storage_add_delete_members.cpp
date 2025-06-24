@@ -6,7 +6,7 @@
 
 namespace cookcookhnya::handlers::storage_add_delete_members {
 
-using namespace render::view_storage_members;
+using namespace render::storage::member_list;
 
 void addDeleteMember(
     MembersAdditionDeletion& state, MessageRef m, BotRef bot, SMRef stateManager, StorageApiRef storageApi) {

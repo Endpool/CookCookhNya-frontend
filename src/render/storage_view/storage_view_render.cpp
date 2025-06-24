@@ -2,7 +2,7 @@
 
 #include "render/common.hpp"
 
-namespace cookcookhnya::render::view_storage {
+namespace cookcookhnya::render::storage {
 
 void renderStorageView(StorageId storageId, UserId userId, ChatId chatId, BotRef bot, StorageApiRef storageApi) {
     auto storage = storageApi.get(userId, storageId);
@@ -17,4 +17,4 @@ void renderStorageView(StorageId storageId, UserId userId, ChatId chatId, BotRef
     bot.sendMessage(chatId, storage.name, nullptr, nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
 }
 
-} // namespace cookcookhnya::render::view_storage
+} // namespace cookcookhnya::render::storage

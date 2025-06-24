@@ -1,0 +1,72 @@
+name: 'Build dependencies'
+runs:
+  using: "composite"
+  steps:
+      - name: Setup C++ tools
+        uses: aminya/setup-cpp@v1
+        with:
+          compiler: clang-19
+          clangtidy: true
+          clangformat: true
+          cmake: true
+
+      - name: Cache Conan dependencies
+        uses: actions/cache@v3
+        id: conan-cache
+        with:
+          path: |
+            ~/.conan2
+            /tmp/deps
+          key: ${{ runner.os }}-conan-cpp23-${{ hashFiles('Frontend/conanfile.txt') }}-tgbotstater-0.3.6
+          restore-keys: |
+            ${{ runner.os }}-conan-cpp23-
+
+      - name: Install system dependencies
+        shell: bash
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            parallel \
+            python3-pip \
+            build-essential \
+            wget \
+            tar
+
+      - name: Install Conan via pip
+        shell: bash
+        run: |
+          python3 -m pip install --user conan==2.15.1
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+      - name: Set up Conan profile
+        working-directory: .
+        shell: bash
+        run: |
+          mkdir -p $HOME/.conan2/profiles
+          conan profile detect --name=default --force
+          sed -i 's/compiler.cppstd=.*/compiler.cppstd=23/' $HOME/.conan2/profiles/default
+          cat $HOME/.conan2/profiles/default
+
+      - name: Install tgbotstater dependency
+        if: steps.conan-cache.outputs.cache-hit != 'true'
+        working-directory: .
+        shell: bash
+        run: |
+          mkdir -p /tmp/deps
+          cd /tmp/deps
+          wget https://github.com/Makcal/TgBotStater/archive/refs/tags/v0.3.6.tar.gz -O tgbotstater.tar.gz
+          tar -xf tgbotstater.tar.gz
+          cd TgBotStater-0.3.6
+          conan create . --build=missing
+
+      - name: Install project dependencies
+        working-directory: .
+        shell: bash
+        run: |
+          make conan-release
+
+      - name: Configure CMake
+        working-directory: .
+        shell: bash
+        run: |
+          make cmake-release

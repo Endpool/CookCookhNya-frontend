@@ -2,6 +2,7 @@
 
 #include "backend/id_types.hpp"
 #include "tg_types.hpp"
+
 #include <tg_stater/state_storage/common.hpp>
 #include <tg_stater/state_storage/memory.hpp>
 
@@ -13,8 +14,8 @@ namespace cookcookhnya::states {
 namespace detail {
 
 struct StorageIdMixin {
-    int storageId;
-    StorageIdMixin(int storageId) : storageId{storageId} {} // NOLINT(*-explicit-*)
+    api::StorageId storageId;
+    StorageIdMixin(api::StorageId storageId) : storageId{storageId} {} // NOLINT(*-explicit-*)
 };
 
 } // namespace detail
@@ -35,9 +36,10 @@ struct PackMemberView : detail::StorageIdMixin {};
 struct MemberAddition : detail::StorageIdMixin {};
 struct MemberDeletion : detail::StorageIdMixin {};
 
-struct IngredientsView : detail::StorageIdMixin {};
-struct IngredientsAddition : detail::StorageIdMixin {};
-struct IngredientsDeletion : detail::StorageIdMixin {};
+struct StorageIngredientsList : detail::StorageIdMixin {};
+struct StorageIngredientsSearch : detail::StorageIdMixin {
+    tg_types::MessageId message;
+};
 
 struct StorageSelection {
     std::vector<api::StorageId> storageIds;
@@ -59,9 +61,8 @@ using State = std::variant<StorageList,
                            PackMemberView,
                            MemberAddition,
                            MemberDeletion,
-                           IngredientsView,
-                           IngredientsAddition,
-                           IngredientsDeletion,
+                           StorageIngredientsList,
+                           StorageIngredientsSearch,
                            StorageSelection,
                            SuggestedRecipeList>;
 
