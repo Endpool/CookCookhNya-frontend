@@ -16,8 +16,6 @@
 
 namespace cookcookhnya::render {
 
-using namespace tg_types;
-
 // API
 using StorageId = api::StorageId;
 using StorageApiRef = const api::StoragesApi&;
