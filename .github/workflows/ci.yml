@@ -57,4 +57,4 @@ jobs:
       - name: Run clang-tidy
         run: |
           cp build/Release/compile_commands.json .
-          run-clang-tidy -j$(nproc) -quiet
+          run-clang-tidy -j$(nproc) -quiet -warnings-as-errors='*'
