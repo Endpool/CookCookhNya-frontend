@@ -3,7 +3,7 @@
 #include "handlers/type_refs.hpp"
 
 namespace cookcookhnya::handlers::storageListCreate {
-using namespace cookcookhnya::forHandlers;
+using namespace cookcookhnya::handlers;
 
 void createStorage(StorageCreationEnterName&, MessageRef m, BotRef bot, SMRef stateManager, StorageApiRef storageApi);
 

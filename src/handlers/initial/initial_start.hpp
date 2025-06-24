@@ -4,7 +4,7 @@
 
 namespace cookcookhnya::handlers::init {
 
-using namespace cookcookhnya::forHandlers;
+using namespace cookcookhnya::handlers;
 
 void start(MessageRef m, BotRef bot, SMRef stateManager, ApiClientRef api);
 

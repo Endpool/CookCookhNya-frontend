@@ -10,7 +10,7 @@
 #include <tgbot/types/CallbackQuery.h>
 #include <tgbot/types/Message.h>
 
-namespace cookcookhnya::forHandlers { //*forhandlers
+namespace cookcookhnya::handlers {
 
 using namespace states;
 
@@ -26,4 +26,4 @@ using CallbackQueryRef = const TgBot::CallbackQuery&;
 using NoState = tg_stater::HandlerTypes::NoState;
 using AnyState = tg_stater::HandlerTypes::AnyState;
 
-} // namespace cookcookhnya::forHandlers
+} // namespace cookcookhnya::handlers

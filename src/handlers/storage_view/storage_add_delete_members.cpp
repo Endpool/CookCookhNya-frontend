@@ -4,10 +4,11 @@
 #include "render/storage_view/storage_members_render.hpp"
 
 namespace cookcookhnya::handlers::storageAddDeleteMembers {
-using namespace cookcookhnya::forHandlers;
+using namespace cookcookhnya::handlers;
 using namespace cookcookhnya::render::viewStorageMembers;
 
-void addDeleteMember(MembersAdditionDeletion& state, MessageRef m, BotRef bot, SMRef stateManager, StorageApiRef storageApi) {
+void addDeleteMember(
+    MembersAdditionDeletion& state, MessageRef m, BotRef bot, SMRef stateManager, StorageApiRef storageApi) {
     auto chatId = m.chat->id;
     auto userId = m.from->id;
     auto memberId = cookcookhnya::utils::parseSafe<UserId>(m.text.data());

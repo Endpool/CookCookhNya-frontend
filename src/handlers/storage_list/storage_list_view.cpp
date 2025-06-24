@@ -6,7 +6,7 @@
 
 namespace cookcookhnya::handlers::storageListView {
 
-using namespace cookcookhnya::forHandlers;
+using namespace cookcookhnya::handlers;
 using namespace cookcookhnya::render::createStorage;
 using namespace cookcookhnya::render::deleteStorage;
 using namespace cookcookhnya::render::viewStorage;

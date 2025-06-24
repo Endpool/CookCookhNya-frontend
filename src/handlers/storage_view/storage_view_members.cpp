@@ -4,7 +4,7 @@
 #include "render/storage_view/storage_members_render.hpp"
 
 namespace cookcookhnya::handlers::storageViewMembers {
-using namespace cookcookhnya::forHandlers;
+using namespace cookcookhnya::handlers;
 using namespace cookcookhnya::render::viewStorageMembers;
 using namespace cookcookhnya::render::storageList;
 

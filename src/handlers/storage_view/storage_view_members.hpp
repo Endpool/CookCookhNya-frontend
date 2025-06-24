@@ -3,7 +3,7 @@
 #include "handlers/type_refs.hpp"
 
 namespace cookcookhnya::handlers::storageViewMembers {
-using namespace cookcookhnya::forHandlers;
+using namespace cookcookhnya::handlers;
 
 void storageMemberViewButtonCallback(
     StorageMemberView& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, StorageApiRef storageApi);
