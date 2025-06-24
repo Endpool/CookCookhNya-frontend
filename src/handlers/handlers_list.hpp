@@ -19,7 +19,7 @@ using namespace cookcookhnya::handlers::storageAddDeleteMembers;
 using namespace cookcookhnya::handlers::init;
 
 // Const for handle no state and start
-constexpr char startCmd[] = "start";
+constexpr char startCmd[] = "start"; // NOLINT(*c-arrays)
 
 // StorageListCreate
 using StorageCreateHandler = Handler<Events::Message{}, createStorage>;
@@ -43,7 +43,7 @@ using memberAdditionDeletionMessageHandler = Handler<Events::Message{}, addDelet
 using cancelAddDeleteMemberHandler = Handler<Events::CallbackQuery{}, cancelAddDeleteMember>;
 
 // Init
-using startHandler = Handler<Events::Command{startCmd}, start, AnyState{}>;
+using startHandler = Handler<Events::Command{startCmd}, start, AnyState{}>; // NOLINT(*decay)
 using noStateHandler = Handler<Events::AnyMessage{}, handleNoState, HandlerTypes::NoState{}>;
 } // namespace cookcookhnya::handlers
 
