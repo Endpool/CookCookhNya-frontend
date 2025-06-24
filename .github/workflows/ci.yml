@@ -11,8 +11,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      
-      - id: Build dependencies
+
+      - name: Build dependencies
         uses: ./.github/actions/build_deps
 
       - name: Build project
@@ -26,13 +26,13 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
       - name: Install clang-format
         run: |
           sudo apt-get update
           sudo apt-get install -y clang-format-19
           echo "/usr/lib/llvm-19/bin" >> $GITHUB_PATH
-      
+
       - name: Run clang-format checks
         run: |
           find src -type f \( -name '*.hpp' -or -name '*.cpp' \) \
@@ -47,13 +47,13 @@ jobs:
 
       - name: Build dependencies
         uses: ./.github/actions/build_deps
-      
+
       - name: Install clang-tidy
         run: |
           sudo apt-get update
           sudo apt-get install -y clang-tidy-19
           echo "/usr/lib/llvm-19/bin" >> $GITHUB_PATH
-      
+
       - name: Run clang-tidy
         run: |
           cp build/Release/compile_commands.json .
