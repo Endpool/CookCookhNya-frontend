@@ -6,6 +6,7 @@
 #include "storage_list/storage_list_delete.hpp"
 #include "storage_list/storage_list_view.hpp"
 #include "storage_view/ingredients/list.hpp"
+#include "storage_view/ingredients/search.hpp"
 #include "storage_view/storage_add_delete_members.hpp"
 #include "storage_view/storage_view.hpp"
 #include "storage_view/storage_view_members.hpp"
@@ -56,8 +57,9 @@ using storageMemberViewButtonHandler = Handler<Events::CallbackQuery{}, storageM
 using memberAdditionDeletionMessageHandler = Handler<Events::Message{}, addDeleteMember>;
 using cancelAddDeleteMemberHandler = Handler<Events::CallbackQuery{}, cancelAddDeleteMember>;
 
-// StorageIngredientsView
+// StorageIngredientsList
 using storageIngredientsListButtonHandler = Handler<Events::CallbackQuery{}, storageIngredientsListButtonCallback>;
+using storageIngredientsSearchButtonHandler = Handler<Events::CallbackQuery{}, storageIngredientsSearchButtonCallback>;
 
 } // namespace bot_handlers
 

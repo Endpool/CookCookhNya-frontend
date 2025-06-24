@@ -21,7 +21,7 @@ class IngredientsApi : ApiBase {
     void putToStorage(UserId user, StorageId storage, IngredientId id) const;
     void deleteFromStorage(UserId user, StorageId storage, IngredientId id) const;
     // [[nodiscard]] std::vector<models::ingredient::Ingredient> getAllIngredients() const;
-    [[nodiscard]] std::vector<IngredientId> getAllIngredients() const;
+    [[nodiscard]] std::vector<models::ingredient::Ingredient> getAllIngredients() const;
     [[nodiscard]] models::ingredient::Ingredient get(IngredientId id) const;
 };
 

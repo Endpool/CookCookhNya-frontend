@@ -4,7 +4,7 @@
 
 namespace cookcookhnya::handlers::storage::ingredients {
 
-void storageIngredientsListButtonCallback(
-    StorageIngredientsList& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api);
+void storageIngredientsSearchButtonCallback(
+    StorageIngredientsSearch& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api);
 
 } // namespace cookcookhnya::handlers::storage::ingredients

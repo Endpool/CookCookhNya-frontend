@@ -24,7 +24,8 @@ int main() {
                                                   storageMemberViewButtonHandler,
                                                   memberAdditionDeletionMessageHandler,
                                                   cancelAddDeleteMemberHandler,
-                                                  storageIngredientsListButtonHandler>
+                                                  storageIngredientsListButtonHandler,
+                                                  storageIngredientsSearchButtonHandler>
         bot{{}, {ApiClient{utils::getenvWithError("API_URL")}}};
 
     bot.start(TgBot::Bot{utils::getenvWithError("BOT_TOKEN")});

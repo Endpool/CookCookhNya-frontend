@@ -21,14 +21,12 @@ void IngredientsApi::deleteFromStorage(UserId user, StorageId storage, Ingredien
     jsonDeleteAuthed<void>(user, std::format("/my/storages/{}/ingredients/{}", storage, id));
 }
 
-std::vector<IngredientId> IngredientsApi::getAllIngredients() const {
-    return jsonGet<std::vector<IngredientId>>("/ingredients");
-    // return jsonGet<std::vector<Ingredient>>("/ingredients");
+std::vector<Ingredient> IngredientsApi::getAllIngredients() const {
+    return jsonGet<std::vector<Ingredient>>("/ingredients");
 }
 
 Ingredient IngredientsApi::get(IngredientId id) const {
     return jsonGet<Ingredient>(std::format("/ingredients/{}", id));
-    // return jsonGet<std::vector<Ingredient>>("/ingredients");
 }
 
 } // namespace cookcookhnya::api
