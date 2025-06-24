@@ -1,4 +1,4 @@
-#include "ingredients_render.hpp"
+#include "list.hpp"
 
 #include "render/common.hpp"
 
@@ -7,7 +7,7 @@
 #include <string>
 #include <utility>
 
-namespace cookcookhnya::render::view_ingredients {
+namespace cookcookhnya::render::storage::ingredients {
 
 using namespace api::models::ingredient;
 
@@ -30,4 +30,4 @@ void renderIngredientsList(StorageId storage, UserId user, ChatId chat, BotRef b
                     detail::makeKeyboardMarkup(std::move(keyboard)));
 }
 
-} // namespace cookcookhnya::render::view_ingredients
+} // namespace cookcookhnya::render::storage::ingredients

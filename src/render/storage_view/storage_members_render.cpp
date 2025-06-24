@@ -7,7 +7,7 @@
 #include <ranges>
 #include <utility>
 
-namespace cookcookhnya::render::view_storage_members {
+namespace cookcookhnya::render::storage::member_list {
 
 void renderMemberList(const StorageId& storageId, UserId userId, ChatId chatId, BotRef bot, StorageApiRef storageApi) {
     auto storage = storageApi.get(userId, storageId);
@@ -48,4 +48,4 @@ void renderMemberAdditionDeletionPrompt(
                     detail::makeKeyboardMarkup(std::move(keyboard)));
 };
 
-} // namespace cookcookhnya::render::view_storage_members
+} // namespace cookcookhnya::render::storage::member_list

@@ -1,14 +1,14 @@
 #include "storage_view.hpp"
 
 #include "handlers/common.hpp"
-#include "render/ingredients_view/ingredients_render.hpp"
 #include "render/storage_list/storage_list_render.hpp"
+#include "render/storage_view/ingredients/list.hpp"
 #include "render/storage_view/storage_members_render.hpp"
 
 namespace cookcookhnya::handlers::storage_view {
 
-using namespace render::view_ingredients;
-using namespace render::view_storage_members;
+using namespace render::storage::ingredients;
+using namespace render::storage::member_list;
 using namespace render::storage_list;
 
 void storageViewButtonCallback(
