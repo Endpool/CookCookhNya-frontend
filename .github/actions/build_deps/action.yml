@@ -23,6 +23,7 @@ runs:
             ${{ runner.os }}-conan-cpp23-
 
       - name: Install system dependencies
+        shell: bash
         run: |
           sudo apt-get update
           sudo apt-get install -y \
@@ -33,12 +34,14 @@ runs:
             tar
 
       - name: Install Conan via pip
+        shell: bash
         run: |
           python3 -m pip install --user conan==2.15.1
           echo "$HOME/.local/bin" >> $GITHUB_PATH
 
       - name: Set up Conan profile
         working-directory: .
+        shell: bash
         run: |
           mkdir -p $HOME/.conan2/profiles
           conan profile detect --name=default --force
@@ -48,6 +51,7 @@ runs:
       - name: Install tgbotstater dependency
         if: steps.conan-cache.outputs.cache-hit != 'true'
         working-directory: .
+        shell: bash
         run: |
           mkdir -p /tmp/deps
           cd /tmp/deps
@@ -58,10 +62,12 @@ runs:
 
       - name: Install project dependencies
         working-directory: .
+        shell: bash
         run: |
           make conan-release
 
       - name: Configure CMake
         working-directory: .
+        shell: bash
         run: |
           make cmake-release
