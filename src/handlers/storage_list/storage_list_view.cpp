@@ -42,7 +42,7 @@ void storageListButtonCallback(
     }
     if (cq.data == "storage_list_what_to_cook") {
         auto messageId = renderStoragesSelect(cq.from->id, chatId, bot, storageApi);
-        stateManager.put(StorageSelection{.storageIds=std::vector<api::StorageId> {}, .messageId=messageId});
+        stateManager.put(StorageSelection{.storageIds = std::vector<api::StorageId>{}, .messageId = messageId});
         return;
     }
     renderStorageView(

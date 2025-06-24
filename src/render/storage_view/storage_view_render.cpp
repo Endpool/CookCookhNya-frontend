@@ -10,9 +10,9 @@ void renderStorageView(StorageId storageId, UserId userId, ChatId chatId, BotRef
     InlineKeyboard keyboard(buttonRows);
     keyboard[0].reserve(3);
     keyboard[1].reserve(1);
-    keyboard[0].push_back(detail::makeCallbackButton("Explore", "storage_view_explore")); 
-    keyboard[0].push_back(detail::makeCallbackButton("Members", "storage_view_members")); 
-    keyboard[0].push_back(detail::makeCallbackButton("Back", "storage_view_back")); 
+    keyboard[0].push_back(detail::makeCallbackButton("Explore", "storage_view_explore"));
+    keyboard[0].push_back(detail::makeCallbackButton("Members", "storage_view_members"));
+    keyboard[0].push_back(detail::makeCallbackButton("Back", "storage_view_back"));
     keyboard[1].push_back(detail::makeCallbackButton("What To Cook", "storage_view_what_to_cook"));
     bot.sendMessage(chatId, storage.name, nullptr, nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
 }

@@ -9,7 +9,7 @@ void renderStorageList(UserId userId, ChatId chatId, BotRef bot, StorageApiRef s
     auto currentStor = storageApi.getStoragesList(userId); // Take storages of user from backend
 
     unsigned long buttonRows = 0;
-    if (!currentStor.empty()){
+    if (!currentStor.empty()) {
         buttonRows = (currentStor.size() + 1) / 2 + 2;
     } else {
         buttonRows = 1;
@@ -30,8 +30,9 @@ void renderStorageList(UserId userId, ChatId chatId, BotRef bot, StorageApiRef s
         keyboard[1 + (i / 2)].push_back(
             detail::makeCallbackButton(currentStor[i].name, std::to_string(currentStor[i].id)));
     }
-    if (!currentStor.empty()){
-        keyboard[((currentStor.size() + 1) / 2) + 1].push_back(detail::makeCallbackButton("What To Cook", "storage_list_what_to_cook"));
+    if (!currentStor.empty()) {
+        keyboard[((currentStor.size() + 1) / 2) + 1].push_back(
+            detail::makeCallbackButton("What To Cook", "storage_list_what_to_cook"));
     }
 
     bot.sendMessage(chatId, "Your storages:", nullptr, nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));

@@ -27,9 +27,9 @@ void storageViewButtonCallback(
     } else if (cq.data == "storage_view_back") {
         renderStorageList(userId, chatId, bot, storageApi);
         stateManager.put(StorageList{});
-    } else if (cq.data == "storage_view_what_to_cook"){
+    } else if (cq.data == "storage_view_what_to_cook") {
         // renderRecipesSuggetion();
-        stateManager.put(SuggestedRecipeList{std::vector<api::StorageId> {state.storageId}});
+        stateManager.put(SuggestedRecipeList{std::vector<api::StorageId>{state.storageId}});
         return;
     }
 }
