@@ -81,5 +81,5 @@
     "clangd.arguments": [
         "--cross-file-rename"
     ],
-    "editor.formatOnSave": true,
+    "editor.formatOnSave": true
 }
