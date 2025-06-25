@@ -22,17 +22,23 @@ auto makeKeyboard(IngredientsApiRef api) {
     InlineKeyboard keyboard{1 + ingredients.size()};
     for (auto [row, i] : zip(keyboard, ingredients)) {
         row.reserve(2);
-        row.push_back(detail::makeCallbackButton("Put " + i.name, '+' + std::to_string(i.id)));
-        row.push_back(detail::makeCallbackButton("Remove " + std::move(i.name), '-' + std::to_string(i.id)));
+        row.push_back(detail::makeCallbackButton(utils::utf8str(u8"Добавить ") + i.name, '+' + std::to_string(i.id)));
+        row.push_back(
+            detail::makeCallbackButton(utils::utf8str(u8"Убрать ") + std::move(i.name), '-' + std::to_string(i.id)));
     }
-    keyboard[ingredients.size()].push_back(detail::makeCallbackButton("Back", "back"));
+    keyboard[ingredients.size()].push_back(detail::makeCallbackButton(utils::utf8str(u8"Назад "), "back"));
     return detail::makeKeyboardMarkup(std::move(keyboard));
 }
 
 } // namespace
 
 MessageId renderStorageIngredientsSearchSend(ChatId chat, BotRef bot, IngredientsApiRef api) {
-    return bot.sendMessage(chat, "Use button below to start Google-like search", nullptr, nullptr, makeKeyboard(api))
+    return bot
+        .sendMessage(chat,
+                     utils::utf8str(u8"Используй кнопку ниже как поисковик чтобы найти ингредиент"),
+                     nullptr,
+                     nullptr,
+                     makeKeyboard(api))
         ->messageId;
 }
 

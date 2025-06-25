@@ -30,14 +30,14 @@ void changePageAndBack(
         temp << data.substr(0, data.find(delimiter) + 1); // +1 is to move from space and get pure number
         int numOfStorages = 0;
         temp >> numOfStorages;
+        auto strgs = state.storageIds;
         if (numOfStorages > 1) {
             // Go to storages selection saving the storages which were chosen
-            auto message = renderStoragesSelect(userId, chatId, bot, api);
-            updateStorageSelect(state.storageIds, message, userId, chatId, bot, api);
+            auto message = renderStoragesSelect(strgs, userId, chatId, bot, api);
             stateManager.put(StorageSelection{.storageIds = std::move(state.storageIds), .messageId = message});
         } else {
-            stateManager.put(StorageView{state.storageIds[0]}); // Go to the only one storage (idk what's wrong with
-                                                                // linter), index is 0 as the object is only one
+            stateManager.put(StorageView{strgs[0]}); // Go to the only one storage (idk what's wrong with
+                                                     // linter), index is 0 as the object is only one
         }
         return;
     }
