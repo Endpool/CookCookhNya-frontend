@@ -48,6 +48,7 @@ struct StorageSelection {
 struct SuggestedRecipeList {
     std::size_t pageNo;
     std::vector<api::StorageId> storageIds;
+    bool fromStorage;
 };
 struct RecipeView {
     std::vector<api::StorageId> storageIds;

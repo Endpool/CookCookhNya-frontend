@@ -25,7 +25,8 @@ void selectStorages(StorageSelection& state, CallbackQueryRef cq, BotRef bot, SM
 
     if (cq.data == "confirm_storages_selection") {
         renderRecipesSuggestion(selectedStorages, 1, userId, chatId, bot, api);
-        stateManager.put(SuggestedRecipeList{.pageNo = 1, .storageIds = std::move(selectedStorages)});
+        stateManager.put(
+            SuggestedRecipeList{.pageNo = 1, .storageIds = std::move(selectedStorages), .fromStorage = false});
         return;
     }
     if (cq.data == "cancel_storages_selection") {
