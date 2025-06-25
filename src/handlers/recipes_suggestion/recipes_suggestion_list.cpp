@@ -1,6 +1,8 @@
 #include "recipes_suggestion_list.hpp"
 
+#include "backend/id_types.hpp"
 #include "handlers/common.hpp"
+#include "render/recipes_suggestion/recipe_view_render.hpp"
 #include "render/recipes_suggestion/recipes_suggestion_render.hpp"
 #include "render/recipes_suggestion/select_storages_render.hpp"
 #include "render/storage_view/storage_view_render.hpp"
@@ -15,6 +17,7 @@ namespace cookcookhnya::handlers::recipes_suggestion {
 using namespace render::recipes_suggestion;
 using namespace render::select_storages;
 using namespace render::storage;
+using namespace render::recipe_view;
 
 void changePageAndBack(
     SuggestedRecipeList& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
@@ -41,10 +44,18 @@ void changePageAndBack(
             stateManager.put(StorageView{state.storageIds[0]}); // Go to the only one storage (idk what's wrong with
                                                                 // linter), index is 0 as the object is only one
         }
+        bot.answerCallbackQuery(cq.id);
         return;
     }
 
     if (data[0] == 'r') { // Same naive implementation: if first char is r then it's recipe
+
+        temp << data.substr(data.find(delimiter, 0) + 1, data.size()); // +1 is to move from space and get pure number
+        api::RecipeId recipeId = 0;
+        temp >> recipeId;
+
+        renderRecipeView(state.storageIds, recipeId, userId, chatId, bot, api);
+        stateManager.put(RecipeView{.storageIds = state.storageIds, .recipeId = recipeId});
         // TODO: Add render of moving to recipe and render this state
         //  data already had recipeId in it
         return;
