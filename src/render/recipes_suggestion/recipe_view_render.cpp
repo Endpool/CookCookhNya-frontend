@@ -17,7 +17,7 @@ void renderRecipeView(std::vector<StorageId> const& storageIds,
 
     std::string recipeName = recipeIngredients.name;
 
-    std::string toPrint = std::format("Ingredients for {}\n", recipeName);
+    std::string toPrint = utils::utf8str(u8"Ингредиенты для ") + recipeName + "\n";
 
     for (size_t i = 0; i < ingredients.size(); i++) {
         if (ingredients[i].available) {
@@ -28,10 +28,11 @@ void renderRecipeView(std::vector<StorageId> const& storageIds,
     }
     InlineKeyboard keyboard(3);
 
-    keyboard[0].push_back(detail::makeCallbackButton("Готовить", "startCooking")); // Add needed info for next states!
-    keyboard[1].push_back(
-        detail::makeCallbackButton("Составить список продуктов", "makeReceipt")); // Add needed info for next states!
-    keyboard[2].push_back(detail::makeCallbackButton("Назад", "backFromRecipeView"));
+    keyboard[0].push_back(
+        detail::makeCallbackButton(utils::utf8str(u8"Готовить"), "startCooking")); // Add needed info for next states!
+    keyboard[1].push_back(detail::makeCallbackButton(utils::utf8str(u8"Составить список продуктов"),
+                                                     "makeReceipt")); // Add needed info for next states!
+    keyboard[2].push_back(detail::makeCallbackButton(utils::utf8str(u8"Назад"), "backFromRecipeView"));
 
     bot.sendMessage(chatId, toPrint, nullptr, nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
 }

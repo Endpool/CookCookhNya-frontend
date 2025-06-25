@@ -19,7 +19,6 @@ using namespace render::select_storages;
 using namespace render::storage;
 using namespace render::recipe_view;
 
-
 void changePageAndBack(
     SuggestedRecipeList& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
     bot.answerCallbackQuery(cq.id);
@@ -46,7 +45,7 @@ void changePageAndBack(
 
     if (data[0] == 'r') { // Same naive implementation: if first char is r then it's recipe
 
-        temp << data.substr(data.find("_", 0) + 1, data.size()); // +1 is to move from space and get pure number
+        temp << data.substr(data.find(' ', 0) + 1, data.size()); // +1 is to move from space and get pure number
         api::RecipeId recipeId = 0;
         temp >> recipeId;
 
