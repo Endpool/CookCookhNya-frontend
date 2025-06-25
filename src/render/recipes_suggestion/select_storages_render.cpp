@@ -65,10 +65,9 @@ void updateStorageSelect(std::vector<StorageId> selected_storages,
     }
     keyboard[buttonRows - 1].reserve(2);
     keyboard[buttonRows - 1].push_back(
-        detail::makeCallbackButton(utils::utf8str(u8"Подтвердить"), "confirm_storages_selection"));
-    keyboard[buttonRows - 1].push_back(
         detail::makeCallbackButton(utils::utf8str(u8"Назад"), "cancel_storages_selection"));
-
+    keyboard[buttonRows - 1].push_back(
+        detail::makeCallbackButton(utils::utf8str(u8"Подтвердить"), "confirm_storages_selection"));
     bot.editMessageReplyMarkup(chatId, messageId, "", detail::makeKeyboardMarkup(std::move(keyboard)));
 }
 } // namespace cookcookhnya::render::select_storages
