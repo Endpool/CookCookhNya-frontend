@@ -15,8 +15,8 @@ constructMarkup(std::vector<StorageId> const& storages, int pageNo, UserId userI
     // because of logic of that variable)
     static const int numOfRecipesOnPage = 10;
 
-    auto recipesList =
-        recipesApi.getRecipeList(userId, numOfRecipesOnPage, pageNo, storages); // Take storages of user from backend
+    auto recipesList = recipesApi.getRecipeList(
+        userId, numOfRecipesOnPage, (pageNo - 1) * numOfRecipesOnPage, storages); // Take storages of user from backend
 
     int amountOfRecipes = recipesList.recipesFound;
     bool ifMaxPage = amountOfRecipes - (numOfRecipesOnPage * pageNo) <= 0;
