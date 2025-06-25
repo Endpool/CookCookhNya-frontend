@@ -24,24 +24,18 @@ void changePageAndBack(
     auto messageId = cq.message->messageId;
     auto userId = cq.from->id;
 
-    std::string delimiter = " ";
     auto data = cq.data;
     std::stringstream temp; // To convert string to int
 
     // About pageNo - got initialised one already from state from which it goes as 1!
     if (data[0] == 'b') { // Here is quite naive implementation: if first char is b then it's "backFromSuggestedRecipes"
-        temp << data.substr(data.find(delimiter, 0) + 1,
-                            data.size()); // +1 is to move from space and get pure numberAdd commentMore actions
-        int numOfStorages = 0;
-        temp >> numOfStorages;
-        if (numOfStorages > 1) {
+        if (state.fromStorage) {
+            renderStorageView(state.storageIds[0], cq.from->id, chatId, bot, api);
+            stateManager.put(StorageView{state.storageIds[0]}); // Go to the only one storage
+        } else {
             // Go to storages selection saving the storages which were chosen
             auto message = renderStoragesSelect(state.storageIds, userId, chatId, bot, api);
             stateManager.put(StorageSelection{.storageIds = std::move(state.storageIds), .messageId = message});
-        } else {
-            renderStorageView(state.storageIds[0], cq.from->id, chatId, bot, api);
-            stateManager.put(StorageView{state.storageIds[0]}); // Go to the only one storage (idk what's wrong with
-                                                                // linter), index is 0 as the object is only one
         }
         return;
     }

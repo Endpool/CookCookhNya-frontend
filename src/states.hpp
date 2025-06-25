@@ -48,6 +48,7 @@ struct StorageSelection {
 struct SuggestedRecipeList {
     std::size_t pageNo;
     std::vector<api::StorageId> storageIds;
+    bool fromStorage;
 };
 
 using State = std::variant<StorageList,
