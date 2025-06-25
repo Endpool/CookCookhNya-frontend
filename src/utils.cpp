@@ -1,10 +1,11 @@
-#include <utils.hpp>
+#include "utils.hpp"
 
 #include <cstdlib>
 #include <format>
 #include <stdexcept>
+#include <string>
 
-namespace utils {
+namespace cookcookhnya::utils {
 
 const char* getenvWithError(const char* key) noexcept(false) {
     const char* value = std::getenv(key);
@@ -13,4 +14,8 @@ const char* getenvWithError(const char* key) noexcept(false) {
     return value;
 }
 
-} // namespace utils
+std::string utf8str(std::u8string_view sv) {
+    return {sv.begin(), sv.end()};
+}
+
+} // namespace cookcookhnya::utils

@@ -2,26 +2,41 @@
 
 ## Building (development)
 
-1. Install Conan package manager
+1. Install Conan package manager.
 
-2. To update dependencies (or install them first time)
+2. To build. The binary is `build/Debug/main`.
 ```bash
-conan install . --build=missing
+make build-debug
 ```
 
-3. To configure
+3. If you need `compile_commands.json` for LSP or similar,
+it is located in `build/Debug/compile_commands.json` and is regenerated when CMake is configured.
+Clangd's default search path of it is `.` and `./build`, so I propose create a symlink to the file:
 ```bash
-cmake --preset conan-release
+ln -s Debug/compile_commands.json build/compile_commands.json
 ```
 
-4. To build. The binary is `build/Release/main`.
+4. To run GDB to debug the application use shortcut:
 ```bash
-cmake --build --preset conan-release
+make gdb
 ```
 
-5. If you need `compile_commands.json` for LSP or other,
-it is located in `build/Release/compile_commands.json` and is regenerated when CMake is configured.
 
 ## Building (production)
 
-Use `Dockerfile`.
+It's better to use `Dockerfile`. If you need to build locally, follow these steps:
+
+1. Install Conan package manager
+
+2. To build. The binary is `build/Release/main`.
+```bash
+make build-release
+```
+
+## Run
+
+```bash
+make start-debug
+# or
+make start-release
+```

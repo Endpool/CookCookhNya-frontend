@@ -1,6 +1,7 @@
 [requires]
-tgbotstater/0.3.4
+tgbotstater/0.3.6
 cpp-httplib/0.19.0
+boost/1.83.0
 
 [generators]
 CMakeDeps
