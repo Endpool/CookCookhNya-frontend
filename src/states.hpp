@@ -50,6 +50,10 @@ struct SuggestedRecipeList {
     std::vector<api::StorageId> storageIds;
     bool fromStorage;
 };
+struct RecipeView {
+    std::vector<api::StorageId> storageIds;
+    api::RecipeId recipeId;
+};
 
 using State = std::variant<StorageList,
                            StorageCreation,
@@ -66,7 +70,8 @@ using State = std::variant<StorageList,
                            StorageIngredientsList,
                            StorageIngredientsSearch,
                            StorageSelection,
-                           SuggestedRecipeList>;
+                           SuggestedRecipeList,
+                           RecipeView>;
 
 using StateManager = tg_stater::StateProxy<tg_stater::MemoryStateStorage<State>>;
 

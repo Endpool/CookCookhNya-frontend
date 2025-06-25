@@ -29,11 +29,13 @@ constructMarkup(std::vector<StorageId> const& storages, int pageNo, UserId userI
                 1 + recipesList.recipes.size()); // 1 for back button return and other buttons are recipes
             for (uint32_t i = 0; i < recipesList.recipes.size(); i++) {
                 // Print on button in form "1. {Recipe}"
-                keyboard[i].push_back(detail::makeCallbackButton(
-                    std::format("{}. {}",
-                                1 + i + ((pageNo - 1) * numOfRecipesOnPage),
-                                recipesList.recipes[i].name),               // + 1 because i stars from 0
-                    std::format("recipe: {}", recipesList.recipes[i].id))); // HERE MUST BE RECIPE ID
+                keyboard[i].push_back(
+                    detail::makeCallbackButton(std::format("{}. {} [{}/{}]",
+                                                           1 + i + ((pageNo - 1) * numOfRecipesOnPage),
+                                                           recipesList.recipes[i].name,
+                                                           recipesList.recipes[i].available,
+                                                           recipesList.recipes[i].total), // + 1 because i stars from 0
+                                               std::format("recipe: {}", recipesList.recipes[i].id))); // RECIPE ID
             }
 
             /* Put the number of storages.
@@ -53,11 +55,13 @@ constructMarkup(std::vector<StorageId> const& storages, int pageNo, UserId userI
 
         for (uint32_t i = 0; i < recipesList.recipes.size(); i++) {
             // Print on button in form "1. {Recipe}"
-            keyboard[i].push_back(detail::makeCallbackButton(
-                std::format("{}. {}",
-                            1 + i + ((pageNo - 1) * numOfRecipesOnPage),
-                            recipesList.recipes[i].name),               // + 1 because i stars from 0
-                std::format("recipe: {}", recipesList.recipes[i].id))); // HERE MUST BE RECIPE ID
+            keyboard[i].push_back(
+                detail::makeCallbackButton(std::format("{}. {} [{}/{}]",
+                                                       1 + i + ((pageNo - 1) * numOfRecipesOnPage),
+                                                       recipesList.recipes[i].name,
+                                                       recipesList.recipes[i].available,
+                                                       recipesList.recipes[i].total), // + 1 because i stars from 0
+                                           std::format("recipe: {}", recipesList.recipes[i].id))); // RECIPE ID
         }
         // If pageNo == 1 and it's not 1st page then show only next button
         keyboard[recipesList.recipes.size()].push_back(detail::makeCallbackButton("⭠", std::to_string(pageNo + 1)));
@@ -79,10 +83,12 @@ constructMarkup(std::vector<StorageId> const& storages, int pageNo, UserId userI
     for (uint32_t i = 0; i < recipesList.recipes.size(); i++) {
         // Print on button in form "1. {Recipe}"
         keyboard[i].push_back(
-            detail::makeCallbackButton(std::format("{}. {}",
+            detail::makeCallbackButton(std::format("{}. {} [{}/{}]",
                                                    1 + i + ((pageNo - 1) * numOfRecipesOnPage),
-                                                   recipesList.recipes[i].name), // + 1 because i stars from 0
-                                       std::format("recipe: {}", recipesList.recipes[i].id))); // HERE MUST BE RECIPE ID
+                                                   recipesList.recipes[i].name,
+                                                   recipesList.recipes[i].available,
+                                                   recipesList.recipes[i].total), // + 1 because i stars from 0
+                                       std::format("recipe: {}", recipesList.recipes[i].id))); // RECIPE ID
     }
     if (!ifMaxPage) {
         // Show both possible ways
