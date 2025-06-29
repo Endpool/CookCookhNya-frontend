@@ -27,19 +27,19 @@ struct IngredientInRecipe {
     friend IngredientInRecipe tag_invoke(boost::json::value_to_tag<IngredientInRecipe>, const boost::json::value& j);
 };
 
-struct IngredientsInRecipe {
+struct RecipeDetails {
     std::vector<IngredientInRecipe> ingredients;
     std::string name; // RECIPE NAME
     std::string link;
 
-    friend IngredientsInRecipe tag_invoke(boost::json::value_to_tag<IngredientsInRecipe>, const boost::json::value& j);
+    friend RecipeDetails tag_invoke(boost::json::value_to_tag<RecipeDetails>, const boost::json::value& j);
 };
 
-struct RecipesSummary {
-    std::vector<RecipeSummary> recipes;
+struct RecipesList {
+    std::vector<RecipeSummary> recipesPage;
     int recipesFound;
 
-    friend RecipesSummary tag_invoke(boost::json::value_to_tag<RecipesSummary>, const boost::json::value& j);
+    friend RecipesList tag_invoke(boost::json::value_to_tag<RecipesList>, const boost::json::value& j);
 };
 
 struct RecipeCreateBody {
