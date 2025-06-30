@@ -5,7 +5,8 @@
 
 namespace cookcookhnya::render::select_storages {
 
-tg_types::MessageId renderStoragesSelect(UserId userId, ChatId chatId, BotRef bot, StorageApiRef storageApi);
+tg_types::MessageId renderStoragesSelect(
+    std::vector<StorageId> selected_storages, UserId userId, ChatId chatId, BotRef bot, StorageApiRef storageApi);
 
 void updateStorageSelect(std::vector<StorageId> selected_storages,
                          tg_types::MessageId messageId,

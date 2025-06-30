@@ -20,11 +20,11 @@ void renderIngredientsList(StorageId storage, UserId user, ChatId chat, BotRef b
         ingredients | transform([](auto& i) { return std::format("- {}\n", i.name); }) | join | to<std::string>();
 
     InlineKeyboard keyboard{2};
-    keyboard[0].push_back(detail::makeCallbackButton("Add/Remove", "search"));
-    keyboard[1].push_back(detail::makeCallbackButton("Back", "back"));
+    keyboard[0].push_back(detail::makeCallbackButton(utils::utf8str(u8"Добавить/Удалить"), "search"));
+    keyboard[1].push_back(detail::makeCallbackButton(utils::utf8str(u8"Назад"), "back"));
 
     bot.sendMessage(chat,
-                    "Your ingredients:\n\n" + std::move(list),
+                    utils::utf8str(u8"Ваши ингредиенты:\n\n") + std::move(list),
                     nullptr,
                     nullptr,
                     detail::makeKeyboardMarkup(std::move(keyboard)));

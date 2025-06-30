@@ -8,4 +8,5 @@ target_sources(main PRIVATE
     src/render/storage_view/ingredients/search.cpp
     src/render/recipes_suggestion/select_storages_render.cpp
     src/render/recipes_suggestion/recipes_suggestion_render.cpp
+    src/render/recipes_suggestion/recipe_view_render.cpp
 )

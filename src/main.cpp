@@ -28,7 +28,8 @@ int main() {
                                                   recipesSuggestionListHandler,
                                                   storageIngredientsListButtonHandler,
                                                   storageIngredientsSearchButtonHandler,
-                                                  storageIngredientsSearchHandler>
+                                                  storageIngredientsSearchHandler,
+                                                  recipeViewHandler>
         bot{{}, {ApiClient{utils::getenvWithError("API_URL")}}};
 
     bot.start(TgBot::Bot{utils::getenvWithError("BOT_TOKEN")});

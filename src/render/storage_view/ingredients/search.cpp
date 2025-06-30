@@ -34,7 +34,7 @@ auto makeKeyboard(const std::vector<IngredientSearchResult>& ingredients) {
         row.push_back(detail::makeCallbackButton((ing.available ? "[+] " : "[-] ") + ing.name, std::to_string(ing.id)));
 
     keyboard[1 + ingredients.size()].push_back(detail::makeCallbackButton(u8"Назад", "back"));
-
+  
     return detail::makeKeyboardMarkup(std::move(keyboard));
 }
 
@@ -42,7 +42,9 @@ auto makeKeyboard(const std::vector<IngredientSearchResult>& ingredients) {
 
 MessageId renderStorageIngredientsSearchSend(ChatId chat, BotRef bot) {
     PatchedBot patchedBot{bot};
-    return patchedBot.sendMessage(chat, "Use the button below to start Google-like search", makeKeyboard({}))
+    return patchedBot
+        .sendMessage(
+            chat, utils::utf8str(u8"Используй кнопку ниже как поисковик чтобы найти ингредиент"), makeKeyboard({}))
         ->messageId;
 }
 
