@@ -3,6 +3,10 @@
 #include "backend/models/ingredient.hpp"
 
 #include <format>
+#include <ranges>
+#include <string>
+#include <unordered_set>
+#include <utility>
 #include <vector>
 
 namespace cookcookhnya::api {
@@ -27,6 +31,18 @@ std::vector<Ingredient> IngredientsApi::getAllIngredients() const {
 
 Ingredient IngredientsApi::get(IngredientId id) const {
     return jsonGet<Ingredient>(std::format("/ingredients/{}", id));
+}
+
+std::vector<IngredientSearchResult> IngredientsApi::search(UserId user, std::string query, StorageId storage) const {
+    // return jsonGetAuthed<std::vector<IngredientSearchResult>>(
+    //     user, "/ingredients-for-storage", {{"query", std::move(query)}, {"storage", std::to_string(storage)}});
+    using namespace std::views;
+    using std::ranges::to;
+    auto sis = getStorageIngredients(user, storage) | transform(&Ingredient::id) | to<std::unordered_set>();
+    return getAllIngredients() | transform([&sis](Ingredient& i) {
+               return IngredientSearchResult{.id = i.id, .name = std::move(i.name), .available = sis.contains(i.id)};
+           }) |
+           take(query.size()) | to<std::vector>();
 }
 
 } // namespace cookcookhnya::api

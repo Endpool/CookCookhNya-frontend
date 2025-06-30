@@ -72,6 +72,7 @@ using recipesSuggestionListHandler = Handler<Events::CallbackQuery{}, changePage
 // StorageIngredientsList
 using storageIngredientsListButtonHandler = Handler<Events::CallbackQuery{}, storageIngredientsListButtonCallback>;
 using storageIngredientsSearchButtonHandler = Handler<Events::CallbackQuery{}, storageIngredientsSearchButtonCallback>;
+using storageIngredientsSearchHandler = Handler<Events::InlineQuery{}, storageIngredientsSearchInlineQueryCallback>;
 
 // RecipeView
 using recipeViewHandler = Handler<Events::CallbackQuery{}, handleRecipeView>;

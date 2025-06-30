@@ -37,10 +37,17 @@ using InlineKeyboard = std::vector<std::vector<TgBot::InlineKeyboardButton::Ptr>
 namespace detail {
 
 inline TgBot::InlineKeyboardButton::Ptr makeCallbackButton(std::string_view text, std::string_view data) {
-    TgBot::InlineKeyboardButton button{};
-    button.text = text;
-    button.callbackData = data;
-    return utils::make_shared(std::move(button));
+    TgBot::InlineKeyboardButton::Ptr button = std::make_shared<TgBot::InlineKeyboardButton>();
+    button->text = text;
+    button->callbackData = data;
+    return button;
+}
+
+inline TgBot::InlineKeyboardButton::Ptr makeCallbackButton(std::u8string_view text, std::string_view data) {
+    TgBot::InlineKeyboardButton::Ptr button = std::make_shared<TgBot::InlineKeyboardButton>();
+    button->text = utils::utf8str(text);
+    button->callbackData = data;
+    return button;
 }
 
 inline std::vector<TgBot::InlineKeyboardButton::Ptr>
