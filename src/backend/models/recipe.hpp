@@ -22,7 +22,7 @@ struct RecipeSummary {
 struct IngredientInRecipe {
     IngredientId id;
     std::string name;
-    bool available;
+    std::vector<StorageId> inStorages;
 
     friend IngredientInRecipe tag_invoke(boost::json::value_to_tag<IngredientInRecipe>, const boost::json::value& j);
 };

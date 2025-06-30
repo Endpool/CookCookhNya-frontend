@@ -15,7 +15,7 @@ void renderStorageList(UserId userId, ChatId chatId, BotRef bot, StorageApiRef s
     } else {
         buttonRows = 1;
     }
-    InlineKeyboard keyboard(buttonRows); // ceiling
+    InlineKeyboard keyboard(buttonRows);
     if (!currentStor.empty()) {
         keyboard[0].reserve(2);
         keyboard[0].push_back(detail::makeCallbackButton(utils::utf8str(u8"➕"), "storage_list_creation"));
@@ -25,7 +25,7 @@ void renderStorageList(UserId userId, ChatId chatId, BotRef bot, StorageApiRef s
         keyboard[0].push_back(detail::makeCallbackButton(utils::utf8str(u8"➕"), "storage_list_creation"));
     }
 
-    for (uint32_t i = 0; i < currentStor.size(); i++) {
+    for (size_t i = 0; i < currentStor.size(); i++) {
         if (i % 2 == 0)
             keyboard[1 + (i / 2)].reserve(2);
         keyboard[1 + (i / 2)].push_back(

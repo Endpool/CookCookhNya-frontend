@@ -20,7 +20,8 @@ RecipesApi::getRecipeList(UserId userId, int size, int offset, std::vector<Stora
 }
 
 RecipeDetails
-RecipesApi::getIngredientsInRecipe(UserId userId, RecipeId recipeId, std::vector<StorageId> const& storageIds) const {
+RecipesApi::getIngredientsInRecipe(UserId userId, RecipeId recipeId, std::vector<StorageId> const& storageIds)
+    const { // StorageIds are not needed in current implementation as backend doesnt return if ingredient is available
 
     std::multimap<std::string, std::string> multimap;
     for (auto temp : storageIds) {
