@@ -10,7 +10,7 @@ using namespace tg_types;
 InlineKeyboard
 constructMarkup(std::vector<StorageId> const& storages, int pageNo, UserId userId, RecipesApiRef recipesApi);
 
-void renderRecipesSuggestion(std::vector<StorageId> const& storages,
+void renderRecipesSuggestion(std::vector<api::StorageId> const& storages,
                              int pageNo,
                              UserId userId,
                              ChatId chatId,

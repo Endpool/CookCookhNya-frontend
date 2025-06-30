@@ -1,6 +1,7 @@
 #include "recipes_suggestion_render.hpp"
 
-#include "extern.hpp"
+#include "backend/id_types.hpp"
+#include "message_tracker.hpp"
 #include "render/common.hpp"
 
 #include <format>
@@ -10,7 +11,7 @@
 namespace cookcookhnya::render::recipes_suggestion {
 
 InlineKeyboard
-constructMarkup(std::vector<StorageId> const& storages, int pageNo, UserId userId, RecipesApiRef recipesApi) {
+constructMarkup(std::vector<api::StorageId> const& storages, int pageNo, UserId userId, RecipesApiRef recipesApi) {
     // CONSTANT AND SAME (STATIC) FOR EVERY USER (static const doesn't actually matter in this function was added
     // because of logic of that variable)
     static const int numOfRecipesOnPage = 10;
@@ -113,7 +114,7 @@ constructMarkup(std::vector<StorageId> const& storages, int pageNo, UserId userI
     return keyboard;
 }
 
-void renderRecipesSuggestion(std::vector<StorageId> const& storages,
+void renderRecipesSuggestion(std::vector<api::StorageId> const& storages,
                              int pageNo,
                              UserId userId,
                              ChatId chatId,

@@ -14,28 +14,28 @@ std::vector<StorageSummary> StoragesApi::getStoragesList(UserId userId) const {
     return jsonGetAuthed<std::vector<StorageSummary>>(userId, "/my/storages");
 }
 
-StorageDetails StoragesApi::get(UserId userId, StorageId id) const {
-    return jsonGetAuthed<StorageDetails>(userId, std::format("/my/storages/{}", id));
+StorageDetails StoragesApi::get(UserId userId, StorageId storageId) const {
+    return jsonGetAuthed<StorageDetails>(userId, std::format("/my/storages/{}", storageId));
 }
 
 StorageId StoragesApi::create(UserId userId, const StorageCreateBody& body) const {
     return jsonPostWithJsonAuthed<StorageId>(userId, "/my/storages", body);
 }
 
-void StoragesApi::delete_(UserId userId, StorageId id) const {
-    jsonDeleteAuthed<void>(userId, std::format("/my/storages/{}", id));
+void StoragesApi::delete_(UserId userId, StorageId storageId) const {
+    jsonDeleteAuthed<void>(userId, std::format("/my/storages/{}", storageId));
 }
 
-std::vector<StorageMemberDetails> StoragesApi::getStorageMembers(UserId userId, StorageId id) const {
-    return jsonGetAuthed<std::vector<StorageMemberDetails>>(userId, std::format("/my/storages/{}/members", id));
+std::vector<StorageMemberDetails> StoragesApi::getStorageMembers(UserId userId, StorageId storageId) const {
+    return jsonGetAuthed<std::vector<StorageMemberDetails>>(userId, std::format("/my/storages/{}/members", storageId));
 }
 
-void StoragesApi::addMember(UserId userId, StorageId id, UserId memberId) const {
-    jsonPutAuthed<void>(userId, std::format("/my/storages/{}/members/{}", id, memberId));
+void StoragesApi::addMember(UserId userId, StorageId storageId, UserId memberId) const {
+    jsonPutAuthed<void>(userId, std::format("/my/storages/{}/members/{}", storageId, memberId));
 }
 
-void StoragesApi::deleteMember(UserId userId, StorageId id, UserId memberId) const {
-    jsonDeleteAuthed<void>(userId, std::format("/my/storages/{}/members/{}", id, memberId));
+void StoragesApi::deleteMember(UserId userId, StorageId storageId, UserId memberId) const {
+    jsonDeleteAuthed<void>(userId, std::format("/my/storages/{}/members/{}", storageId, memberId));
 }
 
 } // namespace cookcookhnya::api

@@ -1,7 +1,6 @@
 #include "storages_select.hpp"
 
 #include "backend/id_types.hpp"
-#include "extern.hpp"
 #include "handlers/common.hpp"
 #include "render/recipes_suggestion/recipes_suggestion_render.hpp"
 #include "render/recipes_suggestion/select_storages_render.hpp"

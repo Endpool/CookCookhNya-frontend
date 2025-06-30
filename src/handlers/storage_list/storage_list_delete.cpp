@@ -8,11 +8,8 @@ namespace cookcookhnya::handlers::storage_delete {
 
 using namespace render::storage_list;
 
-void deleteStorage(StorageDeletionEnterName& /*unused*/,
-                   CallbackQueryRef cq,
-                   BotRef bot,
-                   SMRef stateManager,
-                   StorageApiRef storageApi) {
+void deleteStorage(
+    StorageDeletionName& /*unused*/, CallbackQueryRef cq, BotRef bot, SMRef stateManager, StorageApiRef storageApi) {
 
     std::stringstream temp;
     temp << cq.data;
@@ -23,11 +20,8 @@ void deleteStorage(StorageDeletionEnterName& /*unused*/,
     renderStorageList(cq.from->id, cq.message->chat->id, bot, storageApi);
 };
 
-void cancelStorageDeletion(StorageDeletionEnterName& /*unused*/,
-                           CallbackQueryRef cq,
-                           BotRef bot,
-                           SMRef stateManager,
-                           StorageApiRef storageApi) {
+void cancelStorageDeletion(
+    StorageDeletionName& /*unused*/, CallbackQueryRef cq, BotRef bot, SMRef stateManager, StorageApiRef storageApi) {
     bot.answerCallbackQuery(cq.id);
     if (cq.data == "cancel") {
         renderStorageList(cq.from->id, cq.message->chat->id, bot, storageApi);

@@ -8,9 +8,8 @@ using render::recipes_suggestion::renderRecipesSuggestion;
 
 void handleRecipeView(RecipeView& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
     std::string data = cq.data;
-
     auto chatId = cq.message->chat->id;
-    auto messageId = cq.message->messageId;
+    [[maybe_unused]] auto messageId = cq.message->messageId;
     auto userId = cq.from->id;
 
     if (data == "startCooking") {
@@ -22,7 +21,8 @@ void handleRecipeView(RecipeView& state, CallbackQueryRef cq, BotRef bot, SMRef 
     }
     if (data == "backFromRecipeView") {
         renderRecipesSuggestion(state.storageIds, 1, userId, chatId, bot, api);
-        stateManager.put(SuggestedRecipeList{.pageNo = 1, .storageIds = std::move(state.storageIds)});
+        stateManager.put(
+            SuggestedRecipeList{.pageNo = 1, .storageIds = std::move(state.storageIds), .fromStorage = false});
         return;
     }
 }

@@ -8,11 +8,8 @@ namespace cookcookhnya::handlers::storage_create {
 
 using namespace render::storage_list;
 
-void createStorage(StorageCreationEnterName& /*unused*/,
-                   MessageRef m,
-                   BotRef bot,
-                   SMRef stateManager,
-                   StorageApiRef storageApi) {                                      // BackendProvider bkn (Max: bkn?)
+void createStorage(
+    StorageCreationEnterName& /*unused*/, MessageRef m, BotRef bot, SMRef stateManager, StorageApiRef storageApi) {
     storageApi.create(m.from->id, api::models::storage::StorageCreateBody{m.text}); // Create storage body with new name
     renderStorageList(m.from->id, m.chat->id, bot, storageApi);
     stateManager.put(StorageList{});

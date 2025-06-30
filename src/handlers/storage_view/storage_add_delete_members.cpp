@@ -1,7 +1,8 @@
 #include "storage_add_delete_members.hpp"
 
-#include "extern.hpp"
+#include "backend/models/storage.hpp"
 #include "handlers/common.hpp"
+#include "message_tracker.hpp"
 #include "render/common.hpp"
 #include "render/storage_view/storage_members_render.hpp"
 #include "tg_types.hpp"
@@ -10,6 +11,7 @@
 namespace cookcookhnya::handlers::storage_add_delete_members {
 
 using namespace render::storage::member_list;
+using namespace render;
 
 void addDeleteMember(
     MembersAdditionDeletion& state, MessageRef m, BotRef bot, SMRef stateManager, StorageApiRef storageApi) {
@@ -18,22 +20,25 @@ void addDeleteMember(
     auto memberId = utils::parseSafe<tg_types::UserId>(m.text);
     auto storage = storageApi.get(userId, state.storageId);
 
+    InlineKeyboard keyboard(1);
+    keyboard[0].push_back(detail::makeCallbackButton(utils::utf8str(u8"Назад"), "cancel_member_addition_deletion"));
+
     if (!memberId) {
-        auto messageId = cookcookhnya::message::getMessageId(userId);
         auto text = utils::utf8str(u8"Введен неправильный ID пользователя");
-        InlineKeyboard keyboard(1);
-        keyboard.bot.editMessageText(text, chatId, *messageId, "", "", nullptr);
-        renderMemberAdditionDeletionPrompt(state.storageId, userId, chatId, bot, storageApi);
+        bot.sendMessage(chatId, text);
+        renderMemberList(state.storageId, userId, chatId, bot, storageApi);
         return;
     }
     auto members = storageApi.getStorageMembers(userId, state.storageId);
-    bool isMemberof = std::ranges::find(members, *memberId) != members.end();
-    if (isMemberof) {
+    bool isMemberOf =
+        std::ranges::find(members, memberId, &api::models::storage::StorageMemberDetails::userId) != members.end();
+    if (isMemberOf) {
         storageApi.deleteMember(userId, state.storageId, *memberId);
-
+        auto text = utils::utf8str(u8"Участник успешно удален");
+        bot.sendMessage(chatId, text);
     } else {
         storageApi.addMember(userId, state.storageId, *memberId);
-        bot.sendMessage(chatId, "Member added successfully");
+        bot.sendMessage(chatId, "Участник успешно добавлен");
     }
     renderMemberList(state.storageId, userId, chatId, bot, storageApi);
     stateManager.put(StorageMemberView{state.storageId});
