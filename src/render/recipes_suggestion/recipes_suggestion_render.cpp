@@ -1,7 +1,7 @@
 #include "recipes_suggestion_render.hpp"
 
+#include "extern.hpp"
 #include "render/common.hpp"
-#include "tg_types.hpp"
 
 #include <format>
 #include <string>
@@ -123,26 +123,29 @@ void renderRecipesSuggestion(std::vector<StorageId> const& storages,
     std::string pageInfo = utils::utf8str(u8"Номер страницы: ") + std::to_string(pageNo) +
                            utils::utf8str(u8"\nРецепты выбранные только для вас:");
 
-    bot.sendMessage(chatId,
-                    pageInfo,
-                    nullptr,
-                    nullptr,
-                    detail::makeKeyboardMarkup(constructMarkup(storages, pageNo, userId, recipesApi)));
+    auto messageId = cookcookhnya::message::getMessageId(userId);
+    bot.editMessageText(pageInfo,
+                        chatId,
+                        *messageId,
+                        "",
+                        "",
+                        nullptr,
+                        detail::makeKeyboardMarkup(constructMarkup(storages, pageNo, userId, recipesApi)));
 }
 
 void editSuggestionMessage(std::vector<StorageId> const& storages,
                            int pageNo,
                            UserId userId,
                            ChatId chatId,
-                           tg_types::MessageId messageId,
                            BotRef bot,
                            RecipesApiRef recipesApi) {
     std::string pageInfo = utils::utf8str(u8"Номер страницы: ") + std::to_string(pageNo) +
                            utils::utf8str(u8"\nРецепты выбранные только для вас:");
 
+    auto messageId = cookcookhnya::message::getMessageId(userId);
     bot.editMessageText(pageInfo,
                         chatId,
-                        messageId,
+                        *messageId,
                         "",
                         "",
                         nullptr,

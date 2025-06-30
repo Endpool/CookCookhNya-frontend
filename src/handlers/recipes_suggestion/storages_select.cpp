@@ -1,6 +1,7 @@
 #include "storages_select.hpp"
 
 #include "backend/id_types.hpp"
+#include "extern.hpp"
 #include "handlers/common.hpp"
 #include "render/recipes_suggestion/recipes_suggestion_render.hpp"
 #include "render/recipes_suggestion/select_storages_render.hpp"
@@ -13,7 +14,7 @@
 namespace cookcookhnya::handlers::storages_select {
 
 using render::recipes_suggestion::renderRecipesSuggestion;
-using render::select_storages::updateStorageSelect;
+using render::select_storages::editStorageSelectMessage;
 using render::storage_list::renderStorageList;
 
 void selectStorages(StorageSelection& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
@@ -21,7 +22,6 @@ void selectStorages(StorageSelection& state, CallbackQueryRef cq, BotRef bot, SM
     auto chatId = cq.message->chat->id;
     auto userId = cq.from->id;
     auto selectedStorages = state.storageIds;
-    auto messageId = state.messageId;
 
     if (cq.data == "confirm_storages_selection") {
         renderRecipesSuggestion(selectedStorages, 1, userId, chatId, bot, api);
@@ -39,14 +39,14 @@ void selectStorages(StorageSelection& state, CallbackQueryRef cq, BotRef bot, SM
     if (cq.data.starts_with("in")) {
         auto it = std::ranges::find(selectedStorages, *cqStorageId);
         selectedStorages.erase(it);
-        updateStorageSelect(selectedStorages, messageId, userId, chatId, bot, api);
-        stateManager.put(StorageSelection{.storageIds = selectedStorages, .messageId = messageId});
+        editStorageSelectMessage(selectedStorages, userId, chatId, bot, api);
+        stateManager.put(StorageSelection{.storageIds = selectedStorages});
         return;
     }
     if (cq.data.starts_with("out")) {
         selectedStorages.push_back(*cqStorageId);
-        updateStorageSelect(selectedStorages, messageId, userId, chatId, bot, api);
-        stateManager.put(StorageSelection{.storageIds = selectedStorages, .messageId = messageId});
+        editStorageSelectMessage(selectedStorages, userId, chatId, bot, api);
+        stateManager.put(StorageSelection{.storageIds = selectedStorages});
         return;
     }
 }

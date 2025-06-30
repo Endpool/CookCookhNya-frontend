@@ -30,4 +30,13 @@ struct StorageCreateBody {
     friend void tag_invoke(boost::json::value_from_tag, boost::json::value& j, const StorageCreateBody& body);
 };
 
+struct StorageMemberDetails {
+    tg_types::UserId userId;
+    std::string alias;
+    std::string fullName;
+
+    friend StorageMemberDetails tag_invoke(boost::json::value_to_tag<StorageMemberDetails>,
+                                           const boost::json::value& j);
+};
+
 } // namespace cookcookhnya::api::models::storage

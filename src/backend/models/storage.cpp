@@ -25,4 +25,12 @@ void tag_invoke(json::value_from_tag /*tag*/, json::value& j, const StorageCreat
     j = {{"name", body.name}};
 }
 
+StorageMemberDetails tag_invoke(json::value_from_tag /*tag*/, json::value& j) {
+    return {
+        .userId = value_to<decltype(StorageMemberDetails::userId)>(j.at("id")),
+        .alias = value_to<decltype(StorageMemberDetails::alias)>(j.at("alias")),
+        .fullName = value_to<decltype(StorageMemberDetails::fullName)>(j.at("fullName")),
+    };
+}
+
 } // namespace cookcookhnya::api::models::storage

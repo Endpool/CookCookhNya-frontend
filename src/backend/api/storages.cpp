@@ -26,8 +26,8 @@ void StoragesApi::delete_(UserId userId, StorageId id) const {
     jsonDeleteAuthed<void>(userId, std::format("/my/storages/{}", id));
 }
 
-std::vector<StoragesApi::UserId> StoragesApi::getStorageMembers(UserId userId, StorageId id) const {
-    return jsonGetAuthed<std::vector<UserId>>(userId, std::format("/my/storages/{}/members", id));
+std::vector<StorageMemberDetails> StoragesApi::getStorageMembers(UserId userId, StorageId id) const {
+    return jsonGetAuthed<std::vector<StorageMemberDetails>>(userId, std::format("/my/storages/{}/members", id));
 }
 
 void StoragesApi::addMember(UserId userId, StorageId id, UserId memberId) const {

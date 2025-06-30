@@ -1,5 +1,6 @@
 #include "storage_members_render.hpp"
 
+#include "extern.hpp"
 #include "render/common.hpp"
 #include "utils.hpp"
 
@@ -26,13 +27,10 @@ void renderMemberList(const StorageId& storageId, UserId userId, ChatId chatId, 
 
     std::string list;
     for (auto [i, id] : std::views::enumerate(storageApi.getStorageMembers(userId, storageId)))
-        std::format_to(std::back_inserter(list), "{}\\. {}\n", i + 1, id);
-    bot.sendMessage(chatId,
-                    utils::utf8str(u8"Участники хранилища:\n ") + list,
-                    nullptr,
-                    nullptr,
-                    detail::makeKeyboardMarkup(std::move(keyboard)),
-                    "MarkdownV2");
+        std::format_to(std::back_inserter(list), "  {}\\. {}\n", i + 1, id);
+    auto text = utils::utf8str(u8"Участники хранилища:\n") + list;
+    auto messageId = message::getMessageId(userId);
+    bot.editMessageText(text, chatId, *messageId, "", "", nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
 };
 
 void renderMemberAdditionDeletionPrompt(
@@ -42,12 +40,9 @@ void renderMemberAdditionDeletionPrompt(
 
     InlineKeyboard keyboard(buttonRows);
     keyboard[0].push_back(detail::makeCallbackButton(utils::utf8str(u8"Отмена"), "cancel_member_addition_deletion"));
-
-    bot.sendMessage(chatId,
-                    utils::utf8str(u8"Отправь Telegram ID для добавления/удаления из списка:\n "),
-                    nullptr,
-                    nullptr,
-                    detail::makeKeyboardMarkup(std::move(keyboard)));
+    auto text = utils::utf8str(u8"Перешли сообщение пользователя, которого бы хотел добавить/удалить из хранилища\n ");
+    auto messageId = cookcookhnya::message::getMessageId(userId);
+    bot.editMessageText(text, chatId, *messageId, "", "", nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
 };
 
 } // namespace cookcookhnya::render::storage::member_list

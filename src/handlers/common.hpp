@@ -18,12 +18,10 @@ namespace cookcookhnya::handlers {
 using states::StorageList;
 
 using states::RecipeView;
-using states::StorageCreation;
 using states::StorageCreationEnterName;
 using states::StorageDeletion;
-using states::StorageDeletionEnterName;
+using states::StorageDeletionName;
 using states::StorageView;
-using states::StorageWrongNameToDelete;
 
 using states::MemberAddition;
 using states::MemberDeletion;

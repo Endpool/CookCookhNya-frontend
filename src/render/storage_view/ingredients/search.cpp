@@ -32,9 +32,9 @@ auto makeKeyboard(IngredientsApiRef api) {
 
 } // namespace
 
-MessageId renderStorageIngredientsSearchSend(ChatId chat, BotRef bot, IngredientsApiRef api) {
+MessageId renderStorageIngredientsSearchSend(ChatId chatId, BotRef bot, IngredientsApiRef api) {
     return bot
-        .sendMessage(chat,
+        .sendMessage(chatId,
                      utils::utf8str(u8"Используй кнопку ниже как поисковик чтобы найти ингредиент"),
                      nullptr,
                      nullptr,

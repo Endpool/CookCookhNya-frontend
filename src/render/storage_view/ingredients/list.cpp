@@ -1,5 +1,6 @@
 #include "list.hpp"
 
+#include "extern.hpp"
 #include "render/common.hpp"
 
 #include <format>
@@ -11,11 +12,11 @@ namespace cookcookhnya::render::storage::ingredients {
 
 using namespace api::models::ingredient;
 
-void renderIngredientsList(StorageId storage, UserId user, ChatId chat, BotRef bot, IngredientsApiRef api) {
+void renderIngredientsList(StorageId storage, UserId userId, ChatId chatId, BotRef bot, IngredientsApiRef api) {
     using namespace std::views;
     using std::ranges::to;
 
-    std::vector<Ingredient> ingredients = api.getStorageIngredients(user, storage);
+    std::vector<Ingredient> ingredients = api.getStorageIngredients(userId, storage);
     std::string list =
         ingredients | transform([](auto& i) { return std::format("- {}\n", i.name); }) | join | to<std::string>();
 
@@ -23,11 +24,9 @@ void renderIngredientsList(StorageId storage, UserId user, ChatId chat, BotRef b
     keyboard[0].push_back(detail::makeCallbackButton(utils::utf8str(u8"Добавить/Удалить"), "search"));
     keyboard[1].push_back(detail::makeCallbackButton(utils::utf8str(u8"Назад"), "back"));
 
-    bot.sendMessage(chat,
-                    utils::utf8str(u8"Ваши ингредиенты:\n\n") + std::move(list),
-                    nullptr,
-                    nullptr,
-                    detail::makeKeyboardMarkup(std::move(keyboard)));
+    auto text = utils::utf8str(u8"Ваши ингредиеты:\n\n") + std::move(list);
+    auto messageId = message::getMessageId(userId);
+    bot.editMessageText(text, chatId, *messageId, "", "", nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
 }
 
 } // namespace cookcookhnya::render::storage::ingredients

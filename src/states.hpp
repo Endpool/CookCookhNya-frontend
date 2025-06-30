@@ -21,18 +21,20 @@ struct StorageIdMixin {
 
 } // namespace detail
 
-struct StorageList {};
+struct StorageList {
+    bool fromCreation;
+};
 
-struct StorageCreation {};
 struct StorageDeletion : detail::StorageIdMixin {};
 struct StorageCreationEnterName {};
-struct StorageWrongNameToDelete {};
-struct StorageDeletionEnterName {};
+struct StorageDeletionName {};
 struct StorageView : detail::StorageIdMixin {};
 
 struct StorageMemberView : detail::StorageIdMixin {};
 struct MembersAdditionDeletion : detail::StorageIdMixin {};
-struct PackMemberView : detail::StorageIdMixin {};
+struct PackMemberView : detail::StorageIdMixin {
+    bool fromCreationDeletion;
+};
 struct MemberAddition : detail::StorageIdMixin {};
 struct MemberDeletion : detail::StorageIdMixin {};
 
@@ -43,7 +45,6 @@ struct StorageIngredientsSearch : detail::StorageIdMixin {
 
 struct StorageSelection {
     std::vector<api::StorageId> storageIds;
-    tg_types::MessageId messageId;
 };
 struct SuggestedRecipeList {
     std::size_t pageNo;
@@ -56,11 +57,9 @@ struct RecipeView {
 };
 
 using State = std::variant<StorageList,
-                           StorageCreation,
                            StorageDeletion,
                            StorageCreationEnterName,
-                           StorageWrongNameToDelete,
-                           StorageDeletionEnterName,
+                           StorageDeletionName,
                            StorageView,
                            StorageMemberView,
                            MembersAdditionDeletion,

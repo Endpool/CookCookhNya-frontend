@@ -1,5 +1,6 @@
 #include "delete_storage_render.hpp"
 
+#include "extern.hpp"
 #include "render/common.hpp"
 
 namespace cookcookhnya::render::delete_storage {
@@ -16,11 +17,9 @@ void renderStorageDelete(ChatId chatId, BotRef bot, UserId userId, StorageApiRef
         keyboard[1 + (i / 2)].push_back(
             detail::makeCallbackButton(currentStor[i].name, std::to_string(currentStor[i].id)));
     }
-    bot.sendMessage(chatId,
-                    utils::utf8str(u8"Что вы хотите удалить"),
-                    nullptr,
-                    nullptr,
-                    detail::makeKeyboardMarkup(std::move(keyboard)));
+    auto text = utils::utf8str(u8"Что вы хотите удалить");
+    auto messageId = cookcookhnya::message::getMessageId(userId);
+    bot.editMessageText(text, chatId, *messageId, "", "", nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
 };
 
 } // namespace cookcookhnya::render::delete_storage

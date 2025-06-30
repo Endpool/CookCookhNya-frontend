@@ -1,9 +1,12 @@
 #include "storage_list_render.hpp"
 
+#include "extern.hpp"
 #include "render/common.hpp"
 #include "utils.hpp"
 
 namespace cookcookhnya::render::storage_list {
+
+using namespace tg_types;
 
 void renderStorageList(UserId userId, ChatId chatId, BotRef bot, StorageApiRef storageApi) {
 
@@ -36,8 +39,9 @@ void renderStorageList(UserId userId, ChatId chatId, BotRef bot, StorageApiRef s
             detail::makeCallbackButton(utils::utf8str(u8"Хочу кушать"), "storage_list_what_to_cook"));
     }
 
-    bot.sendMessage(
+    auto message = bot.sendMessage(
         chatId, utils::utf8str(u8"Ваши хранилища:"), nullptr, nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
+    cookcookhnya::message::addMessageId(userId, message->messageId);
 }
 
 } // namespace cookcookhnya::render::storage_list

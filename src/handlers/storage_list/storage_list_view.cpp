@@ -1,6 +1,5 @@
 #include "storage_list_view.hpp"
 
-#include "backend/id_types.hpp"
 #include "handlers/common.hpp"
 #include "render/recipes_suggestion/select_storages_render.hpp"
 #include "render/storage_list/create_storage_render.hpp"
@@ -25,10 +24,10 @@ void storageListButtonCallback(
     temp << cq.data;
     int id = 0;
     temp >> id;
-
+    auto userId = cq.from->id;
     auto chatId = cq.message->chat->id;
     if (cq.data == "storage_list_creation") {
-        renderStorageCreate(chatId, bot);
+        renderStorageCreate(chatId, userId, bot);
         stateManager.put(StorageCreationEnterName{}); // Go to function create storage, while cancel button is handled
                                                       // on cancel storage creation
         return;
@@ -37,12 +36,12 @@ void storageListButtonCallback(
     if (cq.data == "storage_list_deletion") {
         renderStorageDelete(
             chatId, bot, cq.from->id, storageApi); // Need for api, so it could put the list of storages to delete
-        stateManager.put(StorageDeletionEnterName{});
+        stateManager.put(StorageDeletionName{});
         return;
     }
     if (cq.data == "storage_list_what_to_cook") {
-        auto messageId = renderStoragesSelect({}, cq.from->id, chatId, bot, storageApi);
-        stateManager.put(StorageSelection{.storageIds = std::vector<api::StorageId>{}, .messageId = messageId});
+        renderStoragesSelect({}, cq.from->id, chatId, bot, storageApi);
+        stateManager.put(StorageSelection{std::vector<api::StorageId>{}});
         return;
     }
     renderStorageView(

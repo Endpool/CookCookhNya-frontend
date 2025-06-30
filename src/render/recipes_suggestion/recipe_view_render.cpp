@@ -1,5 +1,5 @@
 #include "recipe_view_render.hpp"
-#include <cstddef>
+#include "extern.hpp"
 #include <format>
 #include <vector>
 
@@ -19,11 +19,11 @@ void renderRecipeView(std::vector<StorageId> const& storageIds,
 
     std::string toPrint = utils::utf8str(u8"Ингредиенты для ") + recipeName + "\n";
 
-    for (size_t i = 0; i < ingredients.size(); i++) {
-        if (ingredients[i].available) {
-            toPrint += std::format("{} +\n", ingredients[i].name);
+    for (auto& ingredient : ingredients) {
+        if (ingredient.available) {
+            toPrint += std::format("{} +\n", ingredient.name);
         } else {
-            toPrint += std::format("{} -\n", ingredients[i].name);
+            toPrint += std::format("{} -\n", ingredient.name);
         }
     }
     InlineKeyboard keyboard(3);
@@ -34,6 +34,7 @@ void renderRecipeView(std::vector<StorageId> const& storageIds,
                                                      "makeReceipt")); // Add needed info for next states!
     keyboard[2].push_back(detail::makeCallbackButton(utils::utf8str(u8"Назад"), "backFromRecipeView"));
 
-    bot.sendMessage(chatId, toPrint, nullptr, nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
+    auto messageId = cookcookhnya::message::getMessageId(userId);
+    bot.editMessageText(toPrint, chatId, *messageId, "", "", nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
 }
 } // namespace cookcookhnya::render::recipe_view
