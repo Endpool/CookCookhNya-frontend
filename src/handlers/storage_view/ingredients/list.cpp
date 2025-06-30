@@ -16,8 +16,8 @@ void storageIngredientsListButtonCallback(
         render::storage::renderStorageView(state.storageId, user, chat, bot, api);
         stateManager.put(StorageView{state.storageId});
     } else if (cq.data == "search") {
-        tg_types::MessageId message = render::storage::ingredients::renderStorageIngredientsSearchSend(chat, bot, api);
-        stateManager.put(StorageIngredientsSearch{state.storageId, message});
+        tg_types::MessageId message = render::storage::ingredients::renderStorageIngredientsSearchSend(chat, bot);
+        stateManager.put(StorageIngredientsSearch{state.storageId, message, {}});
     }
 }
 

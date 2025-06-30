@@ -1,17 +1,17 @@
 #pragma once
 
 #include "backend/id_types.hpp"
+#include "backend/models/ingredient.hpp"
 #include "tg_types.hpp"
 
-#include <cstddef>
 #include <tg_stater/state_storage/common.hpp>
 #include <tg_stater/state_storage/memory.hpp>
 
+#include <cstddef>
 #include <variant>
 #include <vector>
 
 namespace cookcookhnya::states {
-using namespace api;
 
 namespace detail {
 struct StorageIdMixin {
@@ -39,6 +39,7 @@ struct MemberDeletion : detail::StorageIdMixin {};
 struct StorageIngredientsList : detail::StorageIdMixin {};
 struct StorageIngredientsSearch : detail::StorageIdMixin {
     tg_types::MessageId message;
+    std::vector<api::models::ingredient::IngredientSearchResult> shownIngredients;
 };
 
 struct StorageSelection {
