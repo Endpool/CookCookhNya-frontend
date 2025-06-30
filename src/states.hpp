@@ -21,9 +21,7 @@ struct StorageIdMixin {
 
 } // namespace detail
 
-struct StorageList {
-    bool fromCreation;
-};
+struct StorageList {};
 
 struct StorageDeletion : detail::StorageIdMixin {};
 struct StorageCreationEnterName {};
@@ -32,9 +30,7 @@ struct StorageView : detail::StorageIdMixin {};
 
 struct StorageMemberView : detail::StorageIdMixin {};
 struct MembersAdditionDeletion : detail::StorageIdMixin {};
-struct PackMemberView : detail::StorageIdMixin {
-    bool fromCreationDeletion;
-};
+struct PackMemberView : detail::StorageIdMixin {};
 struct MemberAddition : detail::StorageIdMixin {};
 struct MemberDeletion : detail::StorageIdMixin {};
 

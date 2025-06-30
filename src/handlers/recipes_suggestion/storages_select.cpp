@@ -29,7 +29,7 @@ void selectStorages(StorageSelection& state, CallbackQueryRef cq, BotRef bot, SM
         return;
     }
     if (cq.data == "cancel_storages_selection") {
-        renderStorageList(userId, chatId, bot, api);
+        renderStorageList(true, userId, chatId, bot, api);
         stateManager.put(StorageList{});
         return;
     }

@@ -1,6 +1,8 @@
 #include "storage_view_render.hpp"
 
+#include "message_tracker.hpp"
 #include "render/common.hpp"
+#include "utils.hpp"
 
 namespace cookcookhnya::render::storage {
 
@@ -14,7 +16,9 @@ void renderStorageView(StorageId storageId, UserId userId, ChatId chatId, BotRef
     keyboard[0].push_back(detail::makeCallbackButton(utils::utf8str(u8"Участники"), "storage_view_members"));
     keyboard[0].push_back(detail::makeCallbackButton(utils::utf8str(u8"Назад"), "storage_view_back"));
     keyboard[1].push_back(detail::makeCallbackButton(utils::utf8str(u8"Хочу кушать"), "storage_view_what_to_cook"));
-    bot.sendMessage(chatId, storage.name, nullptr, nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
+    auto text = storage.name;
+    auto messageId = message::getMessageId(userId);
+    bot.editMessageText(text, chatId, *messageId, "", "", nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
 }
 
 } // namespace cookcookhnya::render::storage

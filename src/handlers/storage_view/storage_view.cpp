@@ -28,7 +28,7 @@ void storageViewButtonCallback(
         renderMemberList(state.storageId, userId, chatId, bot, api);
         stateManager.put(StorageMemberView{state.storageId});
     } else if (cq.data == "storage_view_back") {
-        renderStorageList(userId, chatId, bot, api);
+        renderStorageList(true, userId, chatId, bot, api);
         stateManager.put(StorageList{});
     } else if (cq.data == "storage_view_what_to_cook") {
         renderRecipesSuggestion({state.storageId}, 1, userId, chatId, bot, api);
