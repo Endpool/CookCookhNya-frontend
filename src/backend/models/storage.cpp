@@ -25,10 +25,11 @@ void tag_invoke(json::value_from_tag /*tag*/, json::value& j, const StorageCreat
     j = {{"name", body.name}};
 }
 
-StorageMemberDetails tag_invoke(json::value_from_tag /*tag*/, json::value& j) {
+StorageMemberDetails tag_invoke(json::value_to_tag<StorageMemberDetails> /*tag*/, const json::value& j) {
     return {
         .userId = value_to<decltype(StorageMemberDetails::userId)>(j.at("id")),
-        .alias = value_to<decltype(StorageMemberDetails::alias)>(j.at("alias")),
+        .alias = j.as_object().if_contains("alias") ? value_to<decltype(StorageMemberDetails::alias)>(j.at("alias"))
+                                                    : std::nullopt,
         .fullName = value_to<decltype(StorageMemberDetails::fullName)>(j.at("fullName")),
     };
 }
