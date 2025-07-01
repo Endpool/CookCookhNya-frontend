@@ -15,15 +15,7 @@ void renderStorageList(UserId userId, ChatId chatId, BotRef bot, StorageApiRef s
     const std::size_t buttonRows = currentStorages.empty() ? 1 : ((currentStorages.size() + 1) / 2) + 2; // ceiling
     InlineKeyboard keyboard(buttonRows);
 
-
-    unsigned long buttonRows = 0;
-    if (!currentStor.empty()) {
-        buttonRows = (currentStor.size() + 1) / 2 + 2;
-    } else {
-        buttonRows = 1;
-    }
-    InlineKeyboard keyboard(buttonRows);
-    if (!currentStor.empty()) {
+    if (!currentStorages.empty()) {
 
         keyboard[0].reserve(2);
         keyboard[0].push_back(detail::makeCallbackButton(u8"➕", "storage_list_creation"));
@@ -32,8 +24,7 @@ void renderStorageList(UserId userId, ChatId chatId, BotRef bot, StorageApiRef s
         keyboard[0].push_back(detail::makeCallbackButton(u8"➕", "storage_list_creation"));
     }
 
-
-    for (size_t i = 0; i < currentStor.size(); i++) {
+    for (size_t i = 0; i < currentStorages.size(); i++) {
 
         if (i % 2 == 0)
             keyboard[1 + (i / 2)].reserve(2);

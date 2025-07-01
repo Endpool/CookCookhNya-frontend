@@ -12,17 +12,16 @@
 
 namespace cookcookhnya::render::recipe_view {
 
-
-textGenInfo textGen(std::vector<StorageId> const& storageIds,
+textGenInfo textGen(std::vector<api::StorageId> const& storageIds,
                     const api::models::recipe::RecipeDetails& recipeIngredients,
                     UserId userId,
                     ApiClient api) { // will return needed text and some additional elements
 
     // Get two api's from apiClient
     auto storageApi = api.getStorages();
-    std::unordered_set<StorageId> storageIdSet(storageIds.begin(), storageIds.end());
+    std::unordered_set<api::StorageId> storageIdSet(storageIds.begin(), storageIds.end());
 
-    std::unordered_set<StorageId> suggestedStorageIds;
+    std::unordered_set<api::StorageId> suggestedStorageIds;
     std::vector<std::string> foundInStoragesStrings;
 
     auto ingredients = recipeIngredients.ingredients;
@@ -92,7 +91,7 @@ textGenInfo textGen(std::vector<StorageId> const& storageIds,
                 foundInStoragesStrings}; // Many info may be needed from that function to make right markup
 }
 
-void renderRecipeView(std::vector<StorageId> const& storageIds,
+void renderRecipeView(std::vector<api::StorageId> const& storageIds,
                       api::RecipeId recipeId,
                       UserId userId,
                       ChatId chatId,
@@ -123,7 +122,7 @@ void renderRecipeView(std::vector<StorageId> const& storageIds,
     bot.sendMessage(chatId, toPrint, nullptr, nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
 }
 
-void renderRecipeViewAfterAddingStorage(std::vector<StorageId> const& storageIds,
+void renderRecipeViewAfterAddingStorage(std::vector<api::StorageId> const& storageIds,
                                         api::RecipeId recipeId,
                                         UserId userId,
                                         ChatId chatId,
@@ -162,16 +161,17 @@ void renderRecipeViewAfterAddingStorage(std::vector<StorageId> const& storageIds
                         detail::makeKeyboardMarkup(std::move(keyboard))); // Only on difference between function above
 }
 
-std::vector<StorageId> storagesToShow(std::vector<api::models::recipe::IngredientInRecipe>& ingredients,
-                                      std::vector<StorageId>& storageIdsToAccount) {
-    std::vector<StorageId> storageIdsToShow;
+std::vector<api::StorageId> storagesToShow(std::vector<api::models::recipe::IngredientInRecipe>& ingredients,
+                                           std::vector<api::StorageId>& storageIdsToAccount) {
+    std::vector<api::StorageId> storageIdsToShow;
 
-    std::unordered_set<StorageId> toAdd; // If there will be only one element of storageId then remove
+    std::unordered_set<api::StorageId> toAdd; // If there will be only one element of storageId then remove
     bool isFound = false;
     for (auto& ingredient : ingredients) {
-        isFound = false;                                    // Iterate through each ingredient
-        for (StorageId inStorage : ingredient.inStorages) { // Iterate through each storage where ingredient is present
-            for (StorageId i : storageIdsToAccount) {
+        isFound = false; // Iterate through each ingredient
+        for (api::StorageId inStorage :
+             ingredient.inStorages) { // Iterate through each storage where ingredient is present
+            for (api::StorageId i : storageIdsToAccount) {
                 if (i == inStorage) {
                     isFound = true;
                     break;
@@ -185,7 +185,7 @@ std::vector<StorageId> storagesToShow(std::vector<api::models::recipe::Ingredien
             // Proof that ingredient doesn't have "toxic" storages. Toxic storage is a storage which has some
             // ingredient so because of it other storages with that ingredient are not needed
             // But storages may be redeemed if they are in set of storages of ingredient where there is no toxic one
-            for (StorageId temp : ingredient.inStorages) {
+            for (api::StorageId temp : ingredient.inStorages) {
                 toAdd.insert(temp);
             }
         }
@@ -199,7 +199,7 @@ std::vector<StorageId> storagesToShow(std::vector<api::models::recipe::Ingredien
     return storageIdsToShow;
 }
 
-void renderStorageSuggestion(std::vector<StorageId>& storageIdsToAccount, // storages which are selected
+void renderStorageSuggestion(std::vector<api::StorageId>& storageIdsToAccount, // storages which are selected
                              api::RecipeId recipeId,
                              UserId userId,
                              ChatId chatId,
@@ -213,7 +213,7 @@ void renderStorageSuggestion(std::vector<StorageId>& storageIdsToAccount, // sto
     auto recipeIngredients = recipesApi.getIngredientsInRecipe(userId, recipeId);
     auto ingredients = recipeIngredients.ingredients;
 
-    std::vector<StorageId> storageIdsToShow = storagesToShow(ingredients, storageIdsToAccount);
+    std::vector<api::StorageId> storageIdsToShow = storagesToShow(ingredients, storageIdsToAccount);
 
     textGenInfo text = textGen(storageIdsToAccount, recipeIngredients, userId, api);
     auto toPrint = text.text;
