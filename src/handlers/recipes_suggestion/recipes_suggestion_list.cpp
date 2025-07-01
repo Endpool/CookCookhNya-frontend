@@ -51,8 +51,6 @@ void changePageAndBack(
 
         renderRecipeView(state.storageIds, recipeId, userId, chatId, bot, api);
         stateManager.put(RecipeView{.storageIds = state.storageIds, .recipeId = recipeId});
-        // TODO: Add render of moving to recipe and render this state
-        //  data already had recipeId in it
         return;
     }
 

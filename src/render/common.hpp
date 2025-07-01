@@ -1,5 +1,6 @@
 #pragma once
 
+#include "backend/api/api.hpp"
 #include "backend/api/ingredients.hpp"
 #include "backend/api/recipes.hpp"
 #include "backend/api/storages.hpp"
@@ -24,6 +25,7 @@ using UserApiRef = const api::UsersApi&;
 using StorageApiRef = const api::StoragesApi&;
 using IngredientsApiRef = const api::IngredientsApi&;
 using RecipesApiRef = const api::RecipesApi&;
+using ApiClient = const api::ApiClient&;
 
 using UserId = tg_types::UserId;
 using ChatId = tg_types::ChatId;

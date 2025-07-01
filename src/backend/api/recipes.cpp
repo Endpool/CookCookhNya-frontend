@@ -21,11 +21,10 @@ RecipesApi::getRecipeList(UserId userId, int size, int offset, const std::vector
     return jsonGetAuthed<RecipesList>(userId, "/recipes", params);
 }
 
-RecipeDetails RecipesApi::getDetails(UserId userId, RecipeId recipeId, const std::vector<StorageId>& storageIds) const {
-    httplib::Params params;
-    for (auto id : storageIds)
-        params.insert({"storageId", std::to_string(id)});
-    return jsonGetAuthed<RecipeDetails>(userId, std::format("/recipes/{}", recipeId), params);
+
+RecipeDetails RecipesApi::getIngredientsInRecipe(UserId userId, RecipeId recipeId)
+    const { // StorageIds are not needed in current implementation as backend doesnt return if ingredient is available
+    return jsonGetAuthed<RecipeDetails>(userId, std::format("/recipes/{}", recipeId));
 }
 
 } // namespace cookcookhnya::api
