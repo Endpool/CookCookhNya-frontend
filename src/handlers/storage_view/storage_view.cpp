@@ -25,7 +25,7 @@ void storageViewButtonCallback(
         stateManager.put(StorageIngredientsList{state.storageId});
         renderIngredientsList(state.storageId, userId, chatId, bot, api);
     } else if (cq.data == "storage_view_members") {
-        renderMemberList(state.storageId, userId, chatId, bot, api);
+        renderMemberList(true, state.storageId, userId, chatId, bot, api);
         stateManager.put(StorageMemberView{state.storageId});
     } else if (cq.data == "storage_view_back") {
         renderStorageList(true, userId, chatId, bot, api);

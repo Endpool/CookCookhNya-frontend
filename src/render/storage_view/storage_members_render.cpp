@@ -10,7 +10,8 @@
 
 namespace cookcookhnya::render::storage::member_list {
 
-void renderMemberList(const StorageId& storageId, UserId userId, ChatId chatId, BotRef bot, StorageApiRef storageApi) {
+void renderMemberList(
+    bool toBeEdited, const StorageId& storageId, UserId userId, ChatId chatId, BotRef bot, StorageApiRef storageApi) {
     auto storage = storageApi.get(userId, storageId);
     bool isOwner = storage.ownerId == userId;
     unsigned int buttonRows = isOwner ? 2 : 1;
@@ -31,10 +32,16 @@ void renderMemberList(const StorageId& storageId, UserId userId, ChatId chatId, 
         memberNames.push_back(memberDetails.fullName);
     }
     for (auto [i, name] : std::views::enumerate(memberNames))
-        std::format_to(std::back_inserter(list), "  {}\\. {}\n", i + 1, name);
+        std::format_to(std::back_inserter(list), "  {}. {}\n", i + 1, name);
     auto text = utils::utf8str(u8"Участники хранилища:\n") + list;
-    auto messageId = bot.sendMessage(chatId, text, nullptr, nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
-    message::addMessageId(userId, messageId->messageId);
+    if (toBeEdited) {
+        auto messageId = message::getMessageId(userId);
+        bot.editMessageText(text, chatId, *messageId, "", "", nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
+    } else {
+        auto messageId =
+            bot.sendMessage(chatId, text, nullptr, nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
+        message::addMessageId(userId, messageId->messageId);
+    }
 };
 
 void renderMemberAdditionPrompt(

@@ -25,7 +25,6 @@ using states::StorageView;
 
 using states::MemberAddition;
 using states::MemberDeletion;
-using states::MembersAdditionDeletion;
 using states::PackMemberView;
 using states::StorageMemberView;
 

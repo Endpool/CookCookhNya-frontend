@@ -34,7 +34,7 @@ void selectStorages(StorageSelection& state, CallbackQueryRef cq, BotRef bot, SM
         return;
     }
 
-    auto cqStorageId = utils::parseSafe<api::StorageId>(cq.data.substr(4, cq.data.length() - 4));
+    auto cqStorageId = utils::parseSafe<api::StorageId>(cq.data.substr(4));
     if (cq.data.starts_with("in")) {
         auto it = std::ranges::find(selectedStorages, *cqStorageId);
         selectedStorages.erase(it);
