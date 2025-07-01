@@ -11,10 +11,10 @@
 
 namespace cookcookhnya::render::recipe_view {
 
-returnType textGen(std::vector<StorageId> const& storageIds,
-                   const api::models::recipe::RecipeDetails& recipeIngredients,
-                   UserId userId,
-                   ApiClient api) { // will return needed text and some additional elements
+textGenInfo textGen(std::vector<StorageId> const& storageIds,
+                    const api::models::recipe::RecipeDetails& recipeIngredients,
+                    UserId userId,
+                    ApiClient api) { // will return needed text and some additional elements
 
     // Get two api's from apiClient
     auto storageApi = api.getStorages();
@@ -38,7 +38,7 @@ returnType textGen(std::vector<StorageId> const& storageIds,
         isIngredientNotWritten = true;
         isContains = false;
         if (ingredient.inStorages.size() == 0) {
-            toPrint += std::format("{} -\n", ingredient.name);
+            toPrint += std::format("- {}\n", ingredient.name);
             continue;
         }
 
@@ -46,7 +46,7 @@ returnType textGen(std::vector<StorageId> const& storageIds,
              j++) { // Iterate through each storage where ingredient is present
             if (storageIdSet.contains(
                     ingredient.inStorages[j])) { // If it contains then ingredient is in chosen storages
-                toPrint += std::format("{} +\n", ingredient.name);
+                toPrint += std::format("+ {}\n", ingredient.name);
                 isContains = true;
                 break;
             }
@@ -60,7 +60,7 @@ returnType textGen(std::vector<StorageId> const& storageIds,
              j++) { // Iterate through each storage where ingredient is present
             isSuggestionMade = true;
             if (isIngredientNotWritten) {
-                toPrint += std::format("{} ?\n", ingredient.name);
+                toPrint += std::format("? {}\n", ingredient.name);
                 isIngredientNotWritten = false;
 
                 foundInStoragesStrings.emplace_back(""); // New place for string for suggestion
@@ -75,7 +75,8 @@ returnType textGen(std::vector<StorageId> const& storageIds,
             auto storage = storageApi.get(userId, ingredient.inStorages[j]);
 
             suggestedStorageIds.insert(ingredient.inStorages[j]); // Keep set of storages which will be suggested
-            foundInStoragesStrings[counterOfSuggestion] +=
+            foundInStoragesStrings[counterOfSuggestion] += // I felt myself genious after writing that line of code
+                                                           // (here is one for, if-else and if technically)
                 std::format("\"{}\"{}",
                             storage.name,
                             variants[std::min(variants.size() - 1, ingredient.inStorages.size() - j - 1)]);
@@ -85,7 +86,8 @@ returnType textGen(std::vector<StorageId> const& storageIds,
     return {.text = toPrint,
             .isSuggestionMade = isSuggestionMade,
             .suggestedStorageIds = suggestedStorageIds,
-            .foundInStoragesStrings = foundInStoragesStrings};
+            .foundInStoragesStrings =
+                foundInStoragesStrings}; // Many info may be needed from that function to make right markup
 }
 
 void renderRecipeView(std::vector<StorageId> const& storageIds,
@@ -97,7 +99,7 @@ void renderRecipeView(std::vector<StorageId> const& storageIds,
 
     auto recipesApi = api.getRecipes();
     auto recipeIngredients = recipesApi.getIngredientsInRecipe(userId, recipeId, storageIds);
-    returnType text = textGen(storageIds, recipeIngredients, userId, api);
+    textGenInfo text = textGen(storageIds, recipeIngredients, userId, api);
 
     bool isSuggestionMade = text.isSuggestionMade;
     auto suggestedStorageIds = text.suggestedStorageIds;
@@ -127,7 +129,7 @@ void renderRecipeViewAfterAddingStorage(std::vector<StorageId> const& storageIds
                                         ApiClient api) {
     auto recipesApi = api.getRecipes();
     auto recipeIngredients = recipesApi.getIngredientsInRecipe(userId, recipeId, storageIds);
-    returnType text = textGen(storageIds, recipeIngredients, userId, api);
+    textGenInfo text = textGen(storageIds, recipeIngredients, userId, api);
 
     bool isSuggestionMade = text.isSuggestionMade;
     auto suggestedStorageIds = text.suggestedStorageIds;
@@ -157,23 +159,13 @@ void renderRecipeViewAfterAddingStorage(std::vector<StorageId> const& storageIds
                         detail::makeKeyboardMarkup(std::move(keyboard))); // Only on difference between function above
 }
 
-void renderStorageSuggestion(std::vector<StorageId>& storageIdsToAccount, // storages which are selected
-                             api::RecipeId recipeId,
-                             UserId userId,
-                             ChatId chatId,
-                             tg_types::MessageId messageId,
-                             BotRef bot,
-                             ApiClient api) {
-
-    auto storageApi = api.getStorages();
+std::vector<StorageId> storagesToShow(std::vector<api::models::recipe::IngredientInRecipe> ingredients,
+                                      std::vector<StorageId>& storageIdsToAccount) {
     std::vector<StorageId> storageIdsToShow;
+
     std::unordered_set<StorageId> toAdd; // If there will be only one element of storageId then remove
     std::vector<StorageId> toRemove;
-    auto recipesApi = api.getRecipes();
-    auto recipeIngredients = recipesApi.getIngredientsInRecipe(userId, recipeId, storageIdsToAccount);
-    auto ingredients = recipeIngredients.ingredients;
     bool isFound = false;
-
     for (auto& ingredient : ingredients) {
         isFound = false;                                    // Iterate through each ingredient
         for (StorageId inStorage : ingredient.inStorages) { // Iterate through each storage where ingredient is present
@@ -208,14 +200,39 @@ void renderStorageSuggestion(std::vector<StorageId>& storageIdsToAccount, // sto
     for (auto add : toAdd) {
         storageIdsToShow.push_back(add);
     }
-    returnType text = textGen(storageIdsToAccount, recipeIngredients, userId, api);
+
+    return storageIdsToShow;
+}
+
+void renderStorageSuggestion(std::vector<StorageId>& storageIdsToAccount, // storages which are selected
+                             api::RecipeId recipeId,
+                             UserId userId,
+                             ChatId chatId,
+                             tg_types::MessageId messageId,
+                             BotRef bot,
+                             ApiClient api) {
+
+    auto storageApi = api.getStorages();
+
+    auto recipesApi = api.getRecipes();
+    auto recipeIngredients = recipesApi.getIngredientsInRecipe(userId, recipeId, storageIdsToAccount);
+    auto ingredients = recipeIngredients.ingredients;
+
+    std::vector<StorageId> storageIdsToShow = storagesToShow(ingredients, storageIdsToAccount);
+
+    textGenInfo text = textGen(storageIdsToAccount, recipeIngredients, userId, api);
     auto toPrint = text.text;
     auto suggestionStrings = text.foundInStoragesStrings;
     size_t counterOfSuggestionsFound = 0;
+    bool ifSuggestionEcountered = false;
     for (size_t i = 0; i < toPrint.size(); i++) {
-        if (toPrint[i] == '?') {
-            toPrint.insert(i + 2, suggestionStrings[counterOfSuggestionsFound]);
+        if (toPrint[i] == '\n' && ifSuggestionEcountered) {
+            toPrint.insert(i + 1, suggestionStrings[counterOfSuggestionsFound]);
             counterOfSuggestionsFound++;
+            ifSuggestionEcountered = false;
+        }
+        if (toPrint[i] == '?') {
+            ifSuggestionEcountered = true;
         }
     }
     std::vector<std::string> storageNames;

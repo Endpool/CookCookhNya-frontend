@@ -7,7 +7,7 @@
 
 namespace cookcookhnya::render::recipe_view {
 
-struct returnType {
+struct textGenInfo {
     std::string text;
     bool isSuggestionMade{};
     std::unordered_set<StorageId> suggestedStorageIds;
@@ -38,9 +38,12 @@ void renderRecipeViewAfterAddingStorage(std::vector<StorageId> const& storageIds
                                         tg_types::MessageId messageId,
                                         BotRef bot,
                                         ApiClient api);
+// Helper functions
+std::vector<StorageId> storagesToShow(std::vector<api::models::recipe::IngredientInRecipe> ingredients,
+                                      std::vector<StorageId>& storageIdsToAccount);
 
-returnType textGen(std::vector<StorageId> const& storageIds,
-                   const api::models::recipe::RecipeDetails& recipeIngredients,
-                   UserId userId,
-                   ApiClient api);
+textGenInfo textGen(std::vector<StorageId> const& storageIds,
+                    const api::models::recipe::RecipeDetails& recipeIngredients,
+                    UserId userId,
+                    ApiClient api);
 } // namespace cookcookhnya::render::recipe_view
