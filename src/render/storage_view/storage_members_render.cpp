@@ -21,7 +21,9 @@ void renderMemberList(
 
     if (isOwner) {
         keyboard[0].push_back(detail::makeCallbackButton(utils::utf8str(u8"Добавить участника"), "add_member"));
-        keyboard[0].push_back(detail::makeCallbackButton(utils::utf8str(u8"Удалить участника"), "delete_member"));
+        if (storageApi.getStorageMembers(userId, storageId).size() > 1) {
+            keyboard[0].push_back(detail::makeCallbackButton(utils::utf8str(u8"Удалить участника"), "delete_member"));
+        }
         keyboard[1].push_back(detail::makeCallbackButton(utils::utf8str(u8"Назад"), "back_to_view_storage"));
     } else {
         keyboard[0].push_back(detail::makeCallbackButton(utils::utf8str(u8"Назад"), "back_to_view_storage"));
@@ -62,14 +64,15 @@ void renderMemberDeletionPrompt(
     auto storage = storageApi.get(userId, storageId);
 
     auto members = storageApi.getStorageMembers(userId, storageId);
-
+    std::cerr << userId << storage.ownerId << '\n';
     unsigned int buttonRows = members.size();
     InlineKeyboard keyboard(buttonRows);
     keyboard[0].push_back(detail::makeCallbackButton(utils::utf8str(u8"Отмена"), "cancel_member_deletion"));
-    for (size_t i = 0; i != members.size(); ++i) {
-        if (members[i].userId != storage.ownerId) {
-            keyboard[i + 1].push_back(
-                detail::makeCallbackButton(members[i].fullName, "mem_" + std::to_string(members[i].userId)));
+    size_t k = 1;
+    for (auto& member : members) {
+        if (member.userId != storage.ownerId) {
+            keyboard[k++].push_back(
+                detail::makeCallbackButton(member.fullName, "mem_" + std::to_string(member.userId)));
         }
     }
 
