@@ -7,6 +7,7 @@
 #include "render/storage_list/storage_list_render.hpp"
 #include "utils.hpp"
 
+#include <algorithm>
 #include <utility>
 #include <vector>
 
@@ -18,10 +19,10 @@ using render::storage_list::renderStorageList;
 
 void selectStorages(StorageSelection& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
     bot.answerCallbackQuery(cq.id);
-    auto chatId = cq.message->chat->id;
-    auto userId = cq.from->id;
-    auto selectedStorages = state.storageIds;
-    auto messageId = state.messageId;
+    const auto chatId = cq.message->chat->id;
+    const auto userId = cq.from->id;
+    auto& selectedStorages = state.storageIds;
+    const auto messageId = state.messageId;
 
     if (cq.data == "confirm_storages_selection") {
         renderRecipesSuggestion(selectedStorages, 1, userId, chatId, bot, api);
@@ -35,18 +36,18 @@ void selectStorages(StorageSelection& state, CallbackQueryRef cq, BotRef bot, SM
         return;
     }
 
-    auto cqStorageId = utils::parseSafe<api::StorageId>(cq.data.substr(4, cq.data.length() - 4));
+    const auto storageId = utils::parseSafe<api::StorageId>(cq.data.substr(4));
+    if (!storageId)
+        return;
     if (cq.data.starts_with("in")) {
-        auto it = std::ranges::find(selectedStorages, *cqStorageId);
+        auto it = std::ranges::find(selectedStorages, *storageId);
         selectedStorages.erase(it);
         updateStorageSelect(selectedStorages, messageId, userId, chatId, bot, api);
-        stateManager.put(StorageSelection{.storageIds = selectedStorages, .messageId = messageId});
         return;
     }
     if (cq.data.starts_with("out")) {
-        selectedStorages.push_back(*cqStorageId);
+        selectedStorages.push_back(*storageId);
         updateStorageSelect(selectedStorages, messageId, userId, chatId, bot, api);
-        stateManager.put(StorageSelection{.storageIds = selectedStorages, .messageId = messageId});
         return;
     }
 }

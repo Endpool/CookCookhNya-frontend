@@ -3,9 +3,11 @@
 #include "backend/id_types.hpp"
 #include "render/common.hpp"
 
+#include <vector>
+
 namespace cookcookhnya::render::recipe_view {
 
-void renderRecipeView(std::vector<StorageId> const& storageIds,
+void renderRecipeView(const std::vector<api::StorageId>& storageIds,
                       api::RecipeId recipeId,
                       UserId userId,
                       ChatId chatId,

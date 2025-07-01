@@ -4,7 +4,6 @@
 #include "backend/api/recipes.hpp"
 #include "backend/api/storages.hpp"
 #include "backend/api/users.hpp"
-#include "backend/id_types.hpp"
 #include "tg_types.hpp"
 #include "utils.hpp"
 
@@ -21,7 +20,6 @@
 namespace cookcookhnya::render {
 
 // API
-using StorageId = api::StorageId;
 using UserApiRef = const api::UsersApi&;
 using StorageApiRef = const api::StoragesApi&;
 using IngredientsApiRef = const api::IngredientsApi&;

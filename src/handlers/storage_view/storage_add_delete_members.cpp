@@ -3,6 +3,9 @@
 #include "handlers/common.hpp"
 #include "render/storage_view/storage_members_render.hpp"
 #include "tg_types.hpp"
+#include "utils.hpp"
+
+#include <algorithm>
 
 namespace cookcookhnya::handlers::storage_add_delete_members {
 
@@ -20,7 +23,7 @@ void addDeleteMember(
         return;
     }
     auto members = storageApi.getStorageMembers(userId, state.storageId);
-    bool isMemberof = std::ranges::find(members, *memberId) != members.end();
+    const bool isMemberof = std::ranges::find(members, *memberId) != members.end();
     if (isMemberof) {
         storageApi.deleteMember(userId, state.storageId, *memberId);
         bot.sendMessage(chatId, "Member deleted successfully");

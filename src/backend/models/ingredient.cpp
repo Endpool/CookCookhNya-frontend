@@ -1,6 +1,7 @@
 #include "backend/models/ingredient.hpp"
 
 #include <boost/json/conversion.hpp>
+#include <boost/json/value.hpp>
 #include <boost/json/value_to.hpp>
 
 namespace cookcookhnya::api::models::ingredient {

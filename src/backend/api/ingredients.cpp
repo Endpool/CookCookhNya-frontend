@@ -1,5 +1,6 @@
 #include "backend/api/ingredients.hpp"
 
+#include "backend/id_types.hpp"
 #include "backend/models/ingredient.hpp"
 
 #include <format>
@@ -38,6 +39,8 @@ std::vector<IngredientSearchResult> IngredientsApi::search(UserId user, std::str
     //     user, "/ingredients-for-storage", {{"query", std::move(query)}, {"storage", std::to_string(storage)}});
     using namespace std::views;
     using std::ranges::to;
+    if (!query.empty() && query[0] == '\0') // stub
+        query[0] = 'a';
     auto sis = getStorageIngredients(user, storage) | transform(&Ingredient::id) | to<std::unordered_set>();
     return getAllIngredients() | transform([&sis](Ingredient& i) {
                return IngredientSearchResult{.id = i.id, .name = std::move(i.name), .available = sis.contains(i.id)};
