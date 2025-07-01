@@ -10,13 +10,13 @@ namespace cookcookhnya::handlers::storage::ingredients {
 void storageIngredientsListButtonCallback(
     StorageIngredientsList& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
     bot.answerCallbackQuery(cq.id);
-    auto user = cq.from->id;
-    auto chat = cq.from->id;
+    const auto user = cq.from->id;
+    const auto chat = cq.message->chat->id;
     if (cq.data == "back") {
         render::storage::renderStorageView(state.storageId, user, chat, bot, api);
         stateManager.put(StorageView{state.storageId});
     } else if (cq.data == "search") {
-        tg_types::MessageId message = render::storage::ingredients::renderStorageIngredientsSearchSend(chat, bot);
+        const tg_types::MessageId message = render::storage::ingredients::renderStorageIngredientsSearchSend(chat, bot);
         stateManager.put(StorageIngredientsSearch{state.storageId, message, {}});
     }
 }
