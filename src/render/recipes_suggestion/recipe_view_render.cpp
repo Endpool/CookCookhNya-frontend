@@ -22,7 +22,10 @@ void renderRecipeView(const std::vector<api::StorageId>& storageIds,
 
     std::string toPrint = utils::utf8str(u8"Ингредиенты для ") + std::move(recipeDetails.name) + "\n";
     for (auto& ingredient : ingredients) {
-        toPrint += std::format(ingredient.available ? "{} +\n" : "{} -\n", std::move(ingredient.name));
+        if (ingredient.available)
+            toPrint += std::format("{} +\n", std::move(ingredient.name));
+        else
+            toPrint += std::format("{} -\n", std::move(ingredient.name));
     }
 
     InlineKeyboard keyboard(3);
