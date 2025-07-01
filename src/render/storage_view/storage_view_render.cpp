@@ -12,11 +12,11 @@ void renderStorageView(StorageId storageId, UserId userId, ChatId chatId, BotRef
     InlineKeyboard keyboard(buttonRows);
     keyboard[0].reserve(3);
     keyboard[1].reserve(1);
-    keyboard[0].push_back(detail::makeCallbackButton(utils::utf8str(u8"Исследовать"), "storage_view_explore"));
-    keyboard[0].push_back(detail::makeCallbackButton(utils::utf8str(u8"Участники"), "storage_view_members"));
-    keyboard[0].push_back(detail::makeCallbackButton(utils::utf8str(u8"Назад"), "storage_view_back"));
-    keyboard[1].push_back(detail::makeCallbackButton(utils::utf8str(u8"Хочу кушать"), "storage_view_what_to_cook"));
-    auto text = storage.name;
+    keyboard[0].push_back(detail::makeCallbackButton(utils::utf8str(u8"↩️ Назад"), "storage_view_back"));
+    keyboard[0].push_back(detail::makeCallbackButton(utils::utf8str(u8"👥 Участники"), "storage_view_members"));
+    keyboard[0].push_back(detail::makeCallbackButton(utils::utf8str(u8"🍗 Продукты"), "storage_view_explore"));
+    keyboard[1].push_back(detail::makeCallbackButton(utils::utf8str(u8"🤤 Хочу кушать!"), "storage_view_what_to_cook"));
+    auto text = utils::utf8str(u8"Вы находитесь в хранилище  🍱 ") + storage.name + "\n";
     auto messageId = message::getMessageId(userId);
     bot.editMessageText(text, chatId, *messageId, "", "", nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
 }

@@ -44,7 +44,7 @@ constructMarkup(std::vector<api::StorageId> const& storages, int pageNo, UserId 
              * Even if one storage was chosen in storage list choose it will return to view of these one storage.
              */
             keyboard[recipesList.recipesPage.size()].push_back(detail::makeCallbackButton(
-                utils::utf8str(u8"Назад"),
+                utils::utf8str(u8"↩️ Назад"),
                 std::format("backFromSuggestedRecipes {}", storages.size()))); // To LAST row add "return"
             return keyboard;
         }
@@ -72,7 +72,7 @@ constructMarkup(std::vector<api::StorageId> const& storages, int pageNo, UserId 
          * Even if one storage was chosen in storage list choose it will return to view of these one storage.
          */
         keyboard[recipesList.recipesPage.size() + 1].push_back(detail::makeCallbackButton(
-            utils::utf8str(u8"Назад"),
+            utils::utf8str(u8"↩️ Назад"),
             std::format("backFromSuggestedRecipes {}", storages.size()))); // To LAST row add "return"
         return keyboard;
     }
@@ -95,13 +95,13 @@ constructMarkup(std::vector<api::StorageId> const& storages, int pageNo, UserId 
         // Show both possible ways
         keyboard[recipesList.recipesPage.size()].reserve(2);
         keyboard[recipesList.recipesPage.size()].push_back(
-            detail::makeCallbackButton(utils::utf8str(u8"⭠"), std::to_string(pageNo - 1)));
+            detail::makeCallbackButton(utils::utf8str(u8"⏮️"), std::to_string(pageNo - 1)));
         keyboard[recipesList.recipesPage.size()].push_back(
-            detail::makeCallbackButton(utils::utf8str(u8"⭢"), std::to_string(pageNo + 1)));
+            detail::makeCallbackButton(utils::utf8str(u8"⏭️"), std::to_string(pageNo + 1)));
     } else {
         // If pageNo == maxPage then it's last page -> won't show button next
         keyboard[recipesList.recipesPage.size()].push_back(
-            detail::makeCallbackButton(utils::utf8str(u8"⭠"), std::to_string(pageNo - 1)));
+            detail::makeCallbackButton(utils::utf8str(u8"⏮️"), std::to_string(pageNo - 1)));
     }
 
     /* Put the number of storages.
@@ -109,7 +109,7 @@ constructMarkup(std::vector<api::StorageId> const& storages, int pageNo, UserId 
      * Even if one storage was chosen in storage list choose it will return to view of these one storage.
      */
     keyboard[recipesList.recipesPage.size() + 1].push_back(detail::makeCallbackButton(
-        utils::utf8str(u8"Назад"),
+        utils::utf8str(u8"↩️ Назад"),
         std::format("backFromSuggestedRecipes {}", storages.size()))); // To LAST row add "return"
     return keyboard;
 }
@@ -121,10 +121,10 @@ void renderRecipesSuggestion(std::vector<api::StorageId> const& storages,
                              BotRef bot,
                              RecipesApiRef recipesApi) {
 
-    std::string pageInfo = utils::utf8str(u8"Номер страницы: ") + std::to_string(pageNo) +
-                           utils::utf8str(u8"\nРецепты выбранные только для вас:");
+    std::string pageInfo = utils::utf8str(u8"🔢 Номер страницы: ") + std::to_string(pageNo) +
+                           utils::utf8str(u8"\n🔪 Рецепты подобранные специально для вас");
 
-    auto messageId = cookcookhnya::message::getMessageId(userId);
+    auto messageId = message::getMessageId(userId);
     bot.editMessageText(pageInfo,
                         chatId,
                         *messageId,
@@ -140,10 +140,10 @@ void editSuggestionMessage(std::vector<StorageId> const& storages,
                            ChatId chatId,
                            BotRef bot,
                            RecipesApiRef recipesApi) {
-    std::string pageInfo = utils::utf8str(u8"Номер страницы: ") + std::to_string(pageNo) +
-                           utils::utf8str(u8"\nРецепты выбранные только для вас:");
+    std::string pageInfo = utils::utf8str(u8"🔢 Номер страницы: ") + std::to_string(pageNo) +
+                           utils::utf8str(u8"\n🔪 Рецепты подобранные специально для вас");
 
-    auto messageId = cookcookhnya::message::getMessageId(userId);
+    auto messageId = message::getMessageId(userId);
     bot.editMessageText(pageInfo,
                         chatId,
                         *messageId,

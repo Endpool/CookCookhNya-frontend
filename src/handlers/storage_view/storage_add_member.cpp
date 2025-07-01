@@ -3,7 +3,6 @@
 #include "handlers/common.hpp"
 #include "render/storage_view/storage_members_render.hpp"
 #include "utils.hpp"
-#include <exception>
 #include <memory>
 #include <stdexcept>
 #include <tgbot/types/MessageOriginHiddenUser.h>
@@ -20,7 +19,7 @@ void addMember(MemberAddition& state, MessageRef m, BotRef bot, SMRef stateManag
 
     auto originUser = std::dynamic_pointer_cast<TgBot::MessageOriginUser>(m.forwardOrigin);
     if (originUser == nullptr) {
-        auto text = utils::utf8str(u8"К сожалению мы не смогли добавить данного пользователя");
+        auto text = utils::utf8str(u8"❌ Не удалось добавить: пользователь скрыл аккаунт");
         bot.sendMessage(chatId, text);
         renderMemberList(false, state.storageId, userId, chatId, bot, storageApi);
         stateManager.put(StorageMemberView{state.storageId});
@@ -29,7 +28,7 @@ void addMember(MemberAddition& state, MessageRef m, BotRef bot, SMRef stateManag
         try {
             storageApi.addMember(userId, state.storageId, memberId);
         } catch (std::runtime_error&) {
-            auto text = utils::utf8str(u8"К сожалению данный пользователь не зарегестрирван");
+            auto text = utils::utf8str(u8"❌ Не удалось добавить: пользователь не зарегестрирован в CookCookhNya");
             // TODO: smart start for new users
             bot.sendMessage(chatId, text);
         }

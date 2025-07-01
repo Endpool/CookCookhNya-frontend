@@ -34,7 +34,7 @@ void renderRecipeView(std::vector<StorageId> const& storageIds,
                                                      "makeReceipt")); // Add needed info for next states!
     keyboard[2].push_back(detail::makeCallbackButton(utils::utf8str(u8"Назад"), "backFromRecipeView"));
 
-    auto messageId = cookcookhnya::message::getMessageId(userId);
+    auto messageId = message::getMessageId(userId);
     bot.editMessageText(toPrint, chatId, *messageId, "", "", nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
 }
 } // namespace cookcookhnya::render::recipe_view

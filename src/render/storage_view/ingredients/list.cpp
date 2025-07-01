@@ -24,7 +24,7 @@ void renderIngredientsList(StorageId storage, UserId userId, ChatId chatId, BotR
     keyboard[0].push_back(detail::makeCallbackButton(utils::utf8str(u8"Добавить/Удалить"), "search"));
     keyboard[1].push_back(detail::makeCallbackButton(utils::utf8str(u8"Назад"), "back"));
 
-    auto text = utils::utf8str(u8"Ваши ингредиеты:\n\n") + std::move(list);
+    auto text = utils::utf8str(u8"🍗 Ваши ингредиенты:\n\n") + std::move(list);
     auto messageId = message::getMessageId(userId);
     bot.editMessageText(text, chatId, *messageId, "", "", nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
 }
