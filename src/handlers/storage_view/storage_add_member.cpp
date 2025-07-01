@@ -1,7 +1,6 @@
 #include "storage_add_member.hpp"
 
 #include "handlers/common.hpp"
-#include "render/common.hpp"
 #include "render/storage_view/storage_members_render.hpp"
 #include "utils.hpp"
 #include <memory>
@@ -18,8 +17,6 @@ void addMember(MemberAddition& state, MessageRef m, BotRef bot, SMRef stateManag
     auto userId = m.from->id;
     try {
         auto memberId = std::dynamic_pointer_cast<TgBot::MessageOriginUser>(m.forwardOrigin)->senderUser->id;
-        InlineKeyboard keyboard(1);
-        keyboard[0].push_back(detail::makeCallbackButton(utils::utf8str(u8"Назад"), "cancel_member_addition"));
         storageApi.addMember(userId, state.storageId, memberId);
         renderMemberList(false, state.storageId, userId, chatId, bot, storageApi);
         stateManager.put(StorageMemberView{state.storageId});

@@ -6,6 +6,7 @@
 #include <format>
 #include <iterator>
 #include <ranges>
+#include <string>
 #include <utility>
 
 namespace cookcookhnya::render::storage::member_list {
@@ -50,7 +51,7 @@ void renderMemberAdditionPrompt(
     unsigned int buttonRows = 1;
 
     InlineKeyboard keyboard(buttonRows);
-    keyboard[0].push_back(detail::makeCallbackButton(utils::utf8str(u8"Отмена"), "cancel_member_addition_deletion"));
+    keyboard[0].push_back(detail::makeCallbackButton(utils::utf8str(u8"Отмена"), "cancel_member_addition"));
     auto text = utils::utf8str(u8"Перешли сообщение пользователя, которого бы хотели добавить в хранилища\n");
     auto messageId = cookcookhnya::message::getMessageId(userId);
     bot.editMessageText(text, chatId, *messageId, "", "", nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
@@ -62,13 +63,16 @@ void renderMemberDeletionPrompt(
 
     auto members = storageApi.getStorageMembers(userId, storageId);
 
-    unsigned int buttonRows = members.size() + 1;
+    unsigned int buttonRows = members.size();
     InlineKeyboard keyboard(buttonRows);
+    keyboard[0].push_back(detail::makeCallbackButton(utils::utf8str(u8"Отмена"), "cancel_member_deletion"));
     for (size_t i = 0; i != members.size(); ++i) {
-        keyboard[i].push_back(detail::makeCallbackButton(members[i].fullName, &"mem_"[members[i].userId]));
+        if (members[i].userId != storage.ownerId) {
+            keyboard[i + 1].push_back(
+                detail::makeCallbackButton(members[i].fullName, "mem_" + std::to_string(members[i].userId)));
+        }
     }
-    keyboard[buttonRows - 1].push_back(
-        detail::makeCallbackButton(utils::utf8str(u8"Отмена"), "cancel_member_addition_deletion"));
+
     auto text = utils::utf8str(u8"Какого участника вы хотите удалить\n");
     auto messageId = cookcookhnya::message::getMessageId(userId);
     bot.editMessageText(text, chatId, *messageId, "", "", nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));

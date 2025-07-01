@@ -36,7 +36,7 @@ void storageListButtonCallback(
     if (cq.data == "storage_list_deletion") {
         renderStorageDelete(
             chatId, bot, cq.from->id, storageApi); // Need for api, so it could put the list of storages to delete
-        stateManager.put(StorageDeletionName{});
+        stateManager.put(StorageDeletion{});
         return;
     }
     if (cq.data == "storage_list_what_to_cook") {

@@ -20,7 +20,6 @@ using states::StorageList;
 using states::RecipeView;
 using states::StorageCreationEnterName;
 using states::StorageDeletion;
-using states::StorageDeletionName;
 using states::StorageView;
 
 using states::MemberAddition;

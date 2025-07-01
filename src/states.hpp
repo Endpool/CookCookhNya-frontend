@@ -23,9 +23,8 @@ struct StorageIdMixin {
 
 struct StorageList {};
 
-struct StorageDeletion : detail::StorageIdMixin {};
+struct StorageDeletion {};
 struct StorageCreationEnterName {};
-struct StorageDeletionName {};
 struct StorageView : detail::StorageIdMixin {};
 
 struct StorageMemberView : detail::StorageIdMixin {};
@@ -54,7 +53,6 @@ struct RecipeView {
 using State = std::variant<StorageList,
                            StorageDeletion,
                            StorageCreationEnterName,
-                           StorageDeletionName,
                            StorageView,
                            StorageMemberView,
                            PackMemberView,

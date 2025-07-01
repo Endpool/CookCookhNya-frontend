@@ -49,8 +49,7 @@ using storageCreateHandler = Handler<Events::Message{}, createStorage>;
 using storageCreateButtonHandler = Handler<Events::CallbackQuery{}, cancelStorageCreation>;
 
 // StorageListDelete
-using storgeDeleteHandler = Handler<Events::CallbackQuery{}, deleteStorage>;
-using storageDeleteButtonHandler = Handler<Events::CallbackQuery{}, cancelStorageDeletion>;
+using storageDeleteButtonHandler = Handler<Events::CallbackQuery{}, deleteStorage>;
 
 // StorageListView
 using storageListButtonHandler = Handler<Events::CallbackQuery{}, storageListButtonCallback>;
@@ -66,8 +65,7 @@ using memberAdditionMessageHandler = Handler<Events::Message{}, addMember>;
 using cancelMemberAdditionButtonHandler = Handler<Events::CallbackQuery{}, cancelMemberAddition>;
 
 // StorageDeleteMembers
-using memberDeletionButtonHandler = Handler<Events::Message{}, deleteMember>;
-using cancelMemberDeletionButtonHandler = Handler<Events::CallbackQuery{}, cancelMemberAddition>;
+using memberDeletionButtonHandler = Handler<Events::CallbackQuery{}, deleteMember>;
 
 // StorageSelection
 using storagesSelectionHandler = Handler<Events::CallbackQuery{}, selectStorages>;

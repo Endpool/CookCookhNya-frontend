@@ -6,16 +6,14 @@
 namespace cookcookhnya::render::delete_storage {
 
 void renderStorageDelete(ChatId chatId, BotRef bot, UserId userId, StorageApiRef storageApi) {
-    auto currentStor =
-        storageApi.getStoragesList(userId); // Take all storages from backend so user could choose which to delete
-    InlineKeyboard keyboard(1 + ((currentStor.size() + 1) / 2)); // ceiling
-    keyboard[0].reserve(1);
+    auto storages = storageApi.getStoragesList(userId);
+    InlineKeyboard keyboard(storages.size() + 1);
     keyboard[0].push_back(detail::makeCallbackButton(utils::utf8str(u8"Отмена"), "cancel_storage_deletion"));
-    for (uint32_t i = 0; i < currentStor.size(); i++) {
-        if (i % 2 == 0)
-            keyboard[1 + (i / 2)].reserve(2);
-        keyboard[1 + (i / 2)].push_back(
-            detail::makeCallbackButton(currentStor[i].name, std::to_string(currentStor[i].id)));
+    for (size_t i = 0; i < storages.size(); i++) {
+        if (userId == storages[i].ownerId) {
+            keyboard[i + 1].push_back(
+                detail::makeCallbackButton(storages[i].name, "st__" + std::to_string(storages[i].id)));
+        }
     }
     auto text = utils::utf8str(u8"Что вы хотите удалить");
     auto messageId = cookcookhnya::message::getMessageId(userId);
