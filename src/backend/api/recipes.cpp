@@ -19,15 +19,9 @@ RecipesApi::getRecipeList(UserId userId, int size, int offset, std::vector<Stora
     return jsonGetAuthed<RecipesList>(userId, "/recipes", multimap);
 }
 
-RecipeDetails
-RecipesApi::getIngredientsInRecipe(UserId userId, RecipeId recipeId, std::vector<StorageId> const& storageIds)
+RecipeDetails RecipesApi::getIngredientsInRecipe(UserId userId, RecipeId recipeId)
     const { // StorageIds are not needed in current implementation as backend doesnt return if ingredient is available
-
-    std::multimap<std::string, std::string> multimap;
-    for (auto temp : storageIds) {
-        multimap.insert({"storageId", std::to_string(temp)});
-    }
-    return jsonGetAuthed<RecipeDetails>(userId, std::format("/recipes/{}", recipeId), multimap);
+    return jsonGetAuthed<RecipeDetails>(userId, std::format("/recipes/{}", recipeId));
 }
 
 } // namespace cookcookhnya::api

@@ -99,7 +99,7 @@ void renderRecipeView(std::vector<StorageId> const& storageIds,
                       ApiClient api) {
 
     auto recipesApi = api.getRecipes();
-    auto recipeIngredients = recipesApi.getIngredientsInRecipe(userId, recipeId, storageIds);
+    auto recipeIngredients = recipesApi.getIngredientsInRecipe(userId, recipeId);
     textGenInfo text = textGen(storageIds, recipeIngredients, userId, api);
 
     bool isSuggestionMade = text.isSuggestionMade;
@@ -129,7 +129,7 @@ void renderRecipeViewAfterAddingStorage(std::vector<StorageId> const& storageIds
                                         BotRef bot,
                                         ApiClient api) {
     auto recipesApi = api.getRecipes();
-    auto recipeIngredients = recipesApi.getIngredientsInRecipe(userId, recipeId, storageIds);
+    auto recipeIngredients = recipesApi.getIngredientsInRecipe(userId, recipeId);
     textGenInfo text = textGen(storageIds, recipeIngredients, userId, api);
 
     bool isSuggestionMade = text.isSuggestionMade;
@@ -208,7 +208,7 @@ void renderStorageSuggestion(std::vector<StorageId>& storageIdsToAccount, // sto
     auto storageApi = api.getStorages();
 
     auto recipesApi = api.getRecipes();
-    auto recipeIngredients = recipesApi.getIngredientsInRecipe(userId, recipeId, storageIdsToAccount);
+    auto recipeIngredients = recipesApi.getIngredientsInRecipe(userId, recipeId);
     auto ingredients = recipeIngredients.ingredients;
 
     std::vector<StorageId> storageIdsToShow = storagesToShow(ingredients, storageIdsToAccount);
