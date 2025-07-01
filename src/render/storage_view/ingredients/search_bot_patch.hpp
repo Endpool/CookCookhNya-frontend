@@ -9,6 +9,7 @@
 #include <tgbot/types/InlineKeyboardMarkup.h>
 
 #include <string>
+#include <string_view>
 #include <vector>
 
 namespace cookcookhnya::render {
@@ -78,7 +79,9 @@ class PatchedBot : TgBot::Api {
     explicit PatchedBot(const TgBot::Api& bot) : Api{bot} {}
 
     // A special copy of the `sendMessage` to avoid passing `"pay": false` to the request
-    auto sendMessage(ChatId chatId, const std::string& text, const TgBot::InlineKeyboardMarkup::Ptr& replyMarkup) {
+    TgBot::Message::Ptr sendMessage(ChatId chatId,
+                                    std::string_view text,
+                                    const TgBot::InlineKeyboardMarkup::Ptr& replyMarkup) const {
         std::vector<TgBot::HttpReqArg> args;
         args.reserve(3);
         args.emplace_back("chat_id", chatId);
