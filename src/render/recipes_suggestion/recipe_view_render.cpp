@@ -17,17 +17,12 @@ void renderRecipeView(const std::vector<api::StorageId>& storageIds,
                       ChatId chatId,
                       BotRef bot,
                       RecipesApiRef recipesApi) {
-    auto recipeIngredients = recipesApi.getIngredientsInRecipe(userId, recipeId, storageIds);
-    auto ingredients = recipeIngredients.ingredients;
+    auto recipeDetails = recipesApi.getDetails(userId, recipeId, storageIds);
+    auto ingredients = recipeDetails.ingredients;
 
-    std::string& recipeName = recipeIngredients.name;
-    std::string toPrint = utils::utf8str(u8"Ингредиенты для ") + recipeName + "\n";
-
+    std::string toPrint = utils::utf8str(u8"Ингредиенты для ") + std::move(recipeDetails.name) + "\n";
     for (auto& ingredient : ingredients) {
-        if (ingredient.available)
-            toPrint += std::format("{} +\n", ingredient.name);
-        else
-            toPrint += std::format("{} -\n", ingredient.name);
+        toPrint += std::format(ingredient.available ? "{} +\n" : "{} -\n", std::move(ingredient.name));
     }
 
     InlineKeyboard keyboard(3);

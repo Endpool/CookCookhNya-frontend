@@ -21,8 +21,7 @@ RecipesApi::getRecipeList(UserId userId, int size, int offset, const std::vector
     return jsonGetAuthed<RecipesList>(userId, "/recipes", params);
 }
 
-RecipeDetails
-RecipesApi::getIngredientsInRecipe(UserId userId, RecipeId recipeId, const std::vector<StorageId>& storageIds) const {
+RecipeDetails RecipesApi::getDetails(UserId userId, RecipeId recipeId, const std::vector<StorageId>& storageIds) const {
     httplib::Params params;
     for (auto id : storageIds)
         params.insert({"storageId", std::to_string(id)});

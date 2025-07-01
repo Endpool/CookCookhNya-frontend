@@ -41,7 +41,7 @@ auto makeKeyboard(const std::vector<IngredientSearchResult>& ingredients) {
 } // namespace
 
 MessageId renderStorageIngredientsSearchSend(ChatId chat, BotRef bot) {
-    PatchedBot patchedBot{bot};
+    const PatchedBot patchedBot{bot};
     return patchedBot
         .sendMessage(
             chat, utils::utf8str(u8"Используй кнопку ниже как поисковик чтобы найти ингредиент"), makeKeyboard({}))
@@ -52,7 +52,7 @@ void renderStorageIngredientsSearchEdit(const std::vector<IngredientSearchResult
                                         MessageId message,
                                         ChatId chat,
                                         BotRef bot) {
-    PatchedBot patchedBot{bot};
+    const PatchedBot patchedBot{bot};
     patchedBot.editMessageReplyMarkup(chat, message, makeKeyboard(ingredients));
 }
 

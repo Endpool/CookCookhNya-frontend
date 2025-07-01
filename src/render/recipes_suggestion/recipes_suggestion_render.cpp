@@ -1,5 +1,6 @@
 #include "recipes_suggestion_render.hpp"
 
+#include "backend/id_types.hpp"
 #include "render/common.hpp"
 #include "tg_types.hpp"
 #include "utils.hpp"
@@ -51,11 +52,10 @@ constructMarkup(const std::vector<api::StorageId>& storages, int pageNo, UserId 
         }
 
         // If first page wasn't didn't represent all recipes in one page then the field with arrows is required
-        InlineKeyboard keyboard(
-            2 + recipesList.recipesPage
-                    .size()); // 1 for back button return, 1 for two arrows next and prev, and other buttons are recipes
+        // 1 for back button return, 1 for two arrows next and prev, and other buttons are recipes
+        InlineKeyboard keyboard(2 + recipesList.recipesPage.size());
 
-        for (uint32_t i = 0; i < recipesList.recipesPage.size(); i++) {
+        for (std::size_t i = 0; i < recipesList.recipesPage.size(); i++) {
             // Print on button in form "1. {Recipe}"
             keyboard[i].push_back(
                 detail::makeCallbackButton(std::format("{}. {} [{}/{}]",
