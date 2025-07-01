@@ -57,9 +57,9 @@ void handleRecipeView(RecipeView& state, CallbackQueryRef cq, BotRef bot, SMRef 
         return;
     }
     if (data[0] == '+') {
-        auto storageIds = mySplit(data.substr(1, data.size()));
+        auto storageIds =
+            mySplit(data.substr(1, data.size())); // Here we got all selected storages and new one as last in string
         state.storageIds.push_back(storageIds[storageIds.size() - 1]);
-        storageIds.pop_back();
         renderStorageSuggestion(state.storageIds, state.recipeId, userId, chatId, messageId, bot, api);
     }
 }

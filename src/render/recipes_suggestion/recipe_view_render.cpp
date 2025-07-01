@@ -7,6 +7,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <format>
+#include <string>
 #include <vector>
 
 namespace cookcookhnya::render::recipe_view {
@@ -159,19 +160,17 @@ void renderRecipeViewAfterAddingStorage(std::vector<StorageId> const& storageIds
                         detail::makeKeyboardMarkup(std::move(keyboard))); // Only on difference between function above
 }
 
-std::vector<StorageId> storagesToShow(std::vector<api::models::recipe::IngredientInRecipe> ingredients,
+std::vector<StorageId> storagesToShow(std::vector<api::models::recipe::IngredientInRecipe>& ingredients,
                                       std::vector<StorageId>& storageIdsToAccount) {
     std::vector<StorageId> storageIdsToShow;
 
     std::unordered_set<StorageId> toAdd; // If there will be only one element of storageId then remove
-    std::vector<StorageId> toRemove;
     bool isFound = false;
     for (auto& ingredient : ingredients) {
         isFound = false;                                    // Iterate through each ingredient
         for (StorageId inStorage : ingredient.inStorages) { // Iterate through each storage where ingredient is present
             for (StorageId i : storageIdsToAccount) {
                 if (i == inStorage) {
-                    toRemove.insert(toRemove.end(), ingredient.inStorages.begin(), ingredient.inStorages.end());
                     isFound = true;
                     break;
                 }
@@ -190,13 +189,7 @@ std::vector<StorageId> storagesToShow(std::vector<api::models::recipe::Ingredien
         }
     }
 
-    for (size_t i = 0; i < storageIdsToShow.size(); i++) {
-        for (StorageId j : toRemove) {
-            if (storageIdsToShow[i] == j) {
-                storageIdsToShow.erase(storageIdsToShow.begin() + i, storageIdsToShow.begin() + i + 1);
-            }
-        }
-    }
+    storageIdsToShow.reserve(toAdd.size());
     for (auto add : toAdd) {
         storageIdsToShow.push_back(add);
     }
@@ -222,10 +215,13 @@ void renderStorageSuggestion(std::vector<StorageId>& storageIdsToAccount, // sto
 
     textGenInfo text = textGen(storageIdsToAccount, recipeIngredients, userId, api);
     auto toPrint = text.text;
+
     auto suggestionStrings = text.foundInStoragesStrings;
     size_t counterOfSuggestionsFound = 0;
     bool ifSuggestionEcountered = false;
-    for (size_t i = 0; i < toPrint.size(); i++) {
+
+    // This for can be moved to distinct function
+    for (size_t i = 0; i < toPrint.size(); i++) { // Put suggestions here
         if (toPrint[i] == '\n' && ifSuggestionEcountered) {
             toPrint.insert(i + 1, suggestionStrings[counterOfSuggestionsFound]);
             counterOfSuggestionsFound++;
@@ -235,8 +231,17 @@ void renderStorageSuggestion(std::vector<StorageId>& storageIdsToAccount, // sto
             ifSuggestionEcountered = true;
         }
     }
-    std::vector<std::string> storageNames;
-
+    // This for is similar to suggested storages can be unionaized with this part of textGen (which will be incredibly
+    // difficult to keep consistency of textGen fenction) To print storages which were added
+    std::string storagesWhichAccount = utils::utf8str(u8"Выбранные хранилища: ");
+    for (size_t i = 0; i < storageIdsToAccount.size(); i++) {
+        auto storage = storageApi.get(userId, storageIdsToAccount[i]);
+        storagesWhichAccount += std::format("\"{}\" ", storage.name);
+        if (i == storageIdsToAccount.size() - 1) {
+            storagesWhichAccount += "\n";
+        }
+    }
+    toPrint.insert(0, storagesWhichAccount);
     int buttonRows = 0;
     buttonRows = std::floor(((storageIdsToShow.size() + 1) / 2) + 1); // +1 for back
     InlineKeyboard keyboard(buttonRows);

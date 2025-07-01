@@ -39,7 +39,7 @@ void renderRecipeViewAfterAddingStorage(std::vector<StorageId> const& storageIds
                                         BotRef bot,
                                         ApiClient api);
 // Helper functions
-std::vector<StorageId> storagesToShow(std::vector<api::models::recipe::IngredientInRecipe> ingredients,
+std::vector<StorageId> storagesToShow(std::vector<api::models::recipe::IngredientInRecipe>& ingredients,
                                       std::vector<StorageId>& storageIdsToAccount);
 
 textGenInfo textGen(std::vector<StorageId> const& storageIds,
