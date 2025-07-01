@@ -7,7 +7,6 @@
 #include <cstddef>
 #include <cstdint>
 #include <format>
-#include <unordered_map>
 #include <vector>
 
 namespace cookcookhnya::render::recipe_view {
@@ -20,7 +19,9 @@ returnType textGen(std::vector<StorageId> const& storageIds,
     // Get two api's from apiClient
     auto storageApi = api.getStorages();
     std::unordered_set<StorageId> storageIdSet(storageIds.begin(), storageIds.end());
+
     std::unordered_set<StorageId> suggestedStorageIds;
+    std::vector<std::string> foundInStoragesStrings;
 
     auto ingredients = recipeIngredients.ingredients;
 
@@ -32,7 +33,7 @@ returnType textGen(std::vector<StorageId> const& storageIds,
     bool isContains = false;
     bool isSuggestionMade = false;
     bool isIngredientNotWritten = true;
-
+    size_t counterOfSuggestion = 0;
     for (auto& ingredient : ingredients) { // Iterate through each ingredient
         isIngredientNotWritten = true;
         isContains = false;
@@ -62,21 +63,29 @@ returnType textGen(std::vector<StorageId> const& storageIds,
                 toPrint += std::format("{} ?\n", ingredient.name);
                 isIngredientNotWritten = false;
 
+                foundInStoragesStrings.emplace_back(""); // New place for string for suggestion
+
                 if (ingredient.inStorages.size() == 1) {
-                    toPrint += utils::utf8str(u8" *Найдено в хранилище: ");
+
+                    foundInStoragesStrings[counterOfSuggestion] += utils::utf8str(u8" *Найдено в хранилище: ");
                 } else {
-                    toPrint += utils::utf8str(u8" *Найдено в хранилищах: ");
+                    foundInStoragesStrings[counterOfSuggestion] += utils::utf8str(u8" *Найдено в хранилищах: ");
                 }
             }
             auto storage = storageApi.get(userId, ingredient.inStorages[j]);
 
             suggestedStorageIds.insert(ingredient.inStorages[j]); // Keep set of storages which will be suggested
-            toPrint += std::format("\"{}\"{}",
-                                   storage.name,
-                                   variants[std::min(variants.size() - 1, ingredient.inStorages.size() - j - 1)]);
+            foundInStoragesStrings[counterOfSuggestion] +=
+                std::format("\"{}\"{}",
+                            storage.name,
+                            variants[std::min(variants.size() - 1, ingredient.inStorages.size() - j - 1)]);
         }
+        counterOfSuggestion++; // If here then suggesiton was made
     }
-    return {.text = toPrint, .isSuggestionMade = isSuggestionMade, .suggestedStorageIds = suggestedStorageIds};
+    return {.text = toPrint,
+            .isSuggestionMade = isSuggestionMade,
+            .suggestedStorageIds = suggestedStorageIds,
+            .foundInStoragesStrings = foundInStoragesStrings};
 }
 
 void renderRecipeView(std::vector<StorageId> const& storageIds,
@@ -99,9 +108,6 @@ void renderRecipeView(std::vector<StorageId> const& storageIds,
         detail::makeCallbackButton(utils::utf8str(u8"Готовить"), "startCooking")); // Add needed info for next states!
     if (isSuggestionMade) {
         std::string dataForSuggestion = "?";
-        for (auto id : suggestedStorageIds) {
-            dataForSuggestion += std::format("{} ", id);
-        }
         keyboard[0].push_back(detail::makeCallbackButton(utils::utf8str(u8"?"), dataForSuggestion));
     }
 
@@ -151,8 +157,7 @@ void renderRecipeViewAfterAddingStorage(std::vector<StorageId> const& storageIds
                         detail::makeKeyboardMarkup(std::move(keyboard))); // Only on difference between function above
 }
 
-void renderStorageSuggestion(std::vector<StorageId>& storageIdsToShow,
-                             std::vector<StorageId>& storageIdsToAccount, // storages which are selected
+void renderStorageSuggestion(std::vector<StorageId>& storageIdsToAccount, // storages which are selected
                              api::RecipeId recipeId,
                              UserId userId,
                              ChatId chatId,
@@ -161,13 +166,14 @@ void renderStorageSuggestion(std::vector<StorageId>& storageIdsToShow,
                              ApiClient api) {
 
     auto storageApi = api.getStorages();
-    storageIdsToShow.clear();
+    std::vector<StorageId> storageIdsToShow;
     std::unordered_set<StorageId> toAdd; // If there will be only one element of storageId then remove
     std::vector<StorageId> toRemove;
     auto recipesApi = api.getRecipes();
     auto recipeIngredients = recipesApi.getIngredientsInRecipe(userId, recipeId, storageIdsToAccount);
     auto ingredients = recipeIngredients.ingredients;
     bool isFound = false;
+
     for (auto& ingredient : ingredients) {
         isFound = false;                                    // Iterate through each ingredient
         for (StorageId inStorage : ingredient.inStorages) { // Iterate through each storage where ingredient is present
@@ -204,10 +210,18 @@ void renderStorageSuggestion(std::vector<StorageId>& storageIdsToShow,
     }
     returnType text = textGen(storageIdsToAccount, recipeIngredients, userId, api);
     auto toPrint = text.text;
+    auto suggestionStrings = text.foundInStoragesStrings;
+    size_t counterOfSuggestionsFound = 0;
+    for (size_t i = 0; i < toPrint.size(); i++) {
+        if (toPrint[i] == '?') {
+            toPrint.insert(i + 2, suggestionStrings[counterOfSuggestionsFound]);
+            counterOfSuggestionsFound++;
+        }
+    }
     std::vector<std::string> storageNames;
 
-    size_t buttonRows = 0;
-    buttonRows = std::floor(storageIdsToShow.size() + 1) / 2 + 1; // +1 for back
+    int buttonRows = 0;
+    buttonRows = std::floor(((storageIdsToShow.size() + 1) / 2) + 1); // +1 for back
     InlineKeyboard keyboard(buttonRows);
 
     uint64_t i = 0;
@@ -225,7 +239,7 @@ void renderStorageSuggestion(std::vector<StorageId>& storageIdsToShow,
         keyboard[std::floor(i / 2)].push_back(detail::makeCallbackButton(name, dataToShow + std::to_string(storageId)));
         i++;
     }
-    keyboard[std::floor(storageIdsToShow.size() + 1) / 2].push_back(
+    keyboard[std::floor((storageIdsToShow.size() + 1) / 2)].push_back(
         detail::makeCallbackButton(utils::utf8str(u8"Назад"), "BackFromAddingStorages"));
     bot.editMessageText(toPrint, chatId, messageId, "", "", nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
 }

@@ -5,21 +5,23 @@
 #include "render/recipes_suggestion/recipe_view_render.hpp"
 #include "render/recipes_suggestion/recipes_suggestion_render.hpp"
 
-namespace cookcookhnya::handlers::recipe_view {
-using namespace render::recipe_view;
-using render::recipes_suggestion::renderRecipesSuggestion;
-
-static std::vector<api::StorageId> mySplit(const std::string& input) {
+namespace {
+std::vector<cookcookhnya::api::StorageId> mySplit(const std::string& input) {
     std::istringstream iss(input);
-    std::vector<api::StorageId> result;
+    std::vector<cookcookhnya::api::StorageId> result;
 
     // Using istream_iterator to read integers directly from the string stream
-    std::copy(std::istream_iterator<api::StorageId>(iss),
-              std::istream_iterator<api::StorageId>(),
+    std::copy(std::istream_iterator<cookcookhnya::api::StorageId>(iss),
+              std::istream_iterator<cookcookhnya::api::StorageId>(),
               std::back_inserter(result));
 
     return result;
 }
+} // namespace
+
+namespace cookcookhnya::handlers::recipe_view {
+using namespace render::recipe_view;
+using render::recipes_suggestion::renderRecipesSuggestion;
 
 void handleRecipeView(RecipeView& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
 
@@ -51,16 +53,14 @@ void handleRecipeView(RecipeView& state, CallbackQueryRef cq, BotRef bot, SMRef 
     if (data[0] == '?') {
         // In state we have storages which were chosen by user to suggest recipes -
         // not storages ingredients from which are suggested
-        auto storageIdsToShow = mySplit(data.substr(1, data.size()));
-        renderStorageSuggestion(
-            storageIdsToShow, state.storageIds, state.recipeId, userId, chatId, messageId, bot, api);
+        renderStorageSuggestion(state.storageIds, state.recipeId, userId, chatId, messageId, bot, api);
         return;
     }
     if (data[0] == '+') {
         auto storageIds = mySplit(data.substr(1, data.size()));
         state.storageIds.push_back(storageIds[storageIds.size() - 1]);
         storageIds.pop_back();
-        renderStorageSuggestion(storageIds, state.storageIds, state.recipeId, userId, chatId, messageId, bot, api);
+        renderStorageSuggestion(state.storageIds, state.recipeId, userId, chatId, messageId, bot, api);
     }
 }
 

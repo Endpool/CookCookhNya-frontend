@@ -11,6 +11,7 @@ struct returnType {
     std::string text;
     bool isSuggestionMade{};
     std::unordered_set<StorageId> suggestedStorageIds;
+    std::vector<std::string> foundInStoragesStrings;
 };
 
 void renderRecipeView(
@@ -22,8 +23,7 @@ void renderRecipeView(
     BotRef bot,
     ApiClient api);
 
-void renderStorageSuggestion(std::vector<StorageId>& storageIdsToShow,
-                             std::vector<StorageId>& storageIdsToAccount,
+void renderStorageSuggestion(std::vector<StorageId>& storageIdsToAccount,
                              api::RecipeId recipeId,
                              UserId userId,
                              ChatId chatId,
