@@ -1,24 +1,34 @@
 #include "select_storages_render.hpp"
 
+#include "backend/id_types.hpp"
 #include "render/common.hpp"
 #include "tg_types.hpp"
 #include "utils.hpp"
+
+#include <algorithm>
+#include <cstddef>
+#include <string>
+#include <utility>
+#include <vector>
 
 namespace cookcookhnya::render::select_storages {
 
 using namespace tg_types;
 
-MessageId renderStoragesSelect(
-    std::vector<StorageId> selected_storages, UserId userId, ChatId chatId, BotRef bot, StorageApiRef storageApi) {
+MessageId renderStoragesSelect(const std::vector<api::StorageId>& selected_storages,
+                               UserId userId,
+                               ChatId chatId,
+                               BotRef bot,
+                               StorageApiRef storageApi) {
     auto storages = storageApi.getStoragesList(userId);
 
-    unsigned long buttonRows = ((storages.size() + 1) / 2) + 1;
+    const std::size_t buttonRows = ((storages.size() + 1) / 2) + 1;
     InlineKeyboard keyboard(buttonRows);
 
-    for (uint32_t i = 0; i < storages.size(); ++i) {
+    for (std::size_t i = 0; i < storages.size(); ++i) {
         if (i % 2 == 0)
             keyboard[(i / 2)].reserve(2);
-        bool isSelected = std::ranges::find(selected_storages, storages[i].id) != selected_storages.end();
+        const bool isSelected = std::ranges::find(selected_storages, storages[i].id) != selected_storages.end();
         if (isSelected) {
             keyboard[(i / 2)].push_back(detail::makeCallbackButton(utils::utf8str(u8"✓ ") + storages[i].name,
                                                                    "in__" + std::to_string(storages[i].id)));
@@ -41,20 +51,20 @@ MessageId renderStoragesSelect(
     return message->messageId;
 }
 
-void updateStorageSelect(std::vector<StorageId> selected_storages,
+void updateStorageSelect(const std::vector<api::StorageId>& selected_storages,
                          MessageId messageId,
                          UserId userId,
                          ChatId chatId,
                          BotRef bot,
                          StorageApiRef storageApi) {
-    auto storages = storageApi.getStoragesList(userId); // 🟢 🔴
+    const auto storages = storageApi.getStoragesList(userId); // 🟢 🔴
 
-    unsigned long buttonRows = ((storages.size() + 1) / 2) + 1;
+    const std::size_t buttonRows = ((storages.size() + 1) / 2) + 1;
     InlineKeyboard keyboard(buttonRows);
-    for (uint32_t i = 0; i < storages.size(); ++i) {
+    for (std::size_t i = 0; i < storages.size(); ++i) {
         if (i % 2 == 0)
             keyboard[(i / 2)].reserve(2);
-        bool isSelected = std::ranges::find(selected_storages, storages[i].id) != selected_storages.end();
+        const bool isSelected = std::ranges::find(selected_storages, storages[i].id) != selected_storages.end();
         if (isSelected) {
             keyboard[(i / 2)].push_back(detail::makeCallbackButton(utils::utf8str(u8"✓ ") + storages[i].name,
                                                                    "in__" + std::to_string(storages[i].id)));

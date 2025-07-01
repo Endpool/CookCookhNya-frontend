@@ -4,6 +4,8 @@
 #include "handlers/common.hpp"
 #include "render/storage_list/storage_list_render.hpp"
 
+#include <sstream>
+
 namespace cookcookhnya::handlers::storage_delete {
 
 using namespace render::storage_list;

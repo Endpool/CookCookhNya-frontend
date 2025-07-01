@@ -12,6 +12,7 @@
 
 namespace cookcookhnya::render::recipe_view {
 
+
 textGenInfo textGen(std::vector<StorageId> const& storageIds,
                     const api::models::recipe::RecipeDetails& recipeIngredients,
                     UserId userId,
@@ -115,8 +116,9 @@ void renderRecipeView(std::vector<StorageId> const& storageIds,
     }
 
     keyboard[1].push_back(detail::makeCallbackButton(utils::utf8str(u8"Составить список продуктов"),
+
                                                      "makeReceipt")); // Add needed info for next states!
-    keyboard[2].push_back(detail::makeCallbackButton(utils::utf8str(u8"Назад"), "backFromRecipeView"));
+    keyboard[2].push_back(detail::makeCallbackButton(u8"Назад", "backFromRecipeView"));
 
     bot.sendMessage(chatId, toPrint, nullptr, nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
 }

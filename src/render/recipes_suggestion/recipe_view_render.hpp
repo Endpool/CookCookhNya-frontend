@@ -5,7 +5,10 @@
 #include "render/common.hpp"
 #include <vector>
 
+#include <vector>
+
 namespace cookcookhnya::render::recipe_view {
+
 
 struct textGenInfo {
     std::string text;
@@ -46,4 +49,5 @@ textGenInfo textGen(std::vector<StorageId> const& storageIds,
                     const api::models::recipe::RecipeDetails& recipeIngredients,
                     UserId userId,
                     ApiClient api);
+
 } // namespace cookcookhnya::render::recipe_view

@@ -1,5 +1,3 @@
-#pragma once
-
 #include "recipe_view.hpp"
 #include "backend/id_types.hpp"
 #include "render/recipes_suggestion/recipe_view_render.hpp"
@@ -28,6 +26,7 @@ void handleRecipeView(RecipeView& state, CallbackQueryRef cq, BotRef bot, SMRef 
     std::string data = cq.data;
     auto messageId = cq.message->messageId;
 
+
     auto chatId = cq.message->chat->id;
     auto userId = cq.from->id;
 
@@ -54,6 +53,7 @@ void handleRecipeView(RecipeView& state, CallbackQueryRef cq, BotRef bot, SMRef 
         // In state we have storages which were chosen by user to suggest recipes -
         // not storages ingredients from which are suggested
         renderStorageSuggestion(state.storageIds, state.recipeId, userId, chatId, messageId, bot, api);
+
         return;
     }
     if (data[0] == '+') {
