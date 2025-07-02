@@ -12,11 +12,12 @@ namespace cookcookhnya::render::storage_list {
 void renderStorageList(UserId userId, ChatId chatId, BotRef bot, StorageApiRef storageApi) {
     auto currentStorages = storageApi.getStoragesList(userId); // Take storages of user from backend
 
-    const std::size_t buttonRows = currentStorages.empty() ? 1 : ((currentStorages.size() + 1) / 2) + 2; // ceiling
+    // TODO: refactor this (make it readable)
+    const std::size_t buttonRows =
+        1 + (currentStorages.empty() ? 1 : ((currentStorages.size() + 1) / 2) + 2); // ceiling
     InlineKeyboard keyboard(buttonRows);
 
     if (!currentStorages.empty()) {
-
         keyboard[0].reserve(2);
         keyboard[0].push_back(detail::makeCallbackButton(u8"➕", "storage_list_creation"));
         keyboard[0].push_back(detail::makeCallbackButton(u8"➖", "storage_list_deletion"));
@@ -33,8 +34,11 @@ void renderStorageList(UserId userId, ChatId chatId, BotRef bot, StorageApiRef s
     }
 
     if (!currentStorages.empty()) {
+        keyboard[keyboard.size() - 2].push_back(detail::makeCallbackButton(u8"Список покупок", "shopping_list"));
         keyboard[keyboard.size() - 1].push_back(
             detail::makeCallbackButton(u8"Хочу кушать", "storage_list_what_to_cook"));
+    } else {
+        keyboard[keyboard.size() - 1].push_back(detail::makeCallbackButton(u8"Список покупок", "shopping_list"));
     }
 
     bot.sendMessage(
