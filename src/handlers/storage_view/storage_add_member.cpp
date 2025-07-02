@@ -48,10 +48,6 @@ void cancelMemberAddition(
         renderMemberList(true, state.storageId, userId, chatId, bot, storageApi);
         stateManager.put(StorageMemberView{state.storageId});
     }
-    if (cq.data == "user_sended_link"){
-        renderMemberList(true, state.storageId, userId, chatId, bot, storageApi);
-        stateManager.put(StorageMemberView{state.storageId});
-    }
 };
 
 } // namespace cookcookhnya::handlers::storage_add_member

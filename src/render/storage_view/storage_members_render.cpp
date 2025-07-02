@@ -71,7 +71,7 @@ void renderMemberAdditionPrompt(
     inviteButton->callbackData = "user_sended_link";
 
     keyboard[0].push_back(std::move(inviteButton));
-    keyboard[1].push_back(detail::makeCallbackButton(utils::utf8str(u8"🚫 Отмена"), "cancel_member_addition"));
+    keyboard[1].push_back(detail::makeCallbackButton(utils::utf8str(u8"↩️ Назад"), "cancel_member_addition"));
     auto text = utils::utf8str(u8"📩 Нажмите кнопку ниже или перешлите сообщение пользователя, чтобы добавить его в хранилище\n");
     auto messageId = message::getMessageId(userId);
     bot.editMessageText(text, chatId, *messageId, "", "", nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
