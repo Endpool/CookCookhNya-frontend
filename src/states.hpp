@@ -14,6 +14,7 @@
 namespace cookcookhnya::states {
 
 namespace detail {
+
 struct StorageIdMixin {
     api::StorageId storageId;
     StorageIdMixin(api::StorageId storageId) : storageId{storageId} {} // NOLINT(*-explicit-*)
@@ -56,6 +57,8 @@ struct RecipeView {
     api::RecipeId recipeId;
 };
 
+struct ShoppingListView {};
+
 using State = std::variant<StorageList,
                            StorageCreation,
                            StorageDeletion,
@@ -72,7 +75,8 @@ using State = std::variant<StorageList,
                            StorageIngredientsSearch,
                            StorageSelection,
                            SuggestedRecipeList,
-                           RecipeView>;
+                           RecipeView,
+                           ShoppingListView>;
 
 using StateManager = tg_stater::StateProxy<tg_stater::MemoryStateStorage<State>>;
 

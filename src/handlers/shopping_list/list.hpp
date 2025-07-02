@@ -1,0 +1,10 @@
+#pragma once
+
+#include "handlers/common.hpp"
+
+namespace cookcookhnya::handlers::shopping_list {
+
+void shoppingListButtonCallback(
+    ShoppingListView&, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api);
+
+} // namespace cookcookhnya::handlers::shopping_list
