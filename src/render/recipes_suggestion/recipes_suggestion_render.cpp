@@ -1,8 +1,8 @@
 #include "recipes_suggestion_render.hpp"
 
 #include "backend/id_types.hpp"
+#include "message_tracker.hpp"
 #include "render/common.hpp"
-#include "tg_types.hpp"
 #include "utils.hpp"
 
 #include <cstddef>
@@ -13,7 +13,8 @@
 namespace cookcookhnya::render::recipes_suggestion {
 
 InlineKeyboard
-constructMarkup(const std::vector<api::StorageId>& storageIds, int pageNo, UserId userId, RecipesApiRef recipesApi) {
+ constructMarkup(const std::vector<api::StorageId>& storageIds, int pageNo, UserId userId, RecipesApiRef recipesApi) {
+
     // CONSTANT AND SAME (STATIC) FOR EVERY USER (static const doesn't actually matter in this function was added
     // because of logic of that variable)
     static const int numOfRecipesOnPage = 10;
@@ -48,8 +49,8 @@ constructMarkup(const std::vector<api::StorageId>& storageIds, int pageNo, UserI
              * Even if one storage was chosen in storage list choose it will return to view of these one storage.
              */
             keyboard[recipesList.recipesPage.size()].push_back(detail::makeCallbackButton(
-                utils::utf8str(u8"Назад"),
-                std::format("backFromSuggestedRecipes {}", storageIds.size()))); // To LAST row add "return"
+                utils::utf8str(u8"↩️ Назад"),
+                std::format("backFromSuggestedRecipes {}", storages.size()))); // To LAST row add "return"
             return keyboard;
         }
 
@@ -75,7 +76,8 @@ constructMarkup(const std::vector<api::StorageId>& storageIds, int pageNo, UserI
          * Even if one storage was chosen in storage list choose it will return to view of these one storage.
          */
         keyboard[recipesList.recipesPage.size() + 1].push_back(detail::makeCallbackButton(
-            u8"Назад", std::format("backFromSuggestedRecipes {}", storageIds.size()))); // To LAST row add "return"
+            utils::utf8str(u8"↩️ Назад"),
+            std::format("backFromSuggestedRecipes {}", storages.size()))); // To LAST row add "return"
         return keyboard;
     }
 
@@ -96,13 +98,13 @@ constructMarkup(const std::vector<api::StorageId>& storageIds, int pageNo, UserI
         // Show both possible ways
         keyboard[recipesList.recipesPage.size()].reserve(2);
         keyboard[recipesList.recipesPage.size()].push_back(
-            detail::makeCallbackButton(u8"⭠", std::to_string(pageNo - 1)));
+            detail::makeCallbackButton(utils::utf8str(u8"⏮️"), std::to_string(pageNo - 1)));
         keyboard[recipesList.recipesPage.size()].push_back(
-            detail::makeCallbackButton(u8"⭢", std::to_string(pageNo + 1)));
+            detail::makeCallbackButton(utils::utf8str(u8"⏭️"), std::to_string(pageNo + 1)));
     } else {
         // If pageNo == maxPage then it's last page -> won't show button next
         keyboard[recipesList.recipesPage.size()].push_back(
-            detail::makeCallbackButton(u8"⭠", std::to_string(pageNo - 1)));
+            detail::makeCallbackButton(utils::utf8str(u8"⏮️"), std::to_string(pageNo - 1)));
     }
 
     /* Put the number of storages.
@@ -110,40 +112,46 @@ constructMarkup(const std::vector<api::StorageId>& storageIds, int pageNo, UserI
      * Even if one storage was chosen in storage list choose it will return to view of these one storage.
      */
     keyboard[recipesList.recipesPage.size() + 1].push_back(detail::makeCallbackButton(
-        u8"Назад", std::format("backFromSuggestedRecipes {}", storageIds.size()))); // To LAST row add "return"
+
+        utils::utf8str(u8"↩️ Назад"),
+        std::format("backFromSuggestedRecipes {}", storages.size()))); // To LAST row add "return"
     return keyboard;
 }
 
-void renderRecipesSuggestion(const std::vector<api::StorageId>& storageIds,
+void renderRecipesSuggestion(std::vector<api::StorageId> const& storages,
                              int pageNo,
                              UserId userId,
                              ChatId chatId,
                              BotRef bot,
                              RecipesApiRef recipesApi) {
 
-    const std::string pageInfo = utils::utf8str(u8"Номер страницы: ") + std::to_string(pageNo) +
-                                 utils::utf8str(u8"\nРецепты выбранные только для вас:");
+    std::string pageInfo = utils::utf8str(u8"🔢 Номер страницы: ") + std::to_string(pageNo) +
+                           utils::utf8str(u8"\n🔪 Рецепты подобранные специально для вас");
 
-    bot.sendMessage(chatId,
-                    pageInfo,
-                    nullptr,
-                    nullptr,
-                    detail::makeKeyboardMarkup(constructMarkup(storageIds, pageNo, userId, recipesApi)));
+
+    auto messageId = message::getMessageId(userId);
+    bot.editMessageText(pageInfo,
+                        chatId,
+                        *messageId,
+                        "",
+                        "",
+                        nullptr,
+                        detail::makeKeyboardMarkup(constructMarkup(storages, pageNo, userId, recipesApi)));
 }
 
-void editSuggestionMessage(const std::vector<api::StorageId>& storageIds,
+void editRecipesSuggestion(std::vector<api::StorageId> const& storages,
                            int pageNo,
                            UserId userId,
                            ChatId chatId,
-                           tg_types::MessageId messageId,
                            BotRef bot,
                            RecipesApiRef recipesApi) {
-    const std::string pageInfo = utils::utf8str(u8"Номер страницы: ") + std::to_string(pageNo) +
-                                 utils::utf8str(u8"\nРецепты выбранные только для вас:");
+    std::string pageInfo = utils::utf8str(u8"🔢 Номер страницы: ") + std::to_string(pageNo) +
+                           utils::utf8str(u8"\n🔪 Рецепты подобранные специально для вас");
 
+    auto messageId = message::getMessageId(userId);
     bot.editMessageText(pageInfo,
                         chatId,
-                        messageId,
+                        *messageId,
                         "",
                         "",
                         nullptr,

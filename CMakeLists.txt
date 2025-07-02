@@ -33,6 +33,7 @@ find_package(Boost REQUIRED COMPONENTS json)
 add_executable(main
     src/main.cpp
     src/utils.cpp
+    src/message_tracker.cpp
 )
 include(src/backend/CMakeLists.txt)
 include(src/handlers/CMakeLists.txt)

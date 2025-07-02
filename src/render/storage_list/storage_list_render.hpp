@@ -4,6 +4,6 @@
 
 namespace cookcookhnya::render::storage_list {
 
-void renderStorageList(UserId userId, ChatId chatId, BotRef bot, StorageApiRef storageApi);
+void renderStorageList(bool toBeEdited, UserId userId, ChatId chatId, BotRef bot, StorageApiRef storageApi);
 
 } // namespace cookcookhnya::render::storage_list

@@ -21,7 +21,8 @@ class StoragesApi : ApiBase {
     StorageId create(UserId userId, // NOLINT(*-nodiscard)
                      const models::storage::StorageCreateBody& body) const;
     void delete_(UserId userId, StorageId id) const;
-    [[nodiscard]] std::vector<UserId> getStorageMembers(UserId userId, StorageId id) const;
+    [[nodiscard]] std::vector<models::storage::StorageMemberDetails> getStorageMembers(UserId userId,
+                                                                                       StorageId id) const;
     void addMember(UserId userId, StorageId id, UserId memberId) const;
     void deleteMember(UserId userId, StorageId id, UserId memberId) const;
 };

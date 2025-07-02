@@ -21,7 +21,6 @@ RecipesApi::getRecipeList(UserId userId, int size, int offset, const std::vector
     return jsonGetAuthed<RecipesList>(userId, "/recipes", params);
 }
 
-
 RecipeDetails RecipesApi::getIngredientsInRecipe(UserId userId, RecipeId recipeId)
     const { // StorageIds are not needed in current implementation as backend doesnt return if ingredient is available
     return jsonGetAuthed<RecipeDetails>(userId, std::format("/recipes/{}", recipeId));
