@@ -7,13 +7,15 @@
 
 namespace cookcookhnya::handlers::storage::ingredients {
 
+using namespace render::storage;
+
 void storageIngredientsListButtonCallback(
     StorageIngredientsList& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
     bot.answerCallbackQuery(cq.id);
     const auto user = cq.from->id;
     const auto chat = cq.message->chat->id;
     if (cq.data == "back") {
-        render::storage::renderStorageView(state.storageId, user, chat, bot, api);
+        renderStorageView(state.storageId, user, chat, bot, api);
         stateManager.put(StorageView{state.storageId});
     } else if (cq.data == "search") {
         const tg_types::MessageId message = render::storage::ingredients::renderStorageIngredientsSearchSend(chat, bot);

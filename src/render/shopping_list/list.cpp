@@ -1,5 +1,6 @@
 #include "list.hpp"
 
+#include "message_tracker.hpp"
 #include "render/common.hpp"
 #include "utils.hpp"
 
@@ -17,13 +18,14 @@ void renderShoppingList(
         keyboard[i].push_back(detail::makeCallbackButton(items[i].name, std::to_string(items[i].ingredientId)));
     }
     keyboard[items.size()].push_back(detail::makeCallbackButton(u8"Назад", "back"));
-    bot.editMessageText(utils::utf8str(u8"Ваш список покупок:"),
+    bot.editMessageText(utils::utf8str(u8"🔖 Ваш список покупок:"),
                         chatId,
                         messageId,
                         "",
                         "",
                         nullptr,
                         detail::makeKeyboardMarkup(std::move(keyboard)));
+
 }
 
 } // namespace cookcookhnya::render::shopping_list

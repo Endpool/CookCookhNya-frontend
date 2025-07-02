@@ -5,12 +5,14 @@
 
 namespace cookcookhnya::handlers::shopping_list {
 
+using namespace render::storage_list;
+
 void shoppingListButtonCallback(
     ShoppingListView& /*unused*/, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
     stateManager.put(StorageList{});
     bot.answerCallbackQuery(cq.id);
     if (cq.data == "back") {
-        render::storage_list::renderStorageList(true, cq.from->id, cq.message->chat->id, bot, api);
+        renderStorageList(true, cq.from->id, cq.message->chat->id, bot, api);
         stateManager.put(StorageList{});
         return;
     }
