@@ -8,7 +8,6 @@
 #include "render/storage_view/storage_view_render.hpp"
 
 #include <sstream>
-#include <vector>
 
 namespace cookcookhnya::handlers::storage_list_view {
 
@@ -30,20 +29,19 @@ void storageListButtonCallback(
     auto chatId = cq.message->chat->id;
     if (cq.data == "storage_list_creation") {
         renderStorageCreate(chatId, userId, bot);
-        stateManager.put(StorageCreationEnterName{}); // Go to function create storage, while cancel button is handled
-                                                      // on cancel storage creation
+        stateManager.put(StorageCreationEnterName{});
         return;
     }
 
     if (cq.data == "storage_list_deletion") {
         renderStorageDelete(
-            chatId, bot, cq.from->id, api); // Need for api, so it could put the list of storages to delete
-        stateManager.put(StorageDeletionEnterName{});
+            chatId, bot, cq.from->id, api);
+        stateManager.put(StorageDeletion{});
         return;
     }
     if (cq.data == "storage_list_what_to_cook") {
-        auto messageId = renderStoragesSelect({}, cq.from->id, chatId, bot, api);
-        stateManager.put(StorageSelection{.storageIds = std::vector<api::StorageId>{}, .messageId = messageId});
+        renderStorageSelect({}, cq.from->id, chatId, bot, api);
+        stateManager.put(StorageSelection{.storageIds = std::vector<api::StorageId>{}});
         return;
     }
     if (cq.data == "shopping_list") {

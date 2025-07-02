@@ -24,7 +24,8 @@ void renderStorageSelect(const std::vector<api::StorageId>& selected_storages,
 
     const std::size_t buttonRows = ((storages.size() + 1) / 2) + 1;
     InlineKeyboard keyboard(buttonRows);
-
+    keyboard[0].push_back(detail::makeCallbackButton(utils::utf8str(u8"🚫 Отмена"),
+                                                                       "cancel_storages_selection"));
     for (std::size_t i = 0; i < storages.size(); ++i) {
         if (i % 2 == 0)
             keyboard[(i / 2)].reserve(2);
