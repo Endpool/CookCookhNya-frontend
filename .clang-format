@@ -11,3 +11,4 @@ KeepEmptyLines:
 Language: Cpp
 DerivePointerAlignment: false
 PointerAlignment: Left
+QualifierAlignment: Left
