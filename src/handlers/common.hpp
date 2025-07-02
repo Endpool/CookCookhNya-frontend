@@ -37,6 +37,7 @@ using states::StorageIngredientsSearch;
 using states::StorageSelection;
 using states::SuggestedRecipeList;
 
+using states::ShoppingListCreation;
 // Type aliases
 using ApiClientRef = const api::ApiClient&;
 using UserApiRef = const api::UsersApi&;

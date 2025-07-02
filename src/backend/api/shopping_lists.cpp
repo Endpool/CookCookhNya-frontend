@@ -12,4 +12,10 @@ std::vector<ShoppingListItem> ShoppingListApi::get(UserId userId) const {
     return jsonGetAuthed<std::vector<ShoppingListItem>>(userId, "/my/shopping-list");
 }
 
+void ShoppingListApi::put(UserId userId, const std::vector<IngredientId>& ingredientIds) const {
+    httplib::Params params;
+    for (auto id : ingredientIds)
+        params.insert({"ingredient-id", std::to_string(id)});
+    jsonPutAuthed<void>(userId, "/my/shopping-list", params);
+}
 } // namespace cookcookhnya::api

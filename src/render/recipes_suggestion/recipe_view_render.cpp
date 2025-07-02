@@ -12,7 +12,7 @@
 
 namespace cookcookhnya::render::recipe_view {
 
-textGenInfo textGen(std::vector<api::StorageId> const& storageIds,
+textGenInfo textGen(const std::vector<api::StorageId>& storageIds,
                     const api::models::recipe::RecipeDetails& recipeIngredients,
                     UserId userId,
                     ApiClient api) { // will return needed text and some additional elements
@@ -91,7 +91,7 @@ textGenInfo textGen(std::vector<api::StorageId> const& storageIds,
                 foundInStoragesStrings}; // Many info may be needed from that function to make right markup
 }
 
-void renderRecipeView(std::vector<api::StorageId> const& storageIds,
+void renderRecipeView(const std::vector<api::StorageId>& storageIds,
                       api::RecipeId recipeId,
                       UserId userId,
                       ChatId chatId,
@@ -116,13 +116,13 @@ void renderRecipeView(std::vector<api::StorageId> const& storageIds,
 
     keyboard[1].push_back(detail::makeCallbackButton(utils::utf8str(u8"Составить список продуктов"),
 
-                                                     "makeReceipt")); // Add needed info for next states!
+                                                     "makeProductList")); // Add needed info for next states!
     keyboard[2].push_back(detail::makeCallbackButton(u8"Назад", "backFromRecipeView"));
 
     bot.sendMessage(chatId, toPrint, nullptr, nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
 }
 
-void renderRecipeViewAfterAddingStorage(std::vector<api::StorageId> const& storageIds,
+void renderRecipeViewAfterAddingStorage(const std::vector<api::StorageId>& storageIds,
                                         api::RecipeId recipeId,
                                         UserId userId,
                                         ChatId chatId,
@@ -149,7 +149,7 @@ void renderRecipeViewAfterAddingStorage(std::vector<api::StorageId> const& stora
     }
 
     keyboard[1].push_back(detail::makeCallbackButton(utils::utf8str(u8"Составить список продуктов"),
-                                                     "makeReceipt")); // Add needed info for next states!
+                                                     "makeProductList")); // Add needed info for next states!
     keyboard[2].push_back(detail::makeCallbackButton(utils::utf8str(u8"Назад"), "backFromRecipeView"));
 
     bot.editMessageText(toPrint,
@@ -161,13 +161,13 @@ void renderRecipeViewAfterAddingStorage(std::vector<api::StorageId> const& stora
                         detail::makeKeyboardMarkup(std::move(keyboard))); // Only on difference between function above
 }
 
-std::vector<api::StorageId> storagesToShow(std::vector<api::models::recipe::IngredientInRecipe>& ingredients,
-                                           std::vector<api::StorageId>& storageIdsToAccount) {
+std::vector<api::StorageId> storagesToShow(const std::vector<api::models::recipe::IngredientInRecipe>& ingredients,
+                                           const std::vector<api::StorageId>& storageIdsToAccount) {
     std::vector<api::StorageId> storageIdsToShow;
 
     std::unordered_set<api::StorageId> toAdd; // If there will be only one element of storageId then remove
     bool isFound = false;
-    for (auto& ingredient : ingredients) {
+    for (const auto& ingredient : ingredients) {
         isFound = false; // Iterate through each ingredient
         for (api::StorageId inStorage :
              ingredient.inStorages) { // Iterate through each storage where ingredient is present
@@ -199,7 +199,7 @@ std::vector<api::StorageId> storagesToShow(std::vector<api::models::recipe::Ingr
     return storageIdsToShow;
 }
 
-void renderStorageSuggestion(std::vector<api::StorageId>& storageIdsToAccount, // storages which are selected
+void renderStorageSuggestion(const std::vector<api::StorageId>& storageIdsToAccount, // storages which are selected
                              api::RecipeId recipeId,
                              UserId userId,
                              ChatId chatId,
@@ -244,23 +244,16 @@ void renderStorageSuggestion(std::vector<api::StorageId>& storageIdsToAccount, /
         }
     }
     toPrint.insert(0, storagesWhichAccount);
-    int buttonRows = 0;
-    buttonRows = std::floor(((storageIdsToShow.size() + 1) / 2) + 1); // +1 for back
+    int buttonRows = std::floor(((storageIdsToShow.size() + 1) / 2) + 1); // +1 for back
     InlineKeyboard keyboard(buttonRows);
 
     uint64_t i = 0;
-
-    std::string dataToShow = "+";
-    for (auto id : storageIdsToShow) {
-        dataToShow += std::format("{} ", id);
-    }
-
     for (auto storageId : storageIdsToShow) {
         std::string name = storageApi.get(userId, storageId).name;
         if (i % 2 == 0) {
             keyboard[std::floor(i / 2)].reserve(2);
         }
-        keyboard[std::floor(i / 2)].push_back(detail::makeCallbackButton(name, dataToShow + std::to_string(storageId)));
+        keyboard[std::floor(i / 2)].push_back(detail::makeCallbackButton(name, "+" + std::to_string(storageId)));
         i++;
     }
     keyboard[std::floor((storageIdsToShow.size() + 1) / 2)].push_back(
