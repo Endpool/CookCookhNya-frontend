@@ -7,13 +7,14 @@
 #include "render/storage_list/storage_list_render.hpp"
 #include "utils.hpp"
 
+#include <algorithm>
 #include <utility>
 #include <vector>
 
 namespace cookcookhnya::handlers::storages_select {
 
 using render::recipes_suggestion::renderRecipesSuggestion;
-using render::select_storages::editStorageSelectMessage;
+using render::select_storages::editStorageSelect;
 using render::storage_list::renderStorageList;
 
 void selectStorages(StorageSelection& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
@@ -34,17 +35,17 @@ void selectStorages(StorageSelection& state, CallbackQueryRef cq, BotRef bot, SM
         return;
     }
 
-    auto cqStorageId = utils::parseSafe<api::StorageId>(cq.data.substr(4));
+    auto storageId = utils::parseSafe<api::StorageId>(cq.data.substr(4));
     if (cq.data.starts_with("in")) {
-        auto it = std::ranges::find(selectedStorages, *cqStorageId);
+        auto it = std::ranges::find(selectedStorages, *storageId);
         selectedStorages.erase(it);
-        editStorageSelectMessage(selectedStorages, userId, chatId, bot, api);
+        editStorageSelect(selectedStorages, userId, chatId, bot, api);
         stateManager.put(StorageSelection{.storageIds = selectedStorages});
         return;
     }
     if (cq.data.starts_with("out")) {
-        selectedStorages.push_back(*cqStorageId);
-        editStorageSelectMessage(selectedStorages, userId, chatId, bot, api);
+        selectedStorages.push_back(*storageId);
+        editStorageSelect(selectedStorages, userId, chatId, bot, api);
         stateManager.put(StorageSelection{.storageIds = selectedStorages});
         return;
     }

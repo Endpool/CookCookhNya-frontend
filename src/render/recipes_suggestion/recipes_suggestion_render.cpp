@@ -3,7 +3,9 @@
 #include "backend/id_types.hpp"
 #include "message_tracker.hpp"
 #include "render/common.hpp"
+#include "utils.hpp"
 
+#include <cstddef>
 #include <format>
 #include <string>
 #include <vector>
@@ -19,8 +21,8 @@ constructMarkup(std::vector<api::StorageId> const& storages, int pageNo, UserId 
     auto recipesList = recipesApi.getRecipeList(
         userId, numOfRecipesOnPage, (pageNo - 1) * numOfRecipesOnPage, storages); // Take storages of user from backend
 
-    int amountOfRecipes = recipesList.recipesFound;
-    bool ifMaxPage = amountOfRecipes - (numOfRecipesOnPage * pageNo) <= 0;
+    const int amountOfRecipes = recipesList.recipesFound;
+    const bool ifMaxPage = amountOfRecipes - (numOfRecipesOnPage * pageNo) <= 0;
     // ONLY ONE CASE: WHEN First page has all recipes already
     if (pageNo == 1) {
         if (ifMaxPage) {
@@ -28,11 +30,11 @@ constructMarkup(std::vector<api::StorageId> const& storages, int pageNo, UserId 
             // button
             InlineKeyboard keyboard(
                 1 + recipesList.recipesPage.size()); // 1 for back button return and other buttons are recipes
-            for (uint32_t i = 0; i < recipesList.recipesPage.size(); i++) {
+            for (std::size_t i = 0; i < recipesList.recipesPage.size(); i++) {
                 // Print on button in form "1. {Recipe}"
                 keyboard[i].push_back(detail::makeCallbackButton(
                     std::format("{}. {} [{}/{}]",
-                                1 + i + ((pageNo - 1) * numOfRecipesOnPage),
+                                1 + i + ((static_cast<std::size_t>(pageNo - 1)) * numOfRecipesOnPage),
                                 recipesList.recipesPage[i].name,
                                 recipesList.recipesPage[i].available,
                                 recipesList.recipesPage[i].total),              // + 1 because i stars from 0
@@ -50,19 +52,18 @@ constructMarkup(std::vector<api::StorageId> const& storages, int pageNo, UserId 
         }
 
         // If first page wasn't didn't represent all recipes in one page then the field with arrows is required
-        InlineKeyboard keyboard(
-            2 + recipesList.recipesPage
-                    .size()); // 1 for back button return, 1 for two arrows next and prev, and other buttons are recipes
+        // 1 for back button return, 1 for two arrows next and prev, and other buttons are recipes
+        InlineKeyboard keyboard(2 + recipesList.recipesPage.size());
 
-        for (uint32_t i = 0; i < recipesList.recipesPage.size(); i++) {
+        for (std::size_t i = 0; i < recipesList.recipesPage.size(); i++) {
             // Print on button in form "1. {Recipe}"
-            keyboard[i].push_back(
-                detail::makeCallbackButton(std::format("{}. {} [{}/{}]",
-                                                       1 + i + ((pageNo - 1) * numOfRecipesOnPage),
-                                                       recipesList.recipesPage[i].name,
-                                                       recipesList.recipesPage[i].available,
-                                                       recipesList.recipesPage[i].total), // + 1 because i stars from 0
-                                           std::format("recipe: {}", recipesList.recipesPage[i].id))); // RECIPE ID
+            keyboard[i].push_back(detail::makeCallbackButton(
+                std::format("{}. {} [{}/{}]",
+                            1 + i + ((static_cast<std::size_t>(pageNo - 1)) * numOfRecipesOnPage),
+                            recipesList.recipesPage[i].name,
+                            recipesList.recipesPage[i].available,
+                            recipesList.recipesPage[i].total),              // + 1 because i stars from 0
+                std::format("recipe: {}", recipesList.recipesPage[i].id))); // RECIPE ID
         }
         // If pageNo == 1 and it's not 1st page then show only next button
         keyboard[recipesList.recipesPage.size()].push_back(detail::makeCallbackButton("⭠", std::to_string(pageNo + 1)));
@@ -78,18 +79,17 @@ constructMarkup(std::vector<api::StorageId> const& storages, int pageNo, UserId 
     }
 
     // If first page wasn't didn't represent all recipes in one page then the field with arrows is required
-    InlineKeyboard keyboard(
-        2 + recipesList.recipesPage
-                .size()); // 1 for back button return, 1 for two arrows next and prev, and other buttons are recipes
-    for (uint32_t i = 0; i < recipesList.recipesPage.size(); i++) {
+    // 1 for back button return, 1 for two arrows next and prev, and other buttons are recipes
+    InlineKeyboard keyboard(2 + recipesList.recipesPage.size());
+    for (std::size_t i = 0; i < recipesList.recipesPage.size(); i++) {
         // Print on button in form "1. {Recipe}"
-        keyboard[i].push_back(
-            detail::makeCallbackButton(std::format("{}. {} [{}/{}]",
-                                                   1 + i + ((pageNo - 1) * numOfRecipesOnPage),
-                                                   recipesList.recipesPage[i].name,
-                                                   recipesList.recipesPage[i].available,
-                                                   recipesList.recipesPage[i].total), // + 1 because i stars from 0
-                                       std::format("recipe: {}", recipesList.recipesPage[i].id))); // RECIPE ID
+        keyboard[i].push_back(detail::makeCallbackButton(
+            std::format("{}. {} [{}/{}]",
+                        1 + i + ((static_cast<std::size_t>(pageNo - 1)) * numOfRecipesOnPage),
+                        recipesList.recipesPage[i].name,
+                        recipesList.recipesPage[i].available,
+                        recipesList.recipesPage[i].total),              // + 1 because i stars from 0
+            std::format("recipe: {}", recipesList.recipesPage[i].id))); // RECIPE ID
     }
     if (!ifMaxPage) {
         // Show both possible ways
@@ -134,7 +134,7 @@ void renderRecipesSuggestion(std::vector<api::StorageId> const& storages,
                         detail::makeKeyboardMarkup(constructMarkup(storages, pageNo, userId, recipesApi)));
 }
 
-void editSuggestionMessage(std::vector<StorageId> const& storages,
+void editRecipesSuggestion(std::vector<api::StorageId> const& storages,
                            int pageNo,
                            UserId userId,
                            ChatId chatId,

@@ -19,10 +19,15 @@ class IngredientsApi : ApiBase {
     [[nodiscard]] std::vector<models::ingredient::Ingredient> getStorageIngredients(UserId user,
                                                                                     StorageId storage) const;
     void putToStorage(UserId user, StorageId storage, IngredientId id) const;
+
     void deleteFromStorage(UserId user, StorageId storage, IngredientId id) const;
-    // [[nodiscard]] std::vector<models::ingredient::Ingredient> getAllIngredients() const;
+
     [[nodiscard]] std::vector<models::ingredient::Ingredient> getAllIngredients() const;
+
     [[nodiscard]] models::ingredient::Ingredient get(IngredientId id) const;
+
+    [[nodiscard]] std::vector<models::ingredient::IngredientSearchResult>
+    search(UserId user, std::string query, StorageId storage) const;
 };
 
 } // namespace cookcookhnya::api

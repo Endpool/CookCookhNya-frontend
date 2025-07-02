@@ -44,6 +44,7 @@ using BotRef = const TgBot::Api&;
 using SMRef = const states::StateManager&;
 using MessageRef = const TgBot::Message&;
 using CallbackQueryRef = const TgBot::CallbackQuery&;
+using InlineQueryRef = const TgBot::InlineQuery&;
 
 using NoState = tg_stater::HandlerTypes::NoState;
 using AnyState = tg_stater::HandlerTypes::AnyState;

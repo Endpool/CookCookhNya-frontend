@@ -8,12 +8,19 @@ namespace cookcookhnya::render::delete_storage {
 
 void renderStorageDelete(ChatId chatId, BotRef bot, UserId userId, StorageApiRef storageApi) {
     auto storages = storageApi.getStoragesList(userId);
-    InlineKeyboard keyboard(storages.size() + 1);
+    size_t numStoragesOwner = 0;
+    for (auto& storage : storages) {
+        if (userId == storage.ownerId) {
+            numStoragesOwner++;
+        }
+    }
+    InlineKeyboard keyboard(numStoragesOwner + 1);
     keyboard[0].push_back(detail::makeCallbackButton(utils::utf8str(u8"🚫 Отмена"), "cancel_storage_deletion"));
-    for (size_t i = 0; i < storages.size(); i++) {
-        if (userId == storages[i].ownerId) {
-            keyboard[i + 1].push_back(detail::makeCallbackButton(utils::utf8str(u8"🍱 ") + storages[i].name,
-                                                                 "st__" + std::to_string(storages[i].id)));
+    size_t k = 1;
+    for (auto& storage : storages) {
+        if (userId == storage.ownerId) {
+            keyboard[k++].push_back(detail::makeCallbackButton(utils::utf8str(u8"🍱 ") + storage.name,
+                                                               "st__" + std::to_string(storage.id)));
         }
     }
     auto text = utils::utf8str(u8"🚮 Выберите хранилище для удаления");

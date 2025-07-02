@@ -5,8 +5,8 @@
 #include "render/storage_list/create_storage_render.hpp"
 #include "render/storage_list/delete_storage_render.hpp"
 #include "render/storage_view/storage_view_render.hpp"
-#include "states.hpp"
 
+#include <sstream>
 #include <vector>
 
 namespace cookcookhnya::handlers::storage_list_view {
@@ -40,7 +40,7 @@ void storageListButtonCallback(
         return;
     }
     if (cq.data == "storage_list_what_to_cook") {
-        renderStoragesSelect({}, cq.from->id, chatId, bot, storageApi);
+        renderStorageSelect({}, cq.from->id, chatId, bot, storageApi);
         stateManager.put(StorageSelection{std::vector<api::StorageId>{}});
         return;
     }

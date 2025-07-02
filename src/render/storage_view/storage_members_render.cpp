@@ -11,8 +11,12 @@
 
 namespace cookcookhnya::render::storage::member_list {
 
-void renderMemberList(
-    bool toBeEdited, const StorageId& storageId, UserId userId, ChatId chatId, BotRef bot, StorageApiRef storageApi) {
+void renderMemberList(bool toBeEdited,
+                      api::StorageId const& storageId,
+                      UserId userId,
+                      ChatId chatId,
+                      BotRef bot,
+                      StorageApiRef storageApi) {
     auto storage = storageApi.get(userId, storageId);
     bool isOwner = storage.ownerId == userId;
     unsigned int buttonRows = isOwner ? 2 : 1;
@@ -48,7 +52,7 @@ void renderMemberList(
 };
 
 void renderMemberAdditionPrompt(
-    const StorageId& storageId, UserId userId, ChatId chatId, BotRef bot, StorageApiRef storageApi) {
+    api::StorageId const& storageId, UserId userId, ChatId chatId, BotRef bot, StorageApiRef storageApi) {
     auto storage = storageApi.get(userId, storageId);
     unsigned int buttonRows = 1;
 
@@ -60,7 +64,7 @@ void renderMemberAdditionPrompt(
 };
 
 void renderMemberDeletionPrompt(
-    const StorageId& storageId, UserId userId, ChatId chatId, BotRef bot, StorageApiRef storageApi) {
+    api::StorageId const& storageId, UserId userId, ChatId chatId, BotRef bot, StorageApiRef storageApi) {
     auto storage = storageApi.get(userId, storageId);
 
     auto members = storageApi.getStorageMembers(userId, storageId);

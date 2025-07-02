@@ -5,8 +5,11 @@
 
 namespace cookcookhnya::render::storage::ingredients {
 
-tg_types::MessageId renderStorageIngredientsSearchSend(ChatId chatId, BotRef bot, IngredientsApiRef api);
+tg_types::MessageId renderStorageIngredientsSearchSend(ChatId chat, BotRef bot);
 
-void renderStorageIngredientsSearchEdit(tg_types::MessageId message, ChatId chatId, BotRef bot, IngredientsApiRef api);
+void renderStorageIngredientsSearchEdit(const std::vector<api::models::ingredient::IngredientSearchResult>&,
+                                        tg_types::MessageId messageId,
+                                        ChatId chat,
+                                        BotRef bot);
 
 } // namespace cookcookhnya::render::storage::ingredients

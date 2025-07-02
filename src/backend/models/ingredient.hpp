@@ -16,4 +16,13 @@ struct Ingredient {
     friend Ingredient tag_invoke(boost::json::value_to_tag<Ingredient>, const boost::json::value& j);
 };
 
+struct IngredientSearchResult {
+    IngredientId id;
+    std::string name;
+    bool available;
+
+    friend IngredientSearchResult tag_invoke(boost::json::value_to_tag<IngredientSearchResult>,
+                                             const boost::json::value& j);
+};
+
 } // namespace cookcookhnya::api::models::ingredient

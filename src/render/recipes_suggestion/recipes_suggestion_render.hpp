@@ -8,7 +8,7 @@ using namespace tg_types;
 @brief shared function between render and edit of suggestion message
 */
 InlineKeyboard
-constructMarkup(std::vector<StorageId> const& storages, int pageNo, UserId userId, RecipesApiRef recipesApi);
+constructMarkup(std::vector<api::StorageId> const& storages, int pageNo, UserId userId, RecipesApiRef recipesApi);
 
 void renderRecipesSuggestion(std::vector<api::StorageId> const& storages,
                              int pageNo,
@@ -17,7 +17,7 @@ void renderRecipesSuggestion(std::vector<api::StorageId> const& storages,
                              BotRef bot,
                              RecipesApiRef recipesApi);
 
-void editSuggestionMessage(std::vector<StorageId> const& storages,
+void editRecipesSuggestion(std::vector<api::StorageId> const& storages,
                            int pageNo,
                            UserId userId,
                            ChatId chatId,

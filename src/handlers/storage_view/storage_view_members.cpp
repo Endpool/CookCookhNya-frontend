@@ -1,5 +1,6 @@
 #include "storage_view_members.hpp"
 
+#include "handlers/common.hpp"
 #include "render/storage_view/storage_members_render.hpp"
 #include "render/storage_view/storage_view_render.hpp"
 

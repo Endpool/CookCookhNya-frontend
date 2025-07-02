@@ -1,14 +1,18 @@
 #include "storage_view_render.hpp"
 
+#include "backend/id_types.hpp"
 #include "message_tracker.hpp"
 #include "render/common.hpp"
 #include "utils.hpp"
 
+#include <cstddef>
+#include <utility>
+
 namespace cookcookhnya::render::storage {
 
-void renderStorageView(StorageId storageId, UserId userId, ChatId chatId, BotRef bot, StorageApiRef storageApi) {
+void renderStorageView(api::StorageId storageId, UserId userId, ChatId chatId, BotRef bot, StorageApiRef storageApi) {
     auto storage = storageApi.get(userId, storageId);
-    unsigned int buttonRows = 2;
+    const std::size_t buttonRows = 2;
     InlineKeyboard keyboard(buttonRows);
     keyboard[0].reserve(3);
     keyboard[1].reserve(1);

@@ -4,6 +4,6 @@
 
 namespace cookcookhnya::render::storage::ingredients {
 
-void renderIngredientsList(StorageId storage, UserId userId, ChatId chat, BotRef bot, IngredientsApiRef api);
+void renderIngredientsList(api::StorageId storage, UserId user, ChatId chat, BotRef bot, IngredientsApiRef api);
 
 } // namespace cookcookhnya::render::storage::ingredients
