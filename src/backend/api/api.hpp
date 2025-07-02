@@ -2,6 +2,7 @@
 
 #include "backend/api/ingredients.hpp"
 #include "backend/api/recipes.hpp"
+#include "backend/api/shopping_lists.hpp"
 #include "backend/api/storages.hpp"
 #include "backend/api/users.hpp"
 
@@ -18,13 +19,14 @@ class ApiClient {
     StoragesApi storages;
     IngredientsApi ingredients;
     RecipesApi recipes;
+    ShoppingListApi shoppingList;
 
   public:
     explicit ApiClient(const std::string& apiAddress)
-        : api{apiAddress}, users{api}, storages{api}, ingredients{api}, recipes{api} {}
+        : api{apiAddress}, users{api}, storages{api}, ingredients{api}, recipes{api}, shoppingList{api} {}
     ApiClient(const ApiClient&) = delete;
     ApiClient(ApiClient&& other) noexcept
-        : api{std::move(other.api)}, users{api}, storages{api}, ingredients{api}, recipes{api} {}
+        : api{std::move(other.api)}, users{api}, storages{api}, ingredients{api}, recipes{api}, shoppingList{api} {}
     ApiClient& operator=(const ApiClient&) = delete;
     ApiClient& operator=(ApiClient&& other) noexcept {
         if (&other == this)
@@ -34,6 +36,7 @@ class ApiClient {
         storages = StoragesApi{api};
         ingredients = IngredientsApi{api};
         recipes = RecipesApi{api};
+        shoppingList = ShoppingListApi{api};
         return *this;
     }
     ~ApiClient() = default;
@@ -68,6 +71,14 @@ class ApiClient {
 
     operator const RecipesApi&() const { // NOLINT(*-explicit-*)
         return recipes;
+    }
+
+    [[nodiscard]] const ShoppingListApi& getShoppingList() const {
+        return shoppingList;
+    }
+
+    operator const ShoppingListApi&() const { // NOLINT(*-explicit-*)
+        return shoppingList;
     }
 };
 
