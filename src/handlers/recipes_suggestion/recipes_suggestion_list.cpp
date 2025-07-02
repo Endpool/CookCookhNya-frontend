@@ -22,7 +22,7 @@ using namespace render::recipe_view;
 void changePageAndBack(
     SuggestedRecipeList& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
     bot.answerCallbackQuery(cq.id);
-
+    auto messageId = cq.message->messageId;
     auto chatId = cq.message->chat->id;
     auto userId = cq.from->id;
 
@@ -48,7 +48,7 @@ void changePageAndBack(
         api::RecipeId recipeId = 0;
         temp >> recipeId;
 
-        renderRecipeView(state.storageIds, recipeId, userId, chatId, bot, api);
+        renderRecipeViewAfterAddingStorage(state.storageIds, recipeId, userId, chatId, messageId, bot, api);
         stateManager.put(RecipeView{.storageIds = state.storageIds, .recipeId = recipeId});
         return;
     }

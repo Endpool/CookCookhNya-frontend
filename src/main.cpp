@@ -30,6 +30,7 @@ int main() {
                                                   storageIngredientsSearchButtonHandler,
                                                   storageIngredientsSearchHandler,
                                                   recipeViewHandler,
+                                                  shoppingListCreationHandler,
                                                   shoppingListButtonHandler>
         bot{{}, {ApiClient{utils::getenvWithError("API_URL")}}};
 

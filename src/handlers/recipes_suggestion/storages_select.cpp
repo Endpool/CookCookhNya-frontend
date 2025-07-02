@@ -13,7 +13,7 @@
 
 namespace cookcookhnya::handlers::storages_select {
 
-using render::recipes_suggestion::renderRecipesSuggestion;
+using render::recipes_suggestion::editRecipesSuggestion;
 using render::select_storages::editStorageSelect;
 using render::storage_list::renderStorageList;
 
@@ -24,7 +24,7 @@ void selectStorages(StorageSelection& state, CallbackQueryRef cq, BotRef bot, SM
     auto selectedStorages = state.storageIds;
 
     if (cq.data == "confirm_storages_selection") {
-        renderRecipesSuggestion(selectedStorages, 1, userId, chatId, bot, api);
+        editRecipesSuggestion(selectedStorages, 1, userId, chatId, bot, api);
         stateManager.put(
             SuggestedRecipeList{.pageNo = 1, .storageIds = std::move(selectedStorages), .fromStorage = false});
         return;

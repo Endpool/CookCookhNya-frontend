@@ -20,7 +20,6 @@ using namespace render::storage;
 void storageListButtonCallback(
     StorageList& /*unused*/, CallbackQueryRef cq, BotRef& bot, SMRef stateManager, ApiClientRef api) {
     bot.answerCallbackQuery(cq.id);
-
     std::stringstream temp; // Convert string to int
     temp << cq.data;
     int id = 0;
@@ -34,8 +33,8 @@ void storageListButtonCallback(
     }
 
     if (cq.data == "storage_list_deletion") {
-        renderStorageDelete(
-            chatId, bot, cq.from->id, api);
+        renderStorageDelete(chatId, bot, cq.from->id, api);
+
         stateManager.put(StorageDeletion{});
         return;
     }
@@ -45,7 +44,7 @@ void storageListButtonCallback(
         return;
     }
     if (cq.data == "shopping_list") {
-        renderShoppingList(cq.from->id, chatId, bot, api);
+        renderShoppingList(cq.from->id, chatId, cq.message->messageId, bot, api);
         stateManager.put(ShoppingListView{});
         return;
     }

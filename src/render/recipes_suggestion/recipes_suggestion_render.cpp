@@ -13,13 +13,16 @@
 namespace cookcookhnya::render::recipes_suggestion {
 
 InlineKeyboard
-constructMarkup(std::vector<api::StorageId> const& storages, int pageNo, UserId userId, RecipesApiRef recipesApi) {
+constructMarkup(const std::vector<api::StorageId>& storageIds, int pageNo, UserId userId, RecipesApiRef recipesApi) {
+
     // CONSTANT AND SAME (STATIC) FOR EVERY USER (static const doesn't actually matter in this function was added
     // because of logic of that variable)
     static const int numOfRecipesOnPage = 10;
 
-    auto recipesList = recipesApi.getRecipeList(
-        userId, numOfRecipesOnPage, (pageNo - 1) * numOfRecipesOnPage, storages); // Take storages of user from backend
+    auto recipesList = recipesApi.getRecipeList(userId,
+                                                numOfRecipesOnPage,
+                                                (pageNo - 1) * numOfRecipesOnPage,
+                                                storageIds); // Take storages of user from backend
 
     const int amountOfRecipes = recipesList.recipesFound;
     const bool ifMaxPage = amountOfRecipes - (numOfRecipesOnPage * pageNo) <= 0;
@@ -47,7 +50,7 @@ constructMarkup(std::vector<api::StorageId> const& storages, int pageNo, UserId 
              */
             keyboard[recipesList.recipesPage.size()].push_back(detail::makeCallbackButton(
                 utils::utf8str(u8"↩️ Назад"),
-                std::format("backFromSuggestedRecipes {}", storages.size()))); // To LAST row add "return"
+                std::format("backFromSuggestedRecipes {}", storageIds.size()))); // To LAST row add "return"
             return keyboard;
         }
 
@@ -74,7 +77,7 @@ constructMarkup(std::vector<api::StorageId> const& storages, int pageNo, UserId 
          */
         keyboard[recipesList.recipesPage.size() + 1].push_back(detail::makeCallbackButton(
             utils::utf8str(u8"↩️ Назад"),
-            std::format("backFromSuggestedRecipes {}", storages.size()))); // To LAST row add "return"
+            std::format("backFromSuggestedRecipes {}", storageIds.size()))); // To LAST row add "return"
         return keyboard;
     }
 
@@ -109,32 +112,13 @@ constructMarkup(std::vector<api::StorageId> const& storages, int pageNo, UserId 
      * Even if one storage was chosen in storage list choose it will return to view of these one storage.
      */
     keyboard[recipesList.recipesPage.size() + 1].push_back(detail::makeCallbackButton(
+
         utils::utf8str(u8"↩️ Назад"),
-        std::format("backFromSuggestedRecipes {}", storages.size()))); // To LAST row add "return"
+        std::format("backFromSuggestedRecipes {}", storageIds.size()))); // To LAST row add "return"
     return keyboard;
 }
 
-void renderRecipesSuggestion(std::vector<api::StorageId> const& storages,
-                             int pageNo,
-                             UserId userId,
-                             ChatId chatId,
-                             BotRef bot,
-                             RecipesApiRef recipesApi) {
-
-    std::string pageInfo = utils::utf8str(u8"🔢 Номер страницы: ") + std::to_string(pageNo) +
-                           utils::utf8str(u8"\n🔪 Рецепты подобранные специально для вас");
-
-    auto messageId = message::getMessageId(userId);
-    bot.editMessageText(pageInfo,
-                        chatId,
-                        *messageId,
-                        "",
-                        "",
-                        nullptr,
-                        detail::makeKeyboardMarkup(constructMarkup(storages, pageNo, userId, recipesApi)));
-}
-
-void editRecipesSuggestion(std::vector<api::StorageId> const& storages,
+void editRecipesSuggestion(const std::vector<api::StorageId>& storageIds,
                            int pageNo,
                            UserId userId,
                            ChatId chatId,
@@ -150,7 +134,7 @@ void editRecipesSuggestion(std::vector<api::StorageId> const& storages,
                         "",
                         "",
                         nullptr,
-                        detail::makeKeyboardMarkup(constructMarkup(storages, pageNo, userId, recipesApi)));
+                        detail::makeKeyboardMarkup(constructMarkup(storageIds, pageNo, userId, recipesApi)));
 }
 
 } // namespace cookcookhnya::render::recipes_suggestion

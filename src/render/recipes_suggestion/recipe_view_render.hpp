@@ -12,18 +12,10 @@ struct textGenInfo {
     bool isSuggestionMade{};
     std::unordered_set<api::StorageId> suggestedStorageIds;
     std::vector<std::string> foundInStoragesStrings;
+    bool isAtLeastOneIngredientLack;
 };
 
-void renderRecipeView(
-    std::vector<api::StorageId> const& storageIds, // Will be deleted when all messages will be from editing - for now
-                                                   // it's entry point and guarantee that message exists
-    api::RecipeId recipeId,
-    UserId userId,
-    ChatId chatId,
-    BotRef bot,
-    ApiClient api);
-
-void renderStorageSuggestion(std::vector<api::StorageId>& storageIdsToAccount,
+void renderStorageSuggestion(const std::vector<api::StorageId>& storageIdsToAccount,
                              api::RecipeId recipeId,
                              UserId userId,
                              ChatId chatId,
@@ -31,7 +23,7 @@ void renderStorageSuggestion(std::vector<api::StorageId>& storageIdsToAccount,
                              BotRef bot,
                              ApiClient api);
 
-void renderRecipeViewAfterAddingStorage(std::vector<api::StorageId> const& storageIds,
+void renderRecipeViewAfterAddingStorage(const std::vector<api::StorageId>& storageIds,
                                         api::RecipeId recipeId,
                                         UserId userId,
                                         ChatId chatId,
@@ -39,10 +31,10 @@ void renderRecipeViewAfterAddingStorage(std::vector<api::StorageId> const& stora
                                         BotRef bot,
                                         ApiClient api);
 // Helper functions
-std::vector<api::StorageId> storagesToShow(std::vector<api::models::recipe::IngredientInRecipe>& ingredients,
-                                           std::vector<api::StorageId>& storageIdsToAccount);
+std::vector<api::StorageId> storagesToShow(const std::vector<api::models::recipe::IngredientInRecipe>& ingredients,
+                                           const std::vector<api::StorageId>& storageIdsToAccount);
 
-textGenInfo textGen(std::vector<api::StorageId> const& storageIds,
+textGenInfo textGen(const std::vector<api::StorageId>& storageIds,
                     const api::models::recipe::RecipeDetails& recipeIngredients,
                     UserId userId,
                     ApiClient api);

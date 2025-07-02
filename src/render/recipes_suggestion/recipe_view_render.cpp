@@ -1,7 +1,7 @@
 #include "recipe_view_render.hpp"
 #include "backend/models/recipe.hpp"
-#include "message_tracker.hpp"
 #include "render/common.hpp"
+#include "tg_types.hpp"
 #include "utils.hpp"
 #include <algorithm>
 #include <cmath>
@@ -13,7 +13,7 @@
 
 namespace cookcookhnya::render::recipe_view {
 
-textGenInfo textGen(std::vector<api::StorageId> const& storageIds,
+textGenInfo textGen(const std::vector<api::StorageId>& storageIds,
                     const api::models::recipe::RecipeDetails& recipeIngredients,
                     UserId userId,
                     ApiClient api) { // will return needed text and some additional elements
@@ -35,12 +35,14 @@ textGenInfo textGen(std::vector<api::StorageId> const& storageIds,
     bool isContains = false;
     bool isSuggestionMade = false;
     bool isIngredientNotWritten = true;
+    bool isAtLeastOneIngredientLack = false;
     size_t counterOfSuggestion = 0;
     for (auto& ingredient : ingredients) { // Iterate through each ingredient
         isIngredientNotWritten = true;
         isContains = false;
         if (ingredient.inStorages.size() == 0) {
             toPrint += std::format("- {}\n", ingredient.name);
+            isAtLeastOneIngredientLack = true;
             continue;
         }
 
@@ -85,51 +87,23 @@ textGenInfo textGen(std::vector<api::StorageId> const& storageIds,
         }
         counterOfSuggestion++; // If here then suggesiton was made
     }
+    toPrint += std::format("Source Link: {}", recipeIngredients.link);
     return {.text = toPrint,
             .isSuggestionMade = isSuggestionMade,
             .suggestedStorageIds = suggestedStorageIds,
-            .foundInStoragesStrings =
-                foundInStoragesStrings}; // Many info may be needed from that function to make right markup
+            .foundInStoragesStrings = foundInStoragesStrings,
+            .isAtLeastOneIngredientLack =
+                isAtLeastOneIngredientLack}; // Many info may be needed from that function to make right markup
 }
 
-void renderRecipeView(std::vector<api::StorageId> const& storageIds,
-                      api::RecipeId recipeId,
-                      UserId userId,
-                      ChatId chatId,
-                      BotRef bot,
-                      ApiClient api) {
-
-    auto recipesApi = api.getRecipes();
-    auto recipeIngredients = recipesApi.getIngredientsInRecipe(userId, recipeId);
-    textGenInfo text = textGen(storageIds, recipeIngredients, userId, api);
-
-    bool isSuggestionMade = text.isSuggestionMade;
-    auto suggestedStorageIds = text.suggestedStorageIds;
-    auto toPrint = text.text;
-
-    InlineKeyboard keyboard(3);
-    keyboard[0].push_back(
-        detail::makeCallbackButton(utils::utf8str(u8"Готовить"), "startCooking")); // Add needed info for next states!
-    if (isSuggestionMade) {
-        std::string dataForSuggestion = "?";
-        keyboard[0].push_back(detail::makeCallbackButton(utils::utf8str(u8"?"), dataForSuggestion));
-    }
-
-    keyboard[1].push_back(detail::makeCallbackButton(utils::utf8str(u8"Составить список продуктов"),
-
-                                                     "makeReceipt")); // Add needed info for next states!
-    keyboard[2].push_back(detail::makeCallbackButton(u8"Назад", "backFromRecipeView"));
-    auto messageId = message::getMessageId(userId);
-    bot.editMessageText(toPrint, chatId, *messageId, "", "", nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
-}
-
-void renderRecipeViewAfterAddingStorage(std::vector<api::StorageId> const& storageIds,
+void renderRecipeViewAfterAddingStorage(const std::vector<api::StorageId>& storageIds,
                                         api::RecipeId recipeId,
                                         UserId userId,
                                         ChatId chatId,
                                         tg_types::MessageId messageId,
                                         BotRef bot,
                                         ApiClient api) {
+
     auto recipesApi = api.getRecipes();
     auto recipeIngredients = recipesApi.getIngredientsInRecipe(userId, recipeId);
     textGenInfo text = textGen(storageIds, recipeIngredients, userId, api);
@@ -137,8 +111,14 @@ void renderRecipeViewAfterAddingStorage(std::vector<api::StorageId> const& stora
     bool isSuggestionMade = text.isSuggestionMade;
     auto suggestedStorageIds = text.suggestedStorageIds;
     auto toPrint = text.text;
+    bool isAtLeastOneIngredientLack = text.isAtLeastOneIngredientLack;
 
-    InlineKeyboard keyboard(3);
+    size_t buttonRows =
+        isAtLeastOneIngredientLack
+            ? 3
+            : 2; // if there is no lacking ingredients then there is no need to show field of shopping list
+    InlineKeyboard keyboard(buttonRows);
+
     keyboard[0].push_back(
         detail::makeCallbackButton(utils::utf8str(u8"Готовить"), "startCooking")); // Add needed info for next states!
     if (isSuggestionMade) {
@@ -149,9 +129,12 @@ void renderRecipeViewAfterAddingStorage(std::vector<api::StorageId> const& stora
         keyboard[0].push_back(detail::makeCallbackButton(utils::utf8str(u8"?"), dataForSuggestion));
     }
 
-    keyboard[1].push_back(detail::makeCallbackButton(utils::utf8str(u8"Составить список продуктов"),
-                                                     "makeReceipt")); // Add needed info for next states!
-    keyboard[2].push_back(detail::makeCallbackButton(utils::utf8str(u8"Назад"), "backFromRecipeView"));
+    if (isAtLeastOneIngredientLack) {
+        keyboard[1].push_back(detail::makeCallbackButton(utils::utf8str(u8"Составить список продуктов"),
+                                                         "makeProductList")); // Add needed info for next states!
+    }
+
+    keyboard[buttonRows - 1].push_back(detail::makeCallbackButton(u8"Назад", "backFromRecipeView"));
 
     bot.editMessageText(toPrint,
                         chatId,
@@ -162,13 +145,13 @@ void renderRecipeViewAfterAddingStorage(std::vector<api::StorageId> const& stora
                         detail::makeKeyboardMarkup(std::move(keyboard))); // Only on difference between function above
 }
 
-std::vector<api::StorageId> storagesToShow(std::vector<api::models::recipe::IngredientInRecipe>& ingredients,
-                                           std::vector<api::StorageId>& storageIdsToAccount) {
+std::vector<api::StorageId> storagesToShow(const std::vector<api::models::recipe::IngredientInRecipe>& ingredients,
+                                           const std::vector<api::StorageId>& storageIdsToAccount) {
     std::vector<api::StorageId> storageIdsToShow;
 
     std::unordered_set<api::StorageId> toAdd; // If there will be only one element of storageId then remove
     bool isFound = false;
-    for (auto& ingredient : ingredients) {
+    for (const auto& ingredient : ingredients) {
         isFound = false; // Iterate through each ingredient
         for (api::StorageId inStorage :
              ingredient.inStorages) { // Iterate through each storage where ingredient is present
@@ -200,7 +183,7 @@ std::vector<api::StorageId> storagesToShow(std::vector<api::models::recipe::Ingr
     return storageIdsToShow;
 }
 
-void renderStorageSuggestion(std::vector<api::StorageId>& storageIdsToAccount, // storages which are selected
+void renderStorageSuggestion(const std::vector<api::StorageId>& storageIdsToAccount, // storages which are selected
                              api::RecipeId recipeId,
                              UserId userId,
                              ChatId chatId,
@@ -245,23 +228,16 @@ void renderStorageSuggestion(std::vector<api::StorageId>& storageIdsToAccount, /
         }
     }
     toPrint.insert(0, storagesWhichAccount);
-    int buttonRows = 0;
-    buttonRows = std::floor(((storageIdsToShow.size() + 1) / 2) + 1); // +1 for back
+    int buttonRows = std::floor(((storageIdsToShow.size() + 1) / 2) + 1); // +1 for back
     InlineKeyboard keyboard(buttonRows);
 
     uint64_t i = 0;
-
-    std::string dataToShow = "+";
-    for (auto id : storageIdsToShow) {
-        dataToShow += std::format("{} ", id);
-    }
-
     for (auto storageId : storageIdsToShow) {
         std::string name = storageApi.get(userId, storageId).name;
         if (i % 2 == 0) {
             keyboard[std::floor(i / 2)].reserve(2);
         }
-        keyboard[std::floor(i / 2)].push_back(detail::makeCallbackButton(name, dataToShow + std::to_string(storageId)));
+        keyboard[std::floor(i / 2)].push_back(detail::makeCallbackButton(name, "+" + std::to_string(storageId)));
         i++;
     }
     keyboard[std::floor((storageIdsToShow.size() + 1) / 2)].push_back(

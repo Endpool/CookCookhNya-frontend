@@ -5,6 +5,7 @@
 #include "recipes_suggestion/recipe_view.hpp"
 #include "recipes_suggestion/recipes_suggestion_list.hpp"
 #include "recipes_suggestion/storages_select.hpp"
+#include "shopping_list/shopping_list_creation.hpp"
 #include "shopping_list/list.hpp"
 #include "storage_list/storage_list_create.hpp"
 #include "storage_list/storage_list_delete.hpp"
@@ -20,6 +21,7 @@
 
 #include <tg_stater/handler/event.hpp>
 #include <tg_stater/handler/handler.hpp>
+#include <tg_stater/handler/type.hpp>
 
 namespace cookcookhnya::handlers {
 
@@ -35,6 +37,7 @@ using namespace storage::ingredients;
 using namespace storages_select;
 using namespace recipes_suggestion;
 using namespace recipe_view;
+using namespace shopping_list_creation;
 using namespace shopping_list;
 
 using namespace tg_stater;
@@ -82,6 +85,10 @@ using storageIngredientsSearchHandler = Handler<Events::InlineQuery{}, storageIn
 
 // RecipeView
 using recipeViewHandler = Handler<Events::CallbackQuery{}, handleRecipeView>;
+
+
+// ShoppingListCreation
+using shoppingListCreationHandler = Handler<Events::CallbackQuery{}, handleProductListSubmission>;
 
 // Shopping list
 using shoppingListButtonHandler = Handler<Events::CallbackQuery{}, shoppingListButtonCallback>;

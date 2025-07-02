@@ -29,6 +29,7 @@ void renderStorageList(bool toBeEdited, UserId userId, ChatId chatId, BotRef bot
         keyboard[0].push_back(detail::makeCallbackButton(utils::utf8str(u8"🆕 Создать"), "storage_list_creation"));
     }
 
+
     for (uint32_t i = 0; i < storages.size(); i++) {
         if (i % 2 == 0)
             keyboard[1 + (i / 2)].reserve(2);
