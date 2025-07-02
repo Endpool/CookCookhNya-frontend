@@ -66,7 +66,7 @@ void renderMemberAdditionPrompt(
     auto hash = "hashFromBack"; // NOLINT 
     // TODO: get here hash from back 
     const auto *telegramBotAlias = "stage_stand_bot";
-    auto inviteText = "Нажми на ссылку, чтобы стать участником хранилища 🍱 **" + storage.name + "** в CookCookhNya!\nhttps://t.me/" + telegramBotAlias + "?start=" + hash;
+    auto inviteText = "Нажми на ссылку, чтобы стать участником хранилища 🍱**" + storage.name + "** в CookCookhNya!\nhttps://t.me/" + telegramBotAlias + "?start=" + hash;
     inviteButton->url = "https://t.me/share/url?url=" + inviteText;
     inviteButton->callbackData = "user_sended_link";
 
