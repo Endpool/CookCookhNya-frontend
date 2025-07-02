@@ -13,7 +13,7 @@
 namespace cookcookhnya::render::recipes_suggestion {
 
 InlineKeyboard
- constructMarkup(const std::vector<api::StorageId>& storageIds, int pageNo, UserId userId, RecipesApiRef recipesApi) {
+constructMarkup(const std::vector<api::StorageId>& storageIds, int pageNo, UserId userId, RecipesApiRef recipesApi) {
 
     // CONSTANT AND SAME (STATIC) FOR EVERY USER (static const doesn't actually matter in this function was added
     // because of logic of that variable)
@@ -50,7 +50,7 @@ InlineKeyboard
              */
             keyboard[recipesList.recipesPage.size()].push_back(detail::makeCallbackButton(
                 utils::utf8str(u8"↩️ Назад"),
-                std::format("backFromSuggestedRecipes {}", storages.size()))); // To LAST row add "return"
+                std::format("backFromSuggestedRecipes {}", storageIds.size()))); // To LAST row add "return"
             return keyboard;
         }
 
@@ -77,7 +77,7 @@ InlineKeyboard
          */
         keyboard[recipesList.recipesPage.size() + 1].push_back(detail::makeCallbackButton(
             utils::utf8str(u8"↩️ Назад"),
-            std::format("backFromSuggestedRecipes {}", storages.size()))); // To LAST row add "return"
+            std::format("backFromSuggestedRecipes {}", storageIds.size()))); // To LAST row add "return"
         return keyboard;
     }
 
@@ -114,32 +114,11 @@ InlineKeyboard
     keyboard[recipesList.recipesPage.size() + 1].push_back(detail::makeCallbackButton(
 
         utils::utf8str(u8"↩️ Назад"),
-        std::format("backFromSuggestedRecipes {}", storages.size()))); // To LAST row add "return"
+        std::format("backFromSuggestedRecipes {}", storageIds.size()))); // To LAST row add "return"
     return keyboard;
 }
 
-void renderRecipesSuggestion(std::vector<api::StorageId> const& storages,
-                             int pageNo,
-                             UserId userId,
-                             ChatId chatId,
-                             BotRef bot,
-                             RecipesApiRef recipesApi) {
-
-    std::string pageInfo = utils::utf8str(u8"🔢 Номер страницы: ") + std::to_string(pageNo) +
-                           utils::utf8str(u8"\n🔪 Рецепты подобранные специально для вас");
-
-
-    auto messageId = message::getMessageId(userId);
-    bot.editMessageText(pageInfo,
-                        chatId,
-                        *messageId,
-                        "",
-                        "",
-                        nullptr,
-                        detail::makeKeyboardMarkup(constructMarkup(storages, pageNo, userId, recipesApi)));
-}
-
-void editRecipesSuggestion(std::vector<api::StorageId> const& storages,
+void editRecipesSuggestion(const std::vector<api::StorageId>& storageIds,
                            int pageNo,
                            UserId userId,
                            ChatId chatId,

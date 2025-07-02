@@ -29,13 +29,13 @@ void renderStorageList(bool toBeEdited, UserId userId, ChatId chatId, BotRef bot
         keyboard[0].push_back(detail::makeCallbackButton(utils::utf8str(u8"🆕 Создать"), "storage_list_creation"));
     }
 
-    for (uint32_t i = 0; i < currentStor.size(); i++) {
+    for (uint32_t i = 0; i < currentStorages.size(); i++) {
         if (i % 2 == 0)
             keyboard[1 + (i / 2)].reserve(2);
-        keyboard[1 + (i / 2)].push_back(detail::makeCallbackButton(utils::utf8str(u8"🍱 ") + currentStor[i].name,
-                                                                   std::to_string(currentStor[i].id)));
+        keyboard[1 + (i / 2)].push_back(detail::makeCallbackButton(utils::utf8str(u8"🍱 ") + currentStorages[i].name,
+                                                                   std::to_string(currentStorages[i].id)));
     }
-    
+
     if (!currentStorages.empty()) {
         keyboard[keyboard.size() - 2].push_back(detail::makeCallbackButton(u8"Список покупок", "shopping_list"));
         keyboard[keyboard.size() - 1].push_back(

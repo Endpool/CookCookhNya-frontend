@@ -1,7 +1,7 @@
 #include "recipe_view_render.hpp"
 #include "backend/models/recipe.hpp"
-#include "message_tracker.hpp"
 #include "render/common.hpp"
+#include "tg_types.hpp"
 #include "utils.hpp"
 #include <algorithm>
 #include <cmath>
@@ -96,44 +96,6 @@ textGenInfo textGen(const std::vector<api::StorageId>& storageIds,
                 isAtLeastOneIngredientLack}; // Many info may be needed from that function to make right markup
 }
 
-void renderRecipeView(const std::vector<api::StorageId>& storageIds,
-                      api::RecipeId recipeId,
-                      UserId userId,
-                      ChatId chatId,
-                      BotRef bot,
-                      ApiClient api) {
-
-    auto recipesApi = api.getRecipes();
-    auto recipeIngredients = recipesApi.getIngredientsInRecipe(userId, recipeId);
-    textGenInfo text = textGen(storageIds, recipeIngredients, userId, api);
-
-    bool isSuggestionMade = text.isSuggestionMade;
-    auto suggestedStorageIds = text.suggestedStorageIds;
-    auto toPrint = text.text;
-    bool isAtLeastOneIngredientLack = text.isAtLeastOneIngredientLack;
-
-    size_t buttonRows =
-        isAtLeastOneIngredientLack
-            ? 3
-            : 2; // if there is no lacking ingredients then there is no need to show field of shopping list
-    InlineKeyboard keyboard(buttonRows);
-    keyboard[0].push_back(
-        detail::makeCallbackButton(utils::utf8str(u8"Готовить"), "startCooking")); // Add needed info for next states!
-    if (isSuggestionMade) {
-        std::string dataForSuggestion = "?";
-        keyboard[0].push_back(detail::makeCallbackButton(utils::utf8str(u8"?"), dataForSuggestion));
-    }
-    if (isAtLeastOneIngredientLack) {
-        keyboard[1].push_back(detail::makeCallbackButton(utils::utf8str(u8"Составить список продуктов"),
-                                                         "makeProductList")); // Add needed info for next states!
-    }
-
-    keyboard[buttonRows - 1].push_back(detail::makeCallbackButton(u8"Назад", "backFromRecipeView"));
-
-    bot.sendMessage(chatId, toPrint, nullptr, nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
-
-}
-
 void renderRecipeViewAfterAddingStorage(const std::vector<api::StorageId>& storageIds,
                                         api::RecipeId recipeId,
                                         UserId userId,
@@ -141,6 +103,7 @@ void renderRecipeViewAfterAddingStorage(const std::vector<api::StorageId>& stora
                                         tg_types::MessageId messageId,
                                         BotRef bot,
                                         ApiClient api) {
+
     auto recipesApi = api.getRecipes();
     auto recipeIngredients = recipesApi.getIngredientsInRecipe(userId, recipeId);
     textGenInfo text = textGen(storageIds, recipeIngredients, userId, api);

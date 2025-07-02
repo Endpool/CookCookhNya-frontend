@@ -7,16 +7,14 @@
 
 namespace cookcookhnya::handlers::recipe_view {
 using namespace render::recipe_view;
-using render::recipes_suggestion::renderRecipesSuggestion;
+using render::recipes_suggestion::editRecipesSuggestion;
 using render::shopping_list_creation::renderShoppingListCreation;
 
 void handleRecipeView(RecipeView& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
     std::stringstream temp; // Convert string to int
     std::string data = cq.data;
     auto messageId = cq.message->messageId;
-
     auto chatId = cq.message->chat->id;
-    [[maybe_unused]] auto messageId = cq.message->messageId;
     auto userId = cq.from->id;
 
     if (data == "startCooking") {
@@ -24,7 +22,8 @@ void handleRecipeView(RecipeView& state, CallbackQueryRef cq, BotRef bot, SMRef 
         return;
     }
     if (data == "makeProductList") {
-        auto ingredientsInList = renderShoppingListCreation(state.storageIds, state.recipeId, userId, chatId, bot, api);
+        auto ingredientsInList =
+            renderShoppingListCreation(state.storageIds, state.recipeId, userId, chatId, messageId, bot, api);
         stateManager.put(ShoppingListCreation{.storageIdsFrom = state.storageIds,
                                               .recipeIdFrom = state.recipeId,
                                               .ingredientIdsInList = ingredientsInList});
@@ -32,7 +31,7 @@ void handleRecipeView(RecipeView& state, CallbackQueryRef cq, BotRef bot, SMRef 
         return;
     }
     if (data == "backFromRecipeView") {
-        renderRecipesSuggestion(state.storageIds, 1, userId, chatId, bot, api);
+        editRecipesSuggestion(state.storageIds, 1, userId, chatId, bot, api);
         stateManager.put(SuggestedRecipeList{.pageNo = 1,
                                              .storageIds = std::move(state.storageIds),
                                              .fromStorage = state.storageIds.size() ==
@@ -42,10 +41,16 @@ void handleRecipeView(RecipeView& state, CallbackQueryRef cq, BotRef bot, SMRef 
     }
     if (data == "BackFromAddingStorages") {
         renderRecipeViewAfterAddingStorage(state.storageIds, state.recipeId, userId, chatId, messageId, bot, api);
+        return;
     }
     if (data[0] == '?') {
-        renderStorageSuggestion(state.storageIds, state.recipeId, userId, chatId, messageId, bot, api);
-
+        renderStorageSuggestion(state.storageIds,
+                                state.recipeId,
+                                userId,
+                                chatId,
+                                messageId,
+                                bot,
+                                api); // dangerous to ge message id like that?
         return;
     }
     if (data[0] == '+') {

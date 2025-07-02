@@ -1,5 +1,6 @@
 #include "shopping_lists.hpp"
 
+#include "backend/id_types.hpp"
 #include "backend/models/shopping_list.hpp"
 
 #include <vector>
@@ -14,7 +15,7 @@ std::vector<ShoppingListItem> ShoppingListApi::get(UserId userId) const {
 
 void ShoppingListApi::put(UserId userId, const std::vector<IngredientId>& ingredientIds) const {
     httplib::Params params;
-    for (auto id : ingredientIds)
+    for (IngredientId id : ingredientIds)
         params.insert({"ingredient-id", std::to_string(id)});
     jsonPutAuthed<void>(userId, "/my/shopping-list", params);
 }

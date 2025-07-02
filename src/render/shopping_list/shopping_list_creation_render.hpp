@@ -10,6 +10,7 @@ std::vector<api::IngredientId> renderShoppingListCreation( // It returns ingredi
     api::RecipeId recipeId,
     UserId userId,
     ChatId chatId,
+    tg_types::MessageId messageId,
     BotRef bot,
     RecipesApiRef api);
 

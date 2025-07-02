@@ -12,14 +12,15 @@ using namespace render::recipe_view;
 void handleProductListSubmission(
     ShoppingListCreation& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
     std::string data = cq.data;
-    std::stringstream temp; // Convert string to int
     auto messageId = cq.message->messageId;
+    std::stringstream temp; // Convert string to int
     std::vector<api::IngredientId> ingredientIds;
     auto chatId = cq.message->chat->id;
     auto userId = cq.from->id;
 
     if (data == "BackFromShoppingList") {
-        renderRecipeView(state.storageIdsFrom, state.recipeIdFrom, userId, chatId, bot, api);
+        renderRecipeViewAfterAddingStorage(
+            state.storageIdsFrom, state.recipeIdFrom, userId, chatId, messageId, bot, api);
         stateManager.put(RecipeView{.storageIds = state.storageIdsFrom, .recipeId = state.recipeIdFrom});
         bot.answerCallbackQuery(cq.id);
         return;
@@ -30,7 +31,8 @@ void handleProductListSubmission(
         shoppingApi.put(userId, state.ingredientIdsInList);
 
         // Return to previous state
-        renderRecipeView(state.storageIdsFrom, state.recipeIdFrom, userId, chatId, bot, api);
+        renderRecipeViewAfterAddingStorage(
+            state.storageIdsFrom, state.recipeIdFrom, userId, chatId, messageId, bot, api);
         stateManager.put(RecipeView{.storageIds = state.storageIdsFrom, .recipeId = state.recipeIdFrom});
         bot.answerCallbackQuery(cq.id);
         return;

@@ -18,6 +18,7 @@ std::vector<api::IngredientId> renderShoppingListCreation(const std::vector<api:
                                                           api::RecipeId recipeId,
                                                           UserId userId,
                                                           ChatId chatId,
+                                                          tg_types::MessageId messageId,
                                                           BotRef bot,
                                                           RecipesApiRef recipesApi) {
     std::unordered_set<api::StorageId> storageIdsSet(storageIds.begin(), storageIds.end());
@@ -65,7 +66,7 @@ std::vector<api::IngredientId> renderShoppingListCreation(const std::vector<api:
     keyboard[std::floor(((ingredientIds.size() + 1) / 2) + 1)].push_back(
         detail::makeCallbackButton(utils::utf8str(u8"Назад"), "BackFromShoppingList"));
 
-    bot.sendMessage(chatId, toPrint, nullptr, nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
+    bot.editMessageText(toPrint, chatId, messageId, "", "", nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
     return ingredientIds;
 }
 

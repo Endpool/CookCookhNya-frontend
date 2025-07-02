@@ -15,15 +15,6 @@ struct textGenInfo {
     bool isAtLeastOneIngredientLack;
 };
 
-void renderRecipeView(
-    const std::vector<api::StorageId>& storageIds, // Will be deleted when all messages will be from editing - for now
-                                                   // it's entry point and guarantee that message exists
-    api::RecipeId recipeId,
-    UserId userId,
-    ChatId chatId,
-    BotRef bot,
-    ApiClient api);
-
 void renderStorageSuggestion(const std::vector<api::StorageId>& storageIdsToAccount,
                              api::RecipeId recipeId,
                              UserId userId,

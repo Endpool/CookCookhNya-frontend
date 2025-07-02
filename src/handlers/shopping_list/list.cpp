@@ -10,7 +10,7 @@ void shoppingListButtonCallback(
     stateManager.put(StorageList{});
     bot.answerCallbackQuery(cq.id);
     if (cq.data == "back") {
-        render::storage_list::renderStorageList(cq.from->id, cq.message->chat->id, bot, api);
+        render::storage_list::renderStorageList(true, cq.from->id, cq.message->chat->id, bot, api);
         stateManager.put(StorageList{});
         return;
     }
