@@ -1,6 +1,5 @@
 #pragma once
 
-#include "backend/api/ingredients.hpp"
 #include "backend/id_types.hpp"
 #include "render/common.hpp"
 
@@ -12,10 +11,9 @@ std::vector<api::IngredientId> renderShoppingListCreation( // It returns ingredi
     UserId userId,
     ChatId chatId,
     BotRef bot,
-    ApiClient api);
+    RecipesApiRef api);
 
-void renderEditedShoppingListCreation(std::vector<api::IngredientId> ingredientIds,
-                                      api::IngredientId ingredientIdToRemove,
+void renderEditedShoppingListCreation(const std::vector<api::IngredientId>& ingredientIds,
                                       ChatId chatId,
                                       tg_types::MessageId messageId,
                                       BotRef bot,

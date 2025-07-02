@@ -34,12 +34,14 @@ textGenInfo textGen(const std::vector<api::StorageId>& storageIds,
     bool isContains = false;
     bool isSuggestionMade = false;
     bool isIngredientNotWritten = true;
+    bool isAtLeastOneIngredientLack = false;
     size_t counterOfSuggestion = 0;
     for (auto& ingredient : ingredients) { // Iterate through each ingredient
         isIngredientNotWritten = true;
         isContains = false;
         if (ingredient.inStorages.size() == 0) {
             toPrint += std::format("- {}\n", ingredient.name);
+            isAtLeastOneIngredientLack = true;
             continue;
         }
 
@@ -84,11 +86,13 @@ textGenInfo textGen(const std::vector<api::StorageId>& storageIds,
         }
         counterOfSuggestion++; // If here then suggesiton was made
     }
+    toPrint += std::format("Source Link: {}", recipeIngredients.link);
     return {.text = toPrint,
             .isSuggestionMade = isSuggestionMade,
             .suggestedStorageIds = suggestedStorageIds,
-            .foundInStoragesStrings =
-                foundInStoragesStrings}; // Many info may be needed from that function to make right markup
+            .foundInStoragesStrings = foundInStoragesStrings,
+            .isAtLeastOneIngredientLack =
+                isAtLeastOneIngredientLack}; // Many info may be needed from that function to make right markup
 }
 
 void renderRecipeView(const std::vector<api::StorageId>& storageIds,
@@ -105,19 +109,25 @@ void renderRecipeView(const std::vector<api::StorageId>& storageIds,
     bool isSuggestionMade = text.isSuggestionMade;
     auto suggestedStorageIds = text.suggestedStorageIds;
     auto toPrint = text.text;
+    bool isAtLeastOneIngredientLack = text.isAtLeastOneIngredientLack;
 
-    InlineKeyboard keyboard(3);
+    size_t buttonRows =
+        isAtLeastOneIngredientLack
+            ? 3
+            : 2; // if there is no lacking ingredients then there is no need to show field of shopping list
+    InlineKeyboard keyboard(buttonRows);
     keyboard[0].push_back(
         detail::makeCallbackButton(utils::utf8str(u8"Готовить"), "startCooking")); // Add needed info for next states!
     if (isSuggestionMade) {
         std::string dataForSuggestion = "?";
         keyboard[0].push_back(detail::makeCallbackButton(utils::utf8str(u8"?"), dataForSuggestion));
     }
+    if (isAtLeastOneIngredientLack) {
+        keyboard[1].push_back(detail::makeCallbackButton(utils::utf8str(u8"Составить список продуктов"),
+                                                         "makeProductList")); // Add needed info for next states!
+    }
 
-    keyboard[1].push_back(detail::makeCallbackButton(utils::utf8str(u8"Составить список продуктов"),
-
-                                                     "makeProductList")); // Add needed info for next states!
-    keyboard[2].push_back(detail::makeCallbackButton(u8"Назад", "backFromRecipeView"));
+    keyboard[buttonRows - 1].push_back(detail::makeCallbackButton(u8"Назад", "backFromRecipeView"));
 
     bot.sendMessage(chatId, toPrint, nullptr, nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
 }
@@ -136,8 +146,14 @@ void renderRecipeViewAfterAddingStorage(const std::vector<api::StorageId>& stora
     bool isSuggestionMade = text.isSuggestionMade;
     auto suggestedStorageIds = text.suggestedStorageIds;
     auto toPrint = text.text;
+    bool isAtLeastOneIngredientLack = text.isAtLeastOneIngredientLack;
 
-    InlineKeyboard keyboard(3);
+    size_t buttonRows =
+        isAtLeastOneIngredientLack
+            ? 3
+            : 2; // if there is no lacking ingredients then there is no need to show field of shopping list
+    InlineKeyboard keyboard(buttonRows);
+
     keyboard[0].push_back(
         detail::makeCallbackButton(utils::utf8str(u8"Готовить"), "startCooking")); // Add needed info for next states!
     if (isSuggestionMade) {
@@ -148,9 +164,12 @@ void renderRecipeViewAfterAddingStorage(const std::vector<api::StorageId>& stora
         keyboard[0].push_back(detail::makeCallbackButton(utils::utf8str(u8"?"), dataForSuggestion));
     }
 
-    keyboard[1].push_back(detail::makeCallbackButton(utils::utf8str(u8"Составить список продуктов"),
-                                                     "makeProductList")); // Add needed info for next states!
-    keyboard[2].push_back(detail::makeCallbackButton(utils::utf8str(u8"Назад"), "backFromRecipeView"));
+    if (isAtLeastOneIngredientLack) {
+        keyboard[1].push_back(detail::makeCallbackButton(utils::utf8str(u8"Составить список продуктов"),
+                                                         "makeProductList")); // Add needed info for next states!
+    }
+
+    keyboard[buttonRows - 1].push_back(detail::makeCallbackButton(u8"Назад", "backFromRecipeView"));
 
     bot.editMessageText(toPrint,
                         chatId,

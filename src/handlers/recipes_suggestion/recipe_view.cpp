@@ -27,6 +27,7 @@ void handleRecipeView(RecipeView& state, CallbackQueryRef cq, BotRef bot, SMRef 
         stateManager.put(ShoppingListCreation{.storageIdsFrom = state.storageIds,
                                               .recipeIdFrom = state.recipeId,
                                               .ingredientIdsInList = ingredientsInList});
+        bot.answerCallbackQuery(cq.id);
         return;
     }
     if (data == "backFromRecipeView") {

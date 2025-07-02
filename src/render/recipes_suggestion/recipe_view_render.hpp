@@ -12,6 +12,7 @@ struct textGenInfo {
     bool isSuggestionMade{};
     std::unordered_set<api::StorageId> suggestedStorageIds;
     std::vector<std::string> foundInStoragesStrings;
+    bool isAtLeastOneIngredientLack;
 };
 
 void renderRecipeView(
