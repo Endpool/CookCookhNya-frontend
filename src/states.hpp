@@ -24,28 +24,23 @@ struct StorageIdMixin {
 
 struct StorageList {};
 
-struct StorageCreation {};
-struct StorageDeletion : detail::StorageIdMixin {};
+struct StorageDeletion {};
 struct StorageCreationEnterName {};
-struct StorageWrongNameToDelete {};
-struct StorageDeletionEnterName {};
 struct StorageView : detail::StorageIdMixin {};
 
 struct StorageMemberView : detail::StorageIdMixin {};
-struct MembersAdditionDeletion : detail::StorageIdMixin {};
 struct PackMemberView : detail::StorageIdMixin {};
 struct MemberAddition : detail::StorageIdMixin {};
 struct MemberDeletion : detail::StorageIdMixin {};
 
 struct StorageIngredientsList : detail::StorageIdMixin {};
 struct StorageIngredientsSearch : detail::StorageIdMixin {
-    tg_types::MessageId message;
+    tg_types::MessageId messageId;
     std::vector<api::models::ingredient::IngredientSearchResult> shownIngredients;
 };
 
 struct StorageSelection {
     std::vector<api::StorageId> storageIds;
-    tg_types::MessageId messageId;
 };
 struct SuggestedRecipeList {
     std::size_t pageNo;
@@ -60,14 +55,10 @@ struct RecipeView {
 struct ShoppingListView {};
 
 using State = std::variant<StorageList,
-                           StorageCreation,
                            StorageDeletion,
                            StorageCreationEnterName,
-                           StorageWrongNameToDelete,
-                           StorageDeletionEnterName,
                            StorageView,
                            StorageMemberView,
-                           MembersAdditionDeletion,
                            PackMemberView,
                            MemberAddition,
                            MemberDeletion,

@@ -38,7 +38,7 @@ void storageIngredientsSearchButtonCallback(
         api.putToStorage(user, state.storageId, *mIngredient);
     it->available = !it->available;
 
-    renderStorageIngredientsSearchEdit(state.shownIngredients, state.message, user, bot);
+    renderStorageIngredientsSearchEdit(state.shownIngredients, state.messageId, user, bot);
 }
 
 void storageIngredientsSearchInlineQueryCallback(StorageIngredientsSearch& state,
@@ -54,7 +54,7 @@ void storageIngredientsSearchInlineQueryCallback(StorageIngredientsSearch& state
                                 &IngredientSearchResult::id,
                                 &IngredientSearchResult::id)) {
             state.shownIngredients = newIngredients;
-            renderStorageIngredientsSearchEdit(state.shownIngredients, state.message, user, bot);
+            renderStorageIngredientsSearchEdit(state.shownIngredients, state.messageId, user, bot);
         }
     }
     // Cache is not disabled on Windows and Linux desktops. Works on Android and Web

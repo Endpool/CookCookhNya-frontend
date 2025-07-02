@@ -1,5 +1,6 @@
 #include "recipe_view_render.hpp"
 #include "backend/models/recipe.hpp"
+#include "message_tracker.hpp"
 #include "render/common.hpp"
 #include "utils.hpp"
 #include <algorithm>
@@ -118,8 +119,8 @@ void renderRecipeView(std::vector<api::StorageId> const& storageIds,
 
                                                      "makeReceipt")); // Add needed info for next states!
     keyboard[2].push_back(detail::makeCallbackButton(u8"Назад", "backFromRecipeView"));
-
-    bot.sendMessage(chatId, toPrint, nullptr, nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
+    auto messageId = message::getMessageId(userId);
+    bot.editMessageText(toPrint, chatId, *messageId, "", "", nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
 }
 
 void renderRecipeViewAfterAddingStorage(std::vector<api::StorageId> const& storageIds,

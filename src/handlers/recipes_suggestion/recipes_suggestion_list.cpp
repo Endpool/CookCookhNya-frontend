@@ -24,7 +24,6 @@ void changePageAndBack(
     bot.answerCallbackQuery(cq.id);
 
     auto chatId = cq.message->chat->id;
-    auto messageId = cq.message->messageId;
     auto userId = cq.from->id;
 
     auto data = cq.data;
@@ -36,8 +35,8 @@ void changePageAndBack(
             stateManager.put(StorageView{state.storageIds[0]}); // Go to the only one storage
         } else {
             // Go to storages selection saving the storages which were chosen
-            auto message = renderStoragesSelect(state.storageIds, userId, chatId, bot, api);
-            stateManager.put(StorageSelection{.storageIds = std::move(state.storageIds), .messageId = message});
+            renderStorageSelect(state.storageIds, userId, chatId, bot, api);
+            stateManager.put(StorageSelection{.storageIds = std::move(state.storageIds)});
         }
         bot.answerCallbackQuery(cq.id);
         return;
@@ -61,6 +60,6 @@ void changePageAndBack(
     temp >> pageNo;
 
     // Message is 100% exists as it was rendered by some another method
-    editSuggestionMessage(state.storageIds, pageNo, userId, chatId, messageId, bot, api);
+    editRecipesSuggestion(state.storageIds, pageNo, userId, chatId, bot, api);
 }
 } // namespace cookcookhnya::handlers::recipes_suggestion

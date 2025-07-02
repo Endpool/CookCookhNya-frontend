@@ -1,6 +1,5 @@
 #include "storage_list_view.hpp"
 
-#include "backend/id_types.hpp"
 #include "handlers/common.hpp"
 #include "render/recipes_suggestion/select_storages_render.hpp"
 #include "render/shopping_list/list.hpp"
@@ -27,10 +26,10 @@ void storageListButtonCallback(
     temp << cq.data;
     int id = 0;
     temp >> id;
-
+    auto userId = cq.from->id;
     auto chatId = cq.message->chat->id;
     if (cq.data == "storage_list_creation") {
-        renderStorageCreate(chatId, bot);
+        renderStorageCreate(chatId, userId, bot);
         stateManager.put(StorageCreationEnterName{}); // Go to function create storage, while cancel button is handled
                                                       // on cancel storage creation
         return;

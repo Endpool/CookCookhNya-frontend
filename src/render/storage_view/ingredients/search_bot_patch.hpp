@@ -79,7 +79,7 @@ class PatchedBot : TgBot::Api {
     explicit PatchedBot(const TgBot::Api& bot) : Api{bot} {}
 
     // A special copy of the `sendMessage` to avoid passing `"pay": false` to the request
-    TgBot::Message::Ptr
+    [[nodiscard]] TgBot::Message::Ptr
     sendMessage(ChatId chatId, std::string_view text, const TgBot::InlineKeyboardMarkup::Ptr& replyMarkup) const {
         std::vector<TgBot::HttpReqArg> args;
         args.reserve(3);

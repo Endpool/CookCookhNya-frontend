@@ -4,8 +4,8 @@ target_sources(main PRIVATE
     src/handlers/storage_list/storage_list_create.cpp
     src/handlers/storage_list/storage_list_delete.cpp
     src/handlers/storage_list/storage_list_view.cpp
-
-    src/handlers/storage_view/storage_add_delete_members.cpp
+    src/handlers/storage_view/storage_add_member.cpp
+    src/handlers/storage_view/storage_delete_member.cpp
     src/handlers/storage_view/storage_view.cpp
     src/handlers/storage_view/storage_view_members.cpp
     src/handlers/storage_view/ingredients/list.cpp
