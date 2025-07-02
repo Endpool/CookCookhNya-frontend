@@ -18,23 +18,25 @@ void addMember(MemberAddition& state, MessageRef m, BotRef bot, SMRef stateManag
     auto userId = m.from->id;
 
     auto originUser = std::dynamic_pointer_cast<TgBot::MessageOriginUser>(m.forwardOrigin);
-    if (originUser == nullptr) {
-        auto text = utils::utf8str(u8"❌ Не удалось добавить: пользователь скрыл аккаунт");
-        bot.sendMessage(chatId, text);
-        renderMemberList(false, state.storageId, userId, chatId, bot, storageApi);
-        stateManager.put(StorageMemberView{state.storageId});
-    } else {
+    if (originUser != nullptr) {
         auto memberId = originUser->senderUser->id;
         try {
             storageApi.addMember(userId, state.storageId, memberId);
         } catch (std::runtime_error&) {
             auto text = utils::utf8str(u8"❌ Не удалось добавить: пользователь не зарегестрирован в CookCookhNya");
-            // TODO: smart start for new users
             bot.sendMessage(chatId, text);
         }
-        renderMemberList(false, state.storageId, userId, chatId, bot, storageApi);
-        stateManager.put(StorageMemberView{state.storageId});
+    } else {
+        if (std::dynamic_pointer_cast<TgBot::MessageOriginHiddenUser>(m.forwardOrigin) != nullptr){
+            auto text = utils::utf8str(u8"❌ Не удалось добавить: пользователь скрыл аккаунт");
+            bot.sendMessage(chatId, text);
+        } else {
+            auto text = utils::utf8str(u8"❌ Не удалось добавить: убедитесь, что переслали сообщение пользователя");
+            bot.sendMessage(chatId, text);
+        }
     }
+    renderMemberList(false, state.storageId, userId, chatId, bot, storageApi);
+    stateManager.put(StorageMemberView{state.storageId});
 };
 
 void cancelMemberAddition(
@@ -43,6 +45,10 @@ void cancelMemberAddition(
     auto chatId = cq.message->chat->id;
     auto userId = cq.from->id;
     if (cq.data == "cancel_member_addition") {
+        renderMemberList(true, state.storageId, userId, chatId, bot, storageApi);
+        stateManager.put(StorageMemberView{state.storageId});
+    }
+    if (cq.data == "user_sended_link"){
         renderMemberList(true, state.storageId, userId, chatId, bot, storageApi);
         stateManager.put(StorageMemberView{state.storageId});
     }

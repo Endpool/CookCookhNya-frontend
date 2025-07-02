@@ -39,7 +39,7 @@ void renderStorageList(bool toBeEdited, UserId userId, ChatId chatId, BotRef bot
     if (!storages.empty()) {
         keyboard[keyboard.size() - 2].push_back(detail::makeCallbackButton(utils::utf8str(u8"🗒 Список покупок"), "shopping_list"));
         keyboard[keyboard.size() - 1].push_back(
-            detail::makeCallbackButton(utils::utf8str(u8"🤤 Хочу кушать!"), "storage_list_what_to_cook"));
+            detail::makeCallbackButton(utils::utf8str(u8"😋 Хочу кушать!"), "storage_list_what_to_cook"));
     } else {
         keyboard[keyboard.size() - 1].push_back(detail::makeCallbackButton(u8"🗒 Список покупок", "shopping_list"));
     }
