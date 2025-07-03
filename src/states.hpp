@@ -52,7 +52,6 @@ struct RecipeView {
     api::RecipeId recipeId;
 };
 
-
 struct ShoppingListCreation {
     std::vector<api::StorageId> storageIdsFrom;
     api::RecipeId recipeIdFrom;
@@ -60,7 +59,6 @@ struct ShoppingListCreation {
 };
 
 struct ShoppingListView {};
-
 
 using State = std::variant<StorageList,
                            StorageDeletion,
@@ -77,7 +75,6 @@ using State = std::variant<StorageList,
                            RecipeView,
                            ShoppingListCreation,
                            ShoppingListView>;
-
 
 using StateManager = tg_stater::StateProxy<tg_stater::MemoryStateStorage<State>>;
 

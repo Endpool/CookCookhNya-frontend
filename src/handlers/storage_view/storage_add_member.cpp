@@ -28,7 +28,7 @@ void addMember(MemberAddition& state, MessageRef m, BotRef bot, SMRef stateManag
             bot.sendMessage(chatId, text);
         }
     } else {
-        if (std::dynamic_pointer_cast<TgBot::MessageOriginHiddenUser>(m.forwardOrigin) != nullptr){
+        if (std::dynamic_pointer_cast<TgBot::MessageOriginHiddenUser>(m.forwardOrigin) != nullptr) {
             auto text = utils::utf8str(u8"❌ Не удалось добавить: пользователь скрыл аккаунт");
             bot.sendMessage(chatId, text);
         } else {
@@ -36,7 +36,8 @@ void addMember(MemberAddition& state, MessageRef m, BotRef bot, SMRef stateManag
             bot.sendMessage(chatId, text);
         }
     }
-    auto text = utils::utf8str(u8"📩 Нажмите кнопку ниже или перешлите сообщение пользователя, чтобы добавить его в хранилище\n");
+    auto text = utils::utf8str(
+        u8"📩 Нажмите кнопку ниже или перешлите сообщение пользователя, чтобы добавить его в хранилище\n");
     auto messageId = message::getMessageId(userId);
     bot.editMessageText(text, chatId, *messageId);
     renderMemberList(false, state.storageId, userId, chatId, bot, storageApi);

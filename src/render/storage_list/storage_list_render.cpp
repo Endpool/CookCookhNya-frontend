@@ -16,8 +16,7 @@ void renderStorageList(bool toBeEdited, UserId userId, ChatId chatId, BotRef bot
 
     auto storages = storageApi.getStoragesList(userId); // Take storages of user from backend
 
-    const std::size_t buttonRows =
-        1 + (storages.empty() ? 1 : ((storages.size() + 1) / 2) + 2); // ceiling
+    const std::size_t buttonRows = 1 + (storages.empty() ? 1 : ((storages.size() + 1) / 2) + 2); // ceiling
     InlineKeyboard keyboard(buttonRows);
 
     if (!storages.empty()) {
@@ -29,16 +28,16 @@ void renderStorageList(bool toBeEdited, UserId userId, ChatId chatId, BotRef bot
         keyboard[0].push_back(detail::makeCallbackButton(utils::utf8str(u8"🆕 Создать"), "storage_list_creation"));
     }
 
-
     for (uint32_t i = 0; i < storages.size(); i++) {
         if (i % 2 == 0)
             keyboard[1 + (i / 2)].reserve(2);
-        keyboard[1 + (i / 2)].push_back(detail::makeCallbackButton(utils::utf8str(u8"🍱 ") + storages[i].name,
-                                                                   std::to_string(storages[i].id)));
+        keyboard[1 + (i / 2)].push_back(
+            detail::makeCallbackButton(utils::utf8str(u8"🍱 ") + storages[i].name, std::to_string(storages[i].id)));
     }
-    
+
     if (!storages.empty()) {
-        keyboard[keyboard.size() - 2].push_back(detail::makeCallbackButton(utils::utf8str(u8"🗒 Список покупок"), "shopping_list"));
+        keyboard[keyboard.size() - 2].push_back(
+            detail::makeCallbackButton(utils::utf8str(u8"🗒 Список покупок"), "shopping_list"));
         keyboard[keyboard.size() - 1].push_back(
             detail::makeCallbackButton(utils::utf8str(u8"😋 Хочу кушать!"), "storage_list_what_to_cook"));
     } else {

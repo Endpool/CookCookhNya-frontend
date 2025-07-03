@@ -15,7 +15,7 @@
 namespace cookcookhnya::render::storage::member_list {
 
 void renderMemberList(bool toBeEdited,
-                      api::StorageId const& storageId,
+                      const api::StorageId& storageId,
                       UserId userId,
                       ChatId chatId,
                       BotRef bot,
@@ -55,30 +55,32 @@ void renderMemberList(bool toBeEdited,
 };
 
 void renderMemberAdditionPrompt(
-    api::StorageId const& storageId, UserId userId, ChatId chatId, BotRef bot, StorageApiRef storageApi) {
+    const api::StorageId& storageId, UserId userId, ChatId chatId, BotRef bot, StorageApiRef storageApi) {
     auto storage = storageApi.get(userId, storageId);
 
     unsigned int buttonRows = 2;
     InlineKeyboard keyboard(buttonRows);
-    
+
     auto inviteButton = std::make_shared<TgBot::InlineKeyboardButton>();
     inviteButton->text = utils::utf8str(u8"📤 Поделиться");
-    auto hash = "hashFromBack"; // NOLINT 
-    // TODO: get here hash from back 
-    const auto *telegramBotAlias = "stage_stand_bot";
-    auto inviteText = "Нажми на ссылку, чтобы стать участником хранилища 🍱**" + storage.name + "** в CookCookhNya!\nhttps://t.me/" + telegramBotAlias + "?start=" + hash;
+    auto hash = "hashFromBack"; // NOLINT
+    // TODO: get here hash from back
+    const auto* telegramBotAlias = "stage_stand_bot";
+    auto inviteText = "Нажми на ссылку, чтобы стать участником хранилища 🍱**" + storage.name +
+                      "** в CookCookhNya!\nhttps://t.me/" + telegramBotAlias + "?start=" + hash;
     inviteButton->url = "https://t.me/share/url?url=" + inviteText;
     inviteButton->callbackData = "user_sended_link";
 
     keyboard[0].push_back(std::move(inviteButton));
     keyboard[1].push_back(detail::makeCallbackButton(utils::utf8str(u8"↩️ Назад"), "cancel_member_addition"));
-    auto text = utils::utf8str(u8"📩 Нажмите кнопку ниже или перешлите сообщение пользователя, чтобы добавить его в хранилище\n");
+    auto text = utils::utf8str(
+        u8"📩 Нажмите кнопку ниже или перешлите сообщение пользователя, чтобы добавить его в хранилище\n");
     auto messageId = message::getMessageId(userId);
     bot.editMessageText(text, chatId, *messageId, "", "", nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
 };
 
 void renderMemberDeletionPrompt(
-    api::StorageId const& storageId, UserId userId, ChatId chatId, BotRef bot, StorageApiRef storageApi) {
+    const api::StorageId& storageId, UserId userId, ChatId chatId, BotRef bot, StorageApiRef storageApi) {
     auto storage = storageApi.get(userId, storageId);
 
     auto members = storageApi.getStorageMembers(userId, storageId);

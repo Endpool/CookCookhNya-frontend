@@ -23,7 +23,7 @@ void start(MessageRef m, BotRef bot, SMRef stateManager, ApiClientRef api) {
     }
     auto startText = m.text;
     const int hashPos = 7;
-    if (startText.size() > hashPos - 1){
+    if (startText.size() > hashPos - 1) {
         auto hash = std::string(m.text).substr(hashPos); // NOLINT
         // TODO: if user used start with hash then send request to add to storage
     }

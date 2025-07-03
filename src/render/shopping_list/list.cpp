@@ -25,7 +25,6 @@ void renderShoppingList(
                         "",
                         nullptr,
                         detail::makeKeyboardMarkup(std::move(keyboard)));
-
 }
 
 } // namespace cookcookhnya::render::shopping_list
