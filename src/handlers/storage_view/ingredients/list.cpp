@@ -8,6 +8,8 @@
 namespace cookcookhnya::handlers::storage::ingredients {
 
 using namespace render::storage;
+using namespace render::storage::ingredients;
+using namespace tg_types;
 
 void storageIngredientsListButtonCallback(
     StorageIngredientsList& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
@@ -18,7 +20,7 @@ void storageIngredientsListButtonCallback(
         renderStorageView(state.storageId, user, chat, bot, api);
         stateManager.put(StorageView{state.storageId});
     } else if (cq.data == "search") {
-        const tg_types::MessageId message = render::storage::ingredients::renderStorageIngredientsSearchSend(chat, bot);
+        MessageId message = renderStorageIngredientsSearchSend(chat, bot);
         stateManager.put(StorageIngredientsSearch{state.storageId, message, {}});
     }
 }
