@@ -8,7 +8,9 @@
 #include "utils.hpp"
 
 #include <algorithm>
+#include <cstddef>
 #include <functional>
+#include <utility>
 
 namespace cookcookhnya::handlers::storage::ingredients {
 
@@ -29,7 +31,7 @@ void storageIngredientsSearchButtonCallback(
     auto mIngredient = utils::parseSafe<api::IngredientId>(cq.data);
     if (!mIngredient)
         return;
-    auto it = std::ranges::find(state.shownIngredients, *mIngredient, &IngredientSearchResult::id);
+    auto it = std::ranges::find(state.shownIngredients, *mIngredient, &IngredientSearchItem::id);
     if (it == state.shownIngredients.end())
         return;
     if (it->available)
@@ -38,7 +40,7 @@ void storageIngredientsSearchButtonCallback(
         api.putToStorage(user, state.storageId, *mIngredient);
     it->available = !it->available;
 
-    renderStorageIngredientsSearchEdit(state.shownIngredients, state.messageId, user, bot);
+    renderStorageIngredientsSearchEdit(state.shownIngredients, state.pageNo, 1, state.messageId, user, bot);
 }
 
 void storageIngredientsSearchInlineQueryCallback(StorageIngredientsSearch& state,
@@ -47,14 +49,16 @@ void storageIngredientsSearchInlineQueryCallback(StorageIngredientsSearch& state
                                                  IngredientsApiRef api) {
     if (!iq.query.empty()) {
         const auto user = iq.from->id;
-        auto newIngredients = api.search(user, iq.query, state.storageId);
-        if (!std::ranges::equal(newIngredients,
-                                state.shownIngredients,
-                                std::equal_to<>{},
-                                &IngredientSearchResult::id,
-                                &IngredientSearchResult::id)) {
-            state.shownIngredients = newIngredients;
-            renderStorageIngredientsSearchEdit(state.shownIngredients, state.messageId, user, bot);
+        const std::size_t count = 100;
+        auto response = api.search(user, iq.query, state.storageId, count, 0);
+        if (response.found != state.totalFound || !std::ranges::equal(response.page,
+                                                                      state.shownIngredients,
+                                                                      std::ranges::equal_to{},
+                                                                      &IngredientSearchItem::id,
+                                                                      &IngredientSearchItem::id)) {
+            state.shownIngredients = std::move(response.page);
+            state.totalFound = response.found;
+            renderStorageIngredientsSearchEdit(state.shownIngredients, state.pageNo, 1, state.messageId, user, bot);
         }
     }
     // Cache is not disabled on Windows and Linux desktops. Works on Android and Web

@@ -6,6 +6,7 @@
 
 #include <httplib.h>
 
+#include <cstddef>
 #include <vector>
 
 namespace cookcookhnya::api {
@@ -26,8 +27,8 @@ class IngredientsApi : ApiBase {
 
     [[nodiscard]] models::ingredient::Ingredient get(IngredientId id) const;
 
-    [[nodiscard]] std::vector<models::ingredient::IngredientSearchResult>
-    search(UserId user, std::string query, StorageId storage) const;
+    [[nodiscard]] models::ingredient::IngredientSearchResponse
+    search(UserId user, std::string query, StorageId storage, std::size_t count, std::size_t offset) const;
 };
 
 } // namespace cookcookhnya::api

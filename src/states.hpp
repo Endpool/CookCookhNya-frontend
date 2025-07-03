@@ -36,7 +36,9 @@ struct MemberDeletion : detail::StorageIdMixin {};
 struct StorageIngredientsList : detail::StorageIdMixin {};
 struct StorageIngredientsSearch : detail::StorageIdMixin {
     tg_types::MessageId messageId;
-    std::vector<api::models::ingredient::IngredientSearchResult> shownIngredients;
+    std::vector<api::models::ingredient::IngredientSearchItem> shownIngredients;
+    std::size_t totalFound;
+    std::size_t pageNo;
 };
 
 struct StorageSelection {

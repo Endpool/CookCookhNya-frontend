@@ -17,7 +17,7 @@ constructMarkup(const std::vector<api::StorageId>& storageIds, int pageNo, UserI
 
     // CONSTANT AND SAME (STATIC) FOR EVERY USER (static const doesn't actually matter in this function was added
     // because of logic of that variable)
-    static const int numOfRecipesOnPage = 10;
+    static const int numOfRecipesOnPage = 1;
 
     auto recipesList = recipesApi.getRecipeList(userId,
                                                 numOfRecipesOnPage,

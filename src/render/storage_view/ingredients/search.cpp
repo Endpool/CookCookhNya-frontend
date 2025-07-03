@@ -8,6 +8,7 @@
 
 #include <tgbot/types/InlineKeyboardButton.h>
 
+#include <cstddef>
 #include <memory>
 #include <ranges>
 #include <string>
@@ -21,7 +22,9 @@ using namespace tg_types;
 
 namespace {
 
-auto makeKeyboard(const std::vector<IngredientSearchResult>& ingredients) {
+auto makeKeyboard(const std::vector<IngredientSearchItem>& ingredients,
+                  std::size_t /*pageNo*/,
+                  std::size_t /*totalPages*/) {
     using namespace std::views;
     InlineKeyboard keyboard{2 + ingredients.size()};
 
@@ -43,17 +46,20 @@ auto makeKeyboard(const std::vector<IngredientSearchResult>& ingredients) {
 MessageId renderStorageIngredientsSearchSend(ChatId chat, BotRef bot) {
     const PatchedBot patchedBot{bot};
     return patchedBot
-        .sendMessage(
-            chat, utils::utf8str(u8"Используй кнопку ниже как поисковик чтобы найти ингредиент"), makeKeyboard({}))
+        .sendMessage(chat,
+                     utils::utf8str(u8"Используй кнопку ниже как поисковик чтобы найти ингредиент"),
+                     makeKeyboard({}, 0, 0))
         ->messageId;
 }
 
-void renderStorageIngredientsSearchEdit(const std::vector<IngredientSearchResult>& ingredients,
+void renderStorageIngredientsSearchEdit(const std::vector<IngredientSearchItem>& ingredients,
+                                        std::size_t pageNo,
+                                        std::size_t totalPages,
                                         MessageId message,
                                         ChatId chat,
                                         BotRef bot) {
     const PatchedBot patchedBot{bot};
-    patchedBot.editMessageReplyMarkup(chat, message, makeKeyboard(ingredients));
+    patchedBot.editMessageReplyMarkup(chat, message, makeKeyboard(ingredients, pageNo, totalPages));
 }
 
 } // namespace cookcookhnya::render::storage::ingredients
