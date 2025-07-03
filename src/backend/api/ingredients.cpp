@@ -3,6 +3,7 @@
 #include "backend/id_types.hpp"
 #include "backend/models/ingredient.hpp"
 
+#include <cstddef>
 #include <format>
 #include <string>
 #include <utility>

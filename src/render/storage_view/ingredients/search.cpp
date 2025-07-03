@@ -45,10 +45,11 @@ auto makeKeyboard(const std::vector<IngredientSearchItem>& ingredients,
 
 void renderStorageIngredientsSearch(ChatId chatId, UserId userId, BotRef bot) {
     const PatchedBot patchedBot{bot};
-    patchedBot.editMessageText(utils::utf8str(u8"Используй кнопку ниже как поисковик чтобы найти ингредиент"),
-                               chatId,
-                               *message::getMessageId(userId),
-                               makeKeyboard({}, 0, 0));
+    if (auto mMessageId = message::getMessageId(userId))
+        patchedBot.editMessageText(utils::utf8str(u8"Используй кнопку ниже как поисковик чтобы найти ингредиент"),
+                                   chatId,
+                                   *mMessageId,
+                                   makeKeyboard({}, 0, 0));
 }
 
 void renderStorageIngredientsSearchEdit(const std::vector<IngredientSearchItem>& ingredients,

@@ -41,8 +41,8 @@ void storageIngredientsSearchButtonCallback(
         api.putToStorage(userId, state.storageId, *mIngredient);
     it->available = !it->available;
 
-    renderStorageIngredientsSearchEdit(
-        state.shownIngredients, state.pageNo, 1, *message::getMessageId(userId), chatId, bot);
+    if (auto mMessageId = message::getMessageId(userId))
+        renderStorageIngredientsSearchEdit(state.shownIngredients, state.pageNo, 1, *mMessageId, chatId, bot);
 }
 
 void storageIngredientsSearchInlineQueryCallback(StorageIngredientsSearch& state,
@@ -60,8 +60,8 @@ void storageIngredientsSearchInlineQueryCallback(StorageIngredientsSearch& state
                                                                       &IngredientSearchItem::id)) {
             state.shownIngredients = std::move(response.page);
             state.totalFound = response.found;
-            renderStorageIngredientsSearchEdit(
-                state.shownIngredients, state.pageNo, 1, *message::getMessageId(userId), userId, bot);
+            if (auto mMessageId = message::getMessageId(userId))
+                renderStorageIngredientsSearchEdit(state.shownIngredients, state.pageNo, 1, *mMessageId, userId, bot);
         }
     }
     // Cache is not disabled on Windows and Linux desktops. Works on Android and Web
