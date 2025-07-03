@@ -21,11 +21,14 @@ void renderStorageSelect(const std::vector<api::StorageId>& selected_storages,
                          BotRef bot,
                          StorageApiRef storageApi) {
     auto storages = storageApi.getStoragesList(userId);
-
     const std::size_t buttonRows = ((storages.size() + 1) / 2) + 1;
     InlineKeyboard keyboard(buttonRows);
-
+    keyboard[0].reserve(2);
     keyboard[0].push_back(detail::makeCallbackButton(utils::utf8str(u8"🚫 Отмена"), "cancel_storages_selection"));
+    if (!selected_storages.empty()) {
+        keyboard[0].push_back(
+            detail::makeCallbackButton(utils::utf8str(u8"▶️ Подтвердить"), "confirm_storages_selection"));
+    }
 
     for (std::size_t i = 0; i < storages.size(); ++i) {
         if (i % 2 == 0)
@@ -40,9 +43,11 @@ void renderStorageSelect(const std::vector<api::StorageId>& selected_storages,
         }
     }
 
-    auto text = utils::utf8str(u8"Откуда брать продукты?");
+    auto text = utils::utf8str(u8"🍱 Откуда брать продукты?");
     auto messageId = message::getMessageId(userId);
-    bot.editMessageText(text, chatId, *messageId, "", "", nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
+    if (messageId) {
+        bot.editMessageText(text, chatId, *messageId, "", "", nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
+    }
 }
 
 void editStorageSelect(const std::vector<api::StorageId>& selected_storages,
@@ -55,7 +60,7 @@ void editStorageSelect(const std::vector<api::StorageId>& selected_storages,
     const std::size_t buttonRows = ((storages.size() + 1) / 2) + 1;
     InlineKeyboard keyboard(buttonRows);
     keyboard[0].reserve(2);
-    keyboard[0].push_back(detail::makeCallbackButton(utils::utf8str(u8"↩️ Назад"), "cancel_storages_selection"));
+    keyboard[0].push_back(detail::makeCallbackButton(utils::utf8str(u8"🚫 Отмена"), "cancel_storages_selection"));
     if (!selected_storages.empty()) {
         keyboard[0].push_back(
             detail::makeCallbackButton(utils::utf8str(u8"▶️ Подтвердить"), "confirm_storages_selection"));
@@ -76,6 +81,8 @@ void editStorageSelect(const std::vector<api::StorageId>& selected_storages,
 
     auto text = utils::utf8str(u8"🍱 Откуда брать продукты?");
     auto messageId = message::getMessageId(userId);
-    bot.editMessageText(text, chatId, *messageId, "", "", nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
+    if (messageId) {
+        bot.editMessageText(text, chatId, *messageId, "", "", nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
+    }
 }
 } // namespace cookcookhnya::render::select_storages

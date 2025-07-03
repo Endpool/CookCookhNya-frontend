@@ -1,14 +1,18 @@
 #include "recipe_view_render.hpp"
+#include "backend/id_types.hpp"
 #include "backend/models/recipe.hpp"
+#include "message_tracker.hpp"
 #include "render/common.hpp"
-#include "tg_types.hpp"
 #include "utils.hpp"
+
 #include <algorithm>
 #include <cmath>
 #include <cstddef>
 #include <cstdint>
 #include <format>
 #include <string>
+#include <unordered_set>
+#include <utility>
 #include <vector>
 
 namespace cookcookhnya::render::recipe_view {
@@ -19,15 +23,15 @@ textGenInfo textGen(const std::vector<api::StorageId>& storageIds,
                     ApiClient api) { // will return needed text and some additional elements
 
     // Get two api's from apiClient
-    auto storageApi = api.getStorages();
-    std::unordered_set<api::StorageId> storageIdSet(storageIds.begin(), storageIds.end());
+    auto storageApi = api.getStoragesApi();
+    const std::unordered_set<api::StorageId> storageIdSet(storageIds.begin(), storageIds.end());
 
     std::unordered_set<api::StorageId> suggestedStorageIds;
     std::vector<std::string> foundInStoragesStrings;
 
     auto ingredients = recipeIngredients.ingredients;
 
-    std::string recipeName = recipeIngredients.name;
+    const std::string recipeName = recipeIngredients.name;
     std::string toPrint = utils::utf8str(u8"Ингредиенты для \"") + recipeName + "\"\n";
     std::vector<std::string> variants = {
         "\n", " и ", ", "}; // difference is 0 -> last, difference is 1 -> предпоследний.
@@ -40,7 +44,7 @@ textGenInfo textGen(const std::vector<api::StorageId>& storageIds,
     for (auto& ingredient : ingredients) { // Iterate through each ingredient
         isIngredientNotWritten = true;
         isContains = false;
-        if (ingredient.inStorages.size() == 0) {
+        if (ingredient.inStorages.empty()) {
             toPrint += std::format("- {}\n", ingredient.name);
             isAtLeastOneIngredientLack = true;
             continue;
@@ -100,20 +104,19 @@ void renderRecipeViewAfterAddingStorage(const std::vector<api::StorageId>& stora
                                         api::RecipeId recipeId,
                                         UserId userId,
                                         ChatId chatId,
-                                        tg_types::MessageId messageId,
                                         BotRef bot,
                                         ApiClient api) {
 
-    auto recipesApi = api.getRecipes();
+    auto recipesApi = api.getRecipesApi();
     auto recipeIngredients = recipesApi.getIngredientsInRecipe(userId, recipeId);
-    textGenInfo text = textGen(storageIds, recipeIngredients, userId, api);
+    const textGenInfo text = textGen(storageIds, recipeIngredients, userId, api);
 
-    bool isSuggestionMade = text.isSuggestionMade;
+    const bool isSuggestionMade = text.isSuggestionMade;
     auto suggestedStorageIds = text.suggestedStorageIds;
     auto toPrint = text.text;
-    bool isAtLeastOneIngredientLack = text.isAtLeastOneIngredientLack;
+    const bool isAtLeastOneIngredientLack = text.isAtLeastOneIngredientLack;
 
-    size_t buttonRows =
+    const size_t buttonRows =
         isAtLeastOneIngredientLack
             ? 3
             : 2; // if there is no lacking ingredients then there is no need to show field of shopping list
@@ -135,14 +138,17 @@ void renderRecipeViewAfterAddingStorage(const std::vector<api::StorageId>& stora
     }
 
     keyboard[buttonRows - 1].push_back(detail::makeCallbackButton(u8"Назад", "backFromRecipeView"));
-
-    bot.editMessageText(toPrint,
-                        chatId,
-                        messageId,
-                        "",
-                        "",
-                        nullptr,
-                        detail::makeKeyboardMarkup(std::move(keyboard))); // Only on difference between function above
+    auto messageId = message::getMessageId(userId);
+    if (messageId) {
+        bot.editMessageText(
+            toPrint,
+            chatId,
+            *messageId,
+            "",
+            "",
+            nullptr,
+            detail::makeKeyboardMarkup(std::move(keyboard))); // Only on difference between function above
+    }
 }
 
 std::vector<api::StorageId> storagesToShow(const std::vector<api::models::recipe::IngredientInRecipe>& ingredients,
@@ -153,10 +159,10 @@ std::vector<api::StorageId> storagesToShow(const std::vector<api::models::recipe
     bool isFound = false;
     for (const auto& ingredient : ingredients) {
         isFound = false; // Iterate through each ingredient
-        for (api::StorageId inStorage :
+        for (const api::StorageId inStorage :
              ingredient.inStorages) { // Iterate through each storage where ingredient is present
-            for (api::StorageId i : storageIdsToAccount) {
-                if (i == inStorage) {
+            for (const api::StorageId stId : storageIdsToAccount) {
+                if (stId == inStorage) {
                     isFound = true;
                     break;
                 }
@@ -169,7 +175,7 @@ std::vector<api::StorageId> storagesToShow(const std::vector<api::models::recipe
             // Proof that ingredient doesn't have "toxic" storages. Toxic storage is a storage which has some
             // ingredient so because of it other storages with that ingredient are not needed
             // But storages may be redeemed if they are in set of storages of ingredient where there is no toxic one
-            for (api::StorageId temp : ingredient.inStorages) {
+            for (const api::StorageId temp : ingredient.inStorages) {
                 toAdd.insert(temp);
             }
         }
@@ -187,19 +193,18 @@ void renderStorageSuggestion(const std::vector<api::StorageId>& storageIdsToAcco
                              api::RecipeId recipeId,
                              UserId userId,
                              ChatId chatId,
-                             tg_types::MessageId messageId,
                              BotRef bot,
                              ApiClient api) {
 
-    auto storageApi = api.getStorages();
+    auto storageApi = api.getStoragesApi();
 
-    auto recipesApi = api.getRecipes();
+    auto recipesApi = api.getRecipesApi();
     auto recipeIngredients = recipesApi.getIngredientsInRecipe(userId, recipeId);
     auto ingredients = recipeIngredients.ingredients;
 
-    std::vector<api::StorageId> storageIdsToShow = storagesToShow(ingredients, storageIdsToAccount);
+    const std::vector<api::StorageId> storageIdsToShow = storagesToShow(ingredients, storageIdsToAccount);
 
-    textGenInfo text = textGen(storageIdsToAccount, recipeIngredients, userId, api);
+    const textGenInfo text = textGen(storageIdsToAccount, recipeIngredients, userId, api);
     auto toPrint = text.text;
 
     auto suggestionStrings = text.foundInStoragesStrings;
@@ -228,12 +233,12 @@ void renderStorageSuggestion(const std::vector<api::StorageId>& storageIdsToAcco
         }
     }
     toPrint.insert(0, storagesWhichAccount);
-    int buttonRows = std::floor(((storageIdsToShow.size() + 1) / 2) + 1); // +1 for back
+    const int buttonRows = std::floor(((storageIdsToShow.size() + 1) / 2) + 1); // +1 for back
     InlineKeyboard keyboard(buttonRows);
 
     uint64_t i = 0;
     for (auto storageId : storageIdsToShow) {
-        std::string name = storageApi.get(userId, storageId).name;
+        const std::string name = storageApi.get(userId, storageId).name;
         if (i % 2 == 0) {
             keyboard[std::floor(i / 2)].reserve(2);
         }
@@ -242,6 +247,10 @@ void renderStorageSuggestion(const std::vector<api::StorageId>& storageIdsToAcco
     }
     keyboard[std::floor((storageIdsToShow.size() + 1) / 2)].push_back(
         detail::makeCallbackButton(utils::utf8str(u8"Назад"), "BackFromAddingStorages"));
-    bot.editMessageText(toPrint, chatId, messageId, "", "", nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
+    auto messageId = message::getMessageId(userId);
+    if (messageId) {
+        bot.editMessageText(
+            toPrint, chatId, *messageId, "", "", nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
+    }
 }
 } // namespace cookcookhnya::render::recipe_view

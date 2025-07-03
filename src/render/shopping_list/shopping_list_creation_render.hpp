@@ -10,13 +10,12 @@ std::vector<api::IngredientId> renderShoppingListCreation( // It returns ingredi
     api::RecipeId recipeId,
     UserId userId,
     ChatId chatId,
-    tg_types::MessageId messageId,
     BotRef bot,
     RecipesApiRef api);
 
 void renderEditedShoppingListCreation(const std::vector<api::IngredientId>& ingredientIds,
+                                      UserId userId,
                                       ChatId chatId,
-                                      tg_types::MessageId messageId,
                                       BotRef bot,
                                       IngredientsApiRef ingredientsApi);
 

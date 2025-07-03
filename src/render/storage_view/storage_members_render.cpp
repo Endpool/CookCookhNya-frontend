@@ -46,7 +46,10 @@ void renderMemberList(bool toBeEdited,
     auto text = utils::utf8str(u8"👥 Список участников\n") + list;
     if (toBeEdited) {
         auto messageId = message::getMessageId(userId);
-        bot.editMessageText(text, chatId, *messageId, "", "", nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
+        if (messageId) {
+            bot.editMessageText(
+                text, chatId, *messageId, "", "", nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
+        }
     } else {
         auto messageId =
             bot.sendMessage(chatId, text, nullptr, nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
@@ -76,7 +79,9 @@ void renderMemberAdditionPrompt(
     auto text = utils::utf8str(
         u8"📩 Нажмите кнопку ниже или перешлите сообщение пользователя, чтобы добавить его в хранилище\n");
     auto messageId = message::getMessageId(userId);
-    bot.editMessageText(text, chatId, *messageId, "", "", nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
+    if (messageId) {
+        bot.editMessageText(text, chatId, *messageId, "", "", nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
+    }
 };
 
 void renderMemberDeletionPrompt(
@@ -98,7 +103,9 @@ void renderMemberDeletionPrompt(
 
     auto text = utils::utf8str(u8"🚷 Выберите участника для удаления\n");
     auto messageId = message::getMessageId(userId);
-    bot.editMessageText(text, chatId, *messageId, "", "", nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
+    if (messageId) {
+        bot.editMessageText(text, chatId, *messageId, "", "", nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
+    }
 };
 
 } // namespace cookcookhnya::render::storage::member_list

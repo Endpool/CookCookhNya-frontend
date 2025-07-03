@@ -3,6 +3,8 @@
 #include "backend/id_types.hpp"
 #include "backend/models/shopping_list.hpp"
 
+#include <httplib.h>
+#include <string>
 #include <vector>
 
 namespace cookcookhnya::api {
@@ -15,7 +17,7 @@ std::vector<ShoppingListItem> ShoppingListApi::get(UserId userId) const {
 
 void ShoppingListApi::put(UserId userId, const std::vector<IngredientId>& ingredientIds) const {
     httplib::Params params;
-    for (IngredientId id : ingredientIds)
+    for (const IngredientId id : ingredientIds)
         params.insert({"ingredient-id", std::to_string(id)});
     jsonPutAuthed<void>(userId, "/my/shopping-list", params);
 }

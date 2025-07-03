@@ -39,7 +39,9 @@ void addMember(MemberAddition& state, MessageRef m, BotRef bot, SMRef stateManag
     auto text = utils::utf8str(
         u8"📩 Нажмите кнопку ниже или перешлите сообщение пользователя, чтобы добавить его в хранилище\n");
     auto messageId = message::getMessageId(userId);
-    bot.editMessageText(text, chatId, *messageId);
+    if (messageId) {
+        bot.editMessageText(text, chatId, *messageId);
+    }
     renderMemberList(false, state.storageId, userId, chatId, bot, storageApi);
     stateManager.put(StorageMemberView{state.storageId});
 };

@@ -1,12 +1,10 @@
-#include "backend/api/ingredients.hpp"
-
-#include "backend/api/recipes.hpp"
-
-#include "backend/id_types.hpp"
-
-#include "render/common.hpp"
-
 #include "render/shopping_list/shopping_list_creation_render.hpp"
+
+#include "backend/api/ingredients.hpp"
+#include "backend/api/recipes.hpp"
+#include "backend/id_types.hpp"
+#include "message_tracker.hpp"
+#include "render/common.hpp"
 
 #include <format>
 #include <unordered_set>
@@ -18,10 +16,9 @@ std::vector<api::IngredientId> renderShoppingListCreation(const std::vector<api:
                                                           api::RecipeId recipeId,
                                                           UserId userId,
                                                           ChatId chatId,
-                                                          tg_types::MessageId messageId,
                                                           BotRef bot,
                                                           RecipesApiRef recipesApi) {
-    std::unordered_set<api::StorageId> storageIdsSet(storageIds.begin(), storageIds.end());
+    const std::unordered_set<api::StorageId> storageIdsSet(storageIds.begin(), storageIds.end());
     std::string toPrint = utils::utf8str(u8"Основываясь на недостающих ингредиентах, составили для вас продукты "
                                          u8"которые можно добавить в список покупок:\n *В самом низу выберите "
                                          u8"ингредиенты которые вы хотите исключить из списка покупок\n");
@@ -65,14 +62,17 @@ std::vector<api::IngredientId> renderShoppingListCreation(const std::vector<api:
 
     keyboard[std::floor(((ingredientIds.size() + 1) / 2) + 1)].push_back(
         detail::makeCallbackButton(utils::utf8str(u8"Назад"), "BackFromShoppingList"));
-
-    bot.editMessageText(toPrint, chatId, messageId, "", "", nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
+    auto messageId = message::getMessageId(userId);
+    if (messageId) {
+        bot.editMessageText(
+            toPrint, chatId, *messageId, "", "", nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
+    }
     return ingredientIds;
 }
 
 void renderEditedShoppingListCreation(const std::vector<api::IngredientId>& ingredientIds,
+                                      UserId userId,
                                       ChatId chatId,
-                                      tg_types::MessageId messageId,
                                       BotRef bot,
                                       IngredientsApiRef ingredientsApi) {
     std::vector<std::string> ingredientsName;
@@ -106,8 +106,11 @@ void renderEditedShoppingListCreation(const std::vector<api::IngredientId>& ingr
 
     keyboard[std::floor(((ingredientIds.size() + 1) / 2) + 1)].push_back(
         detail::makeCallbackButton(utils::utf8str(u8"Назад"), "BackFromShoppingList"));
-
-    bot.editMessageText(toPrint, chatId, messageId, "", "", nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
+    auto messageId = message::getMessageId(userId);
+    if (messageId) {
+        bot.editMessageText(
+            toPrint, chatId, *messageId, "", "", nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
+    }
 }
 
 } // namespace cookcookhnya::render::shopping_list_creation

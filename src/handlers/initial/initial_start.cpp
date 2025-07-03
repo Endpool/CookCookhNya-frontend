@@ -31,7 +31,7 @@ void start(MessageRef m, BotRef bot, SMRef stateManager, ApiClientRef api) {
     if (!m.from->username.empty())
         alias = m.from->username;
 
-    api.getUsers().updateInfo(
+    api.getUsersApi().updateInfo(
         m.from->id,
         api::models::user::UpdateUserInfoBody{.alias = std::move(m.from->username), .fullname = std::move(fullname)});
 };
