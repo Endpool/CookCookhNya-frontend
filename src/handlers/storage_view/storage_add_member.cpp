@@ -1,6 +1,7 @@
 #include "storage_add_member.hpp"
 
 #include "handlers/common.hpp"
+#include "message_tracker.hpp"
 #include "render/storage_view/storage_members_render.hpp"
 #include "utils.hpp"
 #include <memory>
@@ -35,6 +36,9 @@ void addMember(MemberAddition& state, MessageRef m, BotRef bot, SMRef stateManag
             bot.sendMessage(chatId, text);
         }
     }
+    auto text = utils::utf8str(u8"📩 Нажмите кнопку ниже или перешлите сообщение пользователя, чтобы добавить его в хранилище\n");
+    auto messageId = message::getMessageId(userId);
+    bot.editMessageText(text, chatId, *messageId);
     renderMemberList(false, state.storageId, userId, chatId, bot, storageApi);
     stateManager.put(StorageMemberView{state.storageId});
 };
