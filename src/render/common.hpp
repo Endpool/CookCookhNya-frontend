@@ -31,6 +31,7 @@ using ShoppingListApiRef = const api::ShoppingListApi&;
 
 using UserId = tg_types::UserId;
 using ChatId = tg_types::ChatId;
+using MessageId = tg_types::MessageId;
 
 using BotRef = const TgBot::Api&;
 using MessageRef = const TgBot::Message&;
