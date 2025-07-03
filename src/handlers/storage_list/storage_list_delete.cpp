@@ -14,7 +14,9 @@ void deleteStorage(
     bot.answerCallbackQuery(cq.id);
     if (cq.data.starts_with("st")) {
         auto storageId = utils::parseSafe<api::StorageId>(cq.data.substr(4));
-        storageApi.delete_(cq.from->id, *storageId);
+        if (storageId) {
+            storageApi.delete_(cq.from->id, *storageId);
+        }
     }
     renderStorageList(true, cq.from->id, cq.message->chat->id, bot, storageApi);
     stateManager.put(StorageList{});

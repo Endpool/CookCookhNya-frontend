@@ -5,6 +5,7 @@
 #include "utils.hpp"
 
 #include <cstddef>
+#include <cstdint>
 #include <string>
 #include <utility>
 

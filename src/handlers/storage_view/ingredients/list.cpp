@@ -20,7 +20,7 @@ void storageIngredientsListButtonCallback(
         renderStorageView(state.storageId, user, chat, bot, api);
         stateManager.put(StorageView{state.storageId});
     } else if (cq.data == "search") {
-        MessageId message = renderStorageIngredientsSearchSend(chat, bot);
+        const MessageId message = renderStorageIngredientsSearchSend(chat, bot);
         stateManager.put(StorageIngredientsSearch{state.storageId, message, {}});
     }
 }

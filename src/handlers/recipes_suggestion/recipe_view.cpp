@@ -1,9 +1,13 @@
 #include "recipe_view.hpp"
+
 #include "backend/id_types.hpp"
 #include "handlers/common.hpp"
 #include "render/recipes_suggestion/recipe_view_render.hpp"
 #include "render/recipes_suggestion/recipes_suggestion_render.hpp"
 #include "render/shopping_list/shopping_list_creation_render.hpp"
+
+#include <sstream>
+#include <string>
 
 namespace cookcookhnya::handlers::recipe_view {
 using namespace render::recipe_view;
@@ -30,10 +34,10 @@ void handleRecipeView(RecipeView& state, CallbackQueryRef cq, BotRef bot, SMRef 
     }
     if (data == "backFromRecipeView") {
         editRecipesSuggestion(state.storageIds, 1, userId, chatId, bot, api);
-        stateManager.put(SuggestedRecipeList{.pageNo = 1,
-                                             .storageIds = std::move(state.storageIds),
-                                             .fromStorage = state.storageIds.size() ==
-                                                            0}); // I don't know if it came from storage or no
+        stateManager.put(
+            SuggestedRecipeList{.pageNo = 1,
+                                .storageIds = state.storageIds,
+                                .fromStorage = state.storageIds.empty()}); // I don't know if it came from storage or no
         bot.answerCallbackQuery(cq.id);
         return;
     }
