@@ -5,6 +5,7 @@
 #include "utils.hpp"
 
 #include <cstddef>
+#include <cstdint>
 #include <string>
 #include <utility>
 
@@ -46,7 +47,10 @@ void renderStorageList(bool toBeEdited, UserId userId, ChatId chatId, BotRef bot
     auto text = utils::utf8str(u8"🍱 Ваши хранилища");
     if (toBeEdited) {
         auto messageId = message::getMessageId(userId);
-        bot.editMessageText(text, chatId, *messageId, "", "", nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
+        if (messageId) {
+            bot.editMessageText(
+                text, chatId, *messageId, "", "", nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
+        }
     } else {
         auto message = bot.sendMessage(chatId, text, nullptr, nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
         message::addMessageId(userId, message->messageId);

@@ -41,7 +41,7 @@ class ApiClient {
     }
     ~ApiClient() = default;
 
-    [[nodiscard]] const UsersApi& getUsers() const {
+    [[nodiscard]] const UsersApi& getUsersApi() const {
         return users;
     }
 
@@ -49,7 +49,7 @@ class ApiClient {
         return users;
     }
 
-    [[nodiscard]] const StoragesApi& getStorages() const {
+    [[nodiscard]] const StoragesApi& getStoragesApi() const {
         return storages;
     }
 
@@ -57,7 +57,7 @@ class ApiClient {
         return storages;
     }
 
-    [[nodiscard]] const IngredientsApi& getIngredients() const {
+    [[nodiscard]] const IngredientsApi& getIngredientsApi() const {
         return ingredients;
     }
 
@@ -65,7 +65,7 @@ class ApiClient {
         return ingredients;
     }
 
-    [[nodiscard]] const RecipesApi& getRecipes() const {
+    [[nodiscard]] const RecipesApi& getRecipesApi() const {
         return recipes;
     }
 
@@ -73,7 +73,7 @@ class ApiClient {
         return recipes;
     }
 
-    [[nodiscard]] const ShoppingListApi& getShoppingList() const {
+    [[nodiscard]] const ShoppingListApi& getShoppingListApi() const {
         return shoppingList;
     }
 

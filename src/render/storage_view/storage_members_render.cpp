@@ -1,16 +1,20 @@
 #include "storage_members_render.hpp"
 
+#include "backend/id_types.hpp"
 #include "message_tracker.hpp"
 #include "render/common.hpp"
 #include "utils.hpp"
+
+#include <tgbot/types/InlineKeyboardButton.h>
+
+#include <cstddef>
 #include <format>
 #include <iterator>
+#include <memory>
 #include <ranges>
 #include <string>
-#include <tgbot/types/InlineKeyboardButton.h>
-#include <tgbot/types/KeyboardButtonRequestUsers.h>
-#include <tgbot/types/SwitchInlineQueryChosenChat.h>
 #include <utility>
+#include <vector>
 
 namespace cookcookhnya::render::storage::member_list {
 
@@ -21,8 +25,8 @@ void renderMemberList(bool toBeEdited,
                       BotRef bot,
                       StorageApiRef storageApi) {
     auto storage = storageApi.get(userId, storageId);
-    bool isOwner = storage.ownerId == userId;
-    unsigned int buttonRows = isOwner ? 2 : 1;
+    const bool isOwner = storage.ownerId == userId;
+    const int buttonRows = isOwner ? 2 : 1;
 
     InlineKeyboard keyboard(buttonRows);
 
@@ -46,7 +50,10 @@ void renderMemberList(bool toBeEdited,
     auto text = utils::utf8str(u8"👥 Список участников\n") + list;
     if (toBeEdited) {
         auto messageId = message::getMessageId(userId);
-        bot.editMessageText(text, chatId, *messageId, "", "", nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
+        if (messageId) {
+            bot.editMessageText(
+                text, chatId, *messageId, "", "", nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
+        }
     } else {
         auto messageId =
             bot.sendMessage(chatId, text, nullptr, nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
@@ -58,7 +65,7 @@ void renderMemberAdditionPrompt(
     const api::StorageId& storageId, UserId userId, ChatId chatId, BotRef bot, StorageApiRef storageApi) {
     auto storage = storageApi.get(userId, storageId);
 
-    unsigned int buttonRows = 2;
+    const int buttonRows = 2;
     InlineKeyboard keyboard(buttonRows);
 
     auto inviteButton = std::make_shared<TgBot::InlineKeyboardButton>();
@@ -76,7 +83,9 @@ void renderMemberAdditionPrompt(
     auto text = utils::utf8str(
         u8"📩 Нажмите кнопку ниже или перешлите сообщение пользователя, чтобы добавить его в хранилище\n");
     auto messageId = message::getMessageId(userId);
-    bot.editMessageText(text, chatId, *messageId, "", "", nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
+    if (messageId) {
+        bot.editMessageText(text, chatId, *messageId, "", "", nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
+    }
 };
 
 void renderMemberDeletionPrompt(
@@ -84,8 +93,7 @@ void renderMemberDeletionPrompt(
     auto storage = storageApi.get(userId, storageId);
 
     auto members = storageApi.getStorageMembers(userId, storageId);
-    std::cerr << userId << storage.ownerId << '\n';
-    unsigned int buttonRows = members.size();
+    const unsigned int buttonRows = members.size();
     InlineKeyboard keyboard(buttonRows);
     keyboard[0].push_back(detail::makeCallbackButton(utils::utf8str(u8"🚫 Отмена"), "cancel_member_deletion"));
     size_t k = 1;
@@ -98,7 +106,9 @@ void renderMemberDeletionPrompt(
 
     auto text = utils::utf8str(u8"🚷 Выберите участника для удаления\n");
     auto messageId = message::getMessageId(userId);
-    bot.editMessageText(text, chatId, *messageId, "", "", nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
+    if (messageId) {
+        bot.editMessageText(text, chatId, *messageId, "", "", nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
+    }
 };
 
 } // namespace cookcookhnya::render::storage::member_list

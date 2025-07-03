@@ -5,6 +5,7 @@
 #include "message_tracker.hpp"
 #include "render/storage_list/storage_list_render.hpp"
 #include "utils.hpp"
+#include <optional>
 
 namespace cookcookhnya::handlers::storage_create {
 
@@ -15,7 +16,9 @@ void createStorage(
     storageApi.create(m.from->id, api::models::storage::StorageCreateBody{m.text}); // Create storage body with new name
     auto text = utils::utf8str(u8"🏷 Введите новое имя хранилища");
     auto messageId = message::getMessageId(m.from->id);
-    bot.editMessageText(text, m.chat->id, *messageId);
+    if (messageId) {
+        bot.editMessageText(text, m.chat->id, *messageId);
+    }
     renderStorageList(false, m.from->id, m.chat->id, bot, storageApi);
     stateManager.put(StorageList{});
 };

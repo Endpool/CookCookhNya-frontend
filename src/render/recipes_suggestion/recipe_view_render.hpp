@@ -3,6 +3,7 @@
 #include "backend/id_types.hpp"
 #include "backend/models/recipe.hpp"
 #include "render/common.hpp"
+
 #include <vector>
 
 namespace cookcookhnya::render::recipe_view {
@@ -19,7 +20,6 @@ void renderStorageSuggestion(const std::vector<api::StorageId>& storageIdsToAcco
                              api::RecipeId recipeId,
                              UserId userId,
                              ChatId chatId,
-                             tg_types::MessageId messageId,
                              BotRef bot,
                              ApiClient api);
 
@@ -27,7 +27,6 @@ void renderRecipeViewAfterAddingStorage(const std::vector<api::StorageId>& stora
                                         api::RecipeId recipeId,
                                         UserId userId,
                                         ChatId chatId,
-                                        tg_types::MessageId messageId,
                                         BotRef bot,
                                         ApiClient api);
 // Helper functions

@@ -30,7 +30,9 @@ void renderIngredientsList(api::StorageId storage, UserId userId, ChatId chatId,
 
     auto text = utils::utf8str(u8"🍗 Ваши ингредиенты:\n\n") + std::move(list);
     auto messageId = message::getMessageId(userId);
-    bot.editMessageText(text, chatId, *messageId, "", "", nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
+    if (messageId) {
+        bot.editMessageText(text, chatId, *messageId, "", "", nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
+    }
 }
 
 } // namespace cookcookhnya::render::storage::ingredients

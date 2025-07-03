@@ -1,5 +1,7 @@
 #include "message_tracker.hpp"
 
+#include "tg_types.hpp"
+
 #include <optional>
 #include <unordered_map>
 
