@@ -1,4 +1,4 @@
-#include "render/shopping_list/shopping_list_creation_render.hpp"
+#include "shopping_list_creation_render.hpp"
 
 #include "backend/api/ingredients.hpp"
 #include "backend/api/recipes.hpp"
@@ -85,6 +85,8 @@ void renderEditedShoppingListCreation(const std::vector<api::IngredientId>& ingr
                                          u8"которые можно добавить в список покупок:\n *В самом низу выберите "
                                          u8"ингредиенты которые вы хотите исключить из списка покупок\n");
     for (const api::IngredientId ingredientId : ingredientIds) {
+        // IMPORTANT!: Probably can be optimized because this data is available at the recipe page
+        // by Maxim Fomin
         std::string name = ingredientsApi.get(ingredientId)
                                .name; // NEED TO TEST if INGREDIENTS WILL MESS UP BETWEEN NAME AND ID - вроде норм
         ingredientsName.push_back(name);

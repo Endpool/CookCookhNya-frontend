@@ -11,6 +11,7 @@ target_sources(main PRIVATE
     src/render/recipes_suggestion/select_storages_render.cpp
     src/render/recipes_suggestion/recipes_suggestion_render.cpp
     src/render/recipes_suggestion/recipe_view_render.cpp
-    src/render/shopping_list/shopping_list_creation_render.cpp
+    src/render/recipes_suggestion/shopping_list_creation_render.cpp
+
     src/render/shopping_list/list.cpp
 )

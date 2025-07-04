@@ -4,12 +4,13 @@
 #include "handlers/common.hpp"
 #include "render/recipes_suggestion/recipe_view_render.hpp"
 #include "render/recipes_suggestion/recipes_suggestion_render.hpp"
-#include "render/shopping_list/shopping_list_creation_render.hpp"
+#include "render/recipes_suggestion/shopping_list_creation_render.hpp"
 
 #include <sstream>
 #include <string>
 
 namespace cookcookhnya::handlers::recipe_view {
+
 using namespace render::recipe_view;
 using render::recipes_suggestion::editRecipesSuggestion;
 using render::shopping_list_creation::renderShoppingListCreation;
@@ -28,16 +29,16 @@ void handleRecipeView(RecipeView& state, CallbackQueryRef cq, BotRef bot, SMRef 
         auto ingredientsInList = renderShoppingListCreation(state.storageIds, state.recipeId, userId, chatId, bot, api);
         stateManager.put(ShoppingListCreation{.storageIdsFrom = state.storageIds,
                                               .recipeIdFrom = state.recipeId,
-                                              .ingredientIdsInList = ingredientsInList});
+                                              .ingredientIdsInList = ingredientsInList,
+                                              .fromStorage = state.fromStorage,
+                                              .pageNo = state.pageNo});
         bot.answerCallbackQuery(cq.id);
         return;
     }
     if (data == "backFromRecipeView") {
-        editRecipesSuggestion(state.storageIds, 1, userId, chatId, bot, api);
+        editRecipesSuggestion(state.storageIds, 0, userId, chatId, bot, api);
         stateManager.put(
-            SuggestedRecipeList{.pageNo = 1,
-                                .storageIds = state.storageIds,
-                                .fromStorage = state.storageIds.empty()}); // I don't know if it came from storage or no
+            SuggestedRecipeList{.pageNo = 0, .storageIds = state.storageIds, .fromStorage = state.fromStorage});
         bot.answerCallbackQuery(cq.id);
         return;
     }
@@ -52,6 +53,7 @@ void handleRecipeView(RecipeView& state, CallbackQueryRef cq, BotRef bot, SMRef 
                                 chatId,
                                 bot,
                                 api); // dangerous to ge message id like that?
+        // What? (by Maxim Fomin)
         return;
     }
     if (data[0] == '+') {
