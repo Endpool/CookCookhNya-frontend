@@ -23,7 +23,7 @@ void storageViewButtonCallback(
     auto userId = cq.from->id;
     if (cq.data == "storage_view_explore") {
         stateManager.put(StorageIngredientsList{state.storageId});
-        renderIngredientsList(state.storageId, userId, chatId, bot, api);
+        renderIngredientsList(state.storageId, userId, chatId, cq.message->messageId, bot, api);
     } else if (cq.data == "storage_view_members") {
         renderMemberList(true, state.storageId, userId, chatId, bot, api);
         stateManager.put(StorageMemberView{state.storageId});

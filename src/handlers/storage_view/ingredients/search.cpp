@@ -17,11 +17,12 @@ using namespace render::storage::ingredients;
 
 void storageIngredientsSearchButtonCallback(
     StorageIngredientsSearch& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, IngredientsApiRef api) {
+
     bot.answerCallbackQuery(cq.id);
     const auto user = cq.from->id;
     const auto chat = cq.message->chat->id;
     if (cq.data == "back") {
-        renderIngredientsList(state.storageId, user, chat, bot, api);
+        renderIngredientsList(state.storageId, user, chat, cq.message->messageId, bot, api);
         stateManager.put(StorageIngredientsList{state.storageId});
         return;
     }
