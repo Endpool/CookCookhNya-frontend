@@ -1,6 +1,7 @@
 #pragma once
 
 #include "render/common.hpp"
+#include <cstddef>
 
 namespace cookcookhnya::render::recipes_suggestion {
 using namespace tg_types;
@@ -8,10 +9,10 @@ using namespace tg_types;
 @brief shared function between render and edit of suggestion message
 */
 InlineKeyboard
-constructMarkup(const std::vector<api::StorageId>& storageIds, int pageNo, UserId userId, RecipesApiRef recipesApi);
+constructMarkup(const std::vector<api::StorageId>& storageIds, size_t pageNo, UserId userId, RecipesApiRef recipesApi);
 
 void editRecipesSuggestion(const std::vector<api::StorageId>& storageIds,
-                           int pageNo,
+                           size_t pageNo,
                            UserId userId,
                            ChatId chatId,
                            BotRef bot,

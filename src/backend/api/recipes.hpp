@@ -4,6 +4,7 @@
 #include "backend/id_types.hpp"
 #include "backend/models/recipe.hpp"
 
+#include <cstddef>
 #include <httplib.h>
 
 #include <vector>
@@ -17,7 +18,7 @@ class RecipesApi : ApiBase {
 
   public:
     [[nodiscard]] models::recipe::RecipesList
-    getRecipeList(UserId userId, int size, int offset, const std::vector<StorageId>& storageIds) const;
+    getRecipeList(UserId userId, int size, size_t offset, const std::vector<StorageId>& storageIds) const;
     [[nodiscard]] models::recipe::RecipeDetails getIngredientsInRecipe(UserId userId, RecipeId recipeId) const;
     [[nodiscard]] models::recipe::RecipeSummary getRecipeName(UserId userId, RecipeId recipeId) const;
 
