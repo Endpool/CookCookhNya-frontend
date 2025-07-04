@@ -62,7 +62,9 @@ class ApiBase {
     template <typename JsonOut>
     JsonOut
     jsonPut(const std::string& path, const httplib::Headers& headers = {}, const httplib::Params& params = {}) const {
-        httplib::Result response = api.get().Put(path, headers, params);
+        // this stupid library forces to put params into the request's body as form-urlencoded
+        httplib::Result response =
+            api.get().Put(httplib::append_query_params(path, params), headers, httplib::Params{});
         assertSuccess(response);
         if constexpr (!std::is_void_v<JsonOut>)
             return value_to<JsonOut>(boost::json::parse(response->body));

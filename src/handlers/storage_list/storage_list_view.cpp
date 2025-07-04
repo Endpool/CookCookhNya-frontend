@@ -25,10 +25,6 @@ using namespace render::recipes_suggestion;
 void storageListButtonCallback(
     StorageList& /*unused*/, CallbackQueryRef cq, BotRef& bot, SMRef stateManager, ApiClientRef api) {
     bot.answerCallbackQuery(cq.id);
-    std::stringstream temp; // Convert string to int
-    temp << cq.data;
-    int id = 0;
-    temp >> id;
     auto userId = cq.from->id;
     auto chatId = cq.message->chat->id;
     auto storages = api.getStoragesApi().getStoragesList(userId);
@@ -37,7 +33,6 @@ void storageListButtonCallback(
         stateManager.put(StorageCreationEnterName{});
         return;
     }
-
     if (cq.data == "storage_list_deletion") {
         renderStorageDelete(chatId, bot, cq.from->id, api);
         stateManager.put(StorageDeletion{});
@@ -59,6 +54,12 @@ void storageListButtonCallback(
         stateManager.put(ShoppingListView{});
         return;
     }
+    std::stringstream temp; // Convert string to int
+    temp << cq.data;
+    int id = 0;
+    temp >> id;
+    if (!temp)
+        return;
     renderStorageView(
         id, cq.from->id, chatId, bot, api); // If nor buttons were pressed then user pressed on their storages
     stateManager.put(StorageView{id});

@@ -1,15 +1,15 @@
-#include "handlers/shopping_list/shopping_list_creation.hpp"
+#include "shopping_list_creation.hpp"
 
 #include "backend/id_types.hpp"
 #include "handlers/common.hpp"
 #include "render/recipes_suggestion/recipe_view_render.hpp"
-#include "render/shopping_list/shopping_list_creation_render.hpp"
+#include "render/recipes_suggestion/shopping_list_creation_render.hpp"
 
 #include <sstream>
 #include <string>
-#include <vector>
 
 namespace cookcookhnya::handlers::shopping_list_creation {
+
 using namespace render::shopping_list_creation;
 using namespace render::recipe_view;
 
@@ -17,7 +17,6 @@ void handleProductListSubmission(
     ShoppingListCreation& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
     std::string data = cq.data;
     std::stringstream temp; // Convert string to int
-    const std::vector<api::IngredientId> ingredientIds;
     auto chatId = cq.message->chat->id;
     auto userId = cq.from->id;
 
