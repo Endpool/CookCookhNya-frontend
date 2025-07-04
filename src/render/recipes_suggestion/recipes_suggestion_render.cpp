@@ -17,17 +17,19 @@ constructMarkup(const std::vector<api::StorageId>& storageIds, int pageNo, UserI
 
     // CONSTANT AND SAME (STATIC) FOR EVERY USER (static const doesn't actually matter in this function was added
     // because of logic of that variable)
-    static const int numOfRecipesOnPage = 1;
+    static const int numOfRecipesOnPage = 5;
 
     auto recipesList = recipesApi.getRecipeList(userId,
                                                 numOfRecipesOnPage,
-                                                (pageNo - 1) * numOfRecipesOnPage,
+                                                (pageNo)*numOfRecipesOnPage,
                                                 storageIds); // Take storages of user from backend
 
     const int amountOfRecipes = recipesList.recipesFound;
-    const bool ifMaxPage = amountOfRecipes - (numOfRecipesOnPage * pageNo) <= 0;
+    const bool ifMaxPage = amountOfRecipes - (numOfRecipesOnPage * (pageNo + 1)) <=
+                           0; // + 1 because of the 0-indexing, as comparisson is between num of recipes gotten and that
+                              // will be actually shown
     // ONLY ONE CASE: WHEN First page has all recipes already
-    if (pageNo == 1) {
+    if (pageNo == 0) {
         if (ifMaxPage) {
             // if didn't worked then the amount of recipes is less then i want to display -> no need for next or prev
             // button
@@ -37,7 +39,7 @@ constructMarkup(const std::vector<api::StorageId>& storageIds, int pageNo, UserI
                 // Print on button in form "1. {Recipe}"
                 keyboard[i].push_back(detail::makeCallbackButton(
                     std::format("{}. {} [{}/{}]",
-                                1 + i + ((static_cast<std::size_t>(pageNo - 1)) * numOfRecipesOnPage),
+                                1 + i + ((static_cast<std::size_t>(pageNo)) * numOfRecipesOnPage),
                                 recipesList.recipesPage[i].name,
                                 recipesList.recipesPage[i].available,
                                 recipesList.recipesPage[i].total),              // + 1 because i stars from 0
@@ -62,14 +64,14 @@ constructMarkup(const std::vector<api::StorageId>& storageIds, int pageNo, UserI
             // Print on button in form "1. {Recipe}"
             keyboard[i].push_back(detail::makeCallbackButton(
                 std::format("{}. {} [{}/{}]",
-                            1 + i + ((static_cast<std::size_t>(pageNo - 1)) * numOfRecipesOnPage),
+                            1 + i + ((static_cast<std::size_t>(pageNo)) * numOfRecipesOnPage),
                             recipesList.recipesPage[i].name,
                             recipesList.recipesPage[i].available,
                             recipesList.recipesPage[i].total),              // + 1 because i stars from 0
                 std::format("recipe: {}", recipesList.recipesPage[i].id))); // RECIPE ID
         }
-        // If pageNo == 1 and it's not 1st page then show only next button
-        keyboard[recipesList.recipesPage.size()].push_back(detail::makeCallbackButton("⏮️", std::to_string(pageNo + 1)));
+        // If pageNo == 0 and it's not 1st page then show only next button
+        keyboard[recipesList.recipesPage.size()].push_back(detail::makeCallbackButton("⏭️", std::to_string(pageNo + 1)));
 
         /* Put the number of storages.
          * If more then one then return to storage list choose if one then go to the storage view.
@@ -86,13 +88,13 @@ constructMarkup(const std::vector<api::StorageId>& storageIds, int pageNo, UserI
     InlineKeyboard keyboard(2 + recipesList.recipesPage.size());
     for (std::size_t i = 0; i < recipesList.recipesPage.size(); i++) {
         // Print on button in form "1. {Recipe}"
-        keyboard[i].push_back(detail::makeCallbackButton(
-            std::format("{}. {} [{}/{}]",
-                        1 + i + ((static_cast<std::size_t>(pageNo - 1)) * numOfRecipesOnPage),
-                        recipesList.recipesPage[i].name,
-                        recipesList.recipesPage[i].available,
-                        recipesList.recipesPage[i].total),              // + 1 because i stars from 0
-            std::format("recipe: {}", recipesList.recipesPage[i].id))); // RECIPE ID
+        keyboard[i].push_back(
+            detail::makeCallbackButton(std::format("{}. {} [{}/{}]",
+                                                   1 + i + ((static_cast<std::size_t>(pageNo)) * numOfRecipesOnPage),
+                                                   recipesList.recipesPage[i].name,
+                                                   recipesList.recipesPage[i].available,
+                                                   recipesList.recipesPage[i].total), // + 1 because i stars from 0
+                                       std::format("recipe: {}", recipesList.recipesPage[i].id))); // RECIPE ID
     }
     if (!ifMaxPage) {
         // Show both possible ways

@@ -48,7 +48,10 @@ void changePageAndBack(
         temp >> recipeId;
 
         renderRecipeViewAfterAddingStorage(state.storageIds, recipeId, userId, chatId, bot, api);
-        stateManager.put(RecipeView{.storageIds = state.storageIds, .recipeId = recipeId});
+        stateManager.put(RecipeView{.storageIds = state.storageIds,
+                                    .recipeId = recipeId,
+                                    .fromStorage = state.fromStorage,
+                                    .pageNo = state.pageNo});
         return;
     }
 
@@ -57,7 +60,7 @@ void changePageAndBack(
     int pageNo = 0;
     temp << data;
     temp >> pageNo;
-
+    state.pageNo = pageNo;
     // Message is 100% exists as it was rendered by some another method
     editRecipesSuggestion(state.storageIds, pageNo, userId, chatId, bot, api);
 }

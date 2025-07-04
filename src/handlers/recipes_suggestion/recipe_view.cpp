@@ -28,16 +28,16 @@ void handleRecipeView(RecipeView& state, CallbackQueryRef cq, BotRef bot, SMRef 
         auto ingredientsInList = renderShoppingListCreation(state.storageIds, state.recipeId, userId, chatId, bot, api);
         stateManager.put(ShoppingListCreation{.storageIdsFrom = state.storageIds,
                                               .recipeIdFrom = state.recipeId,
-                                              .ingredientIdsInList = ingredientsInList});
+                                              .ingredientIdsInList = ingredientsInList,
+                                              .fromStorage = state.fromStorage,
+                                              .pageNo = state.pageNo});
         bot.answerCallbackQuery(cq.id);
         return;
     }
     if (data == "backFromRecipeView") {
-        editRecipesSuggestion(state.storageIds, 1, userId, chatId, bot, api);
+        editRecipesSuggestion(state.storageIds, 0, userId, chatId, bot, api);
         stateManager.put(
-            SuggestedRecipeList{.pageNo = 1,
-                                .storageIds = state.storageIds,
-                                .fromStorage = state.storageIds.empty()}); // I don't know if it came from storage or no
+            SuggestedRecipeList{.pageNo = 0, .storageIds = state.storageIds, .fromStorage = state.fromStorage});
         bot.answerCallbackQuery(cq.id);
         return;
     }
