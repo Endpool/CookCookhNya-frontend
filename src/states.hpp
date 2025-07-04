@@ -50,12 +50,16 @@ struct SuggestedRecipeList {
 struct RecipeView {
     std::vector<api::StorageId> storageIds;
     api::RecipeId recipeId;
+    bool fromStorage;
+    std::size_t pageNo;
 };
 
 struct ShoppingListCreation {
     std::vector<api::StorageId> storageIdsFrom;
     api::RecipeId recipeIdFrom;
     std::vector<api::IngredientId> ingredientIdsInList;
+    bool fromStorage;
+    std::size_t pageNo;
 };
 
 struct ShoppingListView {};

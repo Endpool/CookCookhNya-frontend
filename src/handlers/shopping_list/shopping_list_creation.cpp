@@ -23,7 +23,10 @@ void handleProductListSubmission(
 
     if (data == "BackFromShoppingList") {
         renderRecipeViewAfterAddingStorage(state.storageIdsFrom, state.recipeIdFrom, userId, chatId, bot, api);
-        stateManager.put(RecipeView{.storageIds = state.storageIdsFrom, .recipeId = state.recipeIdFrom});
+        stateManager.put(RecipeView{.storageIds = state.storageIdsFrom,
+                                    .recipeId = state.recipeIdFrom,
+                                    .fromStorage = state.fromStorage,
+                                    .pageNo = state.pageNo});
         bot.answerCallbackQuery(cq.id);
         return;
     }
@@ -34,7 +37,10 @@ void handleProductListSubmission(
 
         // Return to previous state
         renderRecipeViewAfterAddingStorage(state.storageIdsFrom, state.recipeIdFrom, userId, chatId, bot, api);
-        stateManager.put(RecipeView{.storageIds = state.storageIdsFrom, .recipeId = state.recipeIdFrom});
+        stateManager.put(RecipeView{.storageIds = state.storageIdsFrom,
+                                    .recipeId = state.recipeIdFrom,
+                                    .fromStorage = state.fromStorage,
+                                    .pageNo = state.pageNo});
         bot.answerCallbackQuery(cq.id);
         return;
     }
