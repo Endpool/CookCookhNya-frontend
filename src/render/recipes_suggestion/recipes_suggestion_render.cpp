@@ -17,7 +17,7 @@ constructMarkup(const std::vector<api::StorageId>& storageIds, int pageNo, UserI
 
     // CONSTANT AND SAME (STATIC) FOR EVERY USER (static const doesn't actually matter in this function was added
     // because of logic of that variable)
-    static const int numOfRecipesOnPage = 10;
+    static const int numOfRecipesOnPage = 1;
 
     auto recipesList = recipesApi.getRecipeList(userId,
                                                 numOfRecipesOnPage,
@@ -69,7 +69,7 @@ constructMarkup(const std::vector<api::StorageId>& storageIds, int pageNo, UserI
                 std::format("recipe: {}", recipesList.recipesPage[i].id))); // RECIPE ID
         }
         // If pageNo == 1 and it's not 1st page then show only next button
-        keyboard[recipesList.recipesPage.size()].push_back(detail::makeCallbackButton("⭠", std::to_string(pageNo + 1)));
+        keyboard[recipesList.recipesPage.size()].push_back(detail::makeCallbackButton("⏮️", std::to_string(pageNo + 1)));
 
         /* Put the number of storages.
          * If more then one then return to storage list choose if one then go to the storage view.
@@ -124,17 +124,19 @@ void editRecipesSuggestion(const std::vector<api::StorageId>& storageIds,
                            ChatId chatId,
                            BotRef bot,
                            RecipesApiRef recipesApi) {
-    std::string pageInfo = utils::utf8str(u8"🔢 Номер страницы: ") + std::to_string(pageNo) +
-                           utils::utf8str(u8"\n🔪 Рецепты подобранные специально для вас");
+    const std::string pageInfo = utils::utf8str(u8"🔢 Номер страницы: ") + std::to_string(pageNo) +
+                                 utils::utf8str(u8"\n🔪 Рецепты подобранные специально для вас");
 
     auto messageId = message::getMessageId(userId);
-    bot.editMessageText(pageInfo,
-                        chatId,
-                        *messageId,
-                        "",
-                        "",
-                        nullptr,
-                        detail::makeKeyboardMarkup(constructMarkup(storageIds, pageNo, userId, recipesApi)));
+    if (messageId) {
+        bot.editMessageText(pageInfo,
+                            chatId,
+                            *messageId,
+                            "",
+                            "",
+                            nullptr,
+                            detail::makeKeyboardMarkup(constructMarkup(storageIds, pageNo, userId, recipesApi)));
+    }
 }
 
 } // namespace cookcookhnya::render::recipes_suggestion

@@ -15,11 +15,18 @@ Ingredient tag_invoke(json::value_to_tag<Ingredient> /*tag*/, const json::value&
     };
 }
 
-IngredientSearchResult tag_invoke(json::value_to_tag<IngredientSearchResult> /*tag*/, const json::value& j) {
+IngredientSearchItem tag_invoke(json::value_to_tag<IngredientSearchItem> /*tag*/, const json::value& j) {
     return {
-        .id = value_to<decltype(IngredientSearchResult::id)>(j.at("id")),
-        .name = value_to<decltype(IngredientSearchResult::name)>(j.at("name")),
-        .available = value_to<decltype(IngredientSearchResult::available)>(j.at("available")),
+        .id = value_to<decltype(IngredientSearchItem::id)>(j.at("id")),
+        .name = value_to<decltype(IngredientSearchItem::name)>(j.at("name")),
+        .available = value_to<decltype(IngredientSearchItem::available)>(j.at("available")),
+    };
+}
+
+IngredientSearchResponse tag_invoke(json::value_to_tag<IngredientSearchResponse> /*tag*/, const json::value& j) {
+    return {
+        .page = value_to<decltype(IngredientSearchResponse::page)>(j.at("results")),
+        .found = value_to<decltype(IngredientSearchResponse::found)>(j.at("found")),
     };
 }
 

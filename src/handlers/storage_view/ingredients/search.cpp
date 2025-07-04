@@ -1,65 +1,66 @@
 #include "search.hpp"
 
-#include "backend/id_types.hpp"
 #include "backend/models/ingredient.hpp"
-#include "handlers/common.hpp"
-#include "render/storage_view/ingredients/list.hpp"
-#include "render/storage_view/ingredients/search.hpp"
+#include "message_tracker.hpp"
+#include "render/common.hpp"
+#include "search_bot_patch.hpp"
 #include "utils.hpp"
 
-#include <algorithm>
-#include <functional>
+#include <tgbot/types/InlineKeyboardButton.h>
 
-namespace cookcookhnya::handlers::storage::ingredients {
+#include <cstddef>
+#include <memory>
+#include <ranges>
+#include <string>
+#include <utility>
+#include <vector>
+
+namespace cookcookhnya::render::storage::ingredients {
 
 using namespace api::models::ingredient;
-using namespace render::storage::ingredients;
+using namespace tg_types;
 
-void storageIngredientsSearchButtonCallback(
-    StorageIngredientsSearch& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, IngredientsApiRef api) {
+namespace {
 
-    bot.answerCallbackQuery(cq.id);
-    const auto user = cq.from->id;
-    const auto chat = cq.message->chat->id;
-    if (cq.data == "back") {
-        renderIngredientsList(state.storageId, user, chat, cq.message->messageId, bot, api);
-        stateManager.put(StorageIngredientsList{state.storageId});
-        return;
-    }
+auto makeKeyboard(const std::vector<IngredientSearchItem>& ingredients,
+                  std::size_t /*pageNo*/,
+                  std::size_t /*totalPages*/) {
+    using namespace std::views;
+    InlineKeyboard keyboard{2 + ingredients.size()};
 
-    auto mIngredient = utils::parseSafe<api::IngredientId>(cq.data);
-    if (!mIngredient)
-        return;
-    auto it = std::ranges::find(state.shownIngredients, *mIngredient, &IngredientSearchResult::id);
-    if (it == state.shownIngredients.end())
-        return;
-    if (it->available)
-        api.deleteFromStorage(user, state.storageId, *mIngredient);
-    else
-        api.putToStorage(user, state.storageId, *mIngredient);
-    it->available = !it->available;
+    auto searchButton = std::make_shared<TgBot::InlineKeyboardButton>();
+    searchButton->text = utils::utf8str(u8"Поиск");
+    searchButton->switchInlineQueryCurrentChat = "";
+    keyboard[0].push_back(std::move(searchButton));
 
-    renderStorageIngredientsSearchEdit(state.shownIngredients, state.messageId, user, bot);
+    for (auto [row, ing] : zip(drop(keyboard, 1), ingredients))
+        row.push_back(detail::makeCallbackButton((ing.available ? "[+] " : "[-] ") + ing.name, std::to_string(ing.id)));
+
+    keyboard[1 + ingredients.size()].push_back(detail::makeCallbackButton(u8"Назад", "back"));
+
+    return detail::makeKeyboardMarkup(std::move(keyboard));
 }
 
-void storageIngredientsSearchInlineQueryCallback(StorageIngredientsSearch& state,
-                                                 InlineQueryRef iq,
-                                                 BotRef bot,
-                                                 IngredientsApiRef api) {
-    if (!iq.query.empty()) {
-        const auto user = iq.from->id;
-        auto newIngredients = api.search(user, iq.query, state.storageId);
-        if (!std::ranges::equal(newIngredients,
-                                state.shownIngredients,
-                                std::equal_to<>{},
-                                &IngredientSearchResult::id,
-                                &IngredientSearchResult::id)) {
-            state.shownIngredients = newIngredients;
-            renderStorageIngredientsSearchEdit(state.shownIngredients, state.messageId, user, bot);
-        }
+} // namespace
+
+void renderStorageIngredientsSearch(ChatId chatId, UserId userId, BotRef bot) {
+    const PatchedBot patchedBot{bot};
+    if (auto mMessageId = message::getMessageId(userId)) {
+        patchedBot.editMessageText(utils::utf8str(u8"Используй кнопку ниже как поисковик чтобы найти ингредиент"),
+                                   chatId,
+                                   *mMessageId,
+                                   makeKeyboard({}, 0, 0));
     }
-    // Cache is not disabled on Windows and Linux desktops. Works on Android and Web
-    bot.answerInlineQuery(iq.id, {}, 0);
 }
 
-} // namespace cookcookhnya::handlers::storage::ingredients
+void renderStorageIngredientsSearchEdit(const std::vector<IngredientSearchItem>& ingredients,
+                                        std::size_t pageNo,
+                                        std::size_t totalPages,
+                                        MessageId message,
+                                        ChatId chatId,
+                                        BotRef bot) {
+    const PatchedBot patchedBot{bot};
+    patchedBot.editMessageReplyMarkup(chatId, message, makeKeyboard(ingredients, pageNo, totalPages));
+}
+
+} // namespace cookcookhnya::render::storage::ingredients

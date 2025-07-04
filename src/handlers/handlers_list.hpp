@@ -5,8 +5,8 @@
 #include "recipes_suggestion/recipe_view.hpp"
 #include "recipes_suggestion/recipes_suggestion_list.hpp"
 #include "recipes_suggestion/storages_select.hpp"
-#include "shopping_list/shopping_list_creation.hpp"
 #include "shopping_list/list.hpp"
+#include "shopping_list/shopping_list_creation.hpp"
 #include "storage_list/storage_list_create.hpp"
 #include "storage_list/storage_list_delete.hpp"
 #include "storage_list/storage_list_view.hpp"
@@ -85,7 +85,6 @@ using storageIngredientsSearchHandler = Handler<Events::InlineQuery{}, storageIn
 
 // RecipeView
 using recipeViewHandler = Handler<Events::CallbackQuery{}, handleRecipeView>;
-
 
 // ShoppingListCreation
 using shoppingListCreationHandler = Handler<Events::CallbackQuery{}, handleProductListSubmission>;

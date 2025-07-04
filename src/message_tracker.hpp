@@ -2,12 +2,12 @@
 
 #include "tg_types.hpp"
 
+#include <optional>
+
 namespace cookcookhnya::message {
-using UserId = cookcookhnya::tg_types::UserId;
-using MessageId = cookcookhnya::tg_types::MessageId;
 
-std::optional<MessageId> getMessageId(UserId userId);
+std::optional<tg_types::MessageId> getMessageId(tg_types::UserId userId);
 
-void addMessageId(UserId userId, MessageId messageId);
+void addMessageId(tg_types::UserId userId, tg_types::MessageId messageId);
 
 } // namespace cookcookhnya::message

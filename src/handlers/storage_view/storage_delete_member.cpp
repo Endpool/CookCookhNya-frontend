@@ -4,8 +4,6 @@
 #include "render/common.hpp"
 #include "render/storage_view/storage_members_render.hpp"
 #include "utils.hpp"
-#include <tgbot/types/MessageOriginHiddenUser.h>
-#include <tgbot/types/MessageOriginUser.h>
 
 namespace cookcookhnya::handlers::storage_delete_member {
 
@@ -21,7 +19,9 @@ void deleteMember(
 
     if (cq.data.starts_with("mem_")) {
         auto memberId = utils::parseSafe<UserId>(cq.data.substr(4));
-        storageApi.deleteMember(userId, state.storageId, *memberId);
+        if (memberId) {
+            storageApi.deleteMember(userId, state.storageId, *memberId);
+        }
     }
     renderMemberList(true, state.storageId, userId, chatId, bot, storageApi);
     stateManager.put(StorageMemberView{state.storageId});

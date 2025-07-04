@@ -36,18 +36,20 @@ void selectStorages(StorageSelection& state, CallbackQueryRef cq, BotRef bot, SM
     }
 
     auto storageId = utils::parseSafe<api::StorageId>(cq.data.substr(4));
-    if (cq.data.starts_with("in")) {
-        auto it = std::ranges::find(selectedStorages, *storageId);
-        selectedStorages.erase(it);
-        editStorageSelect(selectedStorages, userId, chatId, bot, api);
-        stateManager.put(StorageSelection{.storageIds = selectedStorages});
-        return;
-    }
-    if (cq.data.starts_with("out")) {
-        selectedStorages.push_back(*storageId);
-        editStorageSelect(selectedStorages, userId, chatId, bot, api);
-        stateManager.put(StorageSelection{.storageIds = selectedStorages});
-        return;
+    if (storageId) {
+        if (cq.data.starts_with("in")) {
+            auto it = std::ranges::find(selectedStorages, *storageId);
+            selectedStorages.erase(it);
+            editStorageSelect(selectedStorages, userId, chatId, bot, api);
+            stateManager.put(StorageSelection{.storageIds = selectedStorages});
+            return;
+        }
+        if (cq.data.starts_with("out")) {
+            selectedStorages.push_back(*storageId);
+            editStorageSelect(selectedStorages, userId, chatId, bot, api);
+            stateManager.put(StorageSelection{.storageIds = selectedStorages});
+            return;
+        }
     }
 }
 } // namespace cookcookhnya::handlers::storages_select

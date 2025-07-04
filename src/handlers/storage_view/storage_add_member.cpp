@@ -1,6 +1,7 @@
 #include "storage_add_member.hpp"
 
 #include "handlers/common.hpp"
+#include "message_tracker.hpp"
 #include "render/storage_view/storage_members_render.hpp"
 #include "utils.hpp"
 #include <memory>
@@ -18,23 +19,31 @@ void addMember(MemberAddition& state, MessageRef m, BotRef bot, SMRef stateManag
     auto userId = m.from->id;
 
     auto originUser = std::dynamic_pointer_cast<TgBot::MessageOriginUser>(m.forwardOrigin);
-    if (originUser == nullptr) {
-        auto text = utils::utf8str(u8"❌ Не удалось добавить: пользователь скрыл аккаунт");
-        bot.sendMessage(chatId, text);
-        renderMemberList(false, state.storageId, userId, chatId, bot, storageApi);
-        stateManager.put(StorageMemberView{state.storageId});
-    } else {
+    if (originUser != nullptr) {
         auto memberId = originUser->senderUser->id;
         try {
             storageApi.addMember(userId, state.storageId, memberId);
         } catch (std::runtime_error&) {
             auto text = utils::utf8str(u8"❌ Не удалось добавить: пользователь не зарегестрирован в CookCookhNya");
-            // TODO: smart start for new users
             bot.sendMessage(chatId, text);
         }
-        renderMemberList(false, state.storageId, userId, chatId, bot, storageApi);
-        stateManager.put(StorageMemberView{state.storageId});
+    } else {
+        if (std::dynamic_pointer_cast<TgBot::MessageOriginHiddenUser>(m.forwardOrigin) != nullptr) {
+            auto text = utils::utf8str(u8"❌ Не удалось добавить: пользователь скрыл аккаунт");
+            bot.sendMessage(chatId, text);
+        } else {
+            auto text = utils::utf8str(u8"❌ Не удалось добавить: убедитесь, что переслали сообщение пользователя");
+            bot.sendMessage(chatId, text);
+        }
     }
+    auto text = utils::utf8str(
+        u8"📩 Нажмите кнопку ниже или перешлите сообщение пользователя, чтобы добавить его в хранилище\n");
+    auto messageId = message::getMessageId(userId);
+    if (messageId) {
+        bot.editMessageText(text, chatId, *messageId);
+    }
+    renderMemberList(false, state.storageId, userId, chatId, bot, storageApi);
+    stateManager.put(StorageMemberView{state.storageId});
 };
 
 void cancelMemberAddition(

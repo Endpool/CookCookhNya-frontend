@@ -1,6 +1,5 @@
 #pragma once
 
-#include "render/common.hpp"
 #include "tg_types.hpp"
 
 #include <tgbot/Api.h>
@@ -79,8 +78,10 @@ class PatchedBot : TgBot::Api {
     explicit PatchedBot(const TgBot::Api& bot) : Api{bot} {}
 
     // A special copy of the `sendMessage` to avoid passing `"pay": false` to the request
-    [[nodiscard]] TgBot::Message::Ptr
-    sendMessage(ChatId chatId, std::string_view text, const TgBot::InlineKeyboardMarkup::Ptr& replyMarkup) const {
+    TgBot::Message::Ptr // NOLINT(*nodiscard)
+    sendMessage(tg_types::ChatId chatId,
+                std::string_view text,
+                const TgBot::InlineKeyboardMarkup::Ptr& replyMarkup) const {
         std::vector<TgBot::HttpReqArg> args;
         args.reserve(3);
         args.emplace_back("chat_id", chatId);
@@ -90,7 +91,23 @@ class PatchedBot : TgBot::Api {
         return _tgTypeParser.parseJsonAndGetMessage(sendRequest("sendMessage", args));
     }
 
-    TgBot::Message::Ptr editMessageReplyMarkup(ChatId chatId, // NOLINT(*nodiscard*)
+    TgBot::Message::Ptr // NOLINT(*nodiscard)
+    editMessageText(const std::string& text,
+                    tg_types::ChatId chatId,
+                    tg_types::MessageId messageId,
+                    const TgBot::InlineKeyboardMarkup::Ptr& replyMarkup) const {
+        std::vector<TgBot::HttpReqArg> args;
+        args.reserve(4);
+        args.emplace_back("chat_id", chatId);
+        args.emplace_back("message_id", messageId);
+        args.emplace_back("text", text);
+        if (replyMarkup) {
+            args.emplace_back("reply_markup", parseInlineKeyboardMarkup(replyMarkup));
+        }
+        return _tgTypeParser.parseJsonAndGetMessage(sendRequest("editMessageText", args));
+    }
+
+    TgBot::Message::Ptr editMessageReplyMarkup(tg_types::ChatId chatId, // NOLINT(*nodiscard*)
                                                tg_types::MessageId messageId,
                                                const TgBot::InlineKeyboardMarkup::Ptr& replyMarkup) const {
         std::vector<TgBot::HttpReqArg> args;

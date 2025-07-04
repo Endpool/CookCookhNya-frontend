@@ -4,6 +4,10 @@
 #include "render/common.hpp"
 #include "utils.hpp"
 
+#include <cstddef>
+#include <string>
+#include <utility>
+
 namespace cookcookhnya::render::delete_storage {
 
 void renderStorageDelete(ChatId chatId, BotRef bot, UserId userId, StorageApiRef storageApi) {
@@ -25,7 +29,9 @@ void renderStorageDelete(ChatId chatId, BotRef bot, UserId userId, StorageApiRef
     }
     auto text = utils::utf8str(u8"🚮 Выберите хранилище для удаления");
     auto messageId = message::getMessageId(userId);
-    bot.editMessageText(text, chatId, *messageId, "", "", nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
+    if (messageId) {
+        bot.editMessageText(text, chatId, *messageId, "", "", nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
+    }
 };
 
 } // namespace cookcookhnya::render::delete_storage

@@ -1,13 +1,14 @@
 #include "search.hpp"
-#include "search_bot_patch.hpp"
 
 #include "backend/models/ingredient.hpp"
+#include "message_tracker.hpp"
 #include "render/common.hpp"
-#include "tg_types.hpp"
+#include "search_bot_patch.hpp"
 #include "utils.hpp"
 
 #include <tgbot/types/InlineKeyboardButton.h>
 
+#include <cstddef>
 #include <memory>
 #include <ranges>
 #include <string>
@@ -21,7 +22,9 @@ using namespace tg_types;
 
 namespace {
 
-auto makeKeyboard(const std::vector<IngredientSearchResult>& ingredients) {
+auto makeKeyboard(const std::vector<IngredientSearchItem>& ingredients,
+                  std::size_t /*pageNo*/,
+                  std::size_t /*totalPages*/) {
     using namespace std::views;
     InlineKeyboard keyboard{2 + ingredients.size()};
 
@@ -40,20 +43,24 @@ auto makeKeyboard(const std::vector<IngredientSearchResult>& ingredients) {
 
 } // namespace
 
-MessageId renderStorageIngredientsSearchSend(ChatId chat, BotRef bot) {
+void renderStorageIngredientsSearch(ChatId chatId, UserId userId, BotRef bot) {
     const PatchedBot patchedBot{bot};
-    return patchedBot
-        .sendMessage(
-            chat, utils::utf8str(u8"Используй кнопку ниже как поисковик чтобы найти ингредиент"), makeKeyboard({}))
-        ->messageId;
+    if (auto mMessageId = message::getMessageId(userId)) {
+        patchedBot.editMessageText(utils::utf8str(u8"Используй кнопку ниже как поисковик чтобы найти ингредиент"),
+                                   chatId,
+                                   *mMessageId,
+                                   makeKeyboard({}, 0, 0));
+    }
 }
 
-void renderStorageIngredientsSearchEdit(const std::vector<IngredientSearchResult>& ingredients,
+void renderStorageIngredientsSearchEdit(const std::vector<IngredientSearchItem>& ingredients,
+                                        std::size_t pageNo,
+                                        std::size_t totalPages,
                                         MessageId message,
-                                        ChatId chat,
+                                        ChatId chatId,
                                         BotRef bot) {
     const PatchedBot patchedBot{bot};
-    patchedBot.editMessageReplyMarkup(chat, message, makeKeyboard(ingredients));
+    patchedBot.editMessageReplyMarkup(chatId, message, makeKeyboard(ingredients, pageNo, totalPages));
 }
 
 } // namespace cookcookhnya::render::storage::ingredients

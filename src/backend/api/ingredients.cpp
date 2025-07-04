@@ -3,10 +3,9 @@
 #include "backend/id_types.hpp"
 #include "backend/models/ingredient.hpp"
 
+#include <cstddef>
 #include <format>
-#include <ranges>
 #include <string>
-#include <unordered_set>
 #include <utility>
 #include <vector>
 
@@ -34,18 +33,14 @@ Ingredient IngredientsApi::get(IngredientId id) const {
     return jsonGet<Ingredient>(std::format("/ingredients/{}", id));
 }
 
-std::vector<IngredientSearchResult> IngredientsApi::search(UserId user, std::string query, StorageId storage) const {
-    // return jsonGetAuthed<std::vector<IngredientSearchResult>>(
-    //     user, "/ingredients-for-storage", {{"query", std::move(query)}, {"storage", std::to_string(storage)}});
-    using namespace std::views;
-    using std::ranges::to;
-    if (!query.empty() && query[0] == '\0') // stub
-        query[0] = 'a';
-    auto sis = getStorageIngredients(user, storage) | transform(&Ingredient::id) | to<std::unordered_set>();
-    return getAllIngredients() | transform([&sis](Ingredient& i) {
-               return IngredientSearchResult{.id = i.id, .name = std::move(i.name), .available = sis.contains(i.id)};
-           }) |
-           take(query.size()) | to<std::vector>();
+IngredientSearchResponse IngredientsApi::search(
+    UserId userId, std::string query, StorageId storage, std::size_t count, std::size_t offset) const {
+    return jsonGetAuthed<IngredientSearchResponse>(userId,
+                                                   "/ingredients-for-storage",
+                                                   {{"query", std::move(query)},
+                                                    {"storage-id", std::to_string(storage)},
+                                                    {"size", std::to_string(count)},
+                                                    {"offset", std::to_string(offset)}});
 }
 
 } // namespace cookcookhnya::api
