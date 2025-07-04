@@ -1,19 +1,19 @@
 #pragma once
 
 #include "backend/id_types.hpp"
-#include "tg_types.hpp"
+#include "backend/models/ingredient.hpp"
 
-#include <cstddef>
 #include <tg_stater/state_storage/common.hpp>
 #include <tg_stater/state_storage/memory.hpp>
 
+#include <cstddef>
 #include <variant>
 #include <vector>
 
 namespace cookcookhnya::states {
-using namespace api;
 
 namespace detail {
+
 struct StorageIdMixin {
     api::StorageId storageId;
     StorageIdMixin(api::StorageId storageId) : storageId{storageId} {} // NOLINT(*-explicit-*)
@@ -23,27 +23,24 @@ struct StorageIdMixin {
 
 struct StorageList {};
 
-struct StorageCreation {};
-struct StorageDeletion : detail::StorageIdMixin {};
+struct StorageDeletion {};
 struct StorageCreationEnterName {};
-struct StorageWrongNameToDelete {};
-struct StorageDeletionEnterName {};
 struct StorageView : detail::StorageIdMixin {};
 
 struct StorageMemberView : detail::StorageIdMixin {};
-struct MembersAdditionDeletion : detail::StorageIdMixin {};
 struct PackMemberView : detail::StorageIdMixin {};
 struct MemberAddition : detail::StorageIdMixin {};
 struct MemberDeletion : detail::StorageIdMixin {};
 
 struct StorageIngredientsList : detail::StorageIdMixin {};
 struct StorageIngredientsSearch : detail::StorageIdMixin {
-    tg_types::MessageId message;
+    std::vector<api::models::ingredient::IngredientSearchItem> shownIngredients;
+    std::size_t totalFound;
+    std::size_t pageNo;
 };
 
 struct StorageSelection {
     std::vector<api::StorageId> storageIds;
-    tg_types::MessageId messageId;
 };
 struct SuggestedRecipeList {
     std::size_t pageNo;
@@ -55,15 +52,19 @@ struct RecipeView {
     api::RecipeId recipeId;
 };
 
+struct ShoppingListCreation {
+    std::vector<api::StorageId> storageIdsFrom;
+    api::RecipeId recipeIdFrom;
+    std::vector<api::IngredientId> ingredientIdsInList;
+};
+
+struct ShoppingListView {};
+
 using State = std::variant<StorageList,
-                           StorageCreation,
                            StorageDeletion,
                            StorageCreationEnterName,
-                           StorageWrongNameToDelete,
-                           StorageDeletionEnterName,
                            StorageView,
                            StorageMemberView,
-                           MembersAdditionDeletion,
                            PackMemberView,
                            MemberAddition,
                            MemberDeletion,
@@ -71,7 +72,9 @@ using State = std::variant<StorageList,
                            StorageIngredientsSearch,
                            StorageSelection,
                            SuggestedRecipeList,
-                           RecipeView>;
+                           RecipeView,
+                           ShoppingListCreation,
+                           ShoppingListView>;
 
 using StateManager = tg_stater::StateProxy<tg_stater::MemoryStateStorage<State>>;
 

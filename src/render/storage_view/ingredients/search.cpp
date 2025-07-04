@@ -1,9 +1,15 @@
 #include "search.hpp"
 
 #include "backend/models/ingredient.hpp"
+#include "message_tracker.hpp"
 #include "render/common.hpp"
-#include "tg_types.hpp"
+#include "search_bot_patch.hpp"
+#include "utils.hpp"
 
+#include <tgbot/types/InlineKeyboardButton.h>
+
+#include <cstddef>
+#include <memory>
 #include <ranges>
 #include <string>
 #include <utility>
@@ -16,35 +22,45 @@ using namespace tg_types;
 
 namespace {
 
-auto makeKeyboard(IngredientsApiRef api) {
+auto makeKeyboard(const std::vector<IngredientSearchItem>& ingredients,
+                  std::size_t /*pageNo*/,
+                  std::size_t /*totalPages*/) {
     using namespace std::views;
-    std::vector<Ingredient> ingredients = api.getAllIngredients();
-    InlineKeyboard keyboard{1 + ingredients.size()};
-    for (auto [row, i] : zip(keyboard, ingredients)) {
-        row.reserve(2);
-        row.push_back(detail::makeCallbackButton(utils::utf8str(u8"Добавить ") + i.name, '+' + std::to_string(i.id)));
-        row.push_back(
-            detail::makeCallbackButton(utils::utf8str(u8"Убрать ") + std::move(i.name), '-' + std::to_string(i.id)));
-    }
-    keyboard[ingredients.size()].push_back(detail::makeCallbackButton(utils::utf8str(u8"Назад "), "back"));
+    InlineKeyboard keyboard{2 + ingredients.size()};
+
+    auto searchButton = std::make_shared<TgBot::InlineKeyboardButton>();
+    searchButton->text = utils::utf8str(u8"Поиск");
+    searchButton->switchInlineQueryCurrentChat = "";
+    keyboard[0].push_back(std::move(searchButton));
+
+    for (auto [row, ing] : zip(drop(keyboard, 1), ingredients))
+        row.push_back(detail::makeCallbackButton((ing.available ? "[+] " : "[-] ") + ing.name, std::to_string(ing.id)));
+
+    keyboard[1 + ingredients.size()].push_back(detail::makeCallbackButton(u8"Назад", "back"));
+
     return detail::makeKeyboardMarkup(std::move(keyboard));
 }
 
 } // namespace
 
-MessageId renderStorageIngredientsSearchSend(ChatId chat, BotRef bot, IngredientsApiRef api) {
-    return bot
-        .sendMessage(chat,
-                     utils::utf8str(u8"Используй кнопку ниже как поисковик чтобы найти ингредиент"),
-                     nullptr,
-                     nullptr,
-                     makeKeyboard(api))
-        ->messageId;
+void renderStorageIngredientsSearch(ChatId chatId, UserId userId, BotRef bot) {
+    const PatchedBot patchedBot{bot};
+    if (auto mMessageId = message::getMessageId(userId)) {
+        patchedBot.editMessageText(utils::utf8str(u8"Используй кнопку ниже как поисковик чтобы найти ингредиент"),
+                                   chatId,
+                                   *mMessageId,
+                                   makeKeyboard({}, 0, 0));
+    }
 }
 
-// void renderStorageIngredientsSearchEdit(MessageId message, ChatId chat, BotRef bot, IngredientsApiRef api) {
-void renderStorageIngredientsSearchEdit(MessageId /**/, ChatId /**/, BotRef /**/, IngredientsApiRef /**/) {
-    // bot.editMessageReplyMarkup(chat, message, "", makeKeyboard(api));
+void renderStorageIngredientsSearchEdit(const std::vector<IngredientSearchItem>& ingredients,
+                                        std::size_t pageNo,
+                                        std::size_t totalPages,
+                                        MessageId message,
+                                        ChatId chatId,
+                                        BotRef bot) {
+    const PatchedBot patchedBot{bot};
+    patchedBot.editMessageReplyMarkup(chatId, message, makeKeyboard(ingredients, pageNo, totalPages));
 }
 
 } // namespace cookcookhnya::render::storage::ingredients

@@ -2,6 +2,7 @@
 
 #include "backend/api/ingredients.hpp"
 #include "backend/api/recipes.hpp"
+#include "backend/api/shopping_lists.hpp"
 #include "backend/api/storages.hpp"
 #include "backend/api/users.hpp"
 
@@ -18,13 +19,14 @@ class ApiClient {
     StoragesApi storages;
     IngredientsApi ingredients;
     RecipesApi recipes;
+    ShoppingListApi shoppingList;
 
   public:
     explicit ApiClient(const std::string& apiAddress)
-        : api{apiAddress}, users{api}, storages{api}, ingredients{api}, recipes{api} {}
+        : api{apiAddress}, users{api}, storages{api}, ingredients{api}, recipes{api}, shoppingList{api} {}
     ApiClient(const ApiClient&) = delete;
     ApiClient(ApiClient&& other) noexcept
-        : api{std::move(other.api)}, users{api}, storages{api}, ingredients{api}, recipes{api} {}
+        : api{std::move(other.api)}, users{api}, storages{api}, ingredients{api}, recipes{api}, shoppingList{api} {}
     ApiClient& operator=(const ApiClient&) = delete;
     ApiClient& operator=(ApiClient&& other) noexcept {
         if (&other == this)
@@ -34,11 +36,12 @@ class ApiClient {
         storages = StoragesApi{api};
         ingredients = IngredientsApi{api};
         recipes = RecipesApi{api};
+        shoppingList = ShoppingListApi{api};
         return *this;
     }
     ~ApiClient() = default;
 
-    [[nodiscard]] const UsersApi& getUsers() const {
+    [[nodiscard]] const UsersApi& getUsersApi() const {
         return users;
     }
 
@@ -46,7 +49,7 @@ class ApiClient {
         return users;
     }
 
-    [[nodiscard]] const StoragesApi& getStorages() const {
+    [[nodiscard]] const StoragesApi& getStoragesApi() const {
         return storages;
     }
 
@@ -54,7 +57,7 @@ class ApiClient {
         return storages;
     }
 
-    [[nodiscard]] const IngredientsApi& getIngredients() const {
+    [[nodiscard]] const IngredientsApi& getIngredientsApi() const {
         return ingredients;
     }
 
@@ -62,12 +65,20 @@ class ApiClient {
         return ingredients;
     }
 
-    [[nodiscard]] const RecipesApi& getRecipes() const {
+    [[nodiscard]] const RecipesApi& getRecipesApi() const {
         return recipes;
     }
 
     operator const RecipesApi&() const { // NOLINT(*-explicit-*)
         return recipes;
+    }
+
+    [[nodiscard]] const ShoppingListApi& getShoppingListApi() const {
+        return shoppingList;
+    }
+
+    operator const ShoppingListApi&() const { // NOLINT(*-explicit-*)
+        return shoppingList;
     }
 };
 

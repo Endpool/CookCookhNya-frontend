@@ -1,18 +1,22 @@
 #pragma once
 
+#include "backend/id_types.hpp"
 #include "render/common.hpp"
-#include "tg_types.hpp"
+
+#include <vector>
 
 namespace cookcookhnya::render::select_storages {
 
-tg_types::MessageId renderStoragesSelect(
-    std::vector<StorageId> selected_storages, UserId userId, ChatId chatId, BotRef bot, StorageApiRef storageApi);
-
-void updateStorageSelect(std::vector<StorageId> selected_storages,
-                         tg_types::MessageId messageId,
+void renderStorageSelect(const std::vector<api::StorageId>& selected_storages,
                          UserId userId,
                          ChatId chatId,
                          BotRef bot,
                          StorageApiRef storageApi);
+
+void editStorageSelect(const std::vector<api::StorageId>& selected_storages,
+                       UserId userId,
+                       ChatId chatId,
+                       BotRef bot,
+                       StorageApiRef storageApi);
 
 } // namespace cookcookhnya::render::select_storages

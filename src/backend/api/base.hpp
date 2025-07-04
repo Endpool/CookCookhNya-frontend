@@ -29,7 +29,6 @@ class ApiBase {
     template <typename JsonOut>
     [[nodiscard]] JsonOut
     jsonGet(const std::string& path, const httplib::Headers& headers = {}, const httplib::Params& params = {}) const {
-
         httplib::Result response = api.get().Get(path, params, headers);
         assertSuccess(response);
         if constexpr (!std::is_void_v<JsonOut>)
@@ -61,16 +60,19 @@ class ApiBase {
 
     // PUT
     template <typename JsonOut>
-    JsonOut jsonPut(const std::string& path, const httplib::Headers& headers = {}) const {
-        httplib::Result response = api.get().Put(path, headers, httplib::Params{});
+    JsonOut
+    jsonPut(const std::string& path, const httplib::Headers& headers = {}, const httplib::Params& params = {}) const {
+        httplib::Result response = api.get().Put(path, headers, params);
         assertSuccess(response);
         if constexpr (!std::is_void_v<JsonOut>)
             return value_to<JsonOut>(boost::json::parse(response->body));
     }
 
     template <typename JsonOut>
-    JsonOut jsonPutAuthed(UserId userId, const std::string& path) const {
-        return jsonPut<JsonOut>(path, {{"Authorization", "Bearer " + std::to_string(userId)}});
+    JsonOut jsonPutAuthed(UserId userId,
+                          const std::string& path,
+                          const httplib::Params& params = {}) const { // Now it's possible to pass arguments in Put
+        return jsonPut<JsonOut>(path, {{"Authorization", "Bearer " + std::to_string(userId)}}, params);
     }
 
     template <typename JsonOut, typename JsonIn>

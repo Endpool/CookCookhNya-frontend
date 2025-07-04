@@ -16,11 +16,11 @@ class RecipesApi : ApiBase {
     explicit RecipesApi(httplib::Client& api) : ApiBase{api} {}
 
   public:
-    [[nodiscard]] models::recipe::RecipesSummary
-    getRecipeList(UserId userId, int size, int offset, std::vector<StorageId> const& storageIds) const;
-    [[nodiscard]] models::recipe::IngredientsInRecipe
-    getIngredientsInRecipe(UserId userId, RecipeId recipeId, std::vector<StorageId> const& storageIds) const;
+    [[nodiscard]] models::recipe::RecipesList
+    getRecipeList(UserId userId, int size, int offset, const std::vector<StorageId>& storageIds) const;
+    [[nodiscard]] models::recipe::RecipeDetails getIngredientsInRecipe(UserId userId, RecipeId recipeId) const;
     [[nodiscard]] models::recipe::RecipeSummary getRecipeName(UserId userId, RecipeId recipeId) const;
+
     // Functions below is for future
     /*RecipeId create(UserId userId, // NOLINT(*-nodiscard)
                      const models::recipe::RecipeCreateBody& body) const;

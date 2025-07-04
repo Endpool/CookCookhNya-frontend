@@ -16,19 +16,22 @@ int main() {
     Setup<State, Dependencies<ApiClient>>::Stater<noStateHandler,
                                                   startHandler,
                                                   storageCreateButtonHandler,
-                                                  storgeDeleteHandler,
                                                   storageDeleteButtonHandler,
                                                   storageListButtonHandler,
                                                   storageCreateHandler,
                                                   storageViewButtonHandler,
                                                   storageMemberViewButtonHandler,
-                                                  memberAdditionDeletionMessageHandler,
-                                                  cancelAddDeleteMemberHandler,
+                                                  memberAdditionMessageHandler,
+                                                  cancelMemberAdditionButtonHandler,
+                                                  memberDeletionButtonHandler,
                                                   storagesSelectionHandler,
                                                   recipesSuggestionListHandler,
                                                   storageIngredientsListButtonHandler,
                                                   storageIngredientsSearchButtonHandler,
-                                                  recipeViewHandler>
+                                                  storageIngredientsSearchHandler,
+                                                  recipeViewHandler,
+                                                  shoppingListCreationHandler,
+                                                  shoppingListButtonHandler>
         bot{{}, {ApiClient{utils::getenvWithError("API_URL")}}};
 
     bot.start(TgBot::Bot{utils::getenvWithError("BOT_TOKEN")});

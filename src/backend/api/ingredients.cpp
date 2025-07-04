@@ -1,8 +1,12 @@
 #include "backend/api/ingredients.hpp"
 
+#include "backend/id_types.hpp"
 #include "backend/models/ingredient.hpp"
 
+#include <cstddef>
 #include <format>
+#include <string>
+#include <utility>
 #include <vector>
 
 namespace cookcookhnya::api {
@@ -27,6 +31,16 @@ std::vector<Ingredient> IngredientsApi::getAllIngredients() const {
 
 Ingredient IngredientsApi::get(IngredientId id) const {
     return jsonGet<Ingredient>(std::format("/ingredients/{}", id));
+}
+
+IngredientSearchResponse IngredientsApi::search(
+    UserId userId, std::string query, StorageId storage, std::size_t count, std::size_t offset) const {
+    return jsonGetAuthed<IngredientSearchResponse>(userId,
+                                                   "/ingredients-for-storage",
+                                                   {{"query", std::move(query)},
+                                                    {"storage-id", std::to_string(storage)},
+                                                    {"size", std::to_string(count)},
+                                                    {"offset", std::to_string(offset)}});
 }
 
 } // namespace cookcookhnya::api
