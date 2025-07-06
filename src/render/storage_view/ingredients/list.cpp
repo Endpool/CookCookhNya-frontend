@@ -26,7 +26,7 @@ void renderIngredientsList(api::StorageId storage, UserId userId, ChatId chatId,
 
     InlineKeyboard keyboard{2};
     keyboard[0].push_back(detail::makeCallbackButton(u8"Добавить/Удалить", "search"));
-    keyboard[1].push_back(detail::makeCallbackButton(u8"Назад", "back"));
+    keyboard[1].push_back(detail::makeCallbackButton(u8"↩️ Назад", "back"));
 
     auto text = utils::utf8str(u8"🍗 Ваши ингредиенты:\n\n") + std::move(list);
     auto messageId = message::getMessageId(userId);

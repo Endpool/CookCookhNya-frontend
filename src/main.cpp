@@ -15,6 +15,7 @@ int main() {
 
     Setup<State, Dependencies<ApiClient>>::Stater<noStateHandler,
                                                   startHandler,
+                                                  mainMenuButtonHandler,
                                                   storageCreateButtonHandler,
                                                   storageDeleteButtonHandler,
                                                   storageListButtonHandler,

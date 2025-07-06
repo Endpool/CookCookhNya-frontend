@@ -122,22 +122,22 @@ void renderRecipeViewAfterAddingStorage(const std::vector<api::StorageId>& stora
             : 2; // if there is no lacking ingredients then there is no need to show field of shopping list
     InlineKeyboard keyboard(buttonRows);
 
-    keyboard[0].push_back(
-        detail::makeCallbackButton(utils::utf8str(u8"Готовить"), "startCooking")); // Add needed info for next states!
+    keyboard[0].push_back(detail::makeCallbackButton(u8"🧑‍🍳 Готовить",
+                                                     "startCooking")); // Add needed info for next states!
     if (isSuggestionMade) {
         std::string dataForSuggestion = "?";
         for (auto id : suggestedStorageIds) {
             dataForSuggestion += std::format("{} ", id);
         }
-        keyboard[0].push_back(detail::makeCallbackButton(utils::utf8str(u8"?"), dataForSuggestion));
+        keyboard[0].push_back(detail::makeCallbackButton(u8"?", dataForSuggestion));
     }
 
     if (isAtLeastOneIngredientLack) {
-        keyboard[1].push_back(detail::makeCallbackButton(utils::utf8str(u8"Составить список продуктов"),
+        keyboard[1].push_back(detail::makeCallbackButton(u8"📝 Составить список продуктов",
                                                          "makeProductList")); // Add needed info for next states!
     }
 
-    keyboard[buttonRows - 1].push_back(detail::makeCallbackButton(u8"Назад", "backFromRecipeView"));
+    keyboard[buttonRows - 1].push_back(detail::makeCallbackButton(u8"↩️ Назад", "backFromRecipeView"));
     auto messageId = message::getMessageId(userId);
     if (messageId) {
         bot.editMessageText(
@@ -246,7 +246,7 @@ void renderStorageSuggestion(const std::vector<api::StorageId>& storageIdsToAcco
         i++;
     }
     keyboard[std::floor((storageIdsToShow.size() + 1) / 2)].push_back(
-        detail::makeCallbackButton(utils::utf8str(u8"Назад"), "BackFromAddingStorages"));
+        detail::makeCallbackButton(u8"↩️ Назад", "BackFromAddingStorages"));
     auto messageId = message::getMessageId(userId);
     if (messageId) {
         bot.editMessageText(

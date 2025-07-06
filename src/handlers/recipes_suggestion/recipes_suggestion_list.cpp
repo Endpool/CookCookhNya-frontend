@@ -7,8 +7,8 @@
 #include "render/recipes_suggestion/select_storages_render.hpp"
 #include "render/storage_view/storage_view_render.hpp"
 #include "states.hpp"
+#include "utils.hpp"
 
-#include <sstream>
 #include <string>
 #include <utility>
 
@@ -26,7 +26,6 @@ void changePageAndBack(
     auto userId = cq.from->id;
 
     auto data = cq.data;
-    std::stringstream temp; // To convert string to int
 
     if (data[0] == 'b') { // Here is quite naive implementation: if first char is b then it's "backFromSuggestedRecipes"
         if (state.fromStorage) {
@@ -43,25 +42,26 @@ void changePageAndBack(
 
     if (data[0] == 'r') { // Same naive implementation: if first char is r then it's recipe
 
-        temp << data.substr(data.find(' ', 0) + 1, data.size()); // +1 is to move from space and get pure number
-        api::RecipeId recipeId = 0;
-        temp >> recipeId;
+        auto recipeId = utils::parseSafe<api::RecipeId>(
+            data.substr(data.find(' ', 0) + 1, data.size())); // +1 is to move from space and get pure number
+        if (recipeId) {
+            renderRecipeViewAfterAddingStorage(state.storageIds, *recipeId, userId, chatId, bot, api);
+            stateManager.put(RecipeView{.storageIds = state.storageIds,
+                                        .recipeId = *recipeId,
+                                        .fromStorage = state.fromStorage,
+                                        .pageNo = state.pageNo});
+        }
 
-        renderRecipeViewAfterAddingStorage(state.storageIds, recipeId, userId, chatId, bot, api);
-        stateManager.put(RecipeView{.storageIds = state.storageIds,
-                                    .recipeId = recipeId,
-                                    .fromStorage = state.fromStorage,
-                                    .pageNo = state.pageNo});
         return;
     }
 
     // If none of if's worked then the first char is number -> it's about next or prev page
 
-    int pageNo = 0;
-    temp << data;
-    temp >> pageNo;
-    state.pageNo = pageNo;
+    auto pageNo = utils::parseSafe<int>(data);
+    if (pageNo) {
+        state.pageNo = *pageNo;
+    }
     // Message is 100% exists as it was rendered by some another method
-    editRecipesSuggestion(state.storageIds, pageNo, userId, chatId, bot, api);
+    editRecipesSuggestion(state.storageIds, *pageNo, userId, chatId, bot, api);
 }
 } // namespace cookcookhnya::handlers::recipes_suggestion

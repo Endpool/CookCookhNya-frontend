@@ -19,12 +19,12 @@ void renderStorageDelete(ChatId chatId, BotRef bot, UserId userId, StorageApiRef
         }
     }
     InlineKeyboard keyboard(numStoragesOwner + 1);
-    keyboard[0].push_back(detail::makeCallbackButton(utils::utf8str(u8"🚫 Отмена"), "cancel_storage_deletion"));
+    keyboard[0].push_back(detail::makeCallbackButton(u8"🚫 Отмена", "cancel_storage_deletion"));
     size_t k = 1;
     for (auto& storage : storages) {
         if (userId == storage.ownerId) {
-            keyboard[k++].push_back(detail::makeCallbackButton(utils::utf8str(u8"🍱 ") + storage.name,
-                                                               "st__" + std::to_string(storage.id)));
+            keyboard[k++].push_back(detail::makeCallbackButton(
+                std::format("{} {}", utils::utf8str(u8"🍱"), storage.name), "st__" + std::to_string(storage.id)));
         }
     }
     auto text = utils::utf8str(u8"🚮 Выберите хранилище для удаления");

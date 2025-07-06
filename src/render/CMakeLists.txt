@@ -1,4 +1,6 @@
 target_sources(main PRIVATE
+    src/render/main_menu/main_menu_render.cpp
+
     src/render/storage_list/create_storage_render.cpp
     src/render/storage_list/delete_storage_render.cpp
     src/render/storage_list/storage_list_render.cpp

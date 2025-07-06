@@ -36,7 +36,7 @@ auto makeKeyboard(const std::vector<IngredientSearchItem>& ingredients,
     for (auto [row, ing] : zip(drop(keyboard, 1), ingredients))
         row.push_back(detail::makeCallbackButton((ing.available ? "[+] " : "[-] ") + ing.name, std::to_string(ing.id)));
 
-    keyboard[1 + ingredients.size()].push_back(detail::makeCallbackButton(u8"Назад", "back"));
+    keyboard[1 + ingredients.size()].push_back(detail::makeCallbackButton(u8"↩️ Назад", "back"));
 
     return detail::makeKeyboardMarkup(std::move(keyboard));
 }
