@@ -6,8 +6,8 @@
 #include "utils.hpp"
 
 #include <algorithm>
-#include <boost/mpl/aux_/na_fwd.hpp>
 #include <cstddef>
+#include <format>
 #include <string>
 #include <utility>
 #include <vector>
