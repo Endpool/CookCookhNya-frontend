@@ -23,8 +23,16 @@ struct StorageIdMixin {
 
 struct MainMenu {};
 
-struct StorageList {};
+struct PersonalAccountMenu {};
 
+struct CustomIngredientsList {};
+struct CustomIngredientCreationEnterName {};
+struct CustomIngredientConfirmation {
+    std::string name;
+};
+struct CustomIngredientPublish {};
+
+struct StorageList {};
 struct StorageDeletion {};
 struct StorageCreationEnterName {};
 struct StorageView : detail::StorageIdMixin {};
@@ -67,6 +75,11 @@ struct ShoppingListCreation {
 struct ShoppingListView {};
 
 using State = std::variant<MainMenu,
+                           PersonalAccountMenu,
+                           CustomIngredientsList,
+                           CustomIngredientCreationEnterName,
+                           CustomIngredientConfirmation,
+                           CustomIngredientPublish,
                            StorageList,
                            StorageDeletion,
                            StorageCreationEnterName,

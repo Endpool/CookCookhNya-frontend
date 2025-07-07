@@ -13,6 +13,18 @@ namespace cookcookhnya::api {
 
 using namespace models::ingredient;
 
+std::vector<Ingredient> IngredientsApi::getCustomIngredients(UserId user) const {
+    return jsonGetAuthed<std::vector<Ingredient>>(user, "/my/ingredients/");
+}
+
+IngredientId IngredientsApi::createCustom(UserId user, const IngredientCreateBody& body) const {
+    return jsonPostWithJsonAuthed<IngredientId>(user, "/my/ingredients", body);
+}
+
+void IngredientsApi::publishCustom(UserId user, IngredientId id) const {
+    jsonPostAuthed<void>(user, std::format("/my/ingredients/{}/publish", id));
+}
+
 std::vector<Ingredient> IngredientsApi::getStorageIngredients(UserId user, StorageId storage) const {
     return jsonGetAuthed<std::vector<Ingredient>>(user, std::format("/my/storages/{}/ingredients", storage));
 }
@@ -25,8 +37,16 @@ void IngredientsApi::deleteFromStorage(UserId user, StorageId storage, Ingredien
     jsonDeleteAuthed<void>(user, std::format("/my/storages/{}/ingredients/{}", storage, id));
 }
 
-std::vector<Ingredient> IngredientsApi::getAllIngredients() const {
-    return jsonGet<std::vector<Ingredient>>("/ingredients");
+std::vector<Ingredient> IngredientsApi::getAllIngredients(std::string query,
+                                                          std::size_t size,
+                                                          std::size_t offset,
+                                                          std::size_t threshold) const {
+    return jsonGet<std::vector<Ingredient>>("/ingredients",
+                                            {},
+                                            {{"query", std::move(query)},
+                                             {"size", std::to_string(size)},
+                                             {"offset", std::to_string(offset)},
+                                             {"threshold", std::to_string(threshold)}});
 }
 
 Ingredient IngredientsApi::get(IngredientId id) const {

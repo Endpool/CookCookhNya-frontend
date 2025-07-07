@@ -18,6 +18,12 @@ struct Ingredient {
     friend Ingredient tag_invoke(boost::json::value_to_tag<Ingredient>, const boost::json::value& j);
 };
 
+struct IngredientCreateBody {
+    std::string name;
+
+    friend void tag_invoke(boost::json::value_from_tag, boost::json::value& j, const IngredientCreateBody& body);
+};
+
 struct IngredientSearchItem {
     IngredientId id;
     std::string name;

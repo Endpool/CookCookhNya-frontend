@@ -15,6 +15,10 @@ Ingredient tag_invoke(json::value_to_tag<Ingredient> /*tag*/, const json::value&
     };
 }
 
+void tag_invoke(json::value_from_tag /*tag*/, json::value& j, const IngredientCreateBody& body) {
+    j = {{"name", body.name}};
+}
+
 IngredientSearchItem tag_invoke(json::value_to_tag<IngredientSearchItem> /*tag*/, const json::value& j) {
     return {
         .id = value_to<decltype(IngredientSearchItem::id)>(j.at("id")),
