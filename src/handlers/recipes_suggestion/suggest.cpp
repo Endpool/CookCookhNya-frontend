@@ -64,4 +64,5 @@ void changePageAndBack(
     // Message is 100% exists as it was rendered by some another method
     editRecipesSuggestion(state.storageIds, *pageNo, userId, chatId, bot, api);
 }
+
 } // namespace cookcookhnya::handlers::recipes_suggestion
