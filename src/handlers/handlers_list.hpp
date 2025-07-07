@@ -1,22 +1,24 @@
 #pragma once
 
 // Handler callbacks
-#include "initial/initial_start.hpp"
-#include "main_menu/main_menu_view.hpp"
-#include "recipes_suggestion/recipe_view.hpp"
-#include "recipes_suggestion/recipes_suggestion_list.hpp"
-#include "recipes_suggestion/shopping_list_creation.hpp"
-#include "recipes_suggestion/storages_select.hpp"
-#include "shopping_list/list.hpp"
-#include "storage_list/storage_list_create.hpp"
-#include "storage_list/storage_list_delete.hpp"
-#include "storage_list/storage_list_view.hpp"
-#include "storage_view/ingredients/list.hpp"
+#include "initial/start.hpp"
+#include "main_menu/view.hpp"
+#include "recipes_suggestion/recipe/view.hpp"
+#include "recipes_suggestion/storage_selection/select.hpp"
+#include "recipes_suggestion/suggest.hpp"
+#include "shopping_list/create.hpp"
+#include "shopping_list/view.hpp"
+#include "storage_list/create.hpp"
+#include "storage_list/delete.hpp"
+#include "storage_list/view.hpp"
 #include "storage_view/ingredients/search.hpp"
-#include "storage_view/storage_add_member.hpp"
-#include "storage_view/storage_delete_member.hpp"
-#include "storage_view/storage_view.hpp"
-#include "storage_view/storage_view_members.hpp"
+
+#include "storage_view/ingredients/view.hpp"
+
+#include "storage_view/members/add.hpp"
+#include "storage_view/members/delete.hpp"
+#include "storage_view/members/view.hpp"
+#include "storage_view/view.hpp"
 
 #include "handlers/common.hpp"
 
@@ -39,7 +41,7 @@ using namespace storage::ingredients;
 using namespace storages_select;
 using namespace recipes_suggestion;
 using namespace recipe_view;
-using namespace shopping_list_creation;
+using namespace shopping_list_create;
 using namespace shopping_list;
 
 using namespace tg_stater;
