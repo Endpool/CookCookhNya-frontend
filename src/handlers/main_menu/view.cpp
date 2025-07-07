@@ -3,10 +3,10 @@
 #include "backend/api/storages.hpp"
 #include "backend/id_types.hpp"
 #include "handlers/common.hpp"
-#include "render/recipes_suggestion/recipes_suggestion_render.hpp"
-#include "render/recipes_suggestion/select_storages_render.hpp"
-#include "render/shopping_list/shopping_list_view_render.hpp"
-#include "render/storage_list/storage_list_render.hpp"
+#include "render/recipes_suggestion/storage_selection/select.hpp"
+#include "render/recipes_suggestion/suggest.hpp"
+#include "render/shopping_list/view.hpp"
+#include "render/storage_list/view.hpp"
 
 #include <vector>
 

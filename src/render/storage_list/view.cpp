@@ -1,4 +1,4 @@
-#include "storage_list_render.hpp"
+#include "view.hpp"
 
 #include "message_tracker.hpp"
 #include "render/common.hpp"

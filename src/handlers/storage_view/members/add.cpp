@@ -2,7 +2,7 @@
 
 #include "handlers/common.hpp"
 #include "message_tracker.hpp"
-#include "render/storage_view/storage_members_render.hpp"
+#include "render/storage_view/members/view.hpp"
 #include "utils.hpp"
 #include <memory>
 #include <stdexcept>

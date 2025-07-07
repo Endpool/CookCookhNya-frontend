@@ -12,10 +12,4 @@ void renderMemberList(bool toBeEdited,
                       BotRef bot,
                       StorageApiRef storageApi);
 
-void renderMemberAdditionPrompt(
-    const api::StorageId& storageId, UserId userId, ChatId chatId, BotRef bot, StorageApiRef storageApi);
-
-void renderMemberDeletionPrompt(
-    const api::StorageId& storageId, UserId userId, ChatId chatId, BotRef bot, StorageApiRef storageApi);
-
 } // namespace cookcookhnya::render::storage::member_list

@@ -1,10 +1,10 @@
 #include "view.hpp"
 
 #include "handlers/common.hpp"
-#include "render/recipes_suggestion/recipes_suggestion_render.hpp"
-#include "render/storage_list/storage_list_render.hpp"
-#include "render/storage_view/ingredients/list.hpp"
-#include "render/storage_view/storage_members_render.hpp"
+#include "render/recipes_suggestion/suggest.hpp"
+#include "render/storage_list/view.hpp"
+#include "render/storage_view/ingredients/view.hpp"
+#include "render/storage_view/members/view.hpp"
 #include "states.hpp"
 
 #include <vector>

@@ -1,4 +1,4 @@
-#include "delete_storage_render.hpp"
+#include "delete.hpp"
 
 #include "message_tracker.hpp"
 #include "render/common.hpp"

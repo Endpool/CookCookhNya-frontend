@@ -2,9 +2,9 @@
 
 #include "backend/id_types.hpp"
 #include "handlers/common.hpp"
-#include "render/main_menu/main_menu_render.hpp"
-#include "render/recipes_suggestion/recipes_suggestion_render.hpp"
-#include "render/recipes_suggestion/select_storages_render.hpp"
+#include "render/main_menu/view.hpp"
+#include "render/recipes_suggestion/storage_selection/select.hpp"
+#include "render/recipes_suggestion/suggest.hpp"
 #include "utils.hpp"
 
 #include <algorithm>

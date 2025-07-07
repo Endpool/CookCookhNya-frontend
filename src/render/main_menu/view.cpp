@@ -1,4 +1,4 @@
-#include "main_menu_render.hpp"
+#include "view.hpp"
 
 #include "message_tracker.hpp"
 #include "render/common.hpp"

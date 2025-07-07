@@ -4,8 +4,8 @@
 #include "backend/models/ingredient.hpp"
 #include "handlers/common.hpp"
 #include "message_tracker.hpp"
-#include "render/storage_view/ingredients/list.hpp"
 #include "render/storage_view/ingredients/search.hpp"
+#include "render/storage_view/ingredients/view.hpp"
 #include "utils.hpp"
 
 #include <algorithm>

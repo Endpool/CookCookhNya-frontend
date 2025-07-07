@@ -2,7 +2,7 @@
 
 #include "handlers/common.hpp"
 #include "render/common.hpp"
-#include "render/storage_view/storage_members_render.hpp"
+#include "render/storage_view/members/view.hpp"
 #include "utils.hpp"
 
 namespace cookcookhnya::handlers::storage_delete_member {

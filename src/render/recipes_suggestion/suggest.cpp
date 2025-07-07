@@ -1,4 +1,4 @@
-#include "recipes_suggestion_render.hpp"
+#include "suggest.hpp"
 
 #include "backend/id_types.hpp"
 #include "message_tracker.hpp"

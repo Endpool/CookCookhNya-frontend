@@ -2,7 +2,7 @@
 
 #include "backend/id_types.hpp"
 #include "handlers/common.hpp"
-#include "render/storage_list/storage_list_render.hpp"
+#include "render/storage_list/view.hpp"
 #include "utils.hpp"
 
 namespace cookcookhnya::handlers::storage_delete {

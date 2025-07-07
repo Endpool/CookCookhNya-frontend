@@ -2,7 +2,7 @@
 
 #include "handlers/common.hpp"
 #include "render/storage_view/ingredients/search.hpp"
-#include "render/storage_view/storage_view_render.hpp"
+#include "render/storage_view/view.hpp"
 
 namespace cookcookhnya::handlers::storage::ingredients {
 

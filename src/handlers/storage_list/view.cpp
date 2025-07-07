@@ -3,10 +3,10 @@
 #include "backend/api/storages.hpp"
 #include "backend/id_types.hpp"
 #include "handlers/common.hpp"
-#include "render/main_menu/main_menu_render.hpp"
-#include "render/storage_list/create_storage_render.hpp"
-#include "render/storage_list/delete_storage_render.hpp"
-#include "render/storage_view/storage_view_render.hpp"
+#include "render/main_menu/view.hpp"
+#include "render/storage_list/create.hpp"
+#include "render/storage_list/delete.hpp"
+#include "render/storage_view/view.hpp"
 #include "utils.hpp"
 
 #include <optional>
