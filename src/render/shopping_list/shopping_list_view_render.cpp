@@ -1,4 +1,4 @@
-#include "list.hpp"
+#include "shopping_list_view_render.hpp"
 
 #include "message_tracker.hpp"
 #include "render/common.hpp"

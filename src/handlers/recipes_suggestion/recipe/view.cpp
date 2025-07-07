@@ -1,10 +1,10 @@
-#include "recipe_view.hpp"
+#include "view.hpp"
 
 #include "backend/id_types.hpp"
 #include "handlers/common.hpp"
 #include "render/recipes_suggestion/recipe_view_render.hpp"
 #include "render/recipes_suggestion/recipes_suggestion_render.hpp"
-#include "render/recipes_suggestion/shopping_list_creation_render.hpp"
+#include "render/shopping_list/shopping_list_creation_render.hpp"
 #include "utils.hpp"
 
 #include <string>
@@ -12,8 +12,8 @@
 namespace cookcookhnya::handlers::recipe_view {
 
 using namespace render::recipe_view;
-using render::recipes_suggestion::editRecipesSuggestion;
-using render::shopping_list_creation::renderShoppingListCreation;
+using namespace render::recipes_suggestion;
+using namespace render::shopping_list_create;
 
 void handleRecipeView(RecipeView& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
     std::string data = cq.data;

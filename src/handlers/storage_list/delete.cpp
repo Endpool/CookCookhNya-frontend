@@ -1,4 +1,4 @@
-#include "storage_list_delete.hpp"
+#include "delete.hpp"
 
 #include "backend/id_types.hpp"
 #include "handlers/common.hpp"

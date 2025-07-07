@@ -15,7 +15,7 @@
 #include <utility>
 #include <vector>
 
-namespace cookcookhnya::render::shopping_list_creation {
+namespace cookcookhnya::render::shopping_list_create {
 
 std::vector<api::IngredientId> renderShoppingListCreation(const std::vector<api::StorageId>& storageIds,
                                                           api::RecipeId recipeId,
@@ -120,4 +120,4 @@ void renderEditedShoppingListCreation(const std::vector<api::IngredientId>& ingr
     }
 }
 
-} // namespace cookcookhnya::render::shopping_list_creation
+} // namespace cookcookhnya::render::shopping_list_create

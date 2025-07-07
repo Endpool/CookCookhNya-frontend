@@ -1,4 +1,4 @@
-#include "storage_list_view.hpp"
+#include "view.hpp"
 
 #include "backend/api/storages.hpp"
 #include "backend/id_types.hpp"

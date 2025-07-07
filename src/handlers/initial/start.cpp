@@ -1,4 +1,4 @@
-#include "initial_start.hpp"
+#include "start.hpp"
 
 #include "backend/models/user.hpp"
 #include "handlers/common.hpp"

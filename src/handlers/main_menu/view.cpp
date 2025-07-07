@@ -1,11 +1,11 @@
-#include "main_menu_view.hpp"
+#include "view.hpp"
 
 #include "backend/api/storages.hpp"
 #include "backend/id_types.hpp"
 #include "handlers/common.hpp"
 #include "render/recipes_suggestion/recipes_suggestion_render.hpp"
 #include "render/recipes_suggestion/select_storages_render.hpp"
-#include "render/shopping_list/list.hpp"
+#include "render/shopping_list/shopping_list_view_render.hpp"
 #include "render/storage_list/storage_list_render.hpp"
 
 #include <vector>

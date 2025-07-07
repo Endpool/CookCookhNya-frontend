@@ -1,16 +1,16 @@
-#include "shopping_list_creation.hpp"
+#include "create.hpp"
 
 #include "backend/id_types.hpp"
 #include "handlers/common.hpp"
 #include "render/recipes_suggestion/recipe_view_render.hpp"
-#include "render/recipes_suggestion/shopping_list_creation_render.hpp"
+#include "render/shopping_list/shopping_list_creation_render.hpp"
 #include "utils.hpp"
 
 #include <string>
 
-namespace cookcookhnya::handlers::shopping_list_creation {
+namespace cookcookhnya::handlers::shopping_list_create {
 
-using namespace render::shopping_list_creation;
+using namespace render::shopping_list_create;
 using namespace render::recipe_view;
 
 void handleProductListSubmission(
@@ -59,4 +59,4 @@ void handleProductListSubmission(
         renderEditedShoppingListCreation(state.ingredientIdsInList, userId, chatId, bot, api);
     }
 }
-} // namespace cookcookhnya::handlers::shopping_list_creation
+} // namespace cookcookhnya::handlers::shopping_list_create

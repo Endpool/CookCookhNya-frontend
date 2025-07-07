@@ -1,4 +1,4 @@
-#include "storage_view_members.hpp"
+#include "view.hpp"
 
 #include "handlers/common.hpp"
 #include "render/storage_view/storage_members_render.hpp"

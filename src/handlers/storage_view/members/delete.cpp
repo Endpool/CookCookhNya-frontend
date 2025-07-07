@@ -1,4 +1,4 @@
-#include "storage_delete_member.hpp"
+#include "delete.hpp"
 
 #include "handlers/common.hpp"
 #include "render/common.hpp"

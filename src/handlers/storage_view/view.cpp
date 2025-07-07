@@ -1,4 +1,4 @@
-#include "storage_view.hpp"
+#include "view.hpp"
 
 #include "handlers/common.hpp"
 #include "render/recipes_suggestion/recipes_suggestion_render.hpp"

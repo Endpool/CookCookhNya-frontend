@@ -1,4 +1,4 @@
-#include "recipes_suggestion_list.hpp"
+#include "suggest.hpp"
 
 #include "backend/id_types.hpp"
 #include "handlers/common.hpp"
