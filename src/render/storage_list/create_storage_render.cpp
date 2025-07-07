@@ -10,8 +10,7 @@ namespace cookcookhnya::render::create_storage {
 
 void renderStorageCreate(ChatId chatId, UserId userId, BotRef bot) { // BackendProvider bkn
     InlineKeyboard keyboard(1);
-    keyboard[0].push_back(
-        detail::makeCallbackButton(utils::utf8str(u8"🚫 Отмена"), "cancel_storage_creation")); // StorageCreateCancel
+    keyboard[0].push_back(detail::makeCallbackButton(u8"🚫 Отмена", "cancel_storage_creation")); // StorageCreateCancel
     auto text = utils::utf8str(u8"🏷 Введите новое имя хранилища");
     auto messageId = message::getMessageId(userId);
     if (messageId) {

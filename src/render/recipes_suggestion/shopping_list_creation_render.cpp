@@ -63,10 +63,10 @@ std::vector<api::IngredientId> renderShoppingListCreation(const std::vector<api:
         i++;
     }
     keyboard[std::floor((ingredientIds.size() + 1) / 2)].push_back(
-        detail::makeCallbackButton(utils::utf8str(u8"Подтвердить"), "AcceptShoppingList"));
+        detail::makeCallbackButton(u8"▶️ Подтвердить", "AcceptShoppingList"));
 
     keyboard[std::floor(((ingredientIds.size() + 1) / 2) + 1)].push_back(
-        detail::makeCallbackButton(utils::utf8str(u8"Назад"), "BackFromShoppingList"));
+        detail::makeCallbackButton(u8"↩️ Назад", "BackFromShoppingList"));
     auto messageId = message::getMessageId(userId);
     if (messageId) {
         bot.editMessageText(
@@ -109,10 +109,10 @@ void renderEditedShoppingListCreation(const std::vector<api::IngredientId>& ingr
     }
 
     keyboard[std::floor((ingredientIds.size() + 1) / 2)].push_back(
-        detail::makeCallbackButton(utils::utf8str(u8"Подтвердить"), "AcceptShoppingList"));
+        detail::makeCallbackButton(u8"▶️ Подтвердить", "AcceptShoppingList"));
 
     keyboard[std::floor(((ingredientIds.size() + 1) / 2) + 1)].push_back(
-        detail::makeCallbackButton(utils::utf8str(u8"Назад"), "BackFromShoppingList"));
+        detail::makeCallbackButton(u8"↩️ Назад", "BackFromShoppingList"));
     auto messageId = message::getMessageId(userId);
     if (messageId) {
         bot.editMessageText(

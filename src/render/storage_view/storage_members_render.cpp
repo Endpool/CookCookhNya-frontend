@@ -31,13 +31,13 @@ void renderMemberList(bool toBeEdited,
     InlineKeyboard keyboard(buttonRows);
 
     if (isOwner) {
-        keyboard[0].push_back(detail::makeCallbackButton(utils::utf8str(u8"🔐 Добавить"), "add_member"));
+        keyboard[0].push_back(detail::makeCallbackButton(u8"🔐 Добавить", "add_member"));
         if (storageApi.getStorageMembers(userId, storageId).size() > 1) {
-            keyboard[0].push_back(detail::makeCallbackButton(utils::utf8str(u8"🔒 Удалить"), "delete_member"));
+            keyboard[0].push_back(detail::makeCallbackButton(u8"🔒 Удалить", "delete_member"));
         }
-        keyboard[1].push_back(detail::makeCallbackButton(utils::utf8str(u8"↩️Назад"), "back_to_view_storage"));
+        keyboard[1].push_back(detail::makeCallbackButton(u8"↩️Назад", "back_to_view_storage"));
     } else {
-        keyboard[0].push_back(detail::makeCallbackButton(utils::utf8str(u8"↩️Назад"), "back_to_view_storage"));
+        keyboard[0].push_back(detail::makeCallbackButton(u8"↩️Назад", "back_to_view_storage"));
     }
 
     std::string list;
@@ -79,7 +79,7 @@ void renderMemberAdditionPrompt(
     inviteButton->callbackData = "user_sended_link";
 
     keyboard[0].push_back(std::move(inviteButton));
-    keyboard[1].push_back(detail::makeCallbackButton(utils::utf8str(u8"↩️ Назад"), "cancel_member_addition"));
+    keyboard[1].push_back(detail::makeCallbackButton(u8"↩️ Назад", "cancel_member_addition"));
     auto text = utils::utf8str(
         u8"📩 Нажмите кнопку ниже или перешлите сообщение пользователя, чтобы добавить его в хранилище\n");
     auto messageId = message::getMessageId(userId);
@@ -95,12 +95,12 @@ void renderMemberDeletionPrompt(
     auto members = storageApi.getStorageMembers(userId, storageId);
     const unsigned int buttonRows = members.size();
     InlineKeyboard keyboard(buttonRows);
-    keyboard[0].push_back(detail::makeCallbackButton(utils::utf8str(u8"🚫 Отмена"), "cancel_member_deletion"));
+    keyboard[0].push_back(detail::makeCallbackButton(u8"🚫 Отмена", "cancel_member_deletion"));
     size_t k = 1;
     for (auto& member : members) {
         if (member.userId != storage.ownerId) {
-            keyboard[k++].push_back(detail::makeCallbackButton(utils::utf8str(u8"👤 ") + member.fullName,
-                                                               "mem_" + std::to_string(member.userId)));
+            keyboard[k++].push_back(detail::makeCallbackButton(
+                std::format("{} {}", utils::utf8str(u8"👤"), member.fullName), "mem_" + std::to_string(member.userId)));
         }
     }
 

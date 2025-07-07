@@ -2,9 +2,9 @@
 
 #include "backend/id_types.hpp"
 #include "handlers/common.hpp"
+#include "render/main_menu/main_menu_render.hpp"
 #include "render/recipes_suggestion/recipes_suggestion_render.hpp"
 #include "render/recipes_suggestion/select_storages_render.hpp"
-#include "render/storage_list/storage_list_render.hpp"
 #include "utils.hpp"
 
 #include <algorithm>
@@ -13,9 +13,9 @@
 
 namespace cookcookhnya::handlers::storages_select {
 
-using render::recipes_suggestion::editRecipesSuggestion;
-using render::select_storages::editStorageSelect;
-using render::storage_list::renderStorageList;
+using namespace render::recipes_suggestion;
+using namespace render::select_storages;
+using namespace render::main_menu;
 
 void selectStorages(StorageSelection& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
     bot.answerCallbackQuery(cq.id);
@@ -30,8 +30,8 @@ void selectStorages(StorageSelection& state, CallbackQueryRef cq, BotRef bot, SM
         return;
     }
     if (cq.data == "cancel_storages_selection") {
-        renderStorageList(true, userId, chatId, bot, api);
-        stateManager.put(StorageList{});
+        renderMainMenu(true, userId, chatId, bot, api);
+        stateManager.put(MainMenu{});
         return;
     }
 

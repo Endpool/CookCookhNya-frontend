@@ -30,7 +30,7 @@ void storageViewButtonCallback(
     } else if (cq.data == "storage_view_back") {
         renderStorageList(true, userId, chatId, bot, api);
         stateManager.put(StorageList{});
-    } else if (cq.data == "storage_view_what_to_cook") {
+    } else if (cq.data == "storage_view_wanna_eat") {
         editRecipesSuggestion({state.storageId}, 0, userId, chatId, bot, api);
         stateManager.put(
             SuggestedRecipeList{.pageNo = 0, .storageIds = std::vector{state.storageId}, .fromStorage = true});

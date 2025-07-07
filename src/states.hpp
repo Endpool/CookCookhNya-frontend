@@ -21,6 +21,8 @@ struct StorageIdMixin {
 
 } // namespace detail
 
+struct MainMenu {};
+
 struct StorageList {};
 
 struct StorageDeletion {};
@@ -64,7 +66,8 @@ struct ShoppingListCreation {
 
 struct ShoppingListView {};
 
-using State = std::variant<StorageList,
+using State = std::variant<MainMenu,
+                           StorageList,
                            StorageDeletion,
                            StorageCreationEnterName,
                            StorageView,

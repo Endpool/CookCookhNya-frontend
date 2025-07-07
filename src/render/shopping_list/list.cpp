@@ -16,16 +16,11 @@ void renderShoppingList(UserId userId, ChatId chatId, BotRef bot, ShoppingListAp
     for (std::size_t i = 0; i < items.size(); i++) {
         keyboard[i].push_back(detail::makeCallbackButton(items[i].name, std::to_string(items[i].ingredientId)));
     }
-    keyboard[items.size()].push_back(detail::makeCallbackButton(u8"Назад", "back"));
+    keyboard[items.size()].push_back(detail::makeCallbackButton(u8"↩️ Назад", "back"));
     auto messageId = message::getMessageId(userId);
     if (messageId) {
-        bot.editMessageText(utils::utf8str(u8"🔖 Ваш список покупок:"),
-                            chatId,
-                            *messageId,
-                            "",
-                            "",
-                            nullptr,
-                            detail::makeKeyboardMarkup(std::move(keyboard)));
+        auto text = utils::utf8str(u8"🔖 Ваш список покупок:");
+        bot.editMessageText(text, chatId, *messageId, "", "", nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
     }
 }
 

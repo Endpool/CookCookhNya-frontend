@@ -2,6 +2,7 @@
 
 // Handler callbacks
 #include "initial/initial_start.hpp"
+#include "main_menu/main_menu_view.hpp"
 #include "recipes_suggestion/recipe_view.hpp"
 #include "recipes_suggestion/recipes_suggestion_list.hpp"
 #include "recipes_suggestion/shopping_list_creation.hpp"
@@ -26,6 +27,7 @@
 namespace cookcookhnya::handlers {
 
 using namespace init;
+using namespace main_menu_view;
 using namespace storage_create;
 using namespace storage_delete;
 using namespace storage_list_view;
@@ -48,6 +50,9 @@ namespace bot_handlers {
 constexpr char startCmd[] = "start";                                        // NOLINT(*c-arrays)
 using startHandler = Handler<Events::Command{startCmd}, start, AnyState{}>; // NOLINT(*decay)
 using noStateHandler = Handler<Events::AnyMessage{}, handleNoState, NoState{}>;
+
+// MainMenu
+using mainMenuButtonHandler = Handler<Events::CallbackQuery{}, mainMenuHandler>;
 
 // StorageListCreate
 using storageCreateHandler = Handler<Events::Message{}, createStorage>;

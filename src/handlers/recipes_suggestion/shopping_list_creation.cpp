@@ -4,8 +4,8 @@
 #include "handlers/common.hpp"
 #include "render/recipes_suggestion/recipe_view_render.hpp"
 #include "render/recipes_suggestion/shopping_list_creation_render.hpp"
+#include "utils.hpp"
 
-#include <sstream>
 #include <string>
 
 namespace cookcookhnya::handlers::shopping_list_creation {
@@ -16,7 +16,6 @@ using namespace render::recipe_view;
 void handleProductListSubmission(
     ShoppingListCreation& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
     std::string data = cq.data;
-    std::stringstream temp; // Convert string to int
     auto chatId = cq.message->chat->id;
     auto userId = cq.from->id;
 
@@ -46,16 +45,17 @@ void handleProductListSubmission(
     if (data[0] == 'i') {
         auto newIngredientIdStr =
             data.substr(1, data.size()); // Here we got all selected storages and new one as last in string
-        api::IngredientId ingredientIdToRemove = 0;
-        temp << newIngredientIdStr;
-        temp >> ingredientIdToRemove;
+        auto ingredientIdToRemove = utils::parseSafe<api::IngredientId>(newIngredientIdStr);
         // Remove ingredient which was chosen
-        for (auto ingredientId = state.ingredientIdsInList.begin(); ingredientId < state.ingredientIdsInList.end();
-             ingredientId++) {
-            if (*ingredientId == ingredientIdToRemove) {
-                state.ingredientIdsInList.erase(ingredientId);
+        if (ingredientIdToRemove) {
+            for (auto ingredientId = state.ingredientIdsInList.begin(); ingredientId < state.ingredientIdsInList.end();
+                 ingredientId++) {
+                if (*ingredientId == *ingredientIdToRemove) {
+                    state.ingredientIdsInList.erase(ingredientId);
+                }
             }
         }
+
         renderEditedShoppingListCreation(state.ingredientIdsInList, userId, chatId, bot, api);
     }
 }

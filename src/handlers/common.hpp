@@ -15,6 +15,8 @@
 namespace cookcookhnya::handlers {
 
 // Reimports of states
+using states::MainMenu;
+
 using states::StorageList;
 
 using states::RecipeView;

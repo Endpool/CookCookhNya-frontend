@@ -2,7 +2,7 @@
 
 #include "backend/models/user.hpp"
 #include "handlers/common.hpp"
-#include "render/storage_list/storage_list_render.hpp"
+#include "render/main_menu/main_menu_render.hpp"
 #include "states.hpp"
 
 #include <optional>
@@ -11,11 +11,11 @@
 
 namespace cookcookhnya::handlers::init {
 
-using namespace render::storage_list;
+using namespace render::main_menu;
 
 void start(MessageRef m, BotRef bot, SMRef stateManager, ApiClientRef api) {
-    renderStorageList(false, m.from->id, m.chat->id, bot, api);
-    stateManager.put(StorageList{});
+    renderMainMenu(false, m.from->id, m.chat->id, bot, api);
+    stateManager.put(MainMenu{});
     std::string fullname = m.from->firstName;
     if (!m.from->lastName.empty()) {
         fullname += ' ';

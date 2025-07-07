@@ -51,7 +51,7 @@ constructMarkup(const std::vector<api::StorageId>& storageIds, int pageNo, UserI
              * Even if one storage was chosen in storage list choose it will return to view of these one storage.
              */
             keyboard[recipesList.recipesPage.size()].push_back(detail::makeCallbackButton(
-                utils::utf8str(u8"↩️ Назад"),
+                u8"↩️ Назад",
                 std::format("backFromSuggestedRecipes {}", storageIds.size()))); // To LAST row add "return"
             return keyboard;
         }
@@ -71,15 +71,15 @@ constructMarkup(const std::vector<api::StorageId>& storageIds, int pageNo, UserI
                 std::format("recipe: {}", recipesList.recipesPage[i].id))); // RECIPE ID
         }
         // If pageNo == 0 and it's not 1st page then show only next button
-        keyboard[recipesList.recipesPage.size()].push_back(detail::makeCallbackButton("⏭️", std::to_string(pageNo + 1)));
+        keyboard[recipesList.recipesPage.size()].push_back(
+            detail::makeCallbackButton(u8"⏭️", std::to_string(pageNo + 1)));
 
         /* Put the number of storages.
          * If more then one then return to storage list choose if one then go to the storage view.
          * Even if one storage was chosen in storage list choose it will return to view of these one storage.
          */
         keyboard[recipesList.recipesPage.size() + 1].push_back(detail::makeCallbackButton(
-            utils::utf8str(u8"↩️ Назад"),
-            std::format("backFromSuggestedRecipes {}", storageIds.size()))); // To LAST row add "return"
+            u8"↩️ Назад", std::format("backFromSuggestedRecipes {}", storageIds.size()))); // To LAST row add "return"
         return keyboard;
     }
 
@@ -100,13 +100,13 @@ constructMarkup(const std::vector<api::StorageId>& storageIds, int pageNo, UserI
         // Show both possible ways
         keyboard[recipesList.recipesPage.size()].reserve(2);
         keyboard[recipesList.recipesPage.size()].push_back(
-            detail::makeCallbackButton(utils::utf8str(u8"⏮️"), std::to_string(pageNo - 1)));
+            detail::makeCallbackButton(u8"⏮️", std::to_string(pageNo - 1)));
         keyboard[recipesList.recipesPage.size()].push_back(
-            detail::makeCallbackButton(utils::utf8str(u8"⏭️"), std::to_string(pageNo + 1)));
+            detail::makeCallbackButton(u8"⏭️", std::to_string(pageNo + 1)));
     } else {
         // If pageNo == maxPage then it's last page -> won't show button next
         keyboard[recipesList.recipesPage.size()].push_back(
-            detail::makeCallbackButton(utils::utf8str(u8"⏮️"), std::to_string(pageNo - 1)));
+            detail::makeCallbackButton(u8"⏮️", std::to_string(pageNo - 1)));
     }
 
     /* Put the number of storages.
@@ -114,9 +114,7 @@ constructMarkup(const std::vector<api::StorageId>& storageIds, int pageNo, UserI
      * Even if one storage was chosen in storage list choose it will return to view of these one storage.
      */
     keyboard[recipesList.recipesPage.size() + 1].push_back(detail::makeCallbackButton(
-
-        utils::utf8str(u8"↩️ Назад"),
-        std::format("backFromSuggestedRecipes {}", storageIds.size()))); // To LAST row add "return"
+        u8"↩️ Назад", std::format("backFromSuggestedRecipes {}", storageIds.size()))); // To LAST row add "return"
     return keyboard;
 }
 
