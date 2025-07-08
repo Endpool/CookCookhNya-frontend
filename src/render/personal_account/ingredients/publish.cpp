@@ -4,6 +4,11 @@
 #include "render/common.hpp"
 #include "utils.hpp"
 
+#include <cstddef>
+#include <format>
+#include <string>
+#include <utility>
+
 namespace cookcookhnya::render::publish_custom_ingredients {
 
 using namespace tg_types;

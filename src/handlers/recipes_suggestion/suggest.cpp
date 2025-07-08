@@ -2,10 +2,12 @@
 
 #include "backend/id_types.hpp"
 #include "handlers/common.hpp"
+#include "render/main_menu/view.hpp"
 #include "render/recipes_suggestion/recipe/view.hpp"
 #include "render/recipes_suggestion/storage_selection/select.hpp"
 #include "render/recipes_suggestion/suggest.hpp"
 #include "render/storage_view/view.hpp"
+
 #include "states.hpp"
 #include "utils.hpp"
 
@@ -18,6 +20,7 @@ using namespace render::recipes_suggestion;
 using namespace render::select_storages;
 using namespace render::storage;
 using namespace render::recipe_view;
+using namespace render::main_menu;
 
 void changePageAndBack(
     SuggestedRecipeList& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
@@ -32,9 +35,15 @@ void changePageAndBack(
             renderStorageView(state.storageIds[0], cq.from->id, chatId, bot, api);
             stateManager.put(StorageView{state.storageIds[0]}); // Go to the only one storage
         } else {
-            // Go to storages selection saving the storages which were chosen
-            renderStorageSelect(state.storageIds, userId, chatId, bot, api);
-            stateManager.put(StorageSelection{.storageIds = std::move(state.storageIds)});
+            if (state.storageIds.size() == 1){
+                renderMainMenu(true, userId, chatId, bot, api);
+                stateManager.put(MainMenu{});
+            } else {
+                // Go to storages selection saving the storages which were chosen
+                renderStorageSelect(state.storageIds, userId, chatId, bot, api);
+                stateManager.put(StorageSelection{.storageIds = std::move(state.storageIds)});
+            }
+            
         }
         bot.answerCallbackQuery(cq.id);
         return;

@@ -33,7 +33,7 @@ void mainMenuHandler(MainMenu& /*unused*/, CallbackQueryRef cq, BotRef& bot, SMR
         if (storages.size() == 1) {
             auto storageId = {storages[0].id};
             editRecipesSuggestion(storageId, 0, userId, chatId, bot, api);
-            stateManager.put(SuggestedRecipeList{.pageNo = 0, .storageIds = storageId, .fromStorage = true});
+            stateManager.put(SuggestedRecipeList{.pageNo = 0, .storageIds = storageId, .fromStorage = false});
             return;
         }
         renderStorageSelect({}, userId, chatId, bot, api);

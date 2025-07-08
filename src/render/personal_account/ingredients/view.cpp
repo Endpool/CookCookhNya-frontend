@@ -1,10 +1,12 @@
 #include "view.hpp"
 
+#include "backend/models/ingredient.hpp"
 #include "message_tracker.hpp"
 #include "render/common.hpp"
 #include "utils.hpp"
 
 #include <algorithm>
+#include <format>
 #include <cstddef>
 #include <string>
 #include <utility>
