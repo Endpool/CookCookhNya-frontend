@@ -6,8 +6,8 @@
 #include "utils.hpp"
 
 #include <algorithm>
-#include <format>
 #include <cstddef>
+#include <format>
 #include <string>
 #include <utility>
 
