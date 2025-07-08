@@ -7,8 +7,10 @@ using namespace tg_types;
 /*
 @brief shared function between render and edit of suggestion message
 */
-InlineKeyboard
-constructMarkup(const std::vector<api::StorageId>& storageIds, int pageNo, UserId userId, RecipesApiRef recipesApi);
+InlineKeyboard constructMarkup(const std::vector<api::StorageId>& storageIds,
+                               int pageNo,
+                               int numOfRecipesOnPage,
+                               api::models::recipe::RecipesList recipesList);
 
 void editRecipesSuggestion(const std::vector<api::StorageId>& storageIds,
                            int pageNo,

@@ -1,10 +1,12 @@
 #include "suggest.hpp"
 
 #include "backend/id_types.hpp"
+#include "backend/models/recipe.hpp"
 #include "message_tracker.hpp"
 #include "render/common.hpp"
-#include "utils.hpp"
 
+#include "render/custom_recipes_list/view.hpp"
+#include "utils.hpp"
 #include <cstddef>
 #include <format>
 #include <string>
@@ -12,17 +14,10 @@
 
 namespace cookcookhnya::render::recipes_suggestion {
 
-InlineKeyboard
-constructMarkup(const std::vector<api::StorageId>& storageIds, int pageNo, UserId userId, RecipesApiRef recipesApi) {
-
-    // CONSTANT AND SAME (STATIC) FOR EVERY USER (static const doesn't actually matter in this function was added
-    // because of logic of that variable)
-    static const int numOfRecipesOnPage = 5;
-
-    auto recipesList = recipesApi.getRecipeList(userId,
-                                                numOfRecipesOnPage,
-                                                (pageNo)*numOfRecipesOnPage,
-                                                storageIds); // Take storages of user from backend
+InlineKeyboard constructMarkup(const std::vector<api::StorageId>& storageIds,
+                               int pageNo,
+                               const int numOfRecipesOnPage,
+                               api::models::recipe::RecipesList recipesList) {
 
     const int amountOfRecipes = recipesList.recipesFound;
     const bool ifMaxPage = amountOfRecipes - (numOfRecipesOnPage * (pageNo + 1)) <=
@@ -124,10 +119,17 @@ void editRecipesSuggestion(const std::vector<api::StorageId>& storageIds,
                            ChatId chatId,
                            BotRef bot,
                            RecipesApiRef recipesApi) {
-    const std::string pageInfo = utils::utf8str(u8"🔢 Номер страницы: ") + std::to_string(pageNo) +
-                                 utils::utf8str(u8"\n🔪 Рецепты подобранные специально для вас");
+    const std::string pageInfo = utils::utf8str(u8"🔪 Рецепты подобранные специально для вас");
 
     auto messageId = message::getMessageId(userId);
+
+    const int numOfRecipesOnPage = 3;
+
+    auto recipesList = recipesApi.getRecipeList(userId,
+                                                numOfRecipesOnPage,
+                                                (pageNo)*numOfRecipesOnPage,
+                                                storageIds); // Take storages of user from backend
+
     if (messageId) {
         bot.editMessageText(pageInfo,
                             chatId,
@@ -135,7 +137,11 @@ void editRecipesSuggestion(const std::vector<api::StorageId>& storageIds,
                             "",
                             "",
                             nullptr,
-                            detail::makeKeyboardMarkup(constructMarkup(storageIds, pageNo, userId, recipesApi)));
+                            detail::makeKeyboardMarkup(constructMarkup( // render::customRecipesList::
+                                storageIds,
+                                pageNo,
+                                numOfRecipesOnPage,
+                                recipesList)));
     }
 }
 

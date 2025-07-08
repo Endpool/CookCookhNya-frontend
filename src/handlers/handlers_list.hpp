@@ -8,6 +8,7 @@
 #include "recipes_suggestion/suggest.hpp"
 #include "shopping_list/create.hpp"
 #include "shopping_list/view.hpp"
+#include "states.hpp"
 #include "storage_list/create.hpp"
 #include "storage_list/delete.hpp"
 #include "storage_list/view.hpp"
@@ -19,6 +20,10 @@
 #include "storage_view/members/delete.hpp"
 #include "storage_view/members/view.hpp"
 #include "storage_view/view.hpp"
+
+#include "personal_account/view.hpp"
+
+#include "custom_recipes_list/view.hpp"
 
 #include "handlers/common.hpp"
 
@@ -43,6 +48,8 @@ using namespace recipes_suggestion;
 using namespace recipe_view;
 using namespace shopping_list_create;
 using namespace shopping_list;
+using namespace personal_account_view;
+using namespace custom_recipes_list;
 
 using namespace tg_stater;
 
@@ -99,6 +106,11 @@ using shoppingListCreationHandler = Handler<Events::CallbackQuery{}, handleProdu
 // Shopping list
 using shoppingListButtonHandler = Handler<Events::CallbackQuery{}, shoppingListButtonCallback>;
 
+// Personal account
+using personalAccountButtonHandler = Handler<Events::CallbackQuery{}, personalAccount>;
+
+// Custom Recipes List
+using customRecipesListHandler = Handler<Events::CallbackQuery{}, customRecipeList>;
 } // namespace bot_handlers
 
 } // namespace cookcookhnya::handlers

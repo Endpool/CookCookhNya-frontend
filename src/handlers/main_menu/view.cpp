@@ -3,11 +3,11 @@
 #include "backend/api/storages.hpp"
 #include "backend/id_types.hpp"
 #include "handlers/common.hpp"
+#include "render/personal_account/view.hpp"
 #include "render/recipes_suggestion/storage_selection/select.hpp"
 #include "render/recipes_suggestion/suggest.hpp"
 #include "render/shopping_list/view.hpp"
 #include "render/storage_list/view.hpp"
-
 #include <vector>
 
 namespace cookcookhnya::handlers::main_menu_view {
@@ -16,6 +16,7 @@ using namespace render::storage_list;
 using namespace render::recipes_suggestion;
 using namespace render::select_storages;
 using namespace render::shopping_list;
+using namespace render::personal_account;
 
 void mainMenuHandler(MainMenu& /*unused*/, CallbackQueryRef cq, BotRef& bot, SMRef stateManager, ApiClientRef api) {
     bot.answerCallbackQuery(cq.id);
@@ -44,9 +45,9 @@ void mainMenuHandler(MainMenu& /*unused*/, CallbackQueryRef cq, BotRef& bot, SMR
         return;
     }
     if (cq.data == "personal_account") {
-        // renderPersonalAccount();
-        // stateManager.put(PersonalAccountView{});
-        // return;
+        renderPersonalAccountMenu(userId, chatId, bot);
+        stateManager.put(PersonalAccountMenu{});
+        return;
     }
 }
 

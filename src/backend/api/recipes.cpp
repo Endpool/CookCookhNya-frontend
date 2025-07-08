@@ -26,4 +26,16 @@ RecipeDetails RecipesApi::getIngredientsInRecipe(UserId userId, RecipeId recipeI
     return jsonGetAuthed<RecipeDetails>(userId, std::format("/recipes/{}", recipeId));
 }
 
+CustomRecipesList RecipesApi::getPrivateRecipeList(UserId userId, int size, int offset) const {
+    httplib::Params params = {{"size", std::to_string(size)}, {"offset", std::to_string(offset)}};
+    return jsonGetAuthed<CustomRecipesList>(userId, "/recipes", params);
+}
+
+RecipeId RecipesApi::create(UserId userId, const RecipeCreateBody& body) const {
+    return jsonPostWithJsonAuthed<RecipeId>(userId, "/my/recipes", body); // path analogically to storages
+}
+
+void RecipesApi::delete_(UserId userId, RecipeId recipeId) const {
+    jsonDeleteAuthed<void>(userId, std::format("/my/recipes/{}", recipeId)); // path analogically to storages
+}
 } // namespace cookcookhnya::api

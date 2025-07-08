@@ -42,6 +42,20 @@ struct RecipesList {
     friend RecipesList tag_invoke(boost::json::value_to_tag<RecipesList>, const boost::json::value& j);
 };
 
+struct CustomRecipeSummary {
+    RecipeId id;
+    std::string name;
+
+    friend CustomRecipeSummary tag_invoke(boost::json::value_to_tag<CustomRecipeSummary>, const boost::json::value& j);
+};
+
+struct CustomRecipesList {
+    std::vector<CustomRecipeSummary> recipesPage;
+    int recipesFound;
+
+    friend CustomRecipesList tag_invoke(boost::json::value_to_tag<CustomRecipesList>, const boost::json::value& j);
+};
+
 struct RecipeCreateBody {
     std::string name;
 

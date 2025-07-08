@@ -20,4 +20,7 @@ target_sources(main PRIVATE
     src/handlers/storage_view/members/delete.cpp
     src/handlers/storage_view/members/view.cpp
     src/handlers/storage_view/view.cpp
+
+    src/handlers/personal_account/view.cpp
+    src/handlers/custom_recipes_list/view.cpp
 )
