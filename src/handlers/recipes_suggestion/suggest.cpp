@@ -35,7 +35,7 @@ void changePageAndBack(
             renderStorageView(state.storageIds[0], cq.from->id, chatId, bot, api);
             stateManager.put(StorageView{state.storageIds[0]}); // Go to the only one storage
         } else {
-            if (state.storageIds.size() == 1){
+            if (state.storageIds.size() == 1) {
                 renderMainMenu(true, userId, chatId, bot, api);
                 stateManager.put(MainMenu{});
             } else {
@@ -43,7 +43,6 @@ void changePageAndBack(
                 renderStorageSelect(state.storageIds, userId, chatId, bot, api);
                 stateManager.put(StorageSelection{.storageIds = std::move(state.storageIds)});
             }
-            
         }
         bot.answerCallbackQuery(cq.id);
         return;

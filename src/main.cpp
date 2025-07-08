@@ -33,7 +33,6 @@ int main() {
                                                   memberDeletionButtonHandler,
                                                   storagesSelectionHandler,
                                                   recipesSuggestionListHandler,
-                                                  storageIngredientsListButtonHandler,
                                                   storageIngredientsSearchButtonHandler,
                                                   storageIngredientsSearchHandler,
                                                   recipeViewHandler,

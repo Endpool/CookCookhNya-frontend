@@ -42,8 +42,7 @@ struct PackMemberView : detail::StorageIdMixin {};
 struct MemberAddition : detail::StorageIdMixin {};
 struct MemberDeletion : detail::StorageIdMixin {};
 
-struct StorageIngredientsList : detail::StorageIdMixin {};
-struct StorageIngredientsSearch : detail::StorageIdMixin {
+struct StorageIngredientsList : detail::StorageIdMixin {
     std::vector<api::models::ingredient::IngredientSearchItem> shownIngredients;
     std::size_t totalFound;
     std::size_t pageNo;
@@ -89,7 +88,6 @@ using State = std::variant<MainMenu,
                            MemberAddition,
                            MemberDeletion,
                            StorageIngredientsList,
-                           StorageIngredientsSearch,
                            StorageSelection,
                            SuggestedRecipeList,
                            RecipeView,
