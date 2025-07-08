@@ -13,7 +13,7 @@ namespace cookcookhnya::render::create_custom_ingredient {
 
 void renderCustomIngredientCreate(UserId userId, ChatId chatId, BotRef bot) {
     InlineKeyboard keyboard(1);
-    keyboard[0].push_back(detail::makeCallbackButton(u8"🚫 Отмена", "cancel"));
+    keyboard[0].push_back(detail::makeCallbackButton(u8"↩️ Назад", "back"));
     auto text = utils::utf8str(u8"🌽 Введите новое имя ингредиента");
     auto messageId = message::getMessageId(userId);
     if (messageId) {
@@ -24,8 +24,8 @@ void renderCustomIngredientCreate(UserId userId, ChatId chatId, BotRef bot) {
 void renderCustomIngredientConfirm(
     std::string ingredientName, UserId userId, ChatId chatId, BotRef bot, IngredientsApiRef api) {
     InlineKeyboard keyboard(2);
-    keyboard[0].push_back(detail::makeCallbackButton(u8"✅ Подтвердить", "confirm"));
-    keyboard[1].push_back(detail::makeCallbackButton(u8"🚫 Отмена", "cancel"));
+    keyboard[0].push_back(detail::makeCallbackButton(u8"▶️ Подтвердить", "confirm"));
+    keyboard[1].push_back(detail::makeCallbackButton(u8"↩️ Назад", "back"));
 
     auto similarIngredients = api.getAllIngredients(ingredientName, 5, 0, 70); // NOLINT
     std::string formatedIngredients;

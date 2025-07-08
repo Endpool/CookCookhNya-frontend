@@ -20,7 +20,7 @@ void renderStorageDelete(ChatId chatId, BotRef bot, UserId userId, StorageApiRef
         }
     }
     InlineKeyboard keyboard(numStoragesOwner + 1);
-    keyboard[0].push_back(detail::makeCallbackButton(u8"🚫 Отмена", "cancel_storage_deletion"));
+    keyboard[0].push_back(detail::makeCallbackButton(u8"↩️ Назад", "cancel_storage_deletion"));
     size_t k = 1;
     for (auto& storage : storages) {
         if (userId == storage.ownerId) {

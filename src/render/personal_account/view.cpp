@@ -17,8 +17,8 @@ void renderPersonalAccountMenu(UserId userId, ChatId chatId, BotRef bot) {
     const std::size_t buttonRows = 3;
     InlineKeyboard keyboard(buttonRows);
 
-    keyboard[0].push_back(detail::makeCallbackButton(u8"📋 Мои ингредиенты", "my_ingredients"));
-    keyboard[1].push_back(detail::makeCallbackButton(u8"📒 Мои рецепты", "my_recipes")); // 🗃️
+    keyboard[0].push_back(detail::makeCallbackButton(u8"📋 Мои ингредиенты", "ingredients"));
+    keyboard[1].push_back(detail::makeCallbackButton(u8"📒 Мои рецепты", "recipes")); // 🗃️
     keyboard[2].push_back(detail::makeCallbackButton(u8"↩️ Назад", "back"));
 
     auto text = utils::utf8str(u8"👤 Вы находитесь в Личном Кабинете. Здесь вы можете добавить личные ингредиенты и "

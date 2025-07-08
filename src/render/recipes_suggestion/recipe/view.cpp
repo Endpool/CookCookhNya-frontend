@@ -124,7 +124,7 @@ void renderRecipeViewAfterAddingStorage(const std::vector<api::StorageId>& stora
     InlineKeyboard keyboard(buttonRows);
 
     keyboard[0].push_back(detail::makeCallbackButton(u8"🧑‍🍳 Готовить",
-                                                     "startCooking")); // Add needed info for next states!
+                                                     "cook")); // Add needed info for next states!
     if (isSuggestionMade) {
         std::string dataForSuggestion = "?";
         for (auto id : suggestedStorageIds) {
@@ -135,10 +135,10 @@ void renderRecipeViewAfterAddingStorage(const std::vector<api::StorageId>& stora
 
     if (isAtLeastOneIngredientLack) {
         keyboard[1].push_back(detail::makeCallbackButton(u8"📝 Составить список продуктов",
-                                                         "makeProductList")); // Add needed info for next states!
+                                                         "add_shopping_list")); // Add needed info for next states!
     }
 
-    keyboard[buttonRows - 1].push_back(detail::makeCallbackButton(u8"↩️ Назад", "backFromRecipeView"));
+    keyboard[buttonRows - 1].push_back(detail::makeCallbackButton(u8"↩️ Назад", "back_to_suggestions"));
     auto messageId = message::getMessageId(userId);
     if (messageId) {
         bot.editMessageText(
@@ -247,7 +247,7 @@ void renderStorageSuggestion(const std::vector<api::StorageId>& storageIdsToAcco
         i++;
     }
     keyboard[std::floor((storageIdsToShow.size() + 1) / 2)].push_back(
-        detail::makeCallbackButton(u8"↩️ Назад", "BackFromAddingStorages"));
+        detail::makeCallbackButton(u8"↩️ Назад", "back_to_recipe"));
     auto messageId = message::getMessageId(userId);
     if (messageId) {
         bot.editMessageText(

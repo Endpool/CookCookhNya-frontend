@@ -20,7 +20,7 @@ void renderMemberDeletionPrompt(
     auto members = storageApi.getStorageMembers(userId, storageId);
     const unsigned int buttonRows = members.size();
     InlineKeyboard keyboard(buttonRows);
-    keyboard[0].push_back(detail::makeCallbackButton(u8"🚫 Отмена", "cancel_member_deletion"));
+    keyboard[0].push_back(detail::makeCallbackButton(u8"↩️ Назад", "cancel_member_deletion"));
     size_t k = 1;
     for (auto& member : members) {
         if (member.userId != storage.ownerId) {
