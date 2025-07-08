@@ -20,9 +20,8 @@ void customIngredientPublish(
     auto ingredientId = utils::parseSafe<api::IngredientId>(cq.data);
     if (ingredientId) {
         api.publishCustom(userId, *ingredientId);
-        renderCustomIngredientsList(true, userId, chatId, bot, api);
-        stateManager.put(CustomIngredientsList{});
-        return;
     }
+    renderCustomIngredientsList(true, userId, chatId, bot, api);
+    stateManager.put(CustomIngredientsList{});
 }
 } // namespace cookcookhnya::handlers::publish_custom_ingredients

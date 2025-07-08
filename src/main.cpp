@@ -19,6 +19,7 @@ int main() {
                                                   personalAccountButtonHandler,
                                                   customIngredientsListButtonHandler,
                                                   customIngredientCreateHandler,
+                                                  customIngredientCancelCreationHandler,
                                                   customIngredientConfirmHandler,
                                                   customIngredientPublishHandler,
                                                   storageCreateButtonHandler,

@@ -70,6 +70,7 @@ using personalAccountButtonHandler = Handler<Events::CallbackQuery{}, personalAc
 // // CustomIngredient
 using customIngredientsListButtonHandler = Handler<Events::CallbackQuery{}, customIngredientsList>;
 using customIngredientCreateHandler = Handler<Events::Message{}, customIngredientEnterName>;
+using customIngredientCancelCreationHandler = Handler<Events::CallbackQuery{}, customIngredientCancelCreation>;
 using customIngredientConfirmHandler = Handler<Events::CallbackQuery{}, customIngredientConfirmation>;
 using customIngredientPublishHandler = Handler<Events::CallbackQuery{}, customIngredientPublish>;
 

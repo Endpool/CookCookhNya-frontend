@@ -22,7 +22,7 @@ void customIngredientEnterName(CustomIngredientCreationEnterName& /*unused*/,
     auto userId = m.from->id;
     auto chatId = m.chat->id;
 
-    auto text = utils::utf8str(u8"🌽 Введите новое имя ингредиента");
+    auto text = utils::utf8str(u8"🥦 Введите новое имя ингредиента");
     auto messageId = message::getMessageId(userId);
     if (messageId) {
         bot.editMessageText(text, chatId, *messageId);
@@ -40,7 +40,7 @@ void customIngredientCancelCreation(CustomIngredientCreationEnterName& /*unused*
     auto userId = cq.from->id;
     auto chatId = cq.message->chat->id;
     if (cq.data == "cancel") {
-        renderCustomIngredientsList(false, userId, chatId, bot, api);
+        renderCustomIngredientsList(true, userId, chatId, bot, api);
         stateManager.put(CustomIngredientsList{});
     }
 }

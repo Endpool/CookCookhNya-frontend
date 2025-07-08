@@ -21,7 +21,7 @@ void renderCustomIngredientsList(bool toBeEdited, UserId userId, ChatId chatId, 
 
     if (ingredients.empty()) {
         keyboard[0].push_back(detail::makeCallbackButton(u8"🆕 Создать", "create"));
-        keyboard[2].push_back(detail::makeCallbackButton(u8"↩️ Назад", "back"));
+        keyboard[1].push_back(detail::makeCallbackButton(u8"↩️ Назад", "back"));
     } else {
         keyboard[0].push_back(detail::makeCallbackButton(u8"🆕 Создать", "create"));
         keyboard[1].push_back(detail::makeCallbackButton(u8"📢 Опубликовать", "publish"));
@@ -34,7 +34,7 @@ void renderCustomIngredientsList(bool toBeEdited, UserId userId, ChatId chatId, 
     });
 
     auto text = std::format("{} Вы находитесь в Мои ингредиенты. \nВами созданные ингредиенты:\n{}",
-                            utils::utf8str(u8"🌽"),
+                            utils::utf8str(u8"📋"),
                             formatedIngredients);
 
     if (toBeEdited) {
