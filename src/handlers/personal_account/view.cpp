@@ -9,7 +9,7 @@ using namespace render::custom_recipes_list;
 using namespace render::main_menu;
 
 void personalAccount(PersonalAccountMenu& /**/, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
-    std::string data = cq.data;
+    const std::string data = cq.data;
     bot.answerCallbackQuery(cq.id);
     auto chatId = cq.message->chat->id;
     auto userId = cq.from->id;

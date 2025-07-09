@@ -8,13 +8,17 @@
 
 namespace cookcookhnya::render::custom_recipe_view {
 
-void renderCustomRecipe(
-    bool toBeEdited, UserId userId, ChatId chatId, api::RecipeId recipeId, BotRef bot, RecipesApiRef recipesApi) {
+void renderCustomRecipe(bool toBeEdited,
+                        UserId userId,
+                        ChatId chatId,
+                        api::RecipeId /*recipeId*/,
+                        BotRef bot,
+                        RecipesApiRef /*recipesApi*/) {
     // auto recipeDetails = recipesApi.get(userId, recipeId); UNCOMMENT WHEN BACKEND IS READY
-    api::models::recipe::CustomRecipeDetails recipeDetailsExample{
+    const api::models::recipe::CustomRecipeDetails recipeDetailsExample{
         .ingredients = {{{.id = 1, .name = "asd"}, {.id = 2, .name = "asdfg"}}}, .name = "asdgfh", .link = "heweg"};
 
-    std::size_t rows = 4; // 1 for publish, 1 for delete, 1 for back, 1 for change
+    const size_t rows = 4; // 1 for publish, 1 for delete, 1 for back, 1 for change
     InlineKeyboard keyboard(rows);
     std::string toPrint;
     toPrint += (utils::utf8str(u8"Рецепт: ") + recipeDetailsExample.name + "\n");
