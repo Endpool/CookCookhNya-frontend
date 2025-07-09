@@ -24,19 +24,21 @@ void start(MessageRef m, BotRef bot, SMRef stateManager, ApiClientRef api) {
         fullname += ' ';
         fullname += m.from->lastName;
     }
-    auto startText = m.text;
-    const int hashPos = 7;
-    if (startText.size() > hashPos - 1) {
-        auto hash = std::string(m.text).substr(hashPos);
-        api.getStoragesApi().activate(userId, hash);
-    }
     std::optional<std::string> alias;
     if (!m.from->username.empty())
         alias = m.from->username;
 
     api.getUsersApi().updateInfo(
         userId,
-        api::models::user::UpdateUserInfoBody{.alias = std::move(m.from->username), .fullname = std::move(fullname)});
+        api::models::user::UpdateUserInfoBody{.alias = std::move(m.from->username), .fullname = std::move(fullname)}
+    );
+
+    auto startText = m.text;
+    const int hashPos = "/start ".size();
+    if (startText.size() > hashPos - 1) {
+        auto hash = std::string(m.text).substr(hashPos);
+        api.getStoragesApi().activate(userId, hash);
+    }
 };
 
 void handleNoState(MessageRef m, BotRef bot) {
