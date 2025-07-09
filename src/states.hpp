@@ -2,13 +2,14 @@
 
 #include "backend/id_types.hpp"
 #include "backend/models/ingredient.hpp"
+#include "backend/models/shopping_list.hpp"
+#include "utils.hpp"
 
 #include <tg_stater/state_storage/common.hpp>
 #include <tg_stater/state_storage/memory.hpp>
 
 #include <cstddef>
-#include <set>
-#include <unordered_map>
+#include <utility>
 #include <variant>
 #include <vector>
 
@@ -44,33 +45,16 @@ struct PackMemberView : detail::StorageIdMixin {};
 struct MemberAddition : detail::StorageIdMixin {};
 struct MemberDeletion : detail::StorageIdMixin {};
 
-class StorageIngredientsList : public detail::StorageIdMixin {
-  private:
-    using Ingredient = api::models::ingredient::Ingredient;
+struct StorageIngredientsList : detail::StorageIdMixin {
+    using IngredientsDb = utils::FastSortedDb<api::models::ingredient::Ingredient>;
 
-    struct IngredientComparator {
-        bool operator()(const Ingredient& l, const Ingredient& r) const {
-            return l.name < r.name;
-        }
-    };
+    IngredientsDb storageIngredients;
+    std::size_t totalFound = 0;
+    std::size_t pageNo = 0;
+    std::vector<api::models::ingredient::IngredientSearchForStorageItem> searchItems;
 
-    std::set<Ingredient, IngredientComparator> storageIngredients;
-    std::unordered_map<api::IngredientId, decltype(storageIngredients)::iterator> ingredientIndex;
-
-  public:
-    std::size_t totalFound = 0;                                                       // NOLINT(*non-private*)
-    std::size_t pageNo = 0;                                                           // NOLINT(*non-private*)
-    std::vector<api::models::ingredient::IngredientSearchForStorageItem> searchItems; // NOLINT(*non-private*)
-
-    StorageIngredientsList(api::StorageId storageId, decltype(storageIngredients) storageIngredients);
-
-    void putIngredient(Ingredient ingredient);
-
-    void removeIngredient(api::IngredientId id);
-
-    const decltype(storageIngredients)& getStorageIngredients() const {
-        return storageIngredients;
-    }
+    StorageIngredientsList(api::StorageId storageId, IngredientsDb::Set ingredients)
+        : StorageIdMixin{storageId}, storageIngredients{std::move(ingredients)} {}
 };
 
 struct StorageSelection {
@@ -96,7 +80,12 @@ struct ShoppingListCreation {
     std::size_t pageNo;
 };
 
-struct ShoppingListView {};
+struct ShoppingListView {
+    using ItemsDb = utils::FastSortedDb<api::models::shopping_list::ShoppingListItem,
+                                        &api::models::shopping_list::ShoppingListItem::ingredientId>;
+
+    ItemsDb items;
+};
 
 using State = std::variant<MainMenu,
                            PersonalAccountMenu,

@@ -41,10 +41,10 @@ void storageIngredientsSearchButtonCallback(
 
     if (it->available) {
         api.getIngredientsApi().deleteFromStorage(userId, state.storageId, *mIngredient);
-        state.removeIngredient(*mIngredient);
+        state.storageIngredients.remove(*mIngredient);
     } else {
         api.getIngredientsApi().putToStorage(userId, state.storageId, *mIngredient);
-        state.putIngredient({it->id, it->name});
+        state.storageIngredients.put({.id = it->id, .name = it->name});
     }
     it->available = !it->available;
 

@@ -125,7 +125,7 @@ class ApiBase {
 
     template <typename JsonOut>
     JsonOut jsonDeleteAuthed(UserId userId, const std::string& path, const httplib::Params& params = {}) const {
-        return jsonDelete<JsonOut>(path, {{"Authorization", "Bearer " + std::to_string(userId)}, params});
+        return jsonDelete<JsonOut>(path, {{"Authorization", "Bearer " + std::to_string(userId)}}, params);
     }
 };
 

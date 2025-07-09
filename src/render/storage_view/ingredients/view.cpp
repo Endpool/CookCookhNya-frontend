@@ -49,7 +49,7 @@ void renderIngredientsListSearch(const states::StorageIngredientsList& state,
     using namespace std::views;
     using std::ranges::to;
 
-    std::string list = state.getStorageIngredients() |
+    std::string list = state.storageIngredients.getAll() |
                        transform([](auto& i) { return std::format("• {}\n", i.name); }) | join | to<std::string>();
 
     auto text = utils::utf8str(u8"🍗 Ваши ингредиенты:\n\n") + std::move(list);
