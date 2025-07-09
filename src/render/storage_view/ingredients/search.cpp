@@ -2,8 +2,8 @@
 
 #include "backend/models/ingredient.hpp"
 #include "message_tracker.hpp"
+#include "patched_bot.hpp"
 #include "render/common.hpp"
-#include "search_bot_patch.hpp"
 #include "utils.hpp"
 
 #include <tgbot/types/InlineKeyboardButton.h>

@@ -6,18 +6,22 @@
 #include "backend/api/shopping_lists.hpp"
 #include "backend/api/storages.hpp"
 #include "backend/api/users.hpp"
+#include "patched_bot.hpp"
 #include "tg_types.hpp"
 #include "utils.hpp"
-
-#include <tgbot/Api.h>
-#include <tgbot/types/InlineKeyboardButton.h>
-#include <tgbot/types/Message.h>
 
 #include <initializer_list>
 #include <memory>
 #include <string_view>
 #include <utility>
 #include <vector>
+
+// Forward declarations
+namespace TgBot {
+class Message;
+class InlineKeyboardButton;
+class InlineKeyboardMarkup;
+} // namespace TgBot
 
 namespace cookcookhnya::render {
 
@@ -33,9 +37,9 @@ using UserId = tg_types::UserId;
 using ChatId = tg_types::ChatId;
 using MessageId = tg_types::MessageId;
 
-using BotRef = const TgBot::Api&;
+using BotRef = const PatchedBot&;
 using MessageRef = const TgBot::Message&;
-using InlineKeyboard = std::vector<std::vector<TgBot::InlineKeyboardButton::Ptr>>;
+using InlineKeyboard = std::vector<std::vector<std::shared_ptr<TgBot::InlineKeyboardButton>>>;
 
 inline TgBot::InlineKeyboardButton::Ptr makeCallbackButton(std::string_view text, std::string_view data) {
     TgBot::InlineKeyboardButton::Ptr button = std::make_shared<TgBot::InlineKeyboardButton>();
@@ -61,7 +65,7 @@ makeButtonRow(std::initializer_list<std::pair<std::string_view, std::string_view
     return row;
 }
 
-inline TgBot::InlineKeyboardMarkup::Ptr makeKeyboardMarkup(InlineKeyboard&& keyboard) {
+inline std::shared_ptr<TgBot::InlineKeyboardMarkup> makeKeyboardMarkup(InlineKeyboard&& keyboard) {
     auto markup = std::make_shared<TgBot::InlineKeyboardMarkup>();
     markup->inlineKeyboard = std::move(keyboard);
     return markup;
