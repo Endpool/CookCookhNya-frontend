@@ -22,7 +22,7 @@ using namespace tg_types;
 
 namespace {
 
-auto makeKeyboard(const std::vector<IngredientSearchItem>& ingredients,
+auto makeKeyboard(const std::vector<IngredientSearchForStorageItem>& ingredients,
                   std::size_t /*pageNo*/,
                   std::size_t /*totalPages*/) {
     using namespace std::views;
@@ -53,7 +53,7 @@ void renderStorageIngredientsSearch(ChatId chatId, UserId userId, BotRef bot) {
     }
 }
 
-void renderStorageIngredientsSearchEdit(const std::vector<IngredientSearchItem>& ingredients,
+void renderStorageIngredientsSearchEdit(const std::vector<IngredientSearchForStorageItem>& ingredients,
                                         std::size_t pageNo,
                                         std::size_t totalPages,
                                         MessageId message,

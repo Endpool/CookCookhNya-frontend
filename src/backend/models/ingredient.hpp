@@ -18,17 +18,31 @@ struct Ingredient {
     friend Ingredient tag_invoke(boost::json::value_to_tag<Ingredient>, const boost::json::value& j);
 };
 
-struct IngredientSearchItem {
+struct IngredientCreateBody {
+    std::string name;
+
+    friend void tag_invoke(boost::json::value_from_tag, boost::json::value& j, const IngredientCreateBody& body);
+};
+
+struct IngredientSearchForStorageItem {
     IngredientId id;
     std::string name;
     bool available;
 
-    friend IngredientSearchItem tag_invoke(boost::json::value_to_tag<IngredientSearchItem>,
-                                           const boost::json::value& j);
+    friend IngredientSearchForStorageItem tag_invoke(boost::json::value_to_tag<IngredientSearchForStorageItem>,
+                                                     const boost::json::value& j);
+};
+
+struct IngredientSearchForStorageResponse {
+    std::vector<IngredientSearchForStorageItem> page;
+    std::size_t found;
+
+    friend IngredientSearchForStorageResponse tag_invoke(boost::json::value_to_tag<IngredientSearchForStorageResponse>,
+                                                         const boost::json::value& j);
 };
 
 struct IngredientSearchResponse {
-    std::vector<IngredientSearchItem> page;
+    std::vector<Ingredient> page;
     std::size_t found;
 
     friend IngredientSearchResponse tag_invoke(boost::json::value_to_tag<IngredientSearchResponse>,

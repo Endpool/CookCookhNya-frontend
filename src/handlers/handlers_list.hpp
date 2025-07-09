@@ -3,6 +3,10 @@
 // Handler callbacks
 #include "initial/start.hpp"
 #include "main_menu/view.hpp"
+#include "personal_account/ingredients/create.hpp"
+#include "personal_account/ingredients/publish.hpp"
+#include "personal_account/ingredients/view.hpp"
+#include "personal_account/view.hpp"
 #include "recipes_suggestion/recipe/view.hpp"
 #include "recipes_suggestion/storage_selection/select.hpp"
 #include "recipes_suggestion/suggest.hpp"
@@ -30,6 +34,10 @@ namespace cookcookhnya::handlers {
 
 using namespace init;
 using namespace main_menu_view;
+using namespace personal_account_view;
+using namespace create_custom_ingredients;
+using namespace publish_custom_ingredients;
+using namespace custom_ingredients_view;
 using namespace storage_create;
 using namespace storage_delete;
 using namespace storage_list_view;
@@ -55,6 +63,16 @@ using noStateHandler = Handler<Events::AnyMessage{}, handleNoState, NoState{}>;
 
 // MainMenu
 using mainMenuButtonHandler = Handler<Events::CallbackQuery{}, mainMenuHandler>;
+
+// PersonalAccount
+using personalAccountButtonHandler = Handler<Events::CallbackQuery{}, personalAccountButtonHandler>;
+
+// // CustomIngredient
+using customIngredientsListButtonHandler = Handler<Events::CallbackQuery{}, customIngredientsList>;
+using customIngredientCreateHandler = Handler<Events::Message{}, customIngredientEnterName>;
+using customIngredientCancelCreationHandler = Handler<Events::CallbackQuery{}, customIngredientCancelCreation>;
+using customIngredientConfirmHandler = Handler<Events::CallbackQuery{}, customIngredientConfirmation>;
+using customIngredientPublishHandler = Handler<Events::CallbackQuery{}, customIngredientPublish>;
 
 // StorageListCreate
 using storageCreateHandler = Handler<Events::Message{}, createStorage>;
