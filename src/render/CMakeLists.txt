@@ -20,6 +20,8 @@ target_sources(main PRIVATE
     src/render/storage_view/view.cpp
 
     src/render/custom_recipes_list/view.cpp
+    src/render/custom_recipes_list/create.cpp
+    src/render/custom_recipes_list/custom_recipe/view.cpp
 
     src/render/personal_account/view.cpp
 )

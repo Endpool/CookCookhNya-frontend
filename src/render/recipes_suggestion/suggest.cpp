@@ -5,7 +5,6 @@
 #include "message_tracker.hpp"
 #include "render/common.hpp"
 
-#include "render/custom_recipes_list/view.hpp"
 #include "utils.hpp"
 #include <cstddef>
 #include <format>
@@ -131,17 +130,14 @@ void editRecipesSuggestion(const std::vector<api::StorageId>& storageIds,
                                                 storageIds); // Take storages of user from backend
 
     if (messageId) {
-        bot.editMessageText(pageInfo,
-                            chatId,
-                            *messageId,
-                            "",
-                            "",
-                            nullptr,
-                            detail::makeKeyboardMarkup(constructMarkup( // render::customRecipesList::
-                                storageIds,
-                                pageNo,
-                                numOfRecipesOnPage,
-                                recipesList)));
+        bot.editMessageText(
+            pageInfo,
+            chatId,
+            *messageId,
+            "",
+            "",
+            nullptr,
+            detail::makeKeyboardMarkup(constructMarkup(storageIds, pageNo, numOfRecipesOnPage, recipesList)));
     }
 }
 

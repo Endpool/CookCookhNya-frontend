@@ -24,6 +24,8 @@ class RecipesApi : ApiBase {
     RecipeId create(UserId userId, // NOLINT(*-nodiscard)
                     const models::recipe::RecipeCreateBody& body) const;
     void delete_(UserId userId, RecipeId id) const;
+    [[nodiscard]] models::recipe::CustomRecipeDetails get(UserId userId, RecipeId id) const;
+    void publishRecipe(UserId userId, RecipeId recipeId) const;
 };
 
 } // namespace cookcookhnya::api

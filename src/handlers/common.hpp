@@ -41,9 +41,10 @@ using states::ShoppingListView;
 using states::PersonalAccountMenu;
 
 using states::CreateCustomRecipe;
+using states::CustomRecipeIngredientsSearch;
 using states::CustomRecipesList;
-using states::DeleteCustomRecipe;
 using states::RecipeCustomView;
+
 // Type aliases
 using ApiClientRef = const api::ApiClient&;
 using UserApiRef = const api::UsersApi&;

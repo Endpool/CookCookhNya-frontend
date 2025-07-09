@@ -38,14 +38,14 @@ struct StorageIngredientsList : detail::StorageIdMixin {};
 struct StorageIngredientsSearch : detail::StorageIdMixin {
     std::vector<api::models::ingredient::IngredientSearchItem> shownIngredients;
     std::size_t totalFound;
-    std::size_t pageNo;
+    int pageNo;
 };
 
 struct StorageSelection {
     std::vector<api::StorageId> storageIds;
 };
 struct SuggestedRecipeList {
-    std::size_t pageNo;
+    int pageNo;
     std::vector<api::StorageId> storageIds;
     bool fromStorage;
 };
@@ -53,23 +53,28 @@ struct RecipeView {
     std::vector<api::StorageId> storageIds;
     api::RecipeId recipeId;
     bool fromStorage;
-    std::size_t pageNo;
+    int pageNo;
 };
 
 struct CustomRecipesList {
-    std::size_t pageNo;
-};
-struct RecipeCustomView {
-    api::RecipeId recipeId;
-    std::size_t pageNo;
+    int pageNo;
 };
 
-struct DeleteCustomRecipe {
+struct CustomRecipeIngredientsSearch {
     api::RecipeId recipeId;
+    std::vector<api::models::ingredient::IngredientSearchItem> shownIngredients;
+    std::size_t totalFound;
+    int pageNo;
+};
+
+struct RecipeCustomView {
+    api::RecipeId recipeId;
+    int pageNo;
 };
 
 struct CreateCustomRecipe {
     api::RecipeId recipeId;
+    int pageNo;
 };
 
 struct ShoppingListCreation {
@@ -77,7 +82,7 @@ struct ShoppingListCreation {
     api::RecipeId recipeIdFrom;
     std::vector<api::IngredientId> ingredientIdsInList;
     bool fromStorage;
-    std::size_t pageNo;
+    int pageNo;
 };
 
 struct ShoppingListView {};
@@ -103,7 +108,8 @@ using State = std::variant<MainMenu,
                            PersonalAccountMenu,
                            CustomRecipesList,
                            RecipeCustomView,
-                           CreateCustomRecipe>;
+                           CreateCustomRecipe,
+                           CustomRecipeIngredientsSearch>;
 
 using StateManager = tg_stater::StateProxy<tg_stater::MemoryStateStorage<State>>;
 

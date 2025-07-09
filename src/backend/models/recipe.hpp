@@ -35,6 +35,22 @@ struct RecipeDetails {
     friend RecipeDetails tag_invoke(boost::json::value_to_tag<RecipeDetails>, const boost::json::value& j);
 };
 
+struct IngredientInCustomRecipe {
+    IngredientId id;
+    std::string name;
+
+    friend IngredientInCustomRecipe tag_invoke(boost::json::value_to_tag<IngredientInCustomRecipe>,
+                                               const boost::json::value& j);
+};
+
+struct CustomRecipeDetails { // Exists because of field inStorages which is not needed here
+    std::vector<IngredientInCustomRecipe> ingredients;
+    std::string name; // RECIPE NAME
+    std::string link;
+
+    friend CustomRecipeDetails tag_invoke(boost::json::value_to_tag<CustomRecipeDetails>, const boost::json::value& j);
+};
+
 struct RecipesList {
     std::vector<RecipeSummary> recipesPage;
     int recipesFound;

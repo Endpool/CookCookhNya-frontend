@@ -1,34 +1,32 @@
 #include "create.hpp"
 
-#include "backend/models/storage.hpp"
 #include "handlers/common.hpp"
-#include "message_tracker.hpp"
-#include "render/storage_list/view.hpp"
-#include "utils.hpp"
-#include <optional>
+#include "render/custom_recipes_list/custom_recipe/view.hpp"
+#include "render/custom_recipes_list/view.hpp"
 
 namespace cookcookhnya::handlers::create_custom_recipe {
 
-using namespace render::storage_list;
+using namespace render::custom_recipe_view;
+using namespace render::custom_recipes_list;
 
-void createRecipe(
-    CreateCustomRecipe& /*unused*/, MessageRef m, BotRef bot, SMRef stateManager, RecipesApiRef recipeApi) {
-    storageApi.create(m.from->id, api::models::storage::StorageCreateBody{m.text});
-    /*auto text = utils::utf8str(u8"🏷 Введите новое имя хранилища");
-    auto messageId = message::getMessageId(m.from->id);
-    if (messageId) {
-        bot.editMessageText(text, m.chat->id, *messageId);
-    }*/
-    renderStorageList(false, m.from->id, m.chat->id, bot, storageApi);
-    stateManager.put(StorageList{});
+void createRecipe(CreateCustomRecipe& state, MessageRef m, BotRef bot, SMRef stateManager, RecipesApiRef recipeApi) {
+    // state.recipeId = recipeApi.create(m.from->id, api::models::recipe::RecipeCreateBody{m.text}); wait for backend
+    // realisation
+
+    renderCustomRecipe(false, m.from->id, m.chat->id, state.recipeId, bot, recipeApi);
+    stateManager.put(
+        RecipeCustomView{.recipeId = state.recipeId, .pageNo = 0}); // If it went from creation then as user will return
+                                                                    // from RecipeView to RecipesList on 1st page
 };
 
 void cancelRecipeCreation(
-    CreateCustomRecipe& /*unused*/, CallbackQueryRef cq, BotRef bot, SMRef stateManager, RecipesApiRef recipeApi) {
+    CreateCustomRecipe& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, RecipesApiRef recipeApi) {
     bot.answerCallbackQuery(cq.id);
-    if (cq.data == "cancel_storage_creation") {
-        renderStorageList(true, cq.from->id, cq.message->chat->id, bot, storageApi);
-        stateManager.put(StorageList{});
+    if (cq.data == "cancel_recipe_creation") {
+        renderCustomRecipesList(state.pageNo, cq.from->id, cq.message->chat->id, bot, recipeApi);
+        stateManager.put(
+            CustomRecipesList{.pageNo = state.pageNo}); // If it went from creation then as user will return from
+                                                        // RecipeView to RecipesList on 1st page);
     }
 };
 

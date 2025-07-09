@@ -38,4 +38,14 @@ RecipeId RecipesApi::create(UserId userId, const RecipeCreateBody& body) const {
 void RecipesApi::delete_(UserId userId, RecipeId recipeId) const {
     jsonDeleteAuthed<void>(userId, std::format("/my/recipes/{}", recipeId)); // path analogically to storages
 }
+
+CustomRecipeDetails RecipesApi::get(UserId userId, RecipeId recipeId) const {
+    return jsonGetAuthed<CustomRecipeDetails>(userId,
+                                              std::format("/my/recipes/{}", recipeId)); // path analogically to storages
+}
+
+void RecipesApi::publishRecipe(UserId userId, RecipeId recipeId) const {
+    jsonPostAuthed<void>(userId, std::format("my/recipes/{}/publish", recipeId));
+}
+
 } // namespace cookcookhnya::api

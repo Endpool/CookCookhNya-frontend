@@ -4,6 +4,7 @@
 
 namespace cookcookhnya::handlers::recipe_view {
 
-void handleRecipeView(RecipeView& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api);
+void handleCustomRecipeView(
+    RecipeCustomView& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, RecipesApiRef recipesApi);
 
 } // namespace cookcookhnya::handlers::recipe_view

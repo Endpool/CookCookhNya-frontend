@@ -8,7 +8,6 @@
 #include "recipes_suggestion/suggest.hpp"
 #include "shopping_list/create.hpp"
 #include "shopping_list/view.hpp"
-#include "states.hpp"
 #include "storage_list/create.hpp"
 #include "storage_list/delete.hpp"
 #include "storage_list/view.hpp"
@@ -23,10 +22,14 @@
 
 #include "personal_account/view.hpp"
 
+#include "custom_recipes_list/create.hpp"
+#include "custom_recipes_list/custom_recipe/search.hpp"
+#include "custom_recipes_list/custom_recipe/view.hpp"
 #include "custom_recipes_list/view.hpp"
 
 #include "handlers/common.hpp"
 
+#include <boost/mpl/aux_/na_fwd.hpp>
 #include <tg_stater/handler/event.hpp>
 #include <tg_stater/handler/handler.hpp>
 #include <tg_stater/handler/type.hpp>
@@ -50,7 +53,9 @@ using namespace shopping_list_create;
 using namespace shopping_list;
 using namespace personal_account_view;
 using namespace custom_recipes_list;
-
+using namespace recipe_view;
+using namespace create_custom_recipe;
+using namespace recipe::ingredients;
 using namespace tg_stater;
 
 namespace bot_handlers {
@@ -111,6 +116,19 @@ using personalAccountButtonHandler = Handler<Events::CallbackQuery{}, personalAc
 
 // Custom Recipes List
 using customRecipesListHandler = Handler<Events::CallbackQuery{}, customRecipeList>;
+
+// Custom Recipe Create
+using customRecipeCreateHandler = Handler<Events::Message{}, createRecipe>;
+using customRecipeCreateButtonHandler = Handler<Events::CallbackQuery{}, cancelRecipeCreation>;
+
+// Custom Recipe View
+using customRecipeViewHandler = Handler<Events::CallbackQuery{}, handleCustomRecipeView>;
+
+// Custom Recipe Ingredients Search
+using customRecipeIngredientsSearchButtonHandler =
+    Handler<Events::CallbackQuery{}, customRecipeIngredientsSearchButtonCallback>;
+using customRecipeIngredientsSearchHandler =
+    Handler<Events::InlineQuery{}, customRecipeIngredientsSearchInlineQueryCallback>;
 } // namespace bot_handlers
 
 } // namespace cookcookhnya::handlers

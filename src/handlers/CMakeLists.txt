@@ -23,4 +23,7 @@ target_sources(main PRIVATE
 
     src/handlers/personal_account/view.cpp
     src/handlers/custom_recipes_list/view.cpp
+    src/handlers/custom_recipes_list/create.cpp
+    src/handlers/custom_recipes_list/custom_recipe/view.cpp
+    src/handlers/custom_recipes_list/custom_recipe/search.cpp
 )

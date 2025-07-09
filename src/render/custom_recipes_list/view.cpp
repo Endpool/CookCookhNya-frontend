@@ -23,16 +23,14 @@ InlineKeyboard constuctNavigationsMarkup(size_t offset,
         InlineKeyboard error(0);
         return error;
     }
-    const size_t arrowsRow = offset + numOfRecipesOnPage; // 1 because of the shift of add/delete row
+    const size_t arrowsRow = offset + numOfRecipesOnPage;
 
     InlineKeyboard keyboard(fullKeyBoardSize);
     int counter = 0;
     for (std::size_t i = offset; i < numOfRecipesOnPage + offset; i++) {
         // Print on button in form "1. {Recipe}"
         keyboard[i].push_back(detail::makeCallbackButton(
-            std::format("{}. {}",
-                        1 + counter + ((static_cast<std::size_t>(pageNo)) * numOfRecipesOnPage),
-                        recipesList.recipesPage[counter].name),
+            std::format("{}. {}", 1 + counter + ((pageNo)*numOfRecipesOnPage), recipesList.recipesPage[counter].name),
             std::format("recipe: {}", recipesList.recipesPage[counter].id))); // RECIPE ID
         counter++;
     }
@@ -64,7 +62,6 @@ InlineKeyboard constuctNavigationsMarkup(size_t offset,
     }
 
     // If first page wasn't didn't represent all recipes in one page then the field with arrows is required
-    // 1 for back button return, 1 for two arrows next and prev, and other buttons are recipes
     if (!ifMaxPage) {
         // Show both possible ways
         keyboard[arrowsRow].reserve(3);
@@ -74,7 +71,6 @@ InlineKeyboard constuctNavigationsMarkup(size_t offset,
         keyboard[arrowsRow].push_back(detail::makeCallbackButton(u8"⏭️", std::to_string(pageNo + 1)));
     } else {
         // If pageNo == maxPage then it's last page -> won't show button next
-
         keyboard[arrowsRow].reserve(3);
         keyboard[arrowsRow].push_back(detail::makeCallbackButton(u8"⏮️", std::to_string(pageNo - 1)));
         keyboard[arrowsRow].push_back(
@@ -128,7 +124,7 @@ void renderCustomRecipesList(int pageNo, UserId userId, ChatId chatId, BotRef bo
                                                                             {.id = 2, .name = "asasdd"},
                                                                             {.id = 2, .name = "asasdd"},
                                                                             {.id = 2, .name = "asasdd"}};
-    api::models::recipe::CustomRecipesList recipesList{.recipesPage = recipesExample, .recipesFound = 2};
+    api::models::recipe::CustomRecipesList recipesList{.recipesPage = recipesExample, .recipesFound = 4};
     if (messageId) {
         bot.editMessageText(pageInfo,
                             chatId,

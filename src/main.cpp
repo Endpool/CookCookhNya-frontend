@@ -34,7 +34,12 @@ int main() {
                                                   shoppingListCreationHandler,
                                                   shoppingListButtonHandler,
                                                   customRecipesListHandler,
-                                                  personalAccountButtonHandler>
+                                                  personalAccountButtonHandler,
+                                                  customRecipeCreateHandler,
+                                                  customRecipeCreateButtonHandler,
+                                                  customRecipeViewHandler,
+                                                  customRecipeIngredientsSearchButtonHandler,
+                                                  customRecipeIngredientsSearchHandler>
         bot{{}, {ApiClient{utils::getenvWithError("API_URL")}}};
 
     bot.start(TgBot::Bot{utils::getenvWithError("BOT_TOKEN")});
