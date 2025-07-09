@@ -27,7 +27,7 @@ void renderCustomIngredientConfirm(
     keyboard[0].push_back(detail::makeCallbackButton(u8"✅ Подтвердить", "confirm"));
     keyboard[1].push_back(detail::makeCallbackButton(u8"🚫 Отмена", "cancel"));
 
-    auto similarIngredients = api.getAllIngredients(ingredientName, 5, 0, 70); // NOLINT
+    auto similarIngredients = api.search(ingredientName, 5, 0, 70); // NOLINT
     std::string formatedIngredients;
     std::ranges::for_each(similarIngredients, [&formatedIngredients](const api::models::ingredient::Ingredient& item) {
         formatedIngredients += "• " + item.name + "\n";

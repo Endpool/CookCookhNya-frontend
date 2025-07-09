@@ -42,6 +42,20 @@ class ApiBase {
     }
 
     // POST
+    template <typename JsonOut>
+    JsonOut jsonPost(const std::string& path, const httplib::Headers& headers = {}) const {
+        using namespace boost::json;
+        httplib::Result response = api.get().Post(path, headers);
+        assertSuccess(response);
+        if constexpr (!std::is_void_v<JsonOut>)
+            return value_to<JsonOut>(parse(response->body));
+    }
+
+    template <typename JsonOut>
+    JsonOut jsonPostAuthed(UserId userId, const std::string& path) const {
+        return jsonPost<JsonOut>(path, {{"Authorization", "Bearer " + std::to_string(userId)}});
+    }
+
     template <typename JsonOut, typename JsonIn>
     JsonOut jsonPostWithJson(const std::string& path, JsonIn&& body, const httplib::Headers& headers = {}) const {
         using namespace boost::json;
@@ -56,20 +70,6 @@ class ApiBase {
     JsonOut jsonPostWithJsonAuthed(UserId userId, const std::string& path, JsonIn&& body) const {
         return jsonPostWithJson<JsonOut>(
             path, std::forward<JsonIn>(body), {{"Authorization", "Bearer " + std::to_string(userId)}});
-    }
-
-    template <typename JsonOut>
-    JsonOut jsonPost(const std::string& path, const httplib::Headers& headers = {}) const {
-        using namespace boost::json;
-        httplib::Result response = api.get().Post(path, headers);
-        assertSuccess(response);
-        if constexpr (!std::is_void_v<JsonOut>)
-            return value_to<JsonOut>(parse(response->body));
-    }
-
-    template <typename JsonOut>
-    JsonOut jsonPostAuthed(UserId userId, const std::string& path) const {
-        return jsonPost<JsonOut>(path, {{"Authorization", "Bearer " + std::to_string(userId)}});
     }
 
     // PUT

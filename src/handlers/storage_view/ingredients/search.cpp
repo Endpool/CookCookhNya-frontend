@@ -52,7 +52,7 @@ void storageIngredientsSearchInlineQueryCallback(StorageIngredientsSearch& state
     if (!iq.query.empty()) {
         const auto userId = iq.from->id;
         const std::size_t count = 100;
-        auto response = api.search(userId, iq.query, state.storageId, count, 0);
+        auto response = api.searchForStorage(userId, iq.query, state.storageId, count, 0);
         if (response.found != state.totalFound || !std::ranges::equal(response.page,
                                                                       state.shownIngredients,
                                                                       std::ranges::equal_to{},
