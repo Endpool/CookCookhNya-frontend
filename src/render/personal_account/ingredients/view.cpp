@@ -22,12 +22,12 @@ void renderCustomIngredientsList(bool toBeEdited, UserId userId, ChatId chatId, 
     InlineKeyboard keyboard(buttonRows);
 
     if (ingredients.empty()) {
-        keyboard[0].push_back(detail::makeCallbackButton(u8"🆕 Создать", "create"));
-        keyboard[1].push_back(detail::makeCallbackButton(u8"↩️ Назад", "back"));
+        keyboard[0].push_back(makeCallbackButton(u8"🆕 Создать", "create"));
+        keyboard[1].push_back(makeCallbackButton(u8"↩️ Назад", "back"));
     } else {
-        keyboard[0].push_back(detail::makeCallbackButton(u8"🆕 Создать", "create"));
-        keyboard[1].push_back(detail::makeCallbackButton(u8"📢 Опубликовать", "publish"));
-        keyboard[2].push_back(detail::makeCallbackButton(u8"↩️ Назад", "back"));
+        keyboard[0].push_back(makeCallbackButton(u8"🆕 Создать", "create"));
+        keyboard[1].push_back(makeCallbackButton(u8"📢 Опубликовать", "publish"));
+        keyboard[2].push_back(makeCallbackButton(u8"↩️ Назад", "back"));
     }
 
     std::string formatedIngredients;
@@ -42,11 +42,10 @@ void renderCustomIngredientsList(bool toBeEdited, UserId userId, ChatId chatId, 
     if (toBeEdited) {
         auto messageId = message::getMessageId(userId);
         if (messageId) {
-            bot.editMessageText(
-                text, chatId, *messageId, "", "", nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
+            bot.editMessageText(text, chatId, *messageId, "", "", nullptr, makeKeyboardMarkup(std::move(keyboard)));
         }
     } else {
-        auto message = bot.sendMessage(chatId, text, nullptr, nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
+        auto message = bot.sendMessage(chatId, text, nullptr, nullptr, makeKeyboardMarkup(std::move(keyboard)));
         message::addMessageId(userId, message->messageId);
     }
 }

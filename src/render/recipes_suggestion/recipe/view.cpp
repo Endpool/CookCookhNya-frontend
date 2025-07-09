@@ -123,32 +123,31 @@ void renderRecipeViewAfterAddingStorage(const std::vector<api::StorageId>& stora
             : 2; // if there is no lacking ingredients then there is no need to show field of shopping list
     InlineKeyboard keyboard(buttonRows);
 
-    keyboard[0].push_back(detail::makeCallbackButton(u8"🧑‍🍳 Готовить",
-                                                     "startCooking")); // Add needed info for next states!
+    keyboard[0].push_back(makeCallbackButton(u8"🧑‍🍳 Готовить",
+                                             "startCooking")); // Add needed info for next states!
     if (isSuggestionMade) {
         std::string dataForSuggestion = "?";
         for (auto id : suggestedStorageIds) {
             dataForSuggestion += std::format("{} ", id);
         }
-        keyboard[0].push_back(detail::makeCallbackButton(u8"?", dataForSuggestion));
+        keyboard[0].push_back(makeCallbackButton(u8"?", dataForSuggestion));
     }
 
     if (isAtLeastOneIngredientLack) {
-        keyboard[1].push_back(detail::makeCallbackButton(u8"📝 Составить список продуктов",
-                                                         "makeProductList")); // Add needed info for next states!
+        keyboard[1].push_back(makeCallbackButton(u8"📝 Составить список продуктов",
+                                                 "makeProductList")); // Add needed info for next states!
     }
 
-    keyboard[buttonRows - 1].push_back(detail::makeCallbackButton(u8"↩️ Назад", "backFromRecipeView"));
+    keyboard[buttonRows - 1].push_back(makeCallbackButton(u8"↩️ Назад", "backFromRecipeView"));
     auto messageId = message::getMessageId(userId);
     if (messageId) {
-        bot.editMessageText(
-            toPrint,
-            chatId,
-            *messageId,
-            "",
-            "",
-            nullptr,
-            detail::makeKeyboardMarkup(std::move(keyboard))); // Only on difference between function above
+        bot.editMessageText(toPrint,
+                            chatId,
+                            *messageId,
+                            "",
+                            "",
+                            nullptr,
+                            makeKeyboardMarkup(std::move(keyboard))); // Only on difference between function above
     }
 }
 
@@ -243,15 +242,14 @@ void renderStorageSuggestion(const std::vector<api::StorageId>& storageIdsToAcco
         if (i % 2 == 0) {
             keyboard[std::floor(i / 2)].reserve(2);
         }
-        keyboard[std::floor(i / 2)].push_back(detail::makeCallbackButton(name, "+" + std::to_string(storageId)));
+        keyboard[std::floor(i / 2)].push_back(makeCallbackButton(name, "+" + std::to_string(storageId)));
         i++;
     }
     keyboard[std::floor((storageIdsToShow.size() + 1) / 2)].push_back(
-        detail::makeCallbackButton(u8"↩️ Назад", "BackFromAddingStorages"));
+        makeCallbackButton(u8"↩️ Назад", "BackFromAddingStorages"));
     auto messageId = message::getMessageId(userId);
     if (messageId) {
-        bot.editMessageText(
-            toPrint, chatId, *messageId, "", "", nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
+        bot.editMessageText(toPrint, chatId, *messageId, "", "", nullptr, makeKeyboardMarkup(std::move(keyboard)));
     }
 }
 } // namespace cookcookhnya::render::recipe_view
