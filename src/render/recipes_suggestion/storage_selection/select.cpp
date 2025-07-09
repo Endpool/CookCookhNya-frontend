@@ -32,8 +32,8 @@ void renderStorageSelect(const std::vector<api::StorageId>& selected_storages,
 
         std::string emoji = utils::utf8str(isSelected ? u8"🔘" : u8"⚪️");
         const char* actionPrefix = isSelected ? "in__" : "out_";
-        std::string text = std::format("{} {}", emoji, storages[i].name);
-        std::string data = actionPrefix + std::to_string(storages[i].id);
+        const std::string text = std::format("{} {}", emoji, storages[i].name);
+        const std::string data = actionPrefix + std::to_string(storages[i].id);
         keyboard[i / 2].push_back(makeCallbackButton(text, data));
     }
     keyboard[buttonRows - 1].reserve(2);
@@ -43,9 +43,8 @@ void renderStorageSelect(const std::vector<api::StorageId>& selected_storages,
     }
     auto text = utils::utf8str(u8"🍱 Откуда брать продукты?");
     auto messageId = message::getMessageId(userId);
-    if (messageId) {
-        bot.editMessageText(text, chatId, *messageId, "", "", nullptr, makeKeyboardMarkup(std::move(keyboard)));
-    }
+    if (messageId)
+        bot.editMessageText(text, chatId, *messageId, makeKeyboardMarkup(std::move(keyboard)));
 }
 
 } // namespace cookcookhnya::render::select_storages

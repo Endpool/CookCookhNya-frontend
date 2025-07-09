@@ -5,7 +5,6 @@
 #include "handlers/common.hpp"
 #include "render/main_menu/view.hpp"
 #include "states.hpp"
-#include "utils.hpp"
 
 #include <optional>
 #include <string>

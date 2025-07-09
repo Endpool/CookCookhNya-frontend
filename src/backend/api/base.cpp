@@ -4,6 +4,7 @@
 
 #include <format>
 #include <stdexcept>
+#include <string>
 
 namespace cookcookhnya::api {
 
