@@ -33,7 +33,7 @@ textGenInfo textGen(const std::vector<api::StorageId>& storageIds,
     auto ingredients = recipeIngredients.ingredients;
 
     const std::string recipeName = recipeIngredients.name;
-    std::string toPrint = utils::utf8str(u8"Ингредиенты для \"") + recipeName + "\"\n";
+    auto toPrint = std::format("{} Ингредиенты для *{}* \n\n", utils::utf8str(u8"📖"), recipeName);
     std::vector<std::string> variants = {
         "\n", " и ", ", "}; // difference is 0 -> last, difference is 1 -> предпоследний.
 
@@ -46,7 +46,7 @@ textGenInfo textGen(const std::vector<api::StorageId>& storageIds,
         isIngredientNotWritten = true;
         isContains = false;
         if (ingredient.inStorages.empty()) {
-            toPrint += std::format("- {}\n", ingredient.name);
+            toPrint += std::format("`[ ]` {}\n", ingredient.name);
             isAtLeastOneIngredientLack = true;
             continue;
         }
@@ -55,7 +55,7 @@ textGenInfo textGen(const std::vector<api::StorageId>& storageIds,
              j++) { // Iterate through each storage where ingredient is present
             if (storageIdSet.contains(
                     ingredient.inStorages[j])) { // If it contains then ingredient is in chosen storages
-                toPrint += std::format("+ {}\n", ingredient.name);
+                toPrint += std::format("`[+]` {}\n", ingredient.name);
                 isContains = true;
                 break;
             }
@@ -69,7 +69,7 @@ textGenInfo textGen(const std::vector<api::StorageId>& storageIds,
              j++) { // Iterate through each storage where ingredient is present
             isSuggestionMade = true;
             if (isIngredientNotWritten) {
-                toPrint += std::format("? {}\n", ingredient.name);
+                toPrint += std::format("`[?]` {}\n", ingredient.name);
                 isIngredientNotWritten = false;
 
                 foundInStoragesStrings.emplace_back(""); // New place for string for suggestion
@@ -92,7 +92,7 @@ textGenInfo textGen(const std::vector<api::StorageId>& storageIds,
         }
         counterOfSuggestion++; // If here then suggesiton was made
     }
-    toPrint += std::format("Source Link: {}", recipeIngredients.link);
+    toPrint += "\n🌐 [Источник](" + recipeIngredients.link + ")";
     return {.text = toPrint,
             .isSuggestionMade = isSuggestionMade,
             .suggestedStorageIds = suggestedStorageIds,
@@ -130,7 +130,7 @@ void renderRecipeViewAfterAddingStorage(const std::vector<api::StorageId>& stora
         for (auto id : suggestedStorageIds) {
             dataForSuggestion += std::format("{} ", id);
         }
-        keyboard[0].push_back(detail::makeCallbackButton(u8"?", dataForSuggestion));
+        keyboard[0].push_back(detail::makeCallbackButton(u8"🍱 Другие хранилища?", dataForSuggestion));
     }
 
     if (isAtLeastOneIngredientLack) {
@@ -146,7 +146,7 @@ void renderRecipeViewAfterAddingStorage(const std::vector<api::StorageId>& stora
             chatId,
             *messageId,
             "",
-            "",
+            "MarkdownV2",
             nullptr,
             detail::makeKeyboardMarkup(std::move(keyboard))); // Only on difference between function above
     }
@@ -225,12 +225,12 @@ void renderStorageSuggestion(const std::vector<api::StorageId>& storageIdsToAcco
     }
     // This for is similar to suggested storages can be unionaized with this part of textGen (which will be incredibly
     // difficult to keep consistency of textGen fenction) To print storages which were added
-    std::string storagesWhichAccount = utils::utf8str(u8"Выбранные хранилища: ");
+    auto storagesWhichAccount = std::format("{} Выбранные хранилища: ", utils::utf8str(u8"🍱"));
     for (size_t i = 0; i < storageIdsToAccount.size(); i++) {
         auto storage = storageApi.get(userId, storageIdsToAccount[i]);
-        storagesWhichAccount += std::format("\"{}\" ", storage.name);
+        storagesWhichAccount += std::format("{}, ", storage.name);
         if (i == storageIdsToAccount.size() - 1) {
-            storagesWhichAccount += "\n";
+            storagesWhichAccount += "\n\n";
         }
     }
     toPrint.insert(0, storagesWhichAccount);
@@ -251,7 +251,7 @@ void renderStorageSuggestion(const std::vector<api::StorageId>& storageIdsToAcco
     auto messageId = message::getMessageId(userId);
     if (messageId) {
         bot.editMessageText(
-            toPrint, chatId, *messageId, "", "", nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
+            toPrint, chatId, *messageId, "", "MarkdownV2", nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
     }
 }
 } // namespace cookcookhnya::render::recipe_view

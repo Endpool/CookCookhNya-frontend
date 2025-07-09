@@ -33,8 +33,8 @@ auto makeKeyboard(const states::StorageIngredientsList& state) {
     keyboard[0].push_back(std::move(searchButton));
 
     for (auto [row, ing] : zip(drop(keyboard, 1), state.searchItems))
-        row.push_back(detail::makeCallbackButton((ing.available ? "[+] " : "[-] ") + ing.name, std::to_string(ing.id)));
-
+        row.push_back(
+            detail::makeCallbackButton((ing.available ? "[ + ] " : "[ㅤ] ") + ing.name, std::to_string(ing.id)));
     keyboard[1 + state.searchItems.size()].push_back(detail::makeCallbackButton(u8"↩️ Назад", "back"));
 
     return detail::makeKeyboardMarkup(std::move(keyboard));

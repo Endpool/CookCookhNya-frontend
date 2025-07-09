@@ -35,11 +35,10 @@ void changePageAndBack(
             renderStorageView(state.storageIds[0], cq.from->id, chatId, bot, api);
             stateManager.put(StorageView{state.storageIds[0]}); // Go to the only one storage
         } else {
-            if (state.storageIds.size() == 1) {
+            if (api.getStoragesApi().getStoragesList(userId).size() == 1) {
                 renderMainMenu(true, userId, chatId, bot, api);
                 stateManager.put(MainMenu{});
             } else {
-                // Go to storages selection saving the storages which were chosen
                 renderStorageSelect(state.storageIds, userId, chatId, bot, api);
                 stateManager.put(StorageSelection{.storageIds = std::move(state.storageIds)});
             }
