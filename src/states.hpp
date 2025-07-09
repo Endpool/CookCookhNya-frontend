@@ -7,6 +7,8 @@
 #include <tg_stater/state_storage/memory.hpp>
 
 #include <cstddef>
+#include <set>
+#include <unordered_map>
 #include <variant>
 #include <vector>
 
@@ -42,10 +44,33 @@ struct PackMemberView : detail::StorageIdMixin {};
 struct MemberAddition : detail::StorageIdMixin {};
 struct MemberDeletion : detail::StorageIdMixin {};
 
-struct StorageIngredientsList : detail::StorageIdMixin {
-    std::vector<api::models::ingredient::IngredientSearchItem> shownIngredients;
-    std::size_t totalFound;
-    std::size_t pageNo;
+class StorageIngredientsList : public detail::StorageIdMixin {
+  private:
+    using Ingredient = api::models::ingredient::Ingredient;
+
+    struct IngredientComparator {
+        bool operator()(const Ingredient& l, const Ingredient& r) const {
+            return l.name < r.name;
+        }
+    };
+
+    std::set<Ingredient, IngredientComparator> storageIngredients;
+    std::unordered_map<api::IngredientId, decltype(storageIngredients)::iterator> ingredientIndex;
+
+  public:
+    std::size_t totalFound = 0;                                             // NOLINT(*non-private*)
+    std::size_t pageNo = 0;                                                 // NOLINT(*non-private*)
+    std::vector<api::models::ingredient::IngredientSearchItem> searchItems; // NOLINT(*non-private*)
+
+    StorageIngredientsList(api::StorageId storageId, decltype(storageIngredients) storageIngredients);
+
+    void putIngredient(Ingredient ingredient);
+
+    void removeIngredient(api::IngredientId id);
+
+    const decltype(storageIngredients)& getStorageIngredients() const {
+        return storageIngredients;
+    }
 };
 
 struct StorageSelection {
