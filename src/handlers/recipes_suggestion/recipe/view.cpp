@@ -35,9 +35,9 @@ void handleRecipeView(RecipeView& state, CallbackQueryRef cq, BotRef bot, SMRef 
         return;
     }
     if (data == "backFromRecipeView") {
-        editRecipesSuggestion(state.storageIds, 0, userId, chatId, bot, api);
-        stateManager.put(
-            SuggestedRecipeList{.pageNo = 0, .storageIds = state.storageIds, .fromStorage = state.fromStorage});
+        editRecipesSuggestion(state.storageIds, state.pageNo, userId, chatId, bot, api);
+        stateManager.put(SuggestedRecipeList{
+            .pageNo = state.pageNo, .storageIds = state.storageIds, .fromStorage = state.fromStorage});
         bot.answerCallbackQuery(cq.id);
         return;
     }

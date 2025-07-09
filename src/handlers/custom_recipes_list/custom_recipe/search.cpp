@@ -29,7 +29,7 @@ void customRecipeIngredientsSearchButtonCallback(
     const auto chatId = cq.message->chat->id;
     if (cq.data == "back") {
         renderCustomRecipe(false, userId, chatId, state.recipeId, bot, api);
-        stateManager.put(RecipeCustomView{.recipeId = state.recipeId, .pageNo = 0});
+        stateManager.put(RecipeCustomView{.recipeId = state.recipeId, .pageNo = state.pageNo});
         return;
     }
 
@@ -39,10 +39,13 @@ void customRecipeIngredientsSearchButtonCallback(
     auto it = std::ranges::find(state.shownIngredients, *mIngredient, &IngredientSearchItem::id);
     if (it == state.shownIngredients.end())
         return;
-    if (it->available)
-        ingredientsApi.deleteFromRecipe(userId, state.recipeId, *mIngredient);
-    else
-        ingredientsApi.putToRecipe(userId, state.recipeId, *mIngredient);
+    if (it->available) {
+        // UNCOMMENT WHEN BACKEND IS READY
+        // ingredientsApi.deleteFromRecipe(userId, state.recipeId, *mIngredient);
+    } else {
+        // UNCOMMENT WHEN BACKEND IS READY
+        // ingredientsApi.putToRecipe(userId, state.recipeId, *mIngredient);
+    }
     it->available = !it->available;
 
     if (auto mMessageId = message::getMessageId(userId))
@@ -56,6 +59,7 @@ void customRecipeIngredientsSearchInlineQueryCallback(CustomRecipeIngredientsSea
     if (!iq.query.empty()) {
         const auto userId = iq.from->id;
         const std::size_t count = 100;
+        // CHECK BACKEND WHEN IT'S READY
         auto response = api.searchForRecipe(userId, iq.query, state.recipeId, count, 0);
         if (response.found != state.totalFound || !std::ranges::equal(response.page,
                                                                       state.shownIngredients,

@@ -55,14 +55,15 @@ void changePageAndBack(
         return;
     }
 
-    // If none of if's worked then the first char is number -> it's about next or prev page
-
-    auto pageNo = utils::parseSafe<int>(data);
-    if (pageNo) {
-        state.pageNo = *pageNo;
+    if (data != "dontHandle") {
+        auto pageNo = utils::parseSafe<int>(data);
+        if (pageNo) {
+            state.pageNo = *pageNo;
+        }
+        // Message is 100% exists as it was rendered by some another method
+        editRecipesSuggestion(state.storageIds, *pageNo, userId, chatId, bot, api);
+        return;
     }
-    // Message is 100% exists as it was rendered by some another method
-    editRecipesSuggestion(state.storageIds, *pageNo, userId, chatId, bot, api);
 }
 
 } // namespace cookcookhnya::handlers::recipes_suggestion

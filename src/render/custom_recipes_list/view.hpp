@@ -5,12 +5,13 @@
 
 namespace cookcookhnya::render::custom_recipes_list {
 
-void renderCustomRecipesList(int pageNo, UserId userId, ChatId chatId, BotRef bot, RecipesApiRef recipesApi);
+void renderCustomRecipesList(size_t pageNo, UserId userId, ChatId chatId, BotRef bot, RecipesApiRef recipesApi);
 
-InlineKeyboard constructMarkup(int pageNo, int numOfRecipesOnPage, api::models::recipe::CustomRecipesList& recipesList);
-InlineKeyboard constuctNavigationsMarkup(std::size_t offset,
-                                         std::size_t fullKeyBoardSize,
-                                         int pageNo,
-                                         int numOfRecipesOnPage,
+InlineKeyboard
+constructMarkup(size_t pageNo, size_t numOfRecipesOnPage, api::models::recipe::CustomRecipesList& recipesList);
+InlineKeyboard constuctNavigationsMarkup(size_t offset,
+                                         size_t fullKeyBoardSize,
+                                         size_t pageNo,
+                                         size_t numOfRecipesOnPage,
                                          api::models::recipe::CustomRecipesList recipesList);
 } // namespace cookcookhnya::render::custom_recipes_list

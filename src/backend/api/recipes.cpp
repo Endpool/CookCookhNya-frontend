@@ -3,6 +3,7 @@
 #include "backend/id_types.hpp"
 #include "backend/models/recipe.hpp"
 
+#include <cstddef>
 #include <httplib.h>
 
 #include <format>
@@ -14,7 +15,7 @@ namespace cookcookhnya::api {
 using namespace models::recipe;
 
 RecipesList
-RecipesApi::getRecipeList(UserId userId, int size, int offset, const std::vector<StorageId>& storageIds) const {
+RecipesApi::getRecipeList(UserId userId, size_t size, size_t offset, const std::vector<StorageId>& storageIds) const {
     httplib::Params params = {{"size", std::to_string(size)}, {"offset", std::to_string(offset)}};
     for (auto id : storageIds)
         params.insert({"storageId", std::to_string(id)});
@@ -26,7 +27,7 @@ RecipeDetails RecipesApi::getIngredientsInRecipe(UserId userId, RecipeId recipeI
     return jsonGetAuthed<RecipeDetails>(userId, std::format("/recipes/{}", recipeId));
 }
 
-CustomRecipesList RecipesApi::getPrivateRecipeList(UserId userId, int size, int offset) const {
+CustomRecipesList RecipesApi::getPrivateRecipeList(UserId userId, size_t size, size_t offset) const {
     httplib::Params params = {{"size", std::to_string(size)}, {"offset", std::to_string(offset)}};
     return jsonGetAuthed<CustomRecipesList>(userId, "/recipes", params);
 }

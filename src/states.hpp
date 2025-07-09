@@ -38,14 +38,14 @@ struct StorageIngredientsList : detail::StorageIdMixin {};
 struct StorageIngredientsSearch : detail::StorageIdMixin {
     std::vector<api::models::ingredient::IngredientSearchItem> shownIngredients;
     std::size_t totalFound;
-    int pageNo;
+    size_t pageNo;
 };
 
 struct StorageSelection {
     std::vector<api::StorageId> storageIds;
 };
 struct SuggestedRecipeList {
-    int pageNo;
+    size_t pageNo;
     std::vector<api::StorageId> storageIds;
     bool fromStorage;
 };
@@ -53,28 +53,28 @@ struct RecipeView {
     std::vector<api::StorageId> storageIds;
     api::RecipeId recipeId;
     bool fromStorage;
-    int pageNo;
+    size_t pageNo;
 };
 
 struct CustomRecipesList {
-    int pageNo;
+    size_t pageNo;
 };
 
 struct CustomRecipeIngredientsSearch {
     api::RecipeId recipeId;
     std::vector<api::models::ingredient::IngredientSearchItem> shownIngredients;
     std::size_t totalFound;
-    int pageNo;
+    size_t pageNo;
 };
 
 struct RecipeCustomView {
     api::RecipeId recipeId;
-    int pageNo;
+    size_t pageNo;
 };
 
 struct CreateCustomRecipe {
     api::RecipeId recipeId;
-    int pageNo;
+    size_t pageNo;
 };
 
 struct ShoppingListCreation {
@@ -82,7 +82,7 @@ struct ShoppingListCreation {
     api::RecipeId recipeIdFrom;
     std::vector<api::IngredientId> ingredientIdsInList;
     bool fromStorage;
-    int pageNo;
+    size_t pageNo;
 };
 
 struct ShoppingListView {};

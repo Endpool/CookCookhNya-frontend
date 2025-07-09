@@ -10,7 +10,7 @@ namespace cookcookhnya::render::custom_recipe_view {
 
 void renderCustomRecipe(
     bool toBeEdited, UserId userId, ChatId chatId, api::RecipeId recipeId, BotRef bot, RecipesApiRef recipesApi) {
-    // auto recipeDetails = recipesApi.get(userId, recipeId);
+    // auto recipeDetails = recipesApi.get(userId, recipeId); UNCOMMENT WHEN BACKEND IS READY
     api::models::recipe::CustomRecipeDetails recipeDetailsExample{
         .ingredients = {{{.id = 1, .name = "asd"}, {.id = 2, .name = "asdfg"}}}, .name = "asdgfh", .link = "heweg"};
 

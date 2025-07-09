@@ -32,14 +32,12 @@ void customRecipeList(CustomRecipesList& state, CallbackQueryRef cq, BotRef bot,
     }
     if (data == "custom_recipe_create") {
         renderRecipeCreate(chatId, userId, bot);
-        stateManager.put(CreateCustomRecipe{.recipeId = 0,
-                                            .pageNo = state.pageNo}); // Some default value which will be assigned later
-                                                                      // from backend as we will know name of recipe
+        stateManager.put(CreateCustomRecipe{.recipeId = 0, .pageNo = state.pageNo});
+        bot.answerCallbackQuery(cq.id);
         return;
     }
 
-    if (data[0] == 'r') { // Same naive implementation: if first char is r then it's recipe
-
+    if (data[0] == 'r') {
         auto recipeId = utils::parseSafe<api::RecipeId>(
             data.substr(data.find(' ', 0) + 1, data.size())); // +1 is to move from space and get pure number
         if (recipeId) {

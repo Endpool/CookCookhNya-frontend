@@ -2,11 +2,11 @@
 
 #include "handlers/common.hpp"
 #include "render/custom_recipes_list/view.hpp"
-#include "render/personal_account/view.hpp"
+#include "render/main_menu/view.hpp"
 
 namespace cookcookhnya::handlers::personal_account_view {
 using namespace render::custom_recipes_list;
-using namespace render::personal_account;
+using namespace render::main_menu;
 
 void personalAccount(PersonalAccountMenu& /**/, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
     std::string data = cq.data;
@@ -19,8 +19,8 @@ void personalAccount(PersonalAccountMenu& /**/, CallbackQueryRef cq, BotRef bot,
         stateManager.put(CustomRecipesList{.pageNo = 0});
     }
     if (data == "back") {
-        renderPersonalAccountMenu(userId, chatId, bot);
-        stateManager.put(PersonalAccountMenu{});
+        renderMainMenu(true, userId, chatId, bot, api);
+        stateManager.put(MainMenu{});
         return;
     }
     if (data == "custom_ingredients") {

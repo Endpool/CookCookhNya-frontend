@@ -10,8 +10,8 @@ using namespace render::custom_recipe_view;
 using namespace render::custom_recipes_list;
 
 void createRecipe(CreateCustomRecipe& state, MessageRef m, BotRef bot, SMRef stateManager, RecipesApiRef recipeApi) {
-    // state.recipeId = recipeApi.create(m.from->id, api::models::recipe::RecipeCreateBody{m.text}); wait for backend
-    // realisation
+    // UNCOMMENT WHEN BACKEND IS READY
+    // state.recipeId = recipeApi.create(m.from->id, api::models::recipe::RecipeCreateBody{m.text});
 
     renderCustomRecipe(false, m.from->id, m.chat->id, state.recipeId, bot, recipeApi);
     stateManager.put(

@@ -6,114 +6,110 @@
 #include "render/common.hpp"
 
 #include "utils.hpp"
+#include <cmath>
 #include <cstddef>
+#include <cstdint>
 #include <format>
 #include <string>
 #include <vector>
 
 namespace cookcookhnya::render::recipes_suggestion {
 
-InlineKeyboard constructMarkup(const std::vector<api::StorageId>& storageIds,
-                               int pageNo,
-                               const int numOfRecipesOnPage,
-                               api::models::recipe::RecipesList recipesList) {
-
+// offset is variable which defines amout of rows before beggining of paging
+// fullKeyBoardSize is self explanatory
+InlineKeyboard constuctNavigationsMarkup(size_t offset,
+                                         size_t fullKeyBoardSize,
+                                         size_t pageNo,
+                                         size_t numOfRecipesOnPage,
+                                         api::models::recipe::RecipesList recipesList) {
     const int amountOfRecipes = recipesList.recipesFound;
-    const bool ifMaxPage = amountOfRecipes - (numOfRecipesOnPage * (pageNo + 1)) <=
+    int maxPageNum =
+        static_cast<int>(std::ceil(static_cast<double>(amountOfRecipes) / static_cast<double>(numOfRecipesOnPage)));
+
+    size_t recipesToShow = std::min(numOfRecipesOnPage, recipesList.recipesPage.size());
+    const bool ifMaxPage = amountOfRecipes - (static_cast<int>(numOfRecipesOnPage) * (static_cast<int>(pageNo) + 1)) <=
                            0; // + 1 because of the 0-indexing, as comparisson is between num of recipes gotten and that
                               // will be actually shown
-    // ONLY ONE CASE: WHEN First page has all recipes already
+    if (offset + recipesToShow > fullKeyBoardSize) { // IN ERROR HANDLING MAY USE ASSERT
+        InlineKeyboard error(0);
+        return error;
+    }
+    const size_t arrowsRow = offset + recipesToShow;
+
+    InlineKeyboard keyboard(fullKeyBoardSize);
+    int counter = 0;
+    for (std::size_t i = 0; i < recipesToShow; i++) {
+        // Print on button in form "1. {Recipe}"
+        keyboard[i + offset].push_back(
+            detail::makeCallbackButton(std::format("{}. {} [{} из {}]",
+                                                   1 + counter + ((pageNo)*numOfRecipesOnPage),
+                                                   recipesList.recipesPage[counter].name,
+                                                   recipesList.recipesPage[counter].available,
+                                                   recipesList.recipesPage[counter].total),
+                                       std::format("recipe: {}", recipesList.recipesPage[counter].id))); // RECIPE ID
+        counter++;
+    }
+    keyboard[arrowsRow].reserve(3);
+
+    // Helps to reduce code. Power of C++ YEAH BABE!
+    uint8_t b = 0;
+
+    // Simply enamurate every case
     if (pageNo == 0) {
-        if (ifMaxPage) {
-            // if didn't worked then the amount of recipes is less then i want to display -> no need for next or prev
-            // button
-            InlineKeyboard keyboard(
-                1 + recipesList.recipesPage.size()); // 1 for back button return and other buttons are recipes
-            for (std::size_t i = 0; i < recipesList.recipesPage.size(); i++) {
-                // Print on button in form "1. {Recipe}"
-                keyboard[i].push_back(detail::makeCallbackButton(
-                    std::format("{}. {} [{}/{}]",
-                                1 + i + ((static_cast<std::size_t>(pageNo)) * numOfRecipesOnPage),
-                                recipesList.recipesPage[i].name,
-                                recipesList.recipesPage[i].available,
-                                recipesList.recipesPage[i].total),              // + 1 because i stars from 0
-                    std::format("recipe: {}", recipesList.recipesPage[i].id))); // RECIPE ID
+        if (!ifMaxPage) {
+            b |= uint8_t{0x1};
+        }
+    } else if (ifMaxPage) {
+        b |= uint8_t{0x2};
+    } else {
+        b |= uint8_t{0x3};
+    }
+
+    // Check from left to right due to buttons being displayed like that
+    for (int i = 1; i >= 0; i--) {
+        // Compare two bits under b mask. If 1 was on b mask then we need to place arrow somewhere
+        if ((b & static_cast<uint8_t>((uint8_t{0b1} << static_cast<uint8_t>(i)))) ==
+            (uint8_t{0b1} << static_cast<uint8_t>(i))) {
+            // if we need to place arrow then check the i, which represents bit which we are checking right now
+            if (i == 1) {
+                keyboard[arrowsRow].push_back(detail::makeCallbackButton(u8"◀️", std::to_string(pageNo - 1))); // left
+            } else {
+                keyboard[arrowsRow].push_back(detail::makeCallbackButton(u8"▶️", std::to_string(pageNo + 1))); // right
             }
-
-            /* Put the number of storages.
-             * If more then one then return to storage list choose if one then go to the storage view.
-             * Even if one storage was chosen in storage list choose it will return to view of these one storage.
-             */
-            keyboard[recipesList.recipesPage.size()].push_back(detail::makeCallbackButton(
-                u8"↩️ Назад",
-                std::format("backFromSuggestedRecipes {}", storageIds.size()))); // To LAST row add "return"
-            return keyboard;
+        } else {
+            keyboard[arrowsRow].push_back(detail::makeCallbackButton(u8"ㅤ", "dontHandle"));
         }
+    }
+    // Put pageNo as button
+    keyboard[arrowsRow].insert(
+        keyboard[arrowsRow].begin() + 1,
+        detail::makeCallbackButton(std::format("{} из {}", pageNo + 1, maxPageNum), "dontHandle"));
+    return keyboard;
+}
 
-        // If first page wasn't didn't represent all recipes in one page then the field with arrows is required
-        // 1 for back button return, 1 for two arrows next and prev, and other buttons are recipes
-        InlineKeyboard keyboard(2 + recipesList.recipesPage.size());
+InlineKeyboard
+constructMarkup(size_t pageNo, size_t numOfRecipesOnPage, api::models::recipe::RecipesList& recipesList) {
 
-        for (std::size_t i = 0; i < recipesList.recipesPage.size(); i++) {
-            // Print on button in form "1. {Recipe}"
-            keyboard[i].push_back(detail::makeCallbackButton(
-                std::format("{}. {} [{}/{}]",
-                            1 + i + ((static_cast<std::size_t>(pageNo)) * numOfRecipesOnPage),
-                            recipesList.recipesPage[i].name,
-                            recipesList.recipesPage[i].available,
-                            recipesList.recipesPage[i].total),              // + 1 because i stars from 0
-                std::format("recipe: {}", recipesList.recipesPage[i].id))); // RECIPE ID
-        }
-        // If pageNo == 0 and it's not 1st page then show only next button
-        keyboard[recipesList.recipesPage.size()].push_back(
-            detail::makeCallbackButton(u8"⏭️", std::to_string(pageNo + 1)));
+    const size_t numOfRows = 2; // 1 for back button return, 1 for arrows (ALWAYS ACCOUNT ARROWS)
+    size_t offset = 0;          // Number of rows before list
+    size_t recipesToShow = std::min(numOfRecipesOnPage, recipesList.recipesPage.size());
 
-        /* Put the number of storages.
-         * If more then one then return to storage list choose if one then go to the storage view.
-         * Even if one storage was chosen in storage list choose it will return to view of these one storage.
-         */
-        keyboard[recipesList.recipesPage.size() + 1].push_back(detail::makeCallbackButton(
-            u8"↩️ Назад", std::format("backFromSuggestedRecipes {}", storageIds.size()))); // To LAST row add "return"
+    const size_t arrowsRow = offset + recipesToShow; // 1 because of the offset of add/delete row
+
+    InlineKeyboard keyboard =
+        constuctNavigationsMarkup(offset, numOfRows + recipesToShow, pageNo, numOfRecipesOnPage, recipesList);
+    if (keyboard.empty()) { // If error happened ADD PROPER ERROR HANDLING IF FUNCTION WILL BE REUSED
         return keyboard;
     }
 
-    // If first page wasn't didn't represent all recipes in one page then the field with arrows is required
-    // 1 for back button return, 1 for two arrows next and prev, and other buttons are recipes
-    InlineKeyboard keyboard(2 + recipesList.recipesPage.size());
-    for (std::size_t i = 0; i < recipesList.recipesPage.size(); i++) {
-        // Print on button in form "1. {Recipe}"
-        keyboard[i].push_back(
-            detail::makeCallbackButton(std::format("{}. {} [{}/{}]",
-                                                   1 + i + ((static_cast<std::size_t>(pageNo)) * numOfRecipesOnPage),
-                                                   recipesList.recipesPage[i].name,
-                                                   recipesList.recipesPage[i].available,
-                                                   recipesList.recipesPage[i].total), // + 1 because i stars from 0
-                                       std::format("recipe: {}", recipesList.recipesPage[i].id))); // RECIPE ID
-    }
-    if (!ifMaxPage) {
-        // Show both possible ways
-        keyboard[recipesList.recipesPage.size()].reserve(2);
-        keyboard[recipesList.recipesPage.size()].push_back(
-            detail::makeCallbackButton(u8"⏮️", std::to_string(pageNo - 1)));
-        keyboard[recipesList.recipesPage.size()].push_back(
-            detail::makeCallbackButton(u8"⏭️", std::to_string(pageNo + 1)));
-    } else {
-        // If pageNo == maxPage then it's last page -> won't show button next
-        keyboard[recipesList.recipesPage.size()].push_back(
-            detail::makeCallbackButton(u8"⏮️", std::to_string(pageNo - 1)));
-    }
-
-    /* Put the number of storages.
-     * If more then one then return to storage list choose if one then go to the storage view.
-     * Even if one storage was chosen in storage list choose it will return to view of these one storage.
-     */
-    keyboard[recipesList.recipesPage.size() + 1].push_back(detail::makeCallbackButton(
-        u8"↩️ Назад", std::format("backFromSuggestedRecipes {}", storageIds.size()))); // To LAST row add "return"
+    keyboard[arrowsRow + 1].push_back(
+        detail::makeCallbackButton(u8"↩️ Назад",
+                                   "backFromCustomRecipes")); // To LAST row add "backFromCustomRecipes"
     return keyboard;
 }
 
 void editRecipesSuggestion(const std::vector<api::StorageId>& storageIds,
-                           int pageNo,
+                           size_t pageNo,
                            UserId userId,
                            ChatId chatId,
                            BotRef bot,
@@ -122,22 +118,21 @@ void editRecipesSuggestion(const std::vector<api::StorageId>& storageIds,
 
     auto messageId = message::getMessageId(userId);
 
-    const int numOfRecipesOnPage = 3;
+    const size_t numOfRecipesOnPage = 5;
 
     auto recipesList = recipesApi.getRecipeList(userId,
                                                 numOfRecipesOnPage,
-                                                (pageNo)*numOfRecipesOnPage,
+                                                static_cast<size_t>((pageNo)*numOfRecipesOnPage),
                                                 storageIds); // Take storages of user from backend
 
     if (messageId) {
-        bot.editMessageText(
-            pageInfo,
-            chatId,
-            *messageId,
-            "",
-            "",
-            nullptr,
-            detail::makeKeyboardMarkup(constructMarkup(storageIds, pageNo, numOfRecipesOnPage, recipesList)));
+        bot.editMessageText(pageInfo,
+                            chatId,
+                            *messageId,
+                            "",
+                            "",
+                            nullptr,
+                            detail::makeKeyboardMarkup(constructMarkup(pageNo, numOfRecipesOnPage, recipesList)));
     }
 }
 
