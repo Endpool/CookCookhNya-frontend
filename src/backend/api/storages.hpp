@@ -23,11 +23,10 @@ class StoragesApi : ApiBase {
     void delete_(UserId userId, StorageId id) const;
     [[nodiscard]] std::vector<models::storage::StorageMemberDetails> getStorageMembers(UserId userId,
                                                                                        StorageId id) const;
-
     void addMember(UserId userId, StorageId id, UserId memberId) const;
     void deleteMember(UserId userId, StorageId id, UserId memberId) const;
-    [[nodiscard]] Hash inviteMember(UserId userId, StorageId storageId) const;
-    void activate(UserId userId, Hash hash) const;
+    [[nodiscard]] InvitationId inviteMember(UserId userId, StorageId storageId) const;
+    void activate(UserId userId, InvitationId id) const;
 };
 
 } // namespace cookcookhnya::api

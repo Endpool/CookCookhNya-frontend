@@ -135,7 +135,7 @@ void renderRecipeViewAfterAddingStorage(const std::vector<api::StorageId>& stora
 
     if (isAtLeastOneIngredientLack) {
         keyboard[1].push_back(detail::makeCallbackButton(u8"📝 Составить список продуктов",
-                                                         "add_shopping_list")); // Add needed info for next states!
+                                                         "shopping_list")); // Add needed info for next states!
     }
 
     keyboard[buttonRows - 1].push_back(detail::makeCallbackButton(u8"↩️ Назад", "back_to_suggestions"));

@@ -24,9 +24,9 @@ std::vector<api::IngredientId> renderShoppingListCreation(const std::vector<api:
                                                           BotRef bot,
                                                           RecipesApiRef recipesApi) {
     const std::unordered_set<api::StorageId> storageIdsSet(storageIds.begin(), storageIds.end());
-    std::string toPrint = utils::utf8str(u8"Основываясь на недостающих ингредиентах, составили для вас продукты "
-                                         u8"которые можно добавить в список покупок:\n *В самом низу выберите "
-                                         u8"ингредиенты которые вы хотите исключить из списка покупок\n");
+    std::string text = utils::utf8str(u8"Основываясь на недостающих ингредиентах, составили для вас продукты "
+                                      u8"которые можно добавить в список покупок:\n *В самом низу выберите "
+                                      u8"ингредиенты которые вы хотите исключить из списка покупок\n");
 
     auto ingredients = recipesApi.getIngredientsInRecipe(userId, recipeId).ingredients;
     std::vector<api::IngredientId> ingredientIds;
@@ -44,7 +44,7 @@ std::vector<api::IngredientId> renderShoppingListCreation(const std::vector<api:
         if (!isHavingIngredient) {
             ingredientIds.push_back(ingredient.id);
             ingredientsName.push_back(ingredient.name);
-            toPrint += std::format(
+            text += std::format(
                 "- {}\n", ingredient.name); // Print only ingredients which are not in selected storages - вроде норм
         }
     }
@@ -69,8 +69,7 @@ std::vector<api::IngredientId> renderShoppingListCreation(const std::vector<api:
         detail::makeCallbackButton(u8"↩️ Назад", "back"));
     auto messageId = message::getMessageId(userId);
     if (messageId) {
-        bot.editMessageText(
-            toPrint, chatId, *messageId, "", "", nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
+        bot.editMessageText(text, chatId, *messageId, "", "", nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
     }
     return ingredientIds;
 }
@@ -81,16 +80,16 @@ void renderEditedShoppingListCreation(const std::vector<api::IngredientId>& ingr
                                       BotRef bot,
                                       IngredientsApiRef ingredientsApi) {
     std::vector<std::string> ingredientsName;
-    std::string toPrint = utils::utf8str(u8"Основываясь на недостающих ингредиентах, составили для вас продукты "
-                                         u8"которые можно добавить в список покупок:\n *В самом низу выберите "
-                                         u8"ингредиенты которые вы хотите исключить из списка покупок\n");
+    std::string text = utils::utf8str(u8"Основываясь на недостающих ингредиентах, составили для вас продукты "
+                                      u8"которые можно добавить в список покупок:\n *В самом низу выберите "
+                                      u8"ингредиенты которые вы хотите исключить из списка покупок\n");
     for (const api::IngredientId ingredientId : ingredientIds) {
         // IMPORTANT!: Probably can be optimized because this data is available at the recipe page
         // by Maxim Fomin
         std::string name = ingredientsApi.get(ingredientId)
                                .name; // NEED TO TEST if INGREDIENTS WILL MESS UP BETWEEN NAME AND ID - вроде норм
         ingredientsName.push_back(name);
-        toPrint += std::format("- {}\n", name);
+        text += std::format("- {}\n", name);
     }
 
     const int buttonRows = std::floor(((ingredientIds.size() + 1) / 2) + 2); // +1 for back
@@ -115,8 +114,7 @@ void renderEditedShoppingListCreation(const std::vector<api::IngredientId>& ingr
         detail::makeCallbackButton(u8"↩️ Назад", "back"));
     auto messageId = message::getMessageId(userId);
     if (messageId) {
-        bot.editMessageText(
-            toPrint, chatId, *messageId, "", "", nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
+        bot.editMessageText(text, chatId, *messageId, "", "", nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
     }
 }
 

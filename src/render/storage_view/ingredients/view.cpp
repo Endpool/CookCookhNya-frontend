@@ -52,7 +52,7 @@ void renderIngredientsListSearch(const states::StorageIngredientsList& state,
     const PatchedBot patchedBot{bot};
 
     std::string list = state.getStorageIngredients() |
-                       transform([](auto& i) { return std::format("- {}\n", i.name); }) | join | to<std::string>();
+                       transform([](auto& i) { return std::format("• {}\n", i.name); }) | join | to<std::string>();
 
     auto text = utils::utf8str(u8"🍗 Ваши ингредиенты:\n\n") + std::move(list);
     if (auto messageId = message::getMessageId(userId))

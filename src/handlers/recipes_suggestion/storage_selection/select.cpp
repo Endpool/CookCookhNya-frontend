@@ -40,13 +40,13 @@ void selectStorages(StorageSelection& state, CallbackQueryRef cq, BotRef bot, SM
         if (cq.data.starts_with("in")) {
             auto it = std::ranges::find(selectedStorages, *storageId);
             selectedStorages.erase(it);
-            editStorageSelect(selectedStorages, userId, chatId, bot, api);
+            renderStorageSelect(selectedStorages, userId, chatId, bot, api);
             stateManager.put(StorageSelection{.storageIds = selectedStorages});
             return;
         }
         if (cq.data.starts_with("out")) {
             selectedStorages.push_back(*storageId);
-            editStorageSelect(selectedStorages, userId, chatId, bot, api);
+            renderStorageSelect(selectedStorages, userId, chatId, bot, api);
             stateManager.put(StorageSelection{.storageIds = selectedStorages});
             return;
         }

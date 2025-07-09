@@ -22,19 +22,19 @@ void storageViewButtonCallback(
     bot.answerCallbackQuery(cq.id);
     auto chatId = cq.message->chat->id;
     auto userId = cq.from->id;
-    if (cq.data == "storage_view_explore") {
+    if (cq.data == "ingredients") {
         auto ingredients = api.getIngredientsApi().getStorageIngredients(userId, state.storageId);
         stateManager.put(StorageIngredientsList{
             state.storageId,
             {std::make_move_iterator(ingredients.begin()), std::make_move_iterator(ingredients.end())}});
         renderIngredientsListSearch(std::get<StorageIngredientsList>(*stateManager.get()), userId, chatId, bot);
-    } else if (cq.data == "storage_view_members") {
+    } else if (cq.data == "members") {
         renderMemberList(true, state.storageId, userId, chatId, bot, api);
         stateManager.put(StorageMemberView{state.storageId});
-    } else if (cq.data == "storage_view_back") {
+    } else if (cq.data == "back") {
         renderStorageList(true, userId, chatId, bot, api);
         stateManager.put(StorageList{});
-    } else if (cq.data == "storage_view_wanna_eat") {
+    } else if (cq.data == "wanna_eat") {
         editRecipesSuggestion({state.storageId}, 0, userId, chatId, bot, api);
         stateManager.put(
             SuggestedRecipeList{.pageNo = 0, .storageIds = std::vector{state.storageId}, .fromStorage = true});

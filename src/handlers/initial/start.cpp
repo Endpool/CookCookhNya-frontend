@@ -27,10 +27,8 @@ void start(MessageRef m, BotRef bot, SMRef stateManager, ApiClientRef api) {
     auto startText = m.text;
     const int hashPos = 7;
     if (startText.size() > hashPos - 1) {
-        auto hash = utils::parseSafe<api::Hash>(std::string(m.text).substr(hashPos));
-        if (hash) {
-            api.getStoragesApi().activate(userId, *hash);
-        }
+        auto hash = std::string(m.text).substr(hashPos);
+        api.getStoragesApi().activate(userId, hash);
     }
     std::optional<std::string> alias;
     if (!m.from->username.empty())
