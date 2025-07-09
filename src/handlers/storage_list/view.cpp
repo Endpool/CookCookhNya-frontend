@@ -24,12 +24,12 @@ void storageListButtonCallback(
     auto userId = cq.from->id;
     auto chatId = cq.message->chat->id;
     auto storages = api.getStoragesApi().getStoragesList(userId);
-    if (cq.data == "storage_list_creation") {
+    if (cq.data == "create") {
         renderStorageCreate(chatId, userId, bot);
         stateManager.put(StorageCreationEnterName{});
         return;
     }
-    if (cq.data == "storage_list_deletion") {
+    if (cq.data == "delete") {
         renderStorageDelete(chatId, bot, cq.from->id, api);
         stateManager.put(StorageDeletion{});
         return;

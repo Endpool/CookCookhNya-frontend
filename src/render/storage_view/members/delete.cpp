@@ -20,7 +20,7 @@ void renderMemberDeletionPrompt(
     auto members = storageApi.getStorageMembers(userId, storageId);
     const unsigned int buttonRows = members.size();
     InlineKeyboard keyboard(buttonRows);
-    keyboard[0].push_back(makeCallbackButton(u8"🚫 Отмена", "cancel_member_deletion"));
+    keyboard[0].push_back(makeCallbackButton(u8"↩️ Назад", "cancel_member_deletion"));
     size_t k = 1;
     for (auto& member : members) {
         if (member.userId != storage.ownerId) {
@@ -31,9 +31,8 @@ void renderMemberDeletionPrompt(
 
     auto text = utils::utf8str(u8"🚷 Выберите участника для удаления\n");
     auto messageId = message::getMessageId(userId);
-    if (messageId) {
-        bot.editMessageText(text, chatId, *messageId, "", "", nullptr, makeKeyboardMarkup(std::move(keyboard)));
-    }
+    if (messageId)
+        bot.editMessageText(text, chatId, *messageId, makeKeyboardMarkup(std::move(keyboard)));
 };
 
 } // namespace cookcookhnya::render::storage::delete_member

@@ -22,8 +22,7 @@ void renderMemberAdditionPrompt(
 
     auto inviteButton = std::make_shared<TgBot::InlineKeyboardButton>();
     inviteButton->text = utils::utf8str(u8"📤 Поделиться");
-    auto hash = "hashFromBack"; // NOLINT
-    // TODO: get here hash from back
+    auto hash = storageApi.inviteMember(userId, storageId);
     const auto* telegramBotAlias = "stage_stand_bot";
     auto inviteText = "Нажми на ссылку, чтобы стать участником хранилища 🍱**" + storage.name +
                       "** в CookCookhNya!\nhttps://t.me/" + telegramBotAlias + "?start=" + hash;
@@ -31,13 +30,12 @@ void renderMemberAdditionPrompt(
     inviteButton->callbackData = "user_sended_link";
 
     keyboard[0].push_back(std::move(inviteButton));
-    keyboard[1].push_back(makeCallbackButton(u8"↩️ Назад", "cancel_member_addition"));
+    keyboard[1].push_back(makeCallbackButton(u8"↩️ Назад", "back"));
     auto text = utils::utf8str(
-        u8"📩 Нажмите кнопку ниже или перешлите сообщение пользователя, чтобы добавить его в хранилище\n");
+        u8"📩 Нажмите кнопку ниже или перешлите сообщение пользователя, чтобы добавить его в хранилище.\n");
     auto messageId = message::getMessageId(userId);
-    if (messageId) {
-        bot.editMessageText(text, chatId, *messageId, "", "", nullptr, makeKeyboardMarkup(std::move(keyboard)));
-    }
+    if (messageId)
+        bot.editMessageText(text, chatId, *messageId, makeKeyboardMarkup(std::move(keyboard)));
 };
 
 } // namespace cookcookhnya::render::storage::add_member

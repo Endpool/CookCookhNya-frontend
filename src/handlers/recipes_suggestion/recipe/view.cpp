@@ -20,11 +20,11 @@ void handleRecipeView(RecipeView& state, CallbackQueryRef cq, BotRef bot, SMRef 
     auto chatId = cq.message->chat->id;
     auto userId = cq.from->id;
 
-    if (data == "startCooking") {
+    if (data == "cook") {
         // TODO: add state of begginig of cooking
         return;
     }
-    if (data == "makeProductList") {
+    if (data == "shopping_list") {
         auto ingredientsInList = renderShoppingListCreation(state.storageIds, state.recipeId, userId, chatId, bot, api);
         stateManager.put(ShoppingListCreation{.storageIdsFrom = state.storageIds,
                                               .recipeIdFrom = state.recipeId,
@@ -34,14 +34,14 @@ void handleRecipeView(RecipeView& state, CallbackQueryRef cq, BotRef bot, SMRef 
         bot.answerCallbackQuery(cq.id);
         return;
     }
-    if (data == "backFromRecipeView") {
+    if (data == "back_to_suggestions") {
         editRecipesSuggestion(state.storageIds, 0, userId, chatId, bot, api);
         stateManager.put(
             SuggestedRecipeList{.pageNo = 0, .storageIds = state.storageIds, .fromStorage = state.fromStorage});
         bot.answerCallbackQuery(cq.id);
         return;
     }
-    if (data == "BackFromAddingStorages") {
+    if (data == "back_to_recipe") {
         renderRecipeViewAfterAddingStorage(state.storageIds, state.recipeId, userId, chatId, bot, api);
         return;
     }

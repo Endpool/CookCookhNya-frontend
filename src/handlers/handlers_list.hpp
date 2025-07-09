@@ -15,7 +15,6 @@
 #include "storage_list/create.hpp"
 #include "storage_list/delete.hpp"
 #include "storage_list/view.hpp"
-#include "storage_view/ingredients/search.hpp"
 
 #include "storage_view/ingredients/view.hpp"
 
@@ -104,7 +103,6 @@ using storagesSelectionHandler = Handler<Events::CallbackQuery{}, selectStorages
 using recipesSuggestionListHandler = Handler<Events::CallbackQuery{}, changePageAndBack>;
 
 // StorageIngredientsList
-using storageIngredientsListButtonHandler = Handler<Events::CallbackQuery{}, storageIngredientsListButtonCallback>;
 using storageIngredientsSearchButtonHandler = Handler<Events::CallbackQuery{}, storageIngredientsSearchButtonCallback>;
 using storageIngredientsSearchHandler = Handler<Events::InlineQuery{}, storageIngredientsSearchInlineQueryCallback>;
 

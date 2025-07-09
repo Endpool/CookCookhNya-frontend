@@ -39,7 +39,7 @@ void customIngredientCancelCreation(CustomIngredientCreationEnterName& /*unused*
     bot.answerCallbackQuery(cq.id);
     auto userId = cq.from->id;
     auto chatId = cq.message->chat->id;
-    if (cq.data == "cancel") {
+    if (cq.data == "back") {
         renderCustomIngredientsList(true, userId, chatId, bot, api);
         stateManager.put(CustomIngredientsList{});
     }
@@ -56,7 +56,7 @@ void customIngredientConfirmation(
         renderCustomIngredientsList(true, userId, chatId, bot, api);
         stateManager.put(CustomIngredientsList{});
     }
-    if (cq.data == "cancel") {
+    if (cq.data == "back") {
         renderCustomIngredientsList(true, userId, chatId, bot, api);
         stateManager.put(CustomIngredientsList{});
     }
