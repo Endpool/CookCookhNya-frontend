@@ -14,6 +14,7 @@
 namespace cookcookhnya::handlers::init {
 
 using namespace render::main_menu;
+using namespace std::literals;
 
 void start(MessageRef m, BotRef bot, SMRef stateManager, ApiClientRef api) {
     auto userId = m.from->id;
@@ -34,7 +35,7 @@ void start(MessageRef m, BotRef bot, SMRef stateManager, ApiClientRef api) {
     );
 
     auto startText = m.text;
-    const int hashPos = "/start ".size();
+    const int hashPos = "/start "sv.size();
     if (startText.size() > hashPos - 1) {
         auto hash = std::string(m.text).substr(hashPos);
         api.getStoragesApi().activate(userId, hash);
