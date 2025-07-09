@@ -122,15 +122,15 @@ void renderCustomRecipesList(size_t pageNo, UserId userId, ChatId chatId, BotRef
                                         (pageNo)*numOfRecipesOnPage); //*/
     // api::models::recipe::CustomRecipeSummary recipeExample1 = {.id = 1, .name = "asd"};
 
-    std::vector<api::models::recipe::CustomRecipeSummary> recipesExample = {{.id = 1, .name = "asd"},
-                                                                            {.id = 2, .name = "asasdd"},
-                                                                            {.id = 2, .name = "asasdd"},
-                                                                            {.id = 2, .name = "asasdd"},
-                                                                            {.id = 2, .name = "asasdd"},
-                                                                            {.id = 2, .name = "asasdd"},
-                                                                            {.id = 2, .name = "asasdd"},
-                                                                            {.id = 2, .name = "asasdd"},
-                                                                            {.id = 2, .name = "asasdd"}};
+    const std::vector<api::models::recipe::CustomRecipeSummary> recipesExample = {{.id = 1, .name = "asd"},
+                                                                                  {.id = 2, .name = "asasdd"},
+                                                                                  {.id = 2, .name = "asasdd"},
+                                                                                  {.id = 2, .name = "asasdd"},
+                                                                                  {.id = 2, .name = "asasdd"},
+                                                                                  {.id = 2, .name = "asasdd"},
+                                                                                  {.id = 2, .name = "asasdd"},
+                                                                                  {.id = 2, .name = "asasdd"},
+                                                                                  {.id = 2, .name = "asasdd"}};
     api::models::recipe::CustomRecipesList recipesList{.recipesPage = recipesExample,
                                                        .recipesFound = static_cast<int>(recipesExample.size())};
     if (messageId) {
