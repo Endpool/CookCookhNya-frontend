@@ -17,4 +17,10 @@ void ApiBase::assertSuccess(const httplib::Result& result) noexcept(false) {
         throw std::runtime_error{std::format("API request HTTP error {}:\n{}\n", result->status, result->body)};
 }
 
+std::string ApiBase::post(const std::string& path, const httplib::Headers& headers) const { // NOLINT(*nodiscard)
+    httplib::Result response = api.get().Post(path, headers);
+    assertSuccess(response);
+    return response->body;
+}
+
 } // namespace cookcookhnya::api
