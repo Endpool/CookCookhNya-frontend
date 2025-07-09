@@ -1,5 +1,7 @@
 #include "view.hpp"
 #include "message_tracker.hpp"
+#include "render/common.hpp"
+#include "utils.hpp"
 
 namespace cookcookhnya::render::personal_account {
 

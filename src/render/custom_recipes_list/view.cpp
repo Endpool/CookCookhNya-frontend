@@ -2,8 +2,12 @@
 #include "backend/models/recipe.hpp"
 #include "message_tracker.hpp"
 #include "render/common.hpp"
+#include "utils.hpp"
+#include <algorithm>
+#include <cmath>
 #include <cstddef>
 #include <cstdint>
+#include <format>
 #include <string>
 #include <vector>
 
@@ -20,7 +24,7 @@ InlineKeyboard constuctNavigationsMarkup(size_t offset,
     int maxPageNum =
         static_cast<int>(std::ceil(static_cast<double>(amountOfRecipes) / static_cast<double>(numOfRecipesOnPage)));
 
-    size_t recipesToShow = std::min(numOfRecipesOnPage, recipesList.recipesPage.size());
+    const size_t recipesToShow = std::min(numOfRecipesOnPage, recipesList.recipesPage.size());
 
     const bool ifMaxPage = amountOfRecipes - (static_cast<int>(numOfRecipesOnPage) * (static_cast<int>(pageNo) + 1)) <=
                            0; // + 1 because of the 0-indexing, as comparisson is between num of recipes gotten and that
@@ -85,9 +89,9 @@ constructMarkup(size_t pageNo, size_t numOfRecipesOnPage, api::models::recipe::C
     // 1 for back button return, 1 for arrows (ALWAYS ACCOUNT ARROWS), 1
     // for adding new recipe - other buttons are recipes
     const size_t numOfRows = 3;
-    size_t offset = 1; // Number of rows before list
+    const size_t offset = 1; // Number of rows before list
 
-    size_t recipesToShow = std::min(numOfRecipesOnPage, recipesList.recipesPage.size());
+    const size_t recipesToShow = std::min(numOfRecipesOnPage, recipesList.recipesPage.size());
 
     const size_t arrowsRow = offset + recipesToShow; // 1 because of the offset of add/delete row
 
@@ -104,7 +108,7 @@ constructMarkup(size_t pageNo, size_t numOfRecipesOnPage, api::models::recipe::C
     return keyboard;
 }
 
-void renderCustomRecipesList(size_t pageNo, UserId userId, ChatId chatId, BotRef bot, RecipesApiRef recipesApi) {
+void renderCustomRecipesList(size_t pageNo, UserId userId, ChatId chatId, BotRef bot, RecipesApiRef /*recipesApi*/) {
     const std::string pageInfo = utils::utf8str(u8"🔪 Рецепты созданные вами");
 
     auto messageId = message::getMessageId(userId);
@@ -127,7 +131,8 @@ void renderCustomRecipesList(size_t pageNo, UserId userId, ChatId chatId, BotRef
                                                                             {.id = 2, .name = "asasdd"},
                                                                             {.id = 2, .name = "asasdd"},
                                                                             {.id = 2, .name = "asasdd"}};
-    api::models::recipe::CustomRecipesList recipesList{.recipesPage = recipesExample, .recipesFound = 9};
+    api::models::recipe::CustomRecipesList recipesList{.recipesPage = recipesExample,
+                                                       .recipesFound = static_cast<int>(recipesExample.size())};
     if (messageId) {
         bot.editMessageText(pageInfo,
                             chatId,

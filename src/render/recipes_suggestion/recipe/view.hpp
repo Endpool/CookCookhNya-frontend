@@ -4,6 +4,7 @@
 #include "backend/models/recipe.hpp"
 #include "render/common.hpp"
 
+#include <string>
 #include <vector>
 
 namespace cookcookhnya::render::recipe_view {

@@ -12,7 +12,7 @@ using namespace render::storage::ingredients;
 
 void handleCustomRecipeView(
     RecipeCustomView& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, RecipesApiRef recipesApi) {
-    std::string data = cq.data;
+    const std::string data = cq.data;
     auto chatId = cq.message->chat->id;
     auto userId = cq.from->id;
 

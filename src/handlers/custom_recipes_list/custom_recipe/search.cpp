@@ -40,11 +40,9 @@ void customRecipeIngredientsSearchButtonCallback(
     if (it == state.shownIngredients.end())
         return;
     if (it->available) {
-        // UNCOMMENT WHEN BACKEND IS READY
-        // ingredientsApi.deleteFromRecipe(userId, state.recipeId, *mIngredient);
+        ingredientsApi.deleteFromRecipe(userId, state.recipeId, *mIngredient);
     } else {
-        // UNCOMMENT WHEN BACKEND IS READY
-        // ingredientsApi.putToRecipe(userId, state.recipeId, *mIngredient);
+        ingredientsApi.putToRecipe(userId, state.recipeId, *mIngredient);
     }
     it->available = !it->available;
 

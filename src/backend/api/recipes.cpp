@@ -28,7 +28,7 @@ RecipeDetails RecipesApi::getIngredientsInRecipe(UserId userId, RecipeId recipeI
 }
 
 CustomRecipesList RecipesApi::getPrivateRecipeList(UserId userId, size_t size, size_t offset) const {
-    httplib::Params params = {{"size", std::to_string(size)}, {"offset", std::to_string(offset)}};
+    const httplib::Params params = {{"size", std::to_string(size)}, {"offset", std::to_string(offset)}};
     return jsonGetAuthed<CustomRecipesList>(userId, "/recipes", params);
 }
 

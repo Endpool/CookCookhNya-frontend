@@ -3,6 +3,7 @@
 #include "handlers/common.hpp"
 #include "render/custom_recipes_list/view.hpp"
 #include "render/main_menu/view.hpp"
+#include <string>
 
 namespace cookcookhnya::handlers::personal_account_view {
 using namespace render::custom_recipes_list;
