@@ -9,7 +9,7 @@ namespace cookcookhnya::render::storage::ingredients {
 
 void renderStorageIngredientsSearch(ChatId chatId, UserId userId, BotRef bot);
 
-void renderStorageIngredientsSearchEdit(const std::vector<api::models::ingredient::IngredientSearchItem>&,
+void renderStorageIngredientsSearchEdit(const std::vector<api::models::ingredient::IngredientSearchForStorageItem>&,
                                         std::size_t pageNo,
                                         std::size_t totalPages,
                                         tg_types::MessageId messageId,

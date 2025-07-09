@@ -23,8 +23,16 @@ struct StorageIdMixin {
 
 struct MainMenu {};
 
-struct StorageList {};
+struct PersonalAccountMenu {};
 
+struct CustomIngredientsList {};
+struct CustomIngredientCreationEnterName {};
+struct CustomIngredientConfirmation {
+    std::string name;
+};
+struct CustomIngredientPublish {};
+
+struct StorageList {};
 struct StorageDeletion {};
 struct StorageCreationEnterName {};
 struct StorageView : detail::StorageIdMixin {};
@@ -36,7 +44,7 @@ struct MemberDeletion : detail::StorageIdMixin {};
 
 struct StorageIngredientsList : detail::StorageIdMixin {};
 struct StorageIngredientsSearch : detail::StorageIdMixin {
-    std::vector<api::models::ingredient::IngredientSearchItem> shownIngredients;
+    std::vector<api::models::ingredient::IngredientSearchForStorageItem> shownIngredients;
     std::size_t totalFound;
     std::size_t pageNo;
 };
@@ -67,6 +75,11 @@ struct ShoppingListCreation {
 struct ShoppingListView {};
 
 using State = std::variant<MainMenu,
+                           PersonalAccountMenu,
+                           CustomIngredientsList,
+                           CustomIngredientCreationEnterName,
+                           CustomIngredientConfirmation,
+                           CustomIngredientPublish,
                            StorageList,
                            StorageDeletion,
                            StorageCreationEnterName,

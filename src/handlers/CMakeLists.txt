@@ -3,6 +3,12 @@ target_sources(main PRIVATE
 
     src/handlers/main_menu/view.cpp
 
+    src/handlers/personal_account/view.cpp
+    src/handlers/personal_account/ingredients/view.cpp
+    src/handlers/personal_account/ingredients/create.cpp
+    src/handlers/personal_account/ingredients/publish.cpp
+
+
     src/handlers/recipes_suggestion/recipe/view.cpp
     src/handlers/recipes_suggestion/storage_selection/select.cpp
     src/handlers/recipes_suggestion/suggest.cpp
