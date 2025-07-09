@@ -32,7 +32,7 @@ void storageIngredientsSearchButtonCallback(
     auto mIngredient = utils::parseSafe<api::IngredientId>(cq.data);
     if (!mIngredient)
         return;
-    auto it = std::ranges::find(state.shownIngredients, *mIngredient, &IngredientSearchItem::id);
+    auto it = std::ranges::find(state.shownIngredients, *mIngredient, &IngredientSearchForStorageItem::id);
     if (it == state.shownIngredients.end())
         return;
     if (it->available)
@@ -56,8 +56,8 @@ void storageIngredientsSearchInlineQueryCallback(StorageIngredientsSearch& state
         if (response.found != state.totalFound || !std::ranges::equal(response.page,
                                                                       state.shownIngredients,
                                                                       std::ranges::equal_to{},
-                                                                      &IngredientSearchItem::id,
-                                                                      &IngredientSearchItem::id)) {
+                                                                      &IngredientSearchForStorageItem::id,
+                                                                      &IngredientSearchForStorageItem::id)) {
             state.shownIngredients = std::move(response.page);
             state.totalFound = response.found;
             if (auto mMessageId = message::getMessageId(userId))

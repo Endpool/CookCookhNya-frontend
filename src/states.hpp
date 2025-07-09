@@ -44,7 +44,7 @@ struct MemberDeletion : detail::StorageIdMixin {};
 
 struct StorageIngredientsList : detail::StorageIdMixin {};
 struct StorageIngredientsSearch : detail::StorageIdMixin {
-    std::vector<api::models::ingredient::IngredientSearchItem> shownIngredients;
+    std::vector<api::models::ingredient::IngredientSearchForStorageItem> shownIngredients;
     std::size_t totalFound;
     std::size_t pageNo;
 };

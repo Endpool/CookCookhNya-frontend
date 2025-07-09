@@ -30,12 +30,12 @@ class IngredientsApi : ApiBase {
 
     void deleteFromStorage(UserId user, StorageId storage, IngredientId id) const;
 
-    [[nodiscard]] std::vector<models::ingredient::Ingredient>
+    [[nodiscard]] models::ingredient::IngredientSearchResponse
     search(std::string query, std::size_t size, std::size_t offset, std::size_t threshold) const;
 
     [[nodiscard]] models::ingredient::Ingredient get(IngredientId id) const;
 
-    [[nodiscard]] models::ingredient::IngredientSearchResponse
+    [[nodiscard]] models::ingredient::IngredientSearchForStorageResponse
     searchForStorage(UserId user, std::string query, StorageId storage, std::size_t count, std::size_t offset) const;
 };
 
