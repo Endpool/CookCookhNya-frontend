@@ -7,6 +7,7 @@
 
 #include <algorithm>
 #include <format>
+#include <string>
 #include <utility>
 
 namespace cookcookhnya::render::create_custom_ingredient {
@@ -27,14 +28,22 @@ void renderCustomIngredientConfirm(
     keyboard[0].push_back(detail::makeCallbackButton(u8"✅ Подтвердить", "confirm"));
     keyboard[1].push_back(detail::makeCallbackButton(u8"🚫 Отмена", "cancel"));
 
-    auto similarIngredients = api.search(ingredientName, 5, 0, 70).page; // NOLINT
-    std::string formatedIngredients;
-    std::ranges::for_each(similarIngredients, [&formatedIngredients](const api::models::ingredient::Ingredient& item) {
-        formatedIngredients += "• " + item.name + "\n";
-    });
-    auto text = std::format("{} Нашли похожие ингредиенты:\n{}Вы уверены, что хотите добавить новый ингредиент?",
-                            utils::utf8str(u8"🔍"),
-                            formatedIngredients);
+    auto similarIngredients = api.search(std::move(ingredientName), 5, 0, 70).page; // NOLINT(*magic-numbers*)
+
+    std::string text;
+    if (!similarIngredients.empty()) {
+        std::string formatedIngredients;
+        std::ranges::for_each(similarIngredients,
+                              [&formatedIngredients](const api::models::ingredient::Ingredient& item) {
+                                  formatedIngredients += "• " + item.name + "\n";
+                              });
+        text = std::format("{}\n{}{}",
+                           utils::utf8str(u8"🔍 Нашли похожие ингредиенты:"),
+                           formatedIngredients,
+                           utils::utf8str(u8"Вы уверены, что хотите добавить новый ингредиент?"));
+    } else {
+        text = utils::utf8str(u8"Вы уверены, что хотите добавить новый ингредиент?");
+    }
     auto message = bot.sendMessage(chatId, text, nullptr, nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
     message::addMessageId(userId, message->messageId);
 }
