@@ -37,8 +37,6 @@ using BotRef = const TgBot::Api&;
 using MessageRef = const TgBot::Message&;
 using InlineKeyboard = std::vector<std::vector<TgBot::InlineKeyboardButton::Ptr>>;
 
-namespace detail {
-
 inline TgBot::InlineKeyboardButton::Ptr makeCallbackButton(std::string_view text, std::string_view data) {
     TgBot::InlineKeyboardButton::Ptr button = std::make_shared<TgBot::InlineKeyboardButton>();
     button->text = text;
@@ -68,7 +66,5 @@ inline TgBot::InlineKeyboardMarkup::Ptr makeKeyboardMarkup(InlineKeyboard&& keyb
     markup->inlineKeyboard = std::move(keyboard);
     return markup;
 }
-
-} // namespace detail
 
 } // namespace cookcookhnya::render

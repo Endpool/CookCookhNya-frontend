@@ -27,13 +27,13 @@ void renderMemberList(bool toBeEdited,
     InlineKeyboard keyboard(buttonRows);
 
     if (isOwner) {
-        keyboard[0].push_back(detail::makeCallbackButton(u8"🔐 Добавить", "add_member"));
+        keyboard[0].push_back(makeCallbackButton(u8"🔐 Добавить", "add_member"));
         if (storageApi.getStorageMembers(userId, storageId).size() > 1) {
-            keyboard[0].push_back(detail::makeCallbackButton(u8"🔒 Удалить", "delete_member"));
+            keyboard[0].push_back(makeCallbackButton(u8"🔒 Удалить", "delete_member"));
         }
-        keyboard[1].push_back(detail::makeCallbackButton(u8"↩️Назад", "back_to_view_storage"));
+        keyboard[1].push_back(makeCallbackButton(u8"↩️Назад", "back_to_view_storage"));
     } else {
-        keyboard[0].push_back(detail::makeCallbackButton(u8"↩️Назад", "back_to_view_storage"));
+        keyboard[0].push_back(makeCallbackButton(u8"↩️Назад", "back_to_view_storage"));
     }
 
     std::string list;
@@ -47,12 +47,10 @@ void renderMemberList(bool toBeEdited,
     if (toBeEdited) {
         auto messageId = message::getMessageId(userId);
         if (messageId) {
-            bot.editMessageText(
-                text, chatId, *messageId, "", "", nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
+            bot.editMessageText(text, chatId, *messageId, "", "", nullptr, makeKeyboardMarkup(std::move(keyboard)));
         }
     } else {
-        auto messageId =
-            bot.sendMessage(chatId, text, nullptr, nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
+        auto messageId = bot.sendMessage(chatId, text, nullptr, nullptr, makeKeyboardMarkup(std::move(keyboard)));
         message::addMessageId(userId, messageId->messageId);
     }
 };

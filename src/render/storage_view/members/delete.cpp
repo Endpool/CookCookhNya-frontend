@@ -20,19 +20,19 @@ void renderMemberDeletionPrompt(
     auto members = storageApi.getStorageMembers(userId, storageId);
     const unsigned int buttonRows = members.size();
     InlineKeyboard keyboard(buttonRows);
-    keyboard[0].push_back(detail::makeCallbackButton(u8"🚫 Отмена", "cancel_member_deletion"));
+    keyboard[0].push_back(makeCallbackButton(u8"🚫 Отмена", "cancel_member_deletion"));
     size_t k = 1;
     for (auto& member : members) {
         if (member.userId != storage.ownerId) {
-            keyboard[k++].push_back(detail::makeCallbackButton(
-                std::format("{} {}", utils::utf8str(u8"👤"), member.fullName), "mem_" + std::to_string(member.userId)));
+            keyboard[k++].push_back(makeCallbackButton(std::format("{} {}", utils::utf8str(u8"👤"), member.fullName),
+                                                       "mem_" + std::to_string(member.userId)));
         }
     }
 
     auto text = utils::utf8str(u8"🚷 Выберите участника для удаления\n");
     auto messageId = message::getMessageId(userId);
     if (messageId) {
-        bot.editMessageText(text, chatId, *messageId, "", "", nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
+        bot.editMessageText(text, chatId, *messageId, "", "", nullptr, makeKeyboardMarkup(std::move(keyboard)));
     }
 };
 
