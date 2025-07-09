@@ -24,7 +24,7 @@ void handleRecipeView(RecipeView& state, CallbackQueryRef cq, BotRef bot, SMRef 
         // TODO: add state of begginig of cooking
         return;
     }
-    if (data == "add_shopping_list") {
+    if (data == "shopping_list") {
         auto ingredientsInList = renderShoppingListCreation(state.storageIds, state.recipeId, userId, chatId, bot, api);
         stateManager.put(ShoppingListCreation{.storageIdsFrom = state.storageIds,
                                               .recipeIdFrom = state.recipeId,

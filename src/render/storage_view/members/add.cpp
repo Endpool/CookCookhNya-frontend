@@ -22,8 +22,7 @@ void renderMemberAdditionPrompt(
 
     auto inviteButton = std::make_shared<TgBot::InlineKeyboardButton>();
     inviteButton->text = utils::utf8str(u8"📤 Поделиться");
-    auto hash = "hashFromBack"; // NOLINT
-    // TODO: get here hash from back
+    auto hash = storageApi.inviteMember(userId, storageId);
     const auto* telegramBotAlias = "stage_stand_bot";
     auto inviteText = "Нажми на ссылку, чтобы стать участником хранилища 🍱**" + storage.name +
                       "** в CookCookhNya!\nhttps://t.me/" + telegramBotAlias + "?start=" + hash;
