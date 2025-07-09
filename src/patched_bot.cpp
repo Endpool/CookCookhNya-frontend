@@ -3,10 +3,11 @@
 #include "tg_types.hpp"
 
 #include <boost/json/serialize.hpp>
-#include <tgbot/Api.h>
-#include <tgbot/TgTypeParser.h>
+#include <boost/json/string.hpp>
 #include <tgbot/net/HttpReqArg.h>
+#include <tgbot/types/InlineKeyboardButton.h>
 #include <tgbot/types/InlineKeyboardMarkup.h>
+#include <tgbot/types/Message.h>
 
 #include <string>
 #include <string_view>

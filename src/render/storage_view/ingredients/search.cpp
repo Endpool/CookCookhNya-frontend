@@ -44,12 +44,11 @@ auto makeKeyboard(const std::vector<IngredientSearchForStorageItem>& ingredients
 } // namespace
 
 void renderStorageIngredientsSearch(ChatId chatId, UserId userId, BotRef bot) {
-    const PatchedBot patchedBot{bot};
     if (auto mMessageId = message::getMessageId(userId)) {
-        patchedBot.editMessageText(utils::utf8str(u8"Используй кнопку ниже как поисковик чтобы найти ингредиент"),
-                                   chatId,
-                                   *mMessageId,
-                                   makeKeyboard({}, 0, 0));
+        bot.editMessageText(utils::utf8str(u8"Используй кнопку ниже как поисковик чтобы найти ингредиент"),
+                            chatId,
+                            *mMessageId,
+                            makeKeyboard({}, 0, 0));
     }
 }
 
@@ -59,8 +58,7 @@ void renderStorageIngredientsSearchEdit(const std::vector<IngredientSearchForSto
                                         MessageId message,
                                         ChatId chatId,
                                         BotRef bot) {
-    const PatchedBot patchedBot{bot};
-    patchedBot.editMessageReplyMarkup(chatId, message, makeKeyboard(ingredients, pageNo, totalPages));
+    bot.editMessageReplyMarkup(chatId, message, makeKeyboard(ingredients, pageNo, totalPages));
 }
 
 } // namespace cookcookhnya::render::storage::ingredients

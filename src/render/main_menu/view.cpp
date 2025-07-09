@@ -5,7 +5,6 @@
 #include "utils.hpp"
 
 #include <cstddef>
-#include <string>
 #include <utility>
 
 namespace cookcookhnya::render::main_menu {
@@ -13,7 +12,6 @@ namespace cookcookhnya::render::main_menu {
 using namespace tg_types;
 
 void renderMainMenu(bool toBeEdited, UserId userId, ChatId chatId, BotRef bot, StorageApiRef storageApi) {
-
     auto storages = storageApi.getStoragesList(userId);
 
     const std::size_t buttonRows = storages.empty() ? 3 : 4;
@@ -33,12 +31,10 @@ void renderMainMenu(bool toBeEdited, UserId userId, ChatId chatId, BotRef bot, S
     auto text = utils::utf8str(
         u8"🍳 Добро пожаловать в CookCookNya — ваш личный бот для быстро подбора рецептов и многого другого!");
     if (toBeEdited) {
-        auto messageId = message::getMessageId(userId);
-        if (messageId) {
-            bot.editMessageText(text, chatId, *messageId, "", "", nullptr, makeKeyboardMarkup(std::move(keyboard)));
-        }
+        if (auto messageId = message::getMessageId(userId))
+            bot.editMessageText(text, chatId, *messageId, makeKeyboardMarkup(std::move(keyboard)));
     } else {
-        auto message = bot.sendMessage(chatId, text, nullptr, nullptr, makeKeyboardMarkup(std::move(keyboard)));
+        auto message = bot.sendMessage(chatId, text, makeKeyboardMarkup(std::move(keyboard)));
         message::addMessageId(userId, message->messageId);
     }
 }

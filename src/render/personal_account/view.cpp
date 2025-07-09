@@ -5,7 +5,6 @@
 #include "utils.hpp"
 
 #include <cstddef>
-#include <string>
 #include <utility>
 
 namespace cookcookhnya::render::personal_account {
@@ -13,7 +12,6 @@ namespace cookcookhnya::render::personal_account {
 using namespace tg_types;
 
 void renderPersonalAccountMenu(UserId userId, ChatId chatId, BotRef bot) {
-
     const std::size_t buttonRows = 3;
     InlineKeyboard keyboard(buttonRows);
 
@@ -26,7 +24,7 @@ void renderPersonalAccountMenu(UserId userId, ChatId chatId, BotRef bot) {
 
     auto messageId = message::getMessageId(userId);
     if (messageId) {
-        bot.editMessageText(text, chatId, *messageId, "", "", nullptr, makeKeyboardMarkup(std::move(keyboard)));
+        bot.editMessageText(text, chatId, *messageId, makeKeyboardMarkup(std::move(keyboard)));
     }
 }
 
