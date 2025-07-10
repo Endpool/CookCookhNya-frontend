@@ -15,6 +15,12 @@ int main() {
 
     Setup<State, Dependencies<ApiClient>>::Stater<noStateHandler,
                                                   startHandler,
+                                                  mainMenuButtonHandler,
+                                                  customIngredientsListButtonHandler,
+                                                  customIngredientCreateHandler,
+                                                  customIngredientCancelCreationHandler,
+                                                  customIngredientConfirmHandler,
+                                                  customIngredientPublishHandler,
                                                   storageCreateButtonHandler,
                                                   storageDeleteButtonHandler,
                                                   storageListButtonHandler,
@@ -26,12 +32,19 @@ int main() {
                                                   memberDeletionButtonHandler,
                                                   storagesSelectionHandler,
                                                   recipesSuggestionListHandler,
-                                                  storageIngredientsListButtonHandler,
                                                   storageIngredientsSearchButtonHandler,
                                                   storageIngredientsSearchHandler,
                                                   recipeViewHandler,
                                                   shoppingListCreationHandler,
-                                                  shoppingListButtonHandler>
+                                                  shoppingListButtonHandler,
+                                                  customRecipesListHandler,
+                                                  personalAccountButtonHandler,
+                                                  customRecipeCreateHandler,
+                                                  customRecipeCreateButtonHandler,
+                                                  customRecipeViewHandler,
+                                                  customRecipeIngredientsSearchButtonHandler,
+                                                  customRecipeIngredientsSearchHandler,
+                                                  recipeAddStorageHandler>
         bot{{}, {ApiClient{utils::getenvWithError("API_URL")}}};
 
     bot.start(TgBot::Bot{utils::getenvWithError("BOT_TOKEN")});
