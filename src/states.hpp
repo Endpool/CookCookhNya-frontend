@@ -69,7 +69,35 @@ struct RecipeView {
     std::vector<api::StorageId> storageIds;
     api::RecipeId recipeId;
     bool fromStorage;
-    std::size_t pageNo;
+    size_t pageNo;
+};
+
+struct RecipeAddStoradge {
+    std::vector<api::StorageId> storageIds;
+    api::RecipeId recipeId;
+    bool fromStorage;
+    size_t pageNo;
+};
+
+struct CustomRecipesList {
+    size_t pageNo;
+};
+
+struct CustomRecipeIngredientsSearch {
+    api::RecipeId recipeId;
+    std::vector<api::models::ingredient::IngredientSearchForRecipeItem> shownIngredients;
+    std::size_t totalFound;
+    size_t pageNo;
+};
+
+struct RecipeCustomView {
+    api::RecipeId recipeId;
+    size_t pageNo;
+};
+
+struct CreateCustomRecipe {
+    api::RecipeId recipeId;
+    size_t pageNo;
 };
 
 struct ShoppingListCreation {
@@ -78,6 +106,11 @@ struct ShoppingListCreation {
     std::vector<api::IngredientId> ingredientIdsInList;
     bool fromStorage;
     std::size_t pageNo;
+};
+
+struct RecipeIngredientsSearch {
+    api::RecipeId recipeId;
+    size_t pageNo;
 };
 
 struct ShoppingListView {
@@ -106,8 +139,14 @@ using State = std::variant<MainMenu,
                            SuggestedRecipeList,
                            RecipeView,
                            ShoppingListCreation,
-                           ShoppingListView>;
+                           ShoppingListView,
+                           CreateCustomRecipe,
+                           RecipeCustomView,
+                           CustomRecipeIngredientsSearch,
+                           CustomRecipesList,
+                           RecipeAddStoradge,
+                           RecipeIngredientsSearch>;
 
 using StateManager = tg_stater::StateProxy<tg_stater::MemoryStateStorage<State>>;
 
-} // namespace cookcookhnya::states
+}; // namespace cookcookhnya::states

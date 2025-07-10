@@ -1,30 +1,28 @@
 #include "view.hpp"
 
-#include "backend/id_types.hpp"
 #include "handlers/common.hpp"
-#include "render/recipes_suggestion/recipe/view.hpp"
+#include "render/recipes_suggestion/recipe/add_storage.hpp"
 #include "render/recipes_suggestion/suggest.hpp"
 #include "render/shopping_list/create.hpp"
-#include "utils.hpp"
 
 #include <string>
 
 namespace cookcookhnya::handlers::recipe_view {
 
-using namespace render::recipe_view;
 using namespace render::recipes_suggestion;
 using namespace render::shopping_list_create;
+using namespace render::recipe_add_storage;
 
 void handleRecipeView(RecipeView& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
     std::string data = cq.data;
     auto chatId = cq.message->chat->id;
     auto userId = cq.from->id;
 
-    if (data == "cook") {
+    if (data == "start_cooking") {
         // TODO: add state of begginig of cooking
         return;
     }
-    if (data == "shopping_list") {
+    if (data == "make_product_list") {
         auto ingredientsInList = renderShoppingListCreation(state.storageIds, state.recipeId, userId, chatId, bot, api);
         stateManager.put(ShoppingListCreation{.storageIdsFrom = state.storageIds,
                                               .recipeIdFrom = state.recipeId,
@@ -34,35 +32,21 @@ void handleRecipeView(RecipeView& state, CallbackQueryRef cq, BotRef bot, SMRef 
         bot.answerCallbackQuery(cq.id);
         return;
     }
-    if (data == "back_to_suggestions") {
-        editRecipesSuggestion(state.storageIds, 0, userId, chatId, bot, api);
-        stateManager.put(
-            SuggestedRecipeList{.pageNo = 0, .storageIds = state.storageIds, .fromStorage = state.fromStorage});
+    if (data == "back_from_recipe_view") {
+        editRecipesSuggestion(state.storageIds, state.pageNo, userId, chatId, bot, api);
+        stateManager.put(SuggestedRecipeList{
+            .pageNo = state.pageNo, .storageIds = state.storageIds, .fromStorage = state.fromStorage});
         bot.answerCallbackQuery(cq.id);
         return;
     }
-    if (data == "back_to_recipe") {
-        renderRecipeViewAfterAddingStorage(state.storageIds, state.recipeId, userId, chatId, bot, api);
-        return;
-    }
+
     if (data[0] == '?') {
-        renderStorageSuggestion(state.storageIds,
-                                state.recipeId,
-                                userId,
-                                chatId,
-                                bot,
-                                api); // dangerous to ge message id like that?
-        // What? (by Maxim Fomin)
+        renderStorageSuggestion(state.storageIds, state.recipeId, userId, chatId, bot, api);
+        stateManager.put(RecipeAddStoradge{.storageIds = state.storageIds,
+                                           .recipeId = state.recipeId,
+                                           .fromStorage = state.fromStorage,
+                                           .pageNo = state.pageNo});
         return;
-    }
-    if (data[0] == '+') {
-        auto newStorageIdStr =
-            data.substr(1, data.size()); // Here we got all selected storages and new one as last in string
-        auto newStorageId = utils::parseSafe<api::StorageId>(newStorageIdStr);
-        if (newStorageId) {
-            state.storageIds.push_back(*newStorageId);
-            renderStorageSuggestion(state.storageIds, state.recipeId, userId, chatId, bot, api);
-        }
     }
 }
 

@@ -41,6 +41,23 @@ struct IngredientSearchForStorageResponse {
                                                          const boost::json::value& j);
 };
 
+struct IngredientSearchForRecipeItem {
+    IngredientId id;
+    std::string name;
+    bool available;
+
+    friend IngredientSearchForRecipeItem tag_invoke(boost::json::value_to_tag<IngredientSearchForRecipeItem>,
+                                                    const boost::json::value& j);
+};
+
+struct IngredientSearchForRecipeResponse {
+    std::vector<IngredientSearchForRecipeItem> page;
+    std::size_t found;
+
+    friend IngredientSearchForRecipeResponse tag_invoke(boost::json::value_to_tag<IngredientSearchForRecipeResponse>,
+                                                        const boost::json::value& j);
+};
+
 struct IngredientSearchResponse {
     std::vector<Ingredient> page;
     std::size_t found;

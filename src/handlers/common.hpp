@@ -26,6 +26,7 @@ using states::CustomIngredientsList;
 
 using states::StorageList;
 
+using states::RecipeAddStoradge;
 using states::RecipeView;
 using states::StorageCreationEnterName;
 using states::StorageDeletion;
@@ -43,6 +44,13 @@ using states::SuggestedRecipeList;
 
 using states::ShoppingListCreation;
 using states::ShoppingListView;
+
+using states::PersonalAccountMenu;
+
+using states::CreateCustomRecipe;
+using states::CustomRecipeIngredientsSearch;
+using states::CustomRecipesList;
+using states::RecipeCustomView;
 
 // Type aliases
 using ApiClientRef = const api::ApiClient&;

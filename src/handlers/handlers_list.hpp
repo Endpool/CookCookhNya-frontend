@@ -3,10 +3,13 @@
 // Handler callbacks
 #include "initial/start.hpp"
 #include "main_menu/view.hpp"
+
 #include "personal_account/ingredients/create.hpp"
 #include "personal_account/ingredients/publish.hpp"
 #include "personal_account/ingredients/view.hpp"
 #include "personal_account/view.hpp"
+#include "recipes_suggestion/recipe/add_storage.hpp"
+
 #include "recipes_suggestion/recipe/view.hpp"
 #include "recipes_suggestion/storage_selection/select.hpp"
 #include "recipes_suggestion/suggest.hpp"
@@ -23,8 +26,14 @@
 #include "storage_view/members/view.hpp"
 #include "storage_view/view.hpp"
 
+#include "custom_recipes_list/create.hpp"
+#include "custom_recipes_list/custom_recipe/search.hpp"
+#include "custom_recipes_list/custom_recipe/view.hpp"
+#include "custom_recipes_list/view.hpp"
+
 #include "handlers/common.hpp"
 
+#include <boost/mpl/aux_/na_fwd.hpp>
 #include <tg_stater/handler/event.hpp>
 #include <tg_stater/handler/handler.hpp>
 #include <tg_stater/handler/type.hpp>
@@ -50,6 +59,11 @@ using namespace recipes_suggestion;
 using namespace recipe_view;
 using namespace shopping_list_create;
 using namespace shopping_list;
+using namespace custom_recipes_list;
+using namespace recipe_view;
+using namespace create_custom_recipe;
+using namespace recipe::ingredients;
+using namespace recipe_add_storage;
 
 using namespace tg_stater;
 
@@ -62,9 +76,6 @@ using noStateHandler = Handler<Events::AnyMessage{}, handleNoState, NoState{}>;
 
 // MainMenu
 using mainMenuButtonHandler = Handler<Events::CallbackQuery{}, mainMenuHandler>;
-
-// PersonalAccount
-using personalAccountButtonHandler = Handler<Events::CallbackQuery{}, personalAccountButtonHandler>;
 
 // // CustomIngredient
 using customIngredientsListButtonHandler = Handler<Events::CallbackQuery{}, customIngredientsList>;
@@ -109,12 +120,33 @@ using storageIngredientsSearchHandler = Handler<Events::InlineQuery{}, storageIn
 // RecipeView
 using recipeViewHandler = Handler<Events::CallbackQuery{}, handleRecipeView>;
 
+// Recipe Add Storage
+using recipeAddStorageHandler = Handler<Events::CallbackQuery{}, handleRecipeAddStorage>;
+
 // ShoppingListCreation
 using shoppingListCreationHandler = Handler<Events::CallbackQuery{}, handleProductListSubmission>;
 
 // Shopping list
 using shoppingListButtonHandler = Handler<Events::CallbackQuery{}, shoppingListButtonCallback>;
 
+// Personal account
+using personalAccountButtonHandler = Handler<Events::CallbackQuery{}, personalAccount>;
+
+// Custom Recipes List
+using customRecipesListHandler = Handler<Events::CallbackQuery{}, customRecipeList>;
+
+// Custom Recipe Create
+using customRecipeCreateHandler = Handler<Events::Message{}, createRecipe>;
+using customRecipeCreateButtonHandler = Handler<Events::CallbackQuery{}, cancelRecipeCreation>;
+
+// Custom Recipe View
+using customRecipeViewHandler = Handler<Events::CallbackQuery{}, handleCustomRecipeView>;
+
+// Custom Recipe Ingredients Search
+using customRecipeIngredientsSearchButtonHandler =
+    Handler<Events::CallbackQuery{}, customRecipeIngredientsSearchButtonCallback>;
+using customRecipeIngredientsSearchHandler =
+    Handler<Events::InlineQuery{}, customRecipeIngredientsSearchInlineQueryCallback>;
 } // namespace bot_handlers
 
 } // namespace cookcookhnya::handlers

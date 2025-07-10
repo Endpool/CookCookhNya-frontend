@@ -8,8 +8,8 @@
 #include "render/recipes_suggestion/suggest.hpp"
 #include "render/shopping_list/view.hpp"
 #include "render/storage_list/view.hpp"
-
 #include <iterator>
+
 #include <vector>
 
 namespace cookcookhnya::handlers::main_menu_view {
