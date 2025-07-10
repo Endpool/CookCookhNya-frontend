@@ -40,7 +40,7 @@ InlineKeyboard constuctNavigationsMarkup(size_t offset,
     int counter = 0;
     for (std::size_t i = 0; i < recipesToShow; i++) {
         // Print on button in form "1. {Recipe}"
-        keyboard[i + offset].push_back(detail::makeCallbackButton(
+        keyboard[i + offset].push_back(makeCallbackButton(
             std::format("{}. {}", 1 + counter + ((pageNo)*numOfRecipesOnPage), recipesList.recipesPage[counter].name),
             std::format("recipe: {}", recipesList.recipesPage[counter].id))); // RECIPE ID
         counter++;
@@ -69,18 +69,17 @@ InlineKeyboard constuctNavigationsMarkup(size_t offset,
             (uint8_t{0b1} << static_cast<uint8_t>(i))) {
             // if we need to place arrow then check the i, which represents bit which we are checking right now
             if (i == 1) {
-                keyboard[arrowsRow].push_back(detail::makeCallbackButton(u8"◀️", std::to_string(pageNo - 1))); // left
+                keyboard[arrowsRow].push_back(makeCallbackButton(u8"◀️", std::to_string(pageNo - 1))); // left
             } else {
-                keyboard[arrowsRow].push_back(detail::makeCallbackButton(u8"▶️", std::to_string(pageNo + 1))); // right
+                keyboard[arrowsRow].push_back(makeCallbackButton(u8"▶️", std::to_string(pageNo + 1))); // right
             }
         } else {
-            keyboard[arrowsRow].push_back(detail::makeCallbackButton(u8"ㅤ", "dontHandle"));
+            keyboard[arrowsRow].push_back(makeCallbackButton(u8"ㅤ", "dontHandle"));
         }
     }
     // Put pageNo as button
-    keyboard[arrowsRow].insert(
-        keyboard[arrowsRow].begin() + 1,
-        detail::makeCallbackButton(std::format("{} из {}", pageNo + 1, maxPageNum), "dontHandle"));
+    keyboard[arrowsRow].insert(keyboard[arrowsRow].begin() + 1,
+                               makeCallbackButton(std::format("{} из {}", pageNo + 1, maxPageNum), "dontHandle"));
     return keyboard;
 }
 
@@ -100,11 +99,11 @@ constructMarkup(size_t pageNo, size_t numOfRecipesOnPage, api::models::recipe::C
     if (keyboard.empty()) { // If error happened
         return keyboard;
     }
-    keyboard[0].push_back(detail::makeCallbackButton(u8"Создать", "custom_recipe_create"));
+    keyboard[0].push_back(makeCallbackButton(u8"Создать", "custom_recipe_create"));
 
     keyboard[arrowsRow + 1].push_back(
-        detail::makeCallbackButton(u8"↩️ Назад",
-                                   "backFromCustomRecipes")); // To LAST row add "backFromCustomRecipes"
+        makeCallbackButton(u8"↩️ Назад",
+                           "backFromCustomRecipes")); // To LAST row add "backFromCustomRecipes"
     return keyboard;
 }
 
@@ -140,7 +139,7 @@ void renderCustomRecipesList(size_t pageNo, UserId userId, ChatId chatId, BotRef
                             "",
                             "",
                             nullptr,
-                            detail::makeKeyboardMarkup(constructMarkup(pageNo, numOfRecipesOnPage, recipesList)));
+                            makeKeyboardMarkup(constructMarkup(pageNo, numOfRecipesOnPage, recipesList)));
     }
 }
 } // namespace cookcookhnya::render::custom_recipes_list

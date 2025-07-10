@@ -16,13 +16,13 @@ void storageMemberViewButtonCallback(
     bot.answerCallbackQuery(cq.id);
     auto chatId = cq.message->chat->id;
     auto userId = cq.from->id;
-    if (cq.data == "add_member") {
+    if (cq.data == "add") {
         renderMemberAdditionPrompt(state.storageId, userId, chatId, bot, storageApi);
         stateManager.put(MemberAddition{state.storageId});
-    } else if (cq.data == "delete_member") {
+    } else if (cq.data == "delete") {
         renderMemberDeletionPrompt(state.storageId, userId, chatId, bot, storageApi);
         stateManager.put(MemberDeletion{state.storageId});
-    } else if (cq.data == "back_to_view_storage") {
+    } else if (cq.data == "back") {
         renderStorageView(state.storageId, userId, chatId, bot, storageApi);
         stateManager.put(StorageView{state.storageId});
     }

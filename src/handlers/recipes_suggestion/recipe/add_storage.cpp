@@ -8,7 +8,7 @@ using namespace render::recipe_add_storage;
 using namespace render::recipe_view;
 
 void handleRecipeAddStorage(
-    RecipeAddStoarege& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
+    RecipeAddStoradge& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
     std::string data = cq.data;
     auto chatId = cq.message->chat->id;
     auto userId = cq.from->id;

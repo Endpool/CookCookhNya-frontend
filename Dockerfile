@@ -14,10 +14,10 @@ RUN conan profile detect \
  && sed -i 's/compiler.cppstd=.*/compiler.cppstd=23/' ~/.conan2/profiles/default
 
 WORKDIR /deps
-RUN wget https://github.com/Makcal/TgBotStater/archive/refs/tags/v0.3.6.tar.gz -O tgbotstater.tar.gz \
+RUN wget https://github.com/Makcal/TgBotStater/archive/refs/tags/v0.3.8.tar.gz -O tgbotstater.tar.gz \
  && tar -xf tgbotstater.tar.gz \
  && rm tgbotstater.tar.gz \
- && cd TgBotStater-0.3.6 \
+ && cd TgBotStater-0.3.8 \
  && conan create . --build=missing
 
 WORKDIR /app

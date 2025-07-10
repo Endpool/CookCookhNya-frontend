@@ -19,7 +19,7 @@ void handleProductListSubmission(
     auto chatId = cq.message->chat->id;
     auto userId = cq.from->id;
 
-    if (data == "BackFromShoppingList") {
+    if (data == "back") {
         renderRecipeViewAfterAddingStorage(state.storageIdsFrom, state.recipeIdFrom, userId, chatId, bot, api);
         stateManager.put(RecipeView{.storageIds = state.storageIdsFrom,
                                     .recipeId = state.recipeIdFrom,
@@ -28,7 +28,7 @@ void handleProductListSubmission(
         bot.answerCallbackQuery(cq.id);
         return;
     }
-    if (data == "AcceptShoppingList") {
+    if (data == "confirm") {
         // Put ingredients in list
         auto shoppingApi = api.getShoppingListApi();
         shoppingApi.put(userId, state.ingredientIdsInList);

@@ -4,6 +4,7 @@
 
 namespace cookcookhnya::handlers::personal_account_view {
 
-void personalAccount(PersonalAccountMenu&, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api);
+void personalAccount(
+    PersonalAccountMenu& /*unused*/, CallbackQueryRef cq, BotRef& bot, SMRef stateManager, ApiClientRef api);
 
 } // namespace cookcookhnya::handlers::personal_account_view

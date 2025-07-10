@@ -13,10 +13,4 @@ void renderStorageSelect(const std::vector<api::StorageId>& selected_storages,
                          BotRef bot,
                          StorageApiRef storageApi);
 
-void editStorageSelect(const std::vector<api::StorageId>& selected_storages,
-                       UserId userId,
-                       ChatId chatId,
-                       BotRef bot,
-                       StorageApiRef storageApi);
-
 } // namespace cookcookhnya::render::select_storages

@@ -38,4 +38,12 @@ void StoragesApi::deleteMember(UserId userId, StorageId storageId, UserId member
     jsonDeleteAuthed<void>(userId, std::format("/my/storages/{}/members/{}", storageId, memberId));
 }
 
+InvitationId StoragesApi::inviteMember(UserId userId, StorageId storageId) const {
+    return postAuthed(userId, std::format("/invitations/to/{}", storageId));
+}
+
+void StoragesApi::activate(UserId userId, InvitationId id) const {
+    postAuthed(userId, std::format("/invitations/{}/activate", id));
+}
+
 } // namespace cookcookhnya::api

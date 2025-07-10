@@ -29,7 +29,7 @@ void cancelStorageCreation(StorageCreationEnterName& /*unused*/,
                            SMRef stateManager,
                            StorageApiRef storageApi) {
     bot.answerCallbackQuery(cq.id);
-    if (cq.data == "cancel_storage_creation") {
+    if (cq.data == "back") {
         renderStorageList(true, cq.from->id, cq.message->chat->id, bot, storageApi);
         stateManager.put(StorageList{});
     }

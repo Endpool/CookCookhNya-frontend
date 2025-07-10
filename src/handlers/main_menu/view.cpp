@@ -8,6 +8,8 @@
 #include "render/recipes_suggestion/suggest.hpp"
 #include "render/shopping_list/view.hpp"
 #include "render/storage_list/view.hpp"
+#include <iterator>
+
 #include <vector>
 
 namespace cookcookhnya::handlers::main_menu_view {
@@ -32,16 +34,18 @@ void mainMenuHandler(MainMenu& /*unused*/, CallbackQueryRef cq, BotRef& bot, SMR
         if (storages.size() == 1) {
             auto storageId = {storages[0].id};
             editRecipesSuggestion(storageId, 0, userId, chatId, bot, api);
-            stateManager.put(SuggestedRecipeList{.pageNo = 0, .storageIds = storageId, .fromStorage = true});
+            stateManager.put(SuggestedRecipeList{.pageNo = 0, .storageIds = storageId, .fromStorage = false});
             return;
         }
-        renderStorageSelect({}, cq.from->id, chatId, bot, api);
+        renderStorageSelect({}, userId, chatId, bot, api);
         stateManager.put(StorageSelection{.storageIds = std::vector<api::StorageId>{}});
         return;
     }
     if (cq.data == "shopping_list") {
-        renderShoppingList(cq.from->id, chatId, bot, api);
-        stateManager.put(ShoppingListView{});
+        auto items = api.getShoppingListApi().get(userId);
+        stateManager.put(
+            ShoppingListView{{{std::make_move_iterator(items.begin()), std::make_move_iterator(items.end())}}});
+        renderShoppingList(std::get<ShoppingListView>(*stateManager.get()).items.getAll(), userId, chatId, bot);
         return;
     }
     if (cq.data == "personal_account") {

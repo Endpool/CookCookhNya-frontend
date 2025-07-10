@@ -42,12 +42,12 @@ InlineKeyboard constuctNavigationsMarkup(size_t offset,
     for (std::size_t i = 0; i < recipesToShow; i++) {
         // Print on button in form "1. {Recipe}"
         keyboard[i + offset].push_back(
-            detail::makeCallbackButton(std::format("{}. {} [{} из {}]",
-                                                   1 + counter + ((pageNo)*numOfRecipesOnPage),
-                                                   recipesList.recipesPage[counter].name,
-                                                   recipesList.recipesPage[counter].available,
-                                                   recipesList.recipesPage[counter].total),
-                                       std::format("recipe: {}", recipesList.recipesPage[counter].id))); // RECIPE ID
+            makeCallbackButton(std::format("{}. {} [{} из {}]",
+                                           1 + counter + ((pageNo)*numOfRecipesOnPage),
+                                           recipesList.recipesPage[counter].name,
+                                           recipesList.recipesPage[counter].available,
+                                           recipesList.recipesPage[counter].total),
+                               std::format("recipe: {}", recipesList.recipesPage[counter].id))); // RECIPE ID
         counter++;
     }
     keyboard[arrowsRow].reserve(3);
@@ -73,18 +73,17 @@ InlineKeyboard constuctNavigationsMarkup(size_t offset,
             (uint8_t{0b1} << static_cast<uint8_t>(i))) {
             // if we need to place arrow then check the i, which represents bit which we are checking right now
             if (i == 1) {
-                keyboard[arrowsRow].push_back(detail::makeCallbackButton(u8"◀️", std::to_string(pageNo - 1))); // left
+                keyboard[arrowsRow].push_back(makeCallbackButton(u8"◀️", std::to_string(pageNo - 1))); // left
             } else {
-                keyboard[arrowsRow].push_back(detail::makeCallbackButton(u8"▶️", std::to_string(pageNo + 1))); // right
+                keyboard[arrowsRow].push_back(makeCallbackButton(u8"▶️", std::to_string(pageNo + 1))); // right
             }
         } else {
-            keyboard[arrowsRow].push_back(detail::makeCallbackButton(u8"ㅤ", "dontHandle"));
+            keyboard[arrowsRow].push_back(makeCallbackButton(u8"ㅤ", "dontHandle"));
         }
     }
     // Put pageNo as button
-    keyboard[arrowsRow].insert(
-        keyboard[arrowsRow].begin() + 1,
-        detail::makeCallbackButton(std::format("{} из {}", pageNo + 1, maxPageNum), "dontHandle"));
+    keyboard[arrowsRow].insert(keyboard[arrowsRow].begin() + 1,
+                               makeCallbackButton(std::format("{} из {}", pageNo + 1, maxPageNum), "dontHandle"));
     return keyboard;
 }
 
@@ -104,8 +103,8 @@ constructMarkup(size_t pageNo, size_t numOfRecipesOnPage, api::models::recipe::R
     }
 
     keyboard[arrowsRow + 1].push_back(
-        detail::makeCallbackButton(u8"↩️ Назад",
-                                   "backFromCustomRecipes")); // To LAST row add "backFromCustomRecipes"
+        makeCallbackButton(u8"↩️ Назад",
+                           "backFromCustomRecipes")); // To LAST row add "backFromCustomRecipes"
     return keyboard;
 }
 
@@ -133,7 +132,7 @@ void editRecipesSuggestion(const std::vector<api::StorageId>& storageIds,
                             "",
                             "",
                             nullptr,
-                            detail::makeKeyboardMarkup(constructMarkup(pageNo, numOfRecipesOnPage, recipesList)));
+                            makeKeyboardMarkup(constructMarkup(pageNo, numOfRecipesOnPage, recipesList)));
     }
 }
 

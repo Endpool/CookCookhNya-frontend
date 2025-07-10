@@ -1,6 +1,11 @@
 target_sources(main PRIVATE
     src/render/main_menu/view.cpp
 
+    src/render/personal_account/view.cpp
+    src/render/personal_account/ingredients/view.cpp
+    src/render/personal_account/ingredients/create.cpp
+    src/render/personal_account/ingredients/publish.cpp
+
     src/render/recipes_suggestion/recipe/view.cpp
     src/render/recipes_suggestion/storage_selection/select.cpp
     src/render/recipes_suggestion/suggest.cpp
@@ -13,7 +18,6 @@ target_sources(main PRIVATE
     src/render/storage_list/delete.cpp
     src/render/storage_list/view.cpp
 
-    src/render/storage_view/ingredients/search.cpp
     src/render/storage_view/ingredients/view.cpp
     src/render/storage_view/members/add.cpp
     src/render/storage_view/members/delete.cpp

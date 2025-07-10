@@ -2,11 +2,14 @@
 
 #include "backend/id_types.hpp"
 #include "backend/models/ingredient.hpp"
+#include "backend/models/shopping_list.hpp"
+#include "utils.hpp"
 
 #include <tg_stater/state_storage/common.hpp>
 #include <tg_stater/state_storage/memory.hpp>
 
 #include <cstddef>
+#include <utility>
 #include <variant>
 #include <vector>
 
@@ -23,8 +26,16 @@ struct StorageIdMixin {
 
 struct MainMenu {};
 
-struct StorageList {};
+struct PersonalAccountMenu {};
 
+struct CustomIngredientsList {};
+struct CustomIngredientCreationEnterName {};
+struct CustomIngredientConfirmation {
+    std::string name;
+};
+struct CustomIngredientPublish {};
+
+struct StorageList {};
 struct StorageDeletion {};
 struct StorageCreationEnterName {};
 struct StorageView : detail::StorageIdMixin {};
@@ -34,18 +45,23 @@ struct PackMemberView : detail::StorageIdMixin {};
 struct MemberAddition : detail::StorageIdMixin {};
 struct MemberDeletion : detail::StorageIdMixin {};
 
-struct StorageIngredientsList : detail::StorageIdMixin {};
-struct StorageIngredientsSearch : detail::StorageIdMixin {
-    std::vector<api::models::ingredient::IngredientSearchItem> shownIngredients;
-    std::size_t totalFound;
-    size_t pageNo;
+struct StorageIngredientsList : detail::StorageIdMixin {
+    using IngredientsDb = utils::FastSortedDb<api::models::ingredient::Ingredient>;
+
+    IngredientsDb storageIngredients;
+    std::size_t totalFound = 0;
+    std::size_t pageNo = 0;
+    std::vector<api::models::ingredient::IngredientSearchForStorageItem> searchItems;
+
+    StorageIngredientsList(api::StorageId storageId, IngredientsDb::Set ingredients)
+        : StorageIdMixin{storageId}, storageIngredients{std::move(ingredients)} {}
 };
 
 struct StorageSelection {
     std::vector<api::StorageId> storageIds;
 };
 struct SuggestedRecipeList {
-    size_t pageNo;
+    std::size_t pageNo;
     std::vector<api::StorageId> storageIds;
     bool fromStorage;
 };
@@ -56,7 +72,7 @@ struct RecipeView {
     size_t pageNo;
 };
 
-struct RecipeAddStoarege {
+struct RecipeAddStoradge {
     std::vector<api::StorageId> storageIds;
     api::RecipeId recipeId;
     bool fromStorage;
@@ -69,7 +85,7 @@ struct CustomRecipesList {
 
 struct CustomRecipeIngredientsSearch {
     api::RecipeId recipeId;
-    std::vector<api::models::ingredient::IngredientSearchItem> shownIngredients;
+    std::vector<api::models::ingredient::IngredientSearchForRecipeItem> shownIngredients;
     std::size_t totalFound;
     size_t pageNo;
 };
@@ -89,14 +105,22 @@ struct ShoppingListCreation {
     api::RecipeId recipeIdFrom;
     std::vector<api::IngredientId> ingredientIdsInList;
     bool fromStorage;
-    size_t pageNo;
+    std::size_t pageNo;
 };
 
-struct ShoppingListView {};
+struct ShoppingListView {
+    using ItemsDb = utils::FastSortedDb<api::models::shopping_list::ShoppingListItem,
+                                        &api::models::shopping_list::ShoppingListItem::ingredientId>;
 
-struct PersonalAccountMenu {};
+    ItemsDb items;
+};
 
 using State = std::variant<MainMenu,
+                           PersonalAccountMenu,
+                           CustomIngredientsList,
+                           CustomIngredientCreationEnterName,
+                           CustomIngredientConfirmation,
+                           CustomIngredientPublish,
                            StorageList,
                            StorageDeletion,
                            StorageCreationEnterName,
@@ -106,19 +130,17 @@ using State = std::variant<MainMenu,
                            MemberAddition,
                            MemberDeletion,
                            StorageIngredientsList,
-                           StorageIngredientsSearch,
                            StorageSelection,
                            SuggestedRecipeList,
                            RecipeView,
                            ShoppingListCreation,
                            ShoppingListView,
-                           PersonalAccountMenu,
-                           CustomRecipesList,
-                           RecipeCustomView,
                            CreateCustomRecipe,
+                           RecipeCustomView,
                            CustomRecipeIngredientsSearch,
-                           RecipeAddStoarege>;
+                           CustomRecipesList,
+                           RecipeAddStoradge>;
 
 using StateManager = tg_stater::StateProxy<tg_stater::MemoryStateStorage<State>>;
 
-} // namespace cookcookhnya::states
+}; // namespace cookcookhnya::states

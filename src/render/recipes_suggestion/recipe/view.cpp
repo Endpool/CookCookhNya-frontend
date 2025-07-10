@@ -116,38 +116,32 @@ void renderRecipeViewAfterAddingStorage(const std::vector<api::StorageId>& stora
     auto toPrint = text.text;
     const bool isAtLeastOneIngredientLack = text.isAtLeastOneIngredientLack;
 
-    const size_t buttonRows =
-        isAtLeastOneIngredientLack
-            ? 3
-            : 2; // if there is no lacking ingredients then there is no need to show field of shopping list
+    // if there is no lacking ingredients then there is no need to show field of shopping list
+    const size_t buttonRows = isAtLeastOneIngredientLack ? 3 : 2;
     InlineKeyboard keyboard(buttonRows);
 
-    keyboard[0].push_back(detail::makeCallbackButton(u8"🧑‍🍳 Готовить",
-                                                     "start_cooking")); // Add needed info for next states!
+    keyboard[0].push_back(makeCallbackButton(u8"🧑‍🍳 Готовить",
+                                             "start_cooking")); // Add needed info for next states!
+
     if (isSuggestionMade) {
         std::string dataForSuggestion = "?";
         for (auto id : suggestedStorageIds) {
             dataForSuggestion += std::format("{} ", id);
         }
-        keyboard[0].push_back(detail::makeCallbackButton(u8"?", dataForSuggestion));
+        keyboard[0].push_back(makeCallbackButton(u8"?", dataForSuggestion));
     }
 
     if (isAtLeastOneIngredientLack) {
-        keyboard[1].push_back(detail::makeCallbackButton(u8"📝 Составить список продуктов",
-                                                         "make_product_list")); // Add needed info for next states!
+        keyboard[1].push_back(makeCallbackButton(u8"📝 Составить список продуктов",
+                                                 "make_product_list")); // Add needed info for next states!
     }
 
-    keyboard[buttonRows - 1].push_back(detail::makeCallbackButton(u8"↩️ Назад", "back_from_recipe_view"));
+    keyboard[buttonRows - 1].push_back(makeCallbackButton(u8"↩️ Назад", "back_from_recipe_view"));
+
     auto messageId = message::getMessageId(userId);
     if (messageId) {
-        bot.editMessageText(
-            toPrint,
-            chatId,
-            *messageId,
-            "",
-            "",
-            nullptr,
-            detail::makeKeyboardMarkup(std::move(keyboard))); // Only on difference between function above
+        // Only on difference between function above
+        bot.editMessageText(toPrint, chatId, *messageId, makeKeyboardMarkup(std::move(keyboard)));
     }
 }
 

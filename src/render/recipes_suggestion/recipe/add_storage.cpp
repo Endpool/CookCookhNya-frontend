@@ -108,15 +108,14 @@ void renderStorageSuggestion(const std::vector<api::StorageId>& storageIdsToAcco
         if (i % 2 == 0) {
             keyboard[std::floor(i / 2)].reserve(2);
         }
-        keyboard[std::floor(i / 2)].push_back(detail::makeCallbackButton(name, "+" + std::to_string(storageId)));
+        keyboard[std::floor(i / 2)].push_back(makeCallbackButton(name, "+" + std::to_string(storageId)));
         i++;
     }
     keyboard[std::floor((storageIdsToShow.size() + 1) / 2)].push_back(
-        detail::makeCallbackButton(u8"↩️ Назад", "back_from_adding_storages"));
+        makeCallbackButton(u8"↩️ Назад", "back_from_adding_storages"));
     auto messageId = message::getMessageId(userId);
     if (messageId) {
-        bot.editMessageText(
-            toPrint, chatId, *messageId, "", "", nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
+        bot.editMessageText(toPrint, chatId, *messageId, "", "", nullptr, makeKeyboardMarkup(std::move(keyboard)));
     }
 }
 } // namespace cookcookhnya::render::recipe_add_storage

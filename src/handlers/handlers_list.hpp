@@ -3,7 +3,13 @@
 // Handler callbacks
 #include "initial/start.hpp"
 #include "main_menu/view.hpp"
+
+#include "personal_account/ingredients/create.hpp"
+#include "personal_account/ingredients/publish.hpp"
+#include "personal_account/ingredients/view.hpp"
+#include "personal_account/view.hpp"
 #include "recipes_suggestion/recipe/add_storage.hpp"
+
 #include "recipes_suggestion/recipe/view.hpp"
 #include "recipes_suggestion/storage_selection/select.hpp"
 #include "recipes_suggestion/suggest.hpp"
@@ -12,7 +18,6 @@
 #include "storage_list/create.hpp"
 #include "storage_list/delete.hpp"
 #include "storage_list/view.hpp"
-#include "storage_view/ingredients/search.hpp"
 
 #include "storage_view/ingredients/view.hpp"
 
@@ -20,8 +25,6 @@
 #include "storage_view/members/delete.hpp"
 #include "storage_view/members/view.hpp"
 #include "storage_view/view.hpp"
-
-#include "personal_account/view.hpp"
 
 #include "custom_recipes_list/create.hpp"
 #include "custom_recipes_list/custom_recipe/search.hpp"
@@ -39,6 +42,10 @@ namespace cookcookhnya::handlers {
 
 using namespace init;
 using namespace main_menu_view;
+using namespace personal_account_view;
+using namespace create_custom_ingredients;
+using namespace publish_custom_ingredients;
+using namespace custom_ingredients_view;
 using namespace storage_create;
 using namespace storage_delete;
 using namespace storage_list_view;
@@ -52,7 +59,6 @@ using namespace recipes_suggestion;
 using namespace recipe_view;
 using namespace shopping_list_create;
 using namespace shopping_list;
-using namespace personal_account_view;
 using namespace custom_recipes_list;
 using namespace recipe_view;
 using namespace create_custom_recipe;
@@ -70,6 +76,13 @@ using noStateHandler = Handler<Events::AnyMessage{}, handleNoState, NoState{}>;
 
 // MainMenu
 using mainMenuButtonHandler = Handler<Events::CallbackQuery{}, mainMenuHandler>;
+
+// // CustomIngredient
+using customIngredientsListButtonHandler = Handler<Events::CallbackQuery{}, customIngredientsList>;
+using customIngredientCreateHandler = Handler<Events::Message{}, customIngredientEnterName>;
+using customIngredientCancelCreationHandler = Handler<Events::CallbackQuery{}, customIngredientCancelCreation>;
+using customIngredientConfirmHandler = Handler<Events::CallbackQuery{}, customIngredientConfirmation>;
+using customIngredientPublishHandler = Handler<Events::CallbackQuery{}, customIngredientPublish>;
 
 // StorageListCreate
 using storageCreateHandler = Handler<Events::Message{}, createStorage>;
@@ -101,7 +114,6 @@ using storagesSelectionHandler = Handler<Events::CallbackQuery{}, selectStorages
 using recipesSuggestionListHandler = Handler<Events::CallbackQuery{}, changePageAndBack>;
 
 // StorageIngredientsList
-using storageIngredientsListButtonHandler = Handler<Events::CallbackQuery{}, storageIngredientsListButtonCallback>;
 using storageIngredientsSearchButtonHandler = Handler<Events::CallbackQuery{}, storageIngredientsSearchButtonCallback>;
 using storageIngredientsSearchHandler = Handler<Events::InlineQuery{}, storageIngredientsSearchInlineQueryCallback>;
 
