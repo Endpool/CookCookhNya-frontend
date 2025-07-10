@@ -8,6 +8,7 @@
 #include "render/recipes_suggestion/suggest.hpp"
 #include "render/shopping_list/view.hpp"
 #include "render/storage_list/view.hpp"
+#include <iterator>
 
 #include <vector>
 
@@ -41,8 +42,10 @@ void mainMenuHandler(MainMenu& /*unused*/, CallbackQueryRef cq, BotRef& bot, SMR
         return;
     }
     if (cq.data == "shopping_list") {
-        renderShoppingList(userId, chatId, bot, api);
-        stateManager.put(ShoppingListView{});
+        auto items = api.getShoppingListApi().get(userId);
+        stateManager.put(
+            ShoppingListView{{{std::make_move_iterator(items.begin()), std::make_move_iterator(items.end())}}});
+        renderShoppingList(std::get<ShoppingListView>(*stateManager.get()).items.getAll(), userId, chatId, bot);
         return;
     }
     if (cq.data == "personal_account") {

@@ -24,17 +24,42 @@ struct IngredientCreateBody {
     friend void tag_invoke(boost::json::value_from_tag, boost::json::value& j, const IngredientCreateBody& body);
 };
 
-struct IngredientSearchItem {
+struct IngredientSearchForStorageItem {
     IngredientId id;
     std::string name;
     bool available;
 
-    friend IngredientSearchItem tag_invoke(boost::json::value_to_tag<IngredientSearchItem>,
-                                           const boost::json::value& j);
+    friend IngredientSearchForStorageItem tag_invoke(boost::json::value_to_tag<IngredientSearchForStorageItem>,
+                                                     const boost::json::value& j);
+};
+
+struct IngredientSearchForStorageResponse {
+    std::vector<IngredientSearchForStorageItem> page;
+    std::size_t found;
+
+    friend IngredientSearchForStorageResponse tag_invoke(boost::json::value_to_tag<IngredientSearchForStorageResponse>,
+                                                         const boost::json::value& j);
+};
+
+struct IngredientSearchForRecipeItem {
+    IngredientId id;
+    std::string name;
+    bool available;
+
+    friend IngredientSearchForRecipeItem tag_invoke(boost::json::value_to_tag<IngredientSearchForRecipeItem>,
+                                                    const boost::json::value& j);
+};
+
+struct IngredientSearchForRecipeResponse {
+    std::vector<IngredientSearchForRecipeItem> page;
+    std::size_t found;
+
+    friend IngredientSearchForRecipeResponse tag_invoke(boost::json::value_to_tag<IngredientSearchForRecipeResponse>,
+                                                        const boost::json::value& j);
 };
 
 struct IngredientSearchResponse {
-    std::vector<IngredientSearchItem> page;
+    std::vector<Ingredient> page;
     std::size_t found;
 
     friend IngredientSearchResponse tag_invoke(boost::json::value_to_tag<IngredientSearchResponse>,

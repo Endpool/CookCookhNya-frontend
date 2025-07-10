@@ -20,13 +20,13 @@ void renderMemberAdditionPrompt(
     const int buttonRows = 2;
     InlineKeyboard keyboard(buttonRows);
 
-    keyboard[0].push_back(detail::makeCallbackButton(u8"🔗 Создать ссылку", "create_link"));
-    keyboard[1].push_back(detail::makeCallbackButton(u8"↩️ Назад", "back"));
+    keyboard[0].push_back(makeCallbackButton(u8"🔗 Создать ссылку", "create_link"));
+    keyboard[1].push_back(makeCallbackButton(u8"↩️ Назад", "back"));
     auto text =
         utils::utf8str(u8"📩 Создайте ссылку или перешлите сообщение пользователя, чтобы добавить его в хранилище.\n");
     auto messageId = message::getMessageId(userId);
     if (messageId) {
-        bot.editMessageText(text, chatId, *messageId, "", "", nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
+        bot.editMessageText(text, chatId, *messageId, "", "", nullptr, makeKeyboardMarkup(std::move(keyboard)));
     }
 };
 
@@ -40,20 +40,19 @@ void addShareLinkButton(
     auto inviteButton = std::make_shared<TgBot::InlineKeyboardButton>();
     inviteButton->text = utils::utf8str(u8"📤 Поделиться");
     auto hash = storageApi.inviteMember(userId, storageId);
-    const auto telegramBotAlias = bot.getMe()->username;
+    const auto telegramBotAlias = bot.getUnderlying().getMe()->username;
     auto inviteText = "Нажми на ссылку, чтобы стать участником хранилища 🍱**" + storage.name +
                       "** в CookCookhNya!\nhttps://t.me/" + telegramBotAlias + "?start=" + hash;
     inviteButton->url = "https://t.me/share/url?url=" + inviteText;
     inviteButton->callbackData = "user_sended_link";
 
     keyboard[0].push_back(std::move(inviteButton));
-    keyboard[1].push_back(detail::makeCallbackButton(u8"↩️ Назад", "back"));
+    keyboard[1].push_back(makeCallbackButton(u8"↩️ Назад", "back"));
     auto text = utils::utf8str(
         u8"📩 Нажмите кнопку ниже или перешлите сообщение пользователя, чтобы добавить его в хранилище.\n");
     auto messageId = message::getMessageId(userId);
-    if (messageId) {
-        bot.editMessageText(text, chatId, *messageId, "", "", nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
-    }
+    if (messageId)
+        bot.editMessageText(text, chatId, *messageId, makeKeyboardMarkup(std::move(keyboard)));
 };
 
 } // namespace cookcookhnya::render::storage::add_member

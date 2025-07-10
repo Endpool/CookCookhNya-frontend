@@ -29,26 +29,22 @@ void renderStorageSelect(const std::vector<api::StorageId>& selected_storages,
         if (i % 2 == 0)
             keyboard[i / 2].reserve(2);
         const bool isSelected = std::ranges::find(selected_storages, storages[i].id) != selected_storages.end();
-        if (isSelected) {
-            keyboard[i / 2].push_back(
-                detail::makeCallbackButton(std::format("{} {}", utils::utf8str(u8"[ + ]"), storages[i].name),
-                                           "in__" + std::to_string(storages[i].id)));
-        } else {
-            keyboard[i / 2].push_back(
-                detail::makeCallbackButton(std::format("{} {}", utils::utf8str(u8"[ᅠ]"), storages[i].name),
-                                           "out_" + std::to_string(storages[i].id)));
-        }
+
+        std::string emoji = utils::utf8str(isSelected ? u8"[ + ]" : u8"[ᅠ]");
+        const char* actionPrefix = isSelected ? "in__" : "out_";
+        const std::string text = std::format("{} {}", emoji, storages[i].name);
+        const std::string data = actionPrefix + std::to_string(storages[i].id);
+        keyboard[i / 2].push_back(makeCallbackButton(text, data));
     }
     keyboard[buttonRows - 1].reserve(2);
-    keyboard[buttonRows - 1].push_back(detail::makeCallbackButton(u8"↩️ Назад", "cancel"));
+    keyboard[buttonRows - 1].push_back(makeCallbackButton(u8"↩️ Назад", "cancel"));
     if (!selected_storages.empty()) {
-        keyboard[buttonRows - 1].push_back(detail::makeCallbackButton(u8"▶️ Подтвердить", "confirm"));
+        keyboard[buttonRows - 1].push_back(makeCallbackButton(u8"▶️ Подтвердить", "confirm"));
     }
     auto text = utils::utf8str(u8"🍱 Откуда брать продукты?");
     auto messageId = message::getMessageId(userId);
-    if (messageId) {
-        bot.editMessageText(text, chatId, *messageId, "", "", nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
-    }
+    if (messageId)
+        bot.editMessageText(text, chatId, *messageId, makeKeyboardMarkup(std::move(keyboard)));
 }
 
 } // namespace cookcookhnya::render::select_storages

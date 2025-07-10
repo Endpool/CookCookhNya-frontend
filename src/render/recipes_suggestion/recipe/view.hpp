@@ -4,6 +4,7 @@
 #include "backend/models/recipe.hpp"
 #include "render/common.hpp"
 
+#include <string>
 #include <vector>
 
 namespace cookcookhnya::render::recipe_view {
@@ -16,13 +17,6 @@ struct textGenInfo {
     bool isAtLeastOneIngredientLack;
 };
 
-void renderStorageSuggestion(const std::vector<api::StorageId>& storageIdsToAccount,
-                             api::RecipeId recipeId,
-                             UserId userId,
-                             ChatId chatId,
-                             BotRef bot,
-                             ApiClient api);
-
 void renderRecipeViewAfterAddingStorage(const std::vector<api::StorageId>& storageIds,
                                         api::RecipeId recipeId,
                                         UserId userId,
@@ -30,8 +24,6 @@ void renderRecipeViewAfterAddingStorage(const std::vector<api::StorageId>& stora
                                         BotRef bot,
                                         ApiClient api);
 // Helper functions
-std::vector<api::StorageId> storagesToShow(const std::vector<api::models::recipe::IngredientInRecipe>& ingredients,
-                                           const std::vector<api::StorageId>& storageIdsToAccount);
 
 textGenInfo textGen(const std::vector<api::StorageId>& storageIds,
                     const api::models::recipe::RecipeDetails& recipeIngredients,

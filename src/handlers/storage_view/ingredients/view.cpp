@@ -35,16 +35,16 @@ void storageIngredientsSearchButtonCallback(
     auto mIngredient = utils::parseSafe<api::IngredientId>(cq.data);
     if (!mIngredient)
         return;
-    auto it = std::ranges::find(state.searchItems, *mIngredient, &IngredientSearchItem::id);
+    auto it = std::ranges::find(state.searchItems, *mIngredient, &IngredientSearchForStorageItem::id);
     if (it == state.searchItems.end())
         return;
 
     if (it->available) {
         api.getIngredientsApi().deleteFromStorage(userId, state.storageId, *mIngredient);
-        state.removeIngredient(*mIngredient);
+        state.storageIngredients.remove(*mIngredient);
     } else {
         api.getIngredientsApi().putToStorage(userId, state.storageId, *mIngredient);
-        state.putIngredient({it->id, it->name});
+        state.storageIngredients.put({.id = it->id, .name = it->name});
     }
     it->available = !it->available;
 
@@ -61,12 +61,12 @@ void storageIngredientsSearchInlineQueryCallback(StorageIngredientsList& state,
         renderIngredientsListSearch(state, userId, userId, bot);
     } else {
         const std::size_t count = 100;
-        auto response = api.search(userId, iq.query, state.storageId, count, 0);
+        auto response = api.searchForStorage(userId, iq.query, state.storageId, count, 0);
         if (response.found != state.totalFound || !std::ranges::equal(response.page,
                                                                       state.searchItems,
                                                                       std::ranges::equal_to{},
-                                                                      &IngredientSearchItem::id,
-                                                                      &IngredientSearchItem::id)) {
+                                                                      &IngredientSearchForStorageItem::id,
+                                                                      &IngredientSearchForStorageItem::id)) {
             state.searchItems = std::move(response.page);
             state.totalFound = response.found;
             if (auto mMessageId = message::getMessageId(userId))

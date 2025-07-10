@@ -59,18 +59,14 @@ std::vector<api::IngredientId> renderShoppingListCreation(const std::vector<api:
             keyboard[std::floor(i / 2)].reserve(2);
         }
         keyboard[std::floor(i / 2)].push_back(
-            detail::makeCallbackButton(name, "i" + std::to_string(ingredientId))); // i stands for ingredient
+            makeCallbackButton(name, "i" + std::to_string(ingredientId))); // i stands for ingredient
         i++;
     }
-    keyboard[std::floor((ingredientIds.size() + 1) / 2)].push_back(
-        detail::makeCallbackButton(u8"▶️ Подтвердить", "confirm"));
-
-    keyboard[std::floor(((ingredientIds.size() + 1) / 2) + 1)].push_back(
-        detail::makeCallbackButton(u8"↩️ Назад", "back"));
+    keyboard[std::floor((ingredientIds.size() + 1) / 2)].push_back(makeCallbackButton(u8"▶️ Подтвердить", "confirm"));
+    keyboard[std::floor(((ingredientIds.size() + 1) / 2) + 1)].push_back(makeCallbackButton(u8"↩️ Назад", "back"));
     auto messageId = message::getMessageId(userId);
-    if (messageId) {
-        bot.editMessageText(text, chatId, *messageId, "", "", nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
-    }
+    if (messageId)
+        bot.editMessageText(text, chatId, *messageId, makeKeyboardMarkup(std::move(keyboard)));
     return ingredientIds;
 }
 
@@ -103,19 +99,15 @@ void renderEditedShoppingListCreation(const std::vector<api::IngredientId>& ingr
             keyboard[std::floor(i / 2)].reserve(2);
         }
         keyboard[std::floor(i / 2)].push_back(
-            detail::makeCallbackButton(name, "i" + std::to_string(ingredientId))); // i stands for ingredient
+            makeCallbackButton(name, "i" + std::to_string(ingredientId))); // i stands for ingredient
         i++;
     }
 
-    keyboard[std::floor((ingredientIds.size() + 1) / 2)].push_back(
-        detail::makeCallbackButton(u8"▶️ Подтвердить", "confirm"));
-
-    keyboard[std::floor(((ingredientIds.size() + 1) / 2) + 1)].push_back(
-        detail::makeCallbackButton(u8"↩️ Назад", "back"));
+    keyboard[std::floor((ingredientIds.size() + 1) / 2)].push_back(makeCallbackButton(u8"▶️ Подтвердить", "confirm"));
+    keyboard[std::floor(((ingredientIds.size() + 1) / 2) + 1)].push_back(makeCallbackButton(u8"↩️ Назад", "back"));
     auto messageId = message::getMessageId(userId);
-    if (messageId) {
-        bot.editMessageText(text, chatId, *messageId, "", "", nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
-    }
+    if (messageId)
+        bot.editMessageText(text, chatId, *messageId, makeKeyboardMarkup(std::move(keyboard)));
 }
 
 } // namespace cookcookhnya::render::shopping_list_create

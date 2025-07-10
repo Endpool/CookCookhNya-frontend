@@ -15,15 +15,15 @@ void renderStorageView(api::StorageId storageId, UserId userId, ChatId chatId, B
     const std::size_t buttonRows = 2;
     InlineKeyboard keyboard(buttonRows);
     keyboard[0].reserve(2);
+    keyboard[0].push_back(makeCallbackButton(u8"🍗 Продукты", "ingredients"));
+    keyboard[0].push_back(makeCallbackButton(u8"👥 Участники", "members"));
     keyboard[1].reserve(2);
-    keyboard[0].push_back(detail::makeCallbackButton(u8"🍗 Продукты", "ingredients"));
-    keyboard[0].push_back(detail::makeCallbackButton(u8"👥 Участники", "members"));
-    keyboard[1].push_back(detail::makeCallbackButton(u8"↩️ Назад", "back"));
-    keyboard[1].push_back(detail::makeCallbackButton(u8"😋 Хочу кушать!", "wanna_eat"));
+    keyboard[1].push_back(makeCallbackButton(u8"↩️ Назад", "back"));
+    keyboard[1].push_back(makeCallbackButton(u8"😋 Хочу кушать!", "wanna_eat"));
     auto text = utils::utf8str(u8"Вы находитесь в хранилище  🍱 ") + storage.name + "\n";
     auto messageId = message::getMessageId(userId);
     if (messageId) {
-        bot.editMessageText(text, chatId, *messageId, "", "", nullptr, detail::makeKeyboardMarkup(std::move(keyboard)));
+        bot.editMessageText(text, chatId, *messageId, "", "", nullptr, makeKeyboardMarkup(std::move(keyboard)));
     }
 }
 

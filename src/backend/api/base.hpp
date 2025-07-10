@@ -92,9 +92,7 @@ class ApiBase {
     }
 
     template <typename JsonOut>
-    JsonOut jsonPutAuthed(UserId userId,
-                          const std::string& path,
-                          const httplib::Params& params = {}) const { // Now it's possible to pass arguments in Put
+    JsonOut jsonPutAuthed(UserId userId, const std::string& path, const httplib::Params& params = {}) const {
         return jsonPut<JsonOut>(path, {{"Authorization", "Bearer " + std::to_string(userId)}}, params);
     }
 
@@ -116,15 +114,18 @@ class ApiBase {
 
     // DELETE
     template <typename JsonOut>
-    JsonOut jsonDelete(const std::string& path, const httplib::Headers& headers = {}) const {
-        httplib::Result response = api.get().Delete(path, headers);
+    JsonOut jsonDelete(const std::string& path,
+                       const httplib::Headers& headers = {},
+                       const httplib::Params& params = {}) const {
+        httplib::Result response = api.get().Delete(httplib::append_query_params(path, params), headers);
         assertSuccess(response);
         if constexpr (!std::is_void_v<JsonOut>)
             return boost::json::value_to<JsonOut>(boost::json::parse(response->body));
     }
+
     template <typename JsonOut>
-    JsonOut jsonDeleteAuthed(UserId userId, const std::string& path) const {
-        return jsonDelete<JsonOut>(path, {{"Authorization", "Bearer " + std::to_string(userId)}});
+    JsonOut jsonDeleteAuthed(UserId userId, const std::string& path, const httplib::Params& params = {}) const {
+        return jsonDelete<JsonOut>(path, {{"Authorization", "Bearer " + std::to_string(userId)}}, params);
     }
 };
 
