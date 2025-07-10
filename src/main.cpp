@@ -16,7 +16,6 @@ int main() {
     Setup<State, Dependencies<ApiClient>>::Stater<noStateHandler,
                                                   startHandler,
                                                   mainMenuButtonHandler,
-                                                  personalAccountButtonHandler,
                                                   customIngredientsListButtonHandler,
                                                   customIngredientCreateHandler,
                                                   customIngredientCancelCreationHandler,
