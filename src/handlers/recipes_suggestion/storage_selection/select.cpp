@@ -23,13 +23,13 @@ void selectStorages(StorageSelection& state, CallbackQueryRef cq, BotRef bot, SM
     auto userId = cq.from->id;
     auto selectedStorages = state.storageIds;
 
-    if (cq.data == "confirm_storages_selection") {
+    if (cq.data == "confirm") {
         editRecipesSuggestion(selectedStorages, 0, userId, chatId, bot, api);
         stateManager.put(
             SuggestedRecipeList{.pageNo = 0, .storageIds = std::move(selectedStorages), .fromStorage = false});
         return;
     }
-    if (cq.data == "cancel_storages_selection") {
+    if (cq.data == "cancel") {
         renderMainMenu(true, userId, chatId, bot, api);
         stateManager.put(MainMenu{});
         return;
@@ -40,13 +40,13 @@ void selectStorages(StorageSelection& state, CallbackQueryRef cq, BotRef bot, SM
         if (cq.data.starts_with("in")) {
             auto it = std::ranges::find(selectedStorages, *storageId);
             selectedStorages.erase(it);
-            editStorageSelect(selectedStorages, userId, chatId, bot, api);
+            renderStorageSelect(selectedStorages, userId, chatId, bot, api);
             stateManager.put(StorageSelection{.storageIds = selectedStorages});
             return;
         }
         if (cq.data.starts_with("out")) {
             selectedStorages.push_back(*storageId);
-            editStorageSelect(selectedStorages, userId, chatId, bot, api);
+            renderStorageSelect(selectedStorages, userId, chatId, bot, api);
             stateManager.put(StorageSelection{.storageIds = selectedStorages});
             return;
         }

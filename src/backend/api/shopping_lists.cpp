@@ -21,4 +21,12 @@ void ShoppingListApi::put(UserId userId, const std::vector<IngredientId>& ingred
         params.insert({"ingredient-id", std::to_string(id)});
     jsonPutAuthed<void>(userId, "/my/shopping-list", params);
 }
+
+void ShoppingListApi::remove(UserId userId, const std::vector<IngredientId>& ingredientIds) const {
+    httplib::Params params;
+    for (const IngredientId id : ingredientIds)
+        params.insert({"ingredient-id", std::to_string(id)});
+    jsonDeleteAuthed<void>(userId, "/my/shopping-list", params);
+}
+
 } // namespace cookcookhnya::api

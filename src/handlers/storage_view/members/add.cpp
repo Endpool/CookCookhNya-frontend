@@ -51,7 +51,7 @@ void cancelMemberAddition(
     bot.answerCallbackQuery(cq.id);
     auto chatId = cq.message->chat->id;
     auto userId = cq.from->id;
-    if (cq.data == "cancel_member_addition") {
+    if (cq.data == "back") {
         renderMemberList(true, state.storageId, userId, chatId, bot, storageApi);
         stateManager.put(StorageMemberView{state.storageId});
     }

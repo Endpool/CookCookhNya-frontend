@@ -25,6 +25,8 @@ class StoragesApi : ApiBase {
                                                                                        StorageId id) const;
     void addMember(UserId userId, StorageId id, UserId memberId) const;
     void deleteMember(UserId userId, StorageId id, UserId memberId) const;
+    [[nodiscard]] InvitationId inviteMember(UserId userId, StorageId storageId) const;
+    void activate(UserId userId, InvitationId id) const;
 };
 
 } // namespace cookcookhnya::api

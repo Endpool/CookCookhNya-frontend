@@ -21,7 +21,6 @@ target_sources(main PRIVATE
     src/handlers/storage_list/view.cpp
 
     src/handlers/storage_view/ingredients/view.cpp
-    src/handlers/storage_view/ingredients/search.cpp
     src/handlers/storage_view/members/add.cpp
     src/handlers/storage_view/members/delete.cpp
     src/handlers/storage_view/members/view.cpp

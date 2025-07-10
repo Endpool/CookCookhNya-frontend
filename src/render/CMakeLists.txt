@@ -17,7 +17,6 @@ target_sources(main PRIVATE
     src/render/storage_list/delete.cpp
     src/render/storage_list/view.cpp
 
-    src/render/storage_view/ingredients/search.cpp
     src/render/storage_view/ingredients/view.cpp
     src/render/storage_view/members/add.cpp
     src/render/storage_view/members/delete.cpp

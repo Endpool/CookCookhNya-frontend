@@ -14,12 +14,12 @@ void personalAccountButtonHandler(
     bot.answerCallbackQuery(cq.id);
     auto userId = cq.from->id;
     auto chatId = cq.message->chat->id;
-    if (cq.data == "my_ingredients") {
+    if (cq.data == "ingredients") {
         renderCustomIngredientsList(true, userId, chatId, bot, api);
         stateManager.put(CustomIngredientsList{});
         return;
     }
-    if (cq.data == "my_recipes") {
+    if (cq.data == "recipes") {
         // renderCustomRecipesList(true, userId, chatId, bot, api);
         // stateManager.put(MyRecipes{});
         return;

@@ -17,7 +17,10 @@ class ShoppingListApi : ApiBase {
 
   public:
     [[nodiscard]] std::vector<models::shopping_list::ShoppingListItem> get(UserId userId) const;
+
     void put(UserId userId, const std::vector<IngredientId>& ingredientIds) const;
+
+    void remove(UserId userId, const std::vector<IngredientId>& ingredientIds) const;
 };
 
 } // namespace cookcookhnya::api

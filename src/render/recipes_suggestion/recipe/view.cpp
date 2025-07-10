@@ -117,14 +117,11 @@ void renderRecipeViewAfterAddingStorage(const std::vector<api::StorageId>& stora
     auto toPrint = text.text;
     const bool isAtLeastOneIngredientLack = text.isAtLeastOneIngredientLack;
 
-    const size_t buttonRows =
-        isAtLeastOneIngredientLack
-            ? 3
-            : 2; // if there is no lacking ingredients then there is no need to show field of shopping list
+    // if there is no lacking ingredients then there is no need to show field of shopping list
+    const size_t buttonRows = isAtLeastOneIngredientLack ? 3 : 2;
     InlineKeyboard keyboard(buttonRows);
 
-    keyboard[0].push_back(makeCallbackButton(u8"🧑‍🍳 Готовить",
-                                             "startCooking")); // Add needed info for next states!
+    keyboard[0].push_back(makeCallbackButton(u8"🧑‍🍳 Готовить", "cook"));
     if (isSuggestionMade) {
         std::string dataForSuggestion = "?";
         for (auto id : suggestedStorageIds) {
@@ -134,20 +131,14 @@ void renderRecipeViewAfterAddingStorage(const std::vector<api::StorageId>& stora
     }
 
     if (isAtLeastOneIngredientLack) {
-        keyboard[1].push_back(makeCallbackButton(u8"📝 Составить список продуктов",
-                                                 "makeProductList")); // Add needed info for next states!
+        keyboard[1].push_back(makeCallbackButton(u8"📝 Составить список продуктов", "shopping_list"));
     }
 
-    keyboard[buttonRows - 1].push_back(makeCallbackButton(u8"↩️ Назад", "backFromRecipeView"));
+    keyboard[buttonRows - 1].push_back(makeCallbackButton(u8"↩️ Назад", "back_to_suggestions"));
     auto messageId = message::getMessageId(userId);
     if (messageId) {
-        bot.editMessageText(toPrint,
-                            chatId,
-                            *messageId,
-                            "",
-                            "",
-                            nullptr,
-                            makeKeyboardMarkup(std::move(keyboard))); // Only on difference between function above
+        // Only on difference between function above
+        bot.editMessageText(toPrint, chatId, *messageId, makeKeyboardMarkup(std::move(keyboard)));
     }
 }
 
@@ -156,20 +147,19 @@ std::vector<api::StorageId> storagesToShow(const std::vector<api::models::recipe
     std::vector<api::StorageId> storageIdsToShow;
 
     std::unordered_set<api::StorageId> toAdd; // If there will be only one element of storageId then remove
-    bool isFound = false;
+    // Iterate through each ingredient
     for (const auto& ingredient : ingredients) {
-        isFound = false; // Iterate through each ingredient
-        for (const api::StorageId inStorage :
-             ingredient.inStorages) { // Iterate through each storage where ingredient is present
+        bool isFound = false;
+        // Iterate through each storage where ingredient is present
+        for (const api::StorageId inStorage : ingredient.inStorages) {
             for (const api::StorageId stId : storageIdsToAccount) {
                 if (stId == inStorage) {
                     isFound = true;
                     break;
                 }
             }
-            if (isFound) {
+            if (isFound)
                 break;
-            }
         }
         if (!isFound) {
             // Proof that ingredient doesn't have "toxic" storages. Toxic storage is a storage which has some
@@ -246,7 +236,7 @@ void renderStorageSuggestion(const std::vector<api::StorageId>& storageIdsToAcco
         i++;
     }
     keyboard[std::floor((storageIdsToShow.size() + 1) / 2)].push_back(
-        makeCallbackButton(u8"↩️ Назад", "BackFromAddingStorages"));
+        makeCallbackButton(u8"↩️ Назад", "back_to_recipe"));
     auto messageId = message::getMessageId(userId);
     if (messageId) {
         bot.editMessageText(toPrint, chatId, *messageId, "", "", nullptr, makeKeyboardMarkup(std::move(keyboard)));

@@ -1,9 +1,10 @@
 #pragma once
 
 #include "render/common.hpp"
+#include "states.hpp"
 
 namespace cookcookhnya::render::storage::ingredients {
 
-void renderIngredientsList(api::StorageId storage, UserId user, ChatId chat, BotRef bot, IngredientsApiRef api);
+void renderIngredientsListSearch(const states::StorageIngredientsList& state, UserId user, ChatId chat, BotRef bot);
 
 } // namespace cookcookhnya::render::storage::ingredients

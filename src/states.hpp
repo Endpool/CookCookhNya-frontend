@@ -2,11 +2,14 @@
 
 #include "backend/id_types.hpp"
 #include "backend/models/ingredient.hpp"
+#include "backend/models/shopping_list.hpp"
+#include "utils.hpp"
 
 #include <tg_stater/state_storage/common.hpp>
 #include <tg_stater/state_storage/memory.hpp>
 
 #include <cstddef>
+#include <utility>
 #include <variant>
 #include <vector>
 
@@ -42,11 +45,16 @@ struct PackMemberView : detail::StorageIdMixin {};
 struct MemberAddition : detail::StorageIdMixin {};
 struct MemberDeletion : detail::StorageIdMixin {};
 
-struct StorageIngredientsList : detail::StorageIdMixin {};
-struct StorageIngredientsSearch : detail::StorageIdMixin {
-    std::vector<api::models::ingredient::IngredientSearchForStorageItem> shownIngredients;
-    std::size_t totalFound;
-    std::size_t pageNo;
+struct StorageIngredientsList : detail::StorageIdMixin {
+    using IngredientsDb = utils::FastSortedDb<api::models::ingredient::Ingredient>;
+
+    IngredientsDb storageIngredients;
+    std::size_t totalFound = 0;
+    std::size_t pageNo = 0;
+    std::vector<api::models::ingredient::IngredientSearchForStorageItem> searchItems;
+
+    StorageIngredientsList(api::StorageId storageId, IngredientsDb::Set ingredients)
+        : StorageIdMixin{storageId}, storageIngredients{std::move(ingredients)} {}
 };
 
 struct StorageSelection {
@@ -72,7 +80,12 @@ struct ShoppingListCreation {
     std::size_t pageNo;
 };
 
-struct ShoppingListView {};
+struct ShoppingListView {
+    using ItemsDb = utils::FastSortedDb<api::models::shopping_list::ShoppingListItem,
+                                        &api::models::shopping_list::ShoppingListItem::ingredientId>;
+
+    ItemsDb items;
+};
 
 using State = std::variant<MainMenu,
                            PersonalAccountMenu,
@@ -89,7 +102,6 @@ using State = std::variant<MainMenu,
                            MemberAddition,
                            MemberDeletion,
                            StorageIngredientsList,
-                           StorageIngredientsSearch,
                            StorageSelection,
                            SuggestedRecipeList,
                            RecipeView,
