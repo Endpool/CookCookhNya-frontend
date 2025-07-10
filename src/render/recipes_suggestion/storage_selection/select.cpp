@@ -30,7 +30,7 @@ void renderStorageSelect(const std::vector<api::StorageId>& selected_storages,
             keyboard[i / 2].reserve(2);
         const bool isSelected = std::ranges::find(selected_storages, storages[i].id) != selected_storages.end();
 
-        std::string emoji = utils::utf8str(isSelected ? u8"🔘" : u8"⚪️");
+        std::string emoji = utils::utf8str(isSelected ? u8"[ + ]" : u8"[ᅠ]");
         const char* actionPrefix = isSelected ? "in__" : "out_";
         const std::string text = std::format("{} {}", emoji, storages[i].name);
         const std::string data = actionPrefix + std::to_string(storages[i].id);

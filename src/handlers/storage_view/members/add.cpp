@@ -2,8 +2,10 @@
 
 #include "handlers/common.hpp"
 #include "message_tracker.hpp"
+#include "render/storage_view//members/add.hpp"
 #include "render/storage_view/members/view.hpp"
 #include "utils.hpp"
+
 #include <memory>
 #include <stdexcept>
 #include <tgbot/types/MessageOriginHiddenUser.h>
@@ -13,6 +15,7 @@ namespace cookcookhnya::handlers::storage_add_member {
 
 using namespace render::storage::member_list;
 using namespace render;
+using namespace render::storage::add_member;
 
 void addMember(MemberAddition& state, MessageRef m, BotRef bot, SMRef stateManager, StorageApiRef storageApi) {
     auto chatId = m.chat->id;
@@ -54,6 +57,9 @@ void cancelMemberAddition(
     if (cq.data == "back") {
         renderMemberList(true, state.storageId, userId, chatId, bot, storageApi);
         stateManager.put(StorageMemberView{state.storageId});
+    }
+    if (cq.data == "create_link") {
+        addShareLinkButton(state.storageId, userId, chatId, bot, storageApi);
     }
 };
 

@@ -28,10 +28,14 @@ build-debug: build/Debug/CMakeCache.txt
 	cmake --build --preset=conan-debug
 build-release: build/Release/CMakeCache.txt
 	cmake --build --preset=conan-release
+build-debug-j5: build/Release/CMakeCache.txt
+	cmake --build . --preset=conan-debug -- -j5
 
 # Run bot
 .PHONY: start-debug gdb start-release
 start-debug: build-debug
+	set -a && source .env && ./build/Debug/main
+start-debug-j5: build-debug-j5
 	set -a && source .env && ./build/Debug/main
 gdb: build-debug
 	set -a && source .env && gdb ./build/Debug/main
