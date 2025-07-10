@@ -4,6 +4,7 @@ target_sources(main PRIVATE
     src/render/recipes_suggestion/recipe/view.cpp
     src/render/recipes_suggestion/storage_selection/select.cpp
     src/render/recipes_suggestion/suggest.cpp
+    src/render/recipes_suggestion/recipe/add_storage.cpp
 
     src/render/shopping_list/create.cpp
     src/render/shopping_list/view.cpp

@@ -19,6 +19,7 @@ using states::MainMenu;
 
 using states::StorageList;
 
+using states::RecipeAddStoarege;
 using states::RecipeView;
 using states::StorageCreationEnterName;
 using states::StorageDeletion;

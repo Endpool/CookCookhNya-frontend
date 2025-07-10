@@ -6,6 +6,7 @@ target_sources(main PRIVATE
     src/handlers/recipes_suggestion/recipe/view.cpp
     src/handlers/recipes_suggestion/storage_selection/select.cpp
     src/handlers/recipes_suggestion/suggest.cpp
+    src/handlers/recipes_suggestion/recipe/add_storage.cpp
 
     src/handlers/shopping_list/create.cpp
     src/handlers/shopping_list/view.cpp

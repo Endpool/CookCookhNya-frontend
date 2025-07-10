@@ -3,6 +3,7 @@
 // Handler callbacks
 #include "initial/start.hpp"
 #include "main_menu/view.hpp"
+#include "recipes_suggestion/recipe/add_storage.hpp"
 #include "recipes_suggestion/recipe/view.hpp"
 #include "recipes_suggestion/storage_selection/select.hpp"
 #include "recipes_suggestion/suggest.hpp"
@@ -56,6 +57,8 @@ using namespace custom_recipes_list;
 using namespace recipe_view;
 using namespace create_custom_recipe;
 using namespace recipe::ingredients;
+using namespace recipe_add_storage;
+
 using namespace tg_stater;
 
 namespace bot_handlers {
@@ -104,6 +107,9 @@ using storageIngredientsSearchHandler = Handler<Events::InlineQuery{}, storageIn
 
 // RecipeView
 using recipeViewHandler = Handler<Events::CallbackQuery{}, handleRecipeView>;
+
+// Recipe Add Storage
+using recipeAddStorageHandler = Handler<Events::CallbackQuery{}, handleRecipeAddStorage>;
 
 // ShoppingListCreation
 using shoppingListCreationHandler = Handler<Events::CallbackQuery{}, handleProductListSubmission>;

@@ -56,6 +56,13 @@ struct RecipeView {
     size_t pageNo;
 };
 
+struct RecipeAddStoarege {
+    std::vector<api::StorageId> storageIds;
+    api::RecipeId recipeId;
+    bool fromStorage;
+    size_t pageNo;
+};
+
 struct CustomRecipesList {
     size_t pageNo;
 };
@@ -109,7 +116,8 @@ using State = std::variant<MainMenu,
                            CustomRecipesList,
                            RecipeCustomView,
                            CreateCustomRecipe,
-                           CustomRecipeIngredientsSearch>;
+                           CustomRecipeIngredientsSearch,
+                           RecipeAddStoarege>;
 
 using StateManager = tg_stater::StateProxy<tg_stater::MemoryStateStorage<State>>;
 
