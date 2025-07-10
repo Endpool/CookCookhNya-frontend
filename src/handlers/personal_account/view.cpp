@@ -17,7 +17,7 @@ void personalAccount(PersonalAccountMenu& /**/, CallbackQueryRef cq, BotRef bot,
     auto chatId = cq.message->chat->id;
     auto userId = cq.from->id;
 
-    if (data == "custom_recipes") {
+    if (data == "recipes") {
         renderCustomRecipesList(0, userId, chatId, bot, api);
         stateManager.put(CustomRecipesList{.pageNo = 0});
     }
@@ -26,7 +26,7 @@ void personalAccount(PersonalAccountMenu& /**/, CallbackQueryRef cq, BotRef bot,
         stateManager.put(MainMenu{});
         return;
     }
-    if (data == "custom_ingredients") {
+    if (data == "ingredients") {
         renderCustomIngredientsList(true, userId, chatId, bot, api);
         stateManager.put(CustomIngredientsList{});
         return;

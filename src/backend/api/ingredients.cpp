@@ -58,4 +58,26 @@ IngredientSearchForRecipeResponse IngredientsApi::searchForRecipe(
                                                              {"offset", std::to_string(offset)}});
 }
 
+IngredientSearchResponse
+IngredientsApi::search(std::string query, std::size_t size, std::size_t offset, std::size_t threshold) const {
+    return jsonGet<IngredientSearchResponse>("/ingredients",
+                                             {},
+                                             {{"query", std::move(query)},
+                                              {"size", std::to_string(size)},
+                                              {"offset", std::to_string(offset)},
+                                              {"threshold", std::to_string(threshold)}});
+}
+
+std::vector<Ingredient> IngredientsApi::getCustomIngredients(UserId user) const {
+    return jsonGetAuthed<std::vector<Ingredient>>(user, "/my/ingredients/");
+}
+
+IngredientId IngredientsApi::createCustom(UserId user, const IngredientCreateBody& body) const {
+    return jsonPostWithJsonAuthed<IngredientId>(user, "/my/ingredients", body);
+}
+
+void IngredientsApi::publishCustom(UserId user, IngredientId id) const {
+    jsonPostAuthed<void>(user, std::format("/my/ingredients/{}/publish", id));
+}
+
 } // namespace cookcookhnya::api

@@ -108,6 +108,11 @@ struct ShoppingListCreation {
     std::size_t pageNo;
 };
 
+struct RecipeIngredientsSearch {
+    api::RecipeId recipeId;
+    size_t pageNo;
+};
+
 struct ShoppingListView {
     using ItemsDb = utils::FastSortedDb<api::models::shopping_list::ShoppingListItem,
                                         &api::models::shopping_list::ShoppingListItem::ingredientId>;
@@ -139,7 +144,8 @@ using State = std::variant<MainMenu,
                            RecipeCustomView,
                            CustomRecipeIngredientsSearch,
                            CustomRecipesList,
-                           RecipeAddStoradge>;
+                           RecipeAddStoradge,
+                           RecipeIngredientsSearch>;
 
 using StateManager = tg_stater::StateProxy<tg_stater::MemoryStateStorage<State>>;
 

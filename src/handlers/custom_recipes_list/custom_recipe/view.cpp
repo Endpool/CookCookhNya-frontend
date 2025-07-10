@@ -1,14 +1,14 @@
 #include "view.hpp"
 
 #include "handlers/common.hpp"
+#include "render/custom_recipes_list/custom_recipe/search.hpp"
 #include "render/custom_recipes_list/view.hpp"
-#include "render/storage_view/ingredients/search.hpp"
 #include <string>
 
 namespace cookcookhnya::handlers::recipe_view {
 
 using namespace render::custom_recipes_list;
-using namespace render::storage::ingredients;
+using namespace render::recipe::ingredients;
 
 void handleCustomRecipeView(
     RecipeCustomView& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, RecipesApiRef recipesApi) {

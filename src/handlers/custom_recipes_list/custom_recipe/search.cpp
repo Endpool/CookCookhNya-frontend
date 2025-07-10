@@ -4,8 +4,8 @@
 #include "backend/models/ingredient.hpp"
 #include "handlers/common.hpp"
 #include "message_tracker.hpp"
+#include "render/custom_recipes_list/custom_recipe/search.hpp" // REUSED THE SAME RENDER!!!
 #include "render/custom_recipes_list/custom_recipe/view.hpp"
-#include "render/storage_view/ingredients/search.hpp" // REUSED THE SAME RENDER!!!
 
 #include "utils.hpp"
 
@@ -17,7 +17,7 @@
 namespace cookcookhnya::handlers::recipe::ingredients {
 
 using namespace api::models::ingredient;
-using namespace render::storage::ingredients;
+using namespace render::recipe::ingredients;
 using namespace render::custom_recipe_view;
 
 void customRecipeIngredientsSearchButtonCallback(
@@ -36,7 +36,7 @@ void customRecipeIngredientsSearchButtonCallback(
     auto mIngredient = utils::parseSafe<api::IngredientId>(cq.data);
     if (!mIngredient)
         return;
-    auto it = std::ranges::find(state.shownIngredients, *mIngredient, &IngredientSearchItem::id);
+    auto it = std::ranges::find(state.shownIngredients, *mIngredient, &IngredientSearchForRecipeItem::id);
     if (it == state.shownIngredients.end())
         return;
     if (it->available) {
@@ -47,7 +47,7 @@ void customRecipeIngredientsSearchButtonCallback(
     it->available = !it->available;
 
     if (auto mMessageId = message::getMessageId(userId))
-        renderStorageIngredientsSearchEdit(state.shownIngredients, state.pageNo, 1, *mMessageId, chatId, bot);
+        renderRecipeIngredientsSearchEdit(state.shownIngredients, state.pageNo, 1, *mMessageId, chatId, bot);
 }
 
 void customRecipeIngredientsSearchInlineQueryCallback(CustomRecipeIngredientsSearch& state,
@@ -62,12 +62,12 @@ void customRecipeIngredientsSearchInlineQueryCallback(CustomRecipeIngredientsSea
         if (response.found != state.totalFound || !std::ranges::equal(response.page,
                                                                       state.shownIngredients,
                                                                       std::ranges::equal_to{},
-                                                                      &IngredientSearchItem::id,
-                                                                      &IngredientSearchItem::id)) {
+                                                                      &IngredientSearchForRecipeItem::id,
+                                                                      &IngredientSearchForRecipeItem::id)) {
             state.shownIngredients = std::move(response.page);
             state.totalFound = response.found;
             if (auto mMessageId = message::getMessageId(userId))
-                renderStorageIngredientsSearchEdit(state.shownIngredients, state.pageNo, 1, *mMessageId, userId, bot);
+                renderRecipeIngredientsSearchEdit(state.shownIngredients, state.pageNo, 1, *mMessageId, userId, bot);
         }
     }
     // Cache is not disabled on Windows and Linux desktops. Works on Android and Web

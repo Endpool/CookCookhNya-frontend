@@ -29,4 +29,6 @@ target_sources(main PRIVATE
     src/render/custom_recipes_list/custom_recipe/view.cpp
 
     src/render/personal_account/view.cpp
+
+    src/render/custom_recipes_list/custom_recipe/search.cpp
 )
