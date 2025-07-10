@@ -31,8 +31,7 @@ void start(MessageRef m, BotRef bot, SMRef stateManager, ApiClientRef api) {
 
     api.getUsersApi().updateInfo(
         userId,
-        api::models::user::UpdateUserInfoBody{.alias = std::move(m.from->username), .fullname = std::move(fullname)}
-    );
+        api::models::user::UpdateUserInfoBody{.alias = std::move(m.from->username), .fullname = std::move(fullname)});
 
     auto startText = m.text;
     const int hashPos = "/start "sv.size();

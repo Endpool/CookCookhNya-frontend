@@ -30,7 +30,7 @@ void renderStorageSelect(const std::vector<api::StorageId>& selected_storages,
             keyboard[i / 2].reserve(2);
         const bool isSelected = std::ranges::find(selected_storages, storages[i].id) != selected_storages.end();
         if (isSelected) {
-            keyboard[(i / 2)].push_back(
+            keyboard[i / 2].push_back(
                 detail::makeCallbackButton(std::format("{} {}", utils::utf8str(u8"[ + ]"), storages[i].name),
                                            "in__" + std::to_string(storages[i].id)));
         } else {
