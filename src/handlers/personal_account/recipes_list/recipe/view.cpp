@@ -1,7 +1,7 @@
 #include "view.hpp"
 
 #include "handlers/common.hpp"
-#include "render/personal_account/recipes_list/recipe/search.hpp"
+#include "render/personal_account/recipes_list/recipe/search_ingredients.hpp"
 #include "render/personal_account/recipes_list/view.hpp"
 
 #include <string>

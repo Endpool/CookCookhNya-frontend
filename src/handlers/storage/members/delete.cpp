@@ -10,7 +10,7 @@ namespace cookcookhnya::handlers::storage::members {
 using namespace render::storage::members;
 
 void deleteMember(
-    MemberDeletion& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, StorageApiRef storageApi) {
+    StorageMemberDeletion& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, StorageApiRef storageApi) {
     bot.answerCallbackQuery(cq.id);
 
     auto chatId = cq.message->chat->id;

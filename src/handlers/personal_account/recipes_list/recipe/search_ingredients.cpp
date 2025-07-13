@@ -1,10 +1,10 @@
-#include "search.hpp"
+#include "search_ingredients.hpp"
 
 #include "backend/id_types.hpp"
 #include "backend/models/ingredient.hpp"
 #include "handlers/common.hpp"
 #include "message_tracker.hpp"
-#include "render/personal_account/recipes_list/recipe/search.hpp"
+#include "render/personal_account/recipes_list/recipe/search_ingredients.hpp"
 #include "render/personal_account/recipes_list/recipe/view.hpp"
 #include "utils.hpp"
 

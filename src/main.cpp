@@ -28,7 +28,7 @@ int main() {
                                                   storageViewButtonHandler,
                                                   storageMemberViewButtonHandler,
                                                   memberAdditionMessageHandler,
-                                                  cancelMemberAdditionButtonHandler,
+                                                  cancelStorageMemberAdditionButtonHandler,
                                                   memberDeletionButtonHandler,
                                                   storagesSelectionHandler,
                                                   recipesSuggestionListHandler,

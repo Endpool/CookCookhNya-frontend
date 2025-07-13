@@ -5,7 +5,7 @@
 
 namespace cookcookhnya::render::storage::members {
 
-void renderMemberAdditionPrompt(
+void renderStorageMemberAdditionPrompt(
     const api::StorageId& storageId, UserId userId, ChatId chatId, BotRef bot, StorageApiRef storageApi);
 
 void addShareLinkButton(

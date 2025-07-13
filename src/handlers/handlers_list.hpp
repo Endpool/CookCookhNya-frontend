@@ -10,7 +10,7 @@
 #include "personal_account/ingredients_list/view.hpp"
 
 #include "personal_account/recipes_list/create.hpp"
-#include "personal_account/recipes_list/recipe/search.hpp"
+#include "personal_account/recipes_list/recipe/search_ingredients.hpp"
 #include "personal_account/recipes_list/recipe/view.hpp"
 #include "personal_account/recipes_list/view.hpp"
 
@@ -97,7 +97,7 @@ using storageMemberViewButtonHandler = Handler<Events::CallbackQuery{}, storageM
 
 // StorageAddMembers
 using memberAdditionMessageHandler = Handler<Events::Message{}, addMember>;
-using cancelMemberAdditionButtonHandler = Handler<Events::CallbackQuery{}, cancelMemberAddition>;
+using cancelStorageMemberAdditionButtonHandler = Handler<Events::CallbackQuery{}, cancelStorageMemberAddition>;
 
 // StorageDeleteMembers
 using memberDeletionButtonHandler = Handler<Events::CallbackQuery{}, deleteMember>;

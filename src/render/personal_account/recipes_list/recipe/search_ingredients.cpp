@@ -1,4 +1,4 @@
-#include "search.hpp"
+#include "search_ingredients.hpp"
 
 #include "backend/models/ingredient.hpp"
 #include "message_tracker.hpp"

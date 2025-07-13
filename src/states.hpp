@@ -41,8 +41,8 @@ struct StorageCreationEnterName {};
 struct StorageView : detail::StorageIdMixin {};
 
 struct StorageMemberView : detail::StorageIdMixin {};
-struct MemberAddition : detail::StorageIdMixin {};
-struct MemberDeletion : detail::StorageIdMixin {};
+struct StorageMemberAddition : detail::StorageIdMixin {};
+struct StorageMemberDeletion : detail::StorageIdMixin {};
 
 struct StorageIngredientsList : detail::StorageIdMixin {
     using IngredientsDb = utils::FastSortedDb<api::models::ingredient::Ingredient>;
@@ -71,7 +71,7 @@ struct RecipeView {
     size_t pageNo;
 };
 
-struct RecipeAddStoradge {
+struct RecipeStorageAddition {
     std::vector<api::StorageId> storageIds;
     api::RecipeId recipeId;
     bool fromStorage;
@@ -130,8 +130,8 @@ using State = std::variant<MainMenu,
                            StorageCreationEnterName,
                            StorageView,
                            StorageMemberView,
-                           MemberAddition,
-                           MemberDeletion,
+                           StorageMemberAddition,
+                           StorageMemberDeletion,
                            StorageIngredientsList,
                            StorageSelection,
                            SuggestedRecipeList,
@@ -142,7 +142,7 @@ using State = std::variant<MainMenu,
                            RecipeCustomView,
                            CustomRecipeIngredientsSearch,
                            CustomRecipesList,
-                           RecipeAddStoradge,
+                           RecipeStorageAddition,
                            RecipeIngredientsSearch>;
 
 using StateManager = tg_stater::StateProxy<tg_stater::MemoryStateStorage<State>>;

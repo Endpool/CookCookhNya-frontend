@@ -42,10 +42,10 @@ void handleRecipeView(RecipeView& state, CallbackQueryRef cq, BotRef bot, SMRef 
 
     if (data[0] == '?') {
         renderStorageSuggestion(state.storageIds, state.recipeId, userId, chatId, bot, api);
-        stateManager.put(RecipeAddStoradge{.storageIds = state.storageIds,
-                                           .recipeId = state.recipeId,
-                                           .fromStorage = state.fromStorage,
-                                           .pageNo = state.pageNo});
+        stateManager.put(RecipeStorageAddition{.storageIds = state.storageIds,
+                                               .recipeId = state.recipeId,
+                                               .fromStorage = state.fromStorage,
+                                               .pageNo = state.pageNo});
         return;
     }
 }

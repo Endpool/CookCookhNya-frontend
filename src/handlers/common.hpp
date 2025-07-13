@@ -26,15 +26,15 @@ using states::CustomIngredientsList;
 
 using states::StorageList;
 
-using states::RecipeAddStoradge;
+using states::RecipeStorageAddition;
 using states::RecipeView;
 
 using states::StorageCreationEnterName;
 using states::StorageDeletion;
 using states::StorageView;
 
-using states::MemberAddition;
-using states::MemberDeletion;
+using states::StorageMemberAddition;
+using states::StorageMemberDeletion;
 using states::StorageMemberView;
 
 using states::StorageIngredientsList;

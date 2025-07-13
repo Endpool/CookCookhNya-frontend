@@ -8,7 +8,7 @@ target_sources(main PRIVATE
     src/handlers/personal_account/ingredients_list/view.cpp
 
     src/handlers/personal_account/recipes_list/create.cpp
-    src/handlers/personal_account/recipes_list/recipe/search.cpp
+    src/handlers/personal_account/recipes_list/recipe/search_ingredients.cpp
     src/handlers/personal_account/recipes_list/recipe/view.cpp
     src/handlers/personal_account/recipes_list/view.cpp
 
