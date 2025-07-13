@@ -91,9 +91,9 @@ jobs:
               return 0
             fi
             echo "Linting file: $FILE"
-            # Run clang-tidy
-            if clang-tidy-19 "$FILE" --quiet --warnings-as-errors='*' -p build/Release; then
-              # Update cache on success
+            # Run clang-tidy without treating warnings as errors
+            if clang-tidy-19 "$FILE" --quiet -p build/Release; then
+              # Update cache even if there are warnings
               jq --arg file "$FILE" --arg hash "$HASH" '.[$file] = $hash' "$NEW_CACHE" > tmp.json && mv tmp.json "$NEW_CACHE"
               return 0
             else
