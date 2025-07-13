@@ -16,7 +16,7 @@ Clangd's default search path of it is `.` and `./build`, so I propose create a s
 ln -s Debug/compile_commands.json build/compile_commands.json
 ```
 
-4. To run GDB to debug the application use shortcut:
+4. To run GDB to debug the application use a shortcut:
 ```bash
 make gdb
 ```
