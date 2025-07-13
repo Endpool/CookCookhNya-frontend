@@ -6,12 +6,13 @@
 #include "render/storage_view/members/view.hpp"
 #include "utils.hpp"
 
-#include <memory>
-#include <stdexcept>
 #include <tgbot/types/MessageOriginHiddenUser.h>
 #include <tgbot/types/MessageOriginUser.h>
 
-namespace cookcookhnya::handlers::storage_add_member {
+#include <memory>
+#include <stdexcept>
+
+namespace cookcookhnya::handlers::storage::members {
 
 using namespace render::storage::member_list;
 using namespace render;
@@ -63,4 +64,4 @@ void cancelMemberAddition(
     }
 };
 
-} // namespace cookcookhnya::handlers::storage_add_member
+} // namespace cookcookhnya::handlers::storage::members

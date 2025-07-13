@@ -5,7 +5,7 @@
 #include "render/storage_view/members/delete.hpp"
 #include "render/storage_view/view.hpp"
 
-namespace cookcookhnya::handlers::storage_view_members {
+namespace cookcookhnya::handlers::storage_members {
 
 using namespace render::storage::add_member;
 using namespace render::storage::delete_member;
@@ -28,4 +28,4 @@ void storageMemberViewButtonCallback(
     }
 };
 
-} // namespace cookcookhnya::handlers::storage_view_members
+} // namespace cookcookhnya::handlers::storage_members

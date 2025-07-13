@@ -10,7 +10,7 @@
 namespace cookcookhnya::handlers::recipe_view {
 
 using namespace render::recipes_suggestion;
-using namespace render::shopping_list_create;
+using namespace render::shopping_list;
 using namespace render::recipe_add_storage;
 
 void handleRecipeView(RecipeView& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {

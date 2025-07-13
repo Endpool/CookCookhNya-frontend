@@ -4,9 +4,11 @@
 #include "render/custom_recipes_list/view.hpp"
 #include "render/main_menu/view.hpp"
 #include "render/personal_account/ingredients/view.hpp"
+
 #include <string>
 
 namespace cookcookhnya::handlers::personal_account_view {
+
 using namespace render::custom_recipes_list;
 using namespace render::main_menu;
 using namespace render::view_custom_ingredients;

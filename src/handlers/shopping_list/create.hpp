@@ -2,9 +2,9 @@
 
 #include "handlers/common.hpp"
 
-namespace cookcookhnya::handlers::shopping_list_create {
+namespace cookcookhnya::handlers::shopping_list {
 
 void handleProductListSubmission(
     ShoppingListCreation& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api);
 
-} // namespace cookcookhnya::handlers::shopping_list_create
+} // namespace cookcookhnya::handlers::shopping_list

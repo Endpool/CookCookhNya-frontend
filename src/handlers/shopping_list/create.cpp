@@ -8,9 +8,9 @@
 
 #include <string>
 
-namespace cookcookhnya::handlers::shopping_list_create {
+namespace cookcookhnya::handlers::shopping_list {
 
-using namespace render::shopping_list_create;
+using namespace render::shopping_list;
 using namespace render::recipe_view;
 
 void handleProductListSubmission(
@@ -59,4 +59,4 @@ void handleProductListSubmission(
         renderEditedShoppingListCreation(state.ingredientIdsInList, userId, chatId, bot, api);
     }
 }
-} // namespace cookcookhnya::handlers::shopping_list_create
+} // namespace cookcookhnya::handlers::shopping_list

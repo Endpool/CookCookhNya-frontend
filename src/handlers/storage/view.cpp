@@ -10,7 +10,7 @@
 #include <iterator>
 #include <vector>
 
-namespace cookcookhnya::handlers::storage_view {
+namespace cookcookhnya::handlers::storage {
 
 using namespace render::storage::ingredients;
 using namespace render::storage::member_list;
@@ -42,4 +42,4 @@ void storageViewButtonCallback(
     }
 }
 
-} // namespace cookcookhnya::handlers::storage_view
+} // namespace cookcookhnya::handlers::storage

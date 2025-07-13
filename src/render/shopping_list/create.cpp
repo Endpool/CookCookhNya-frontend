@@ -15,7 +15,7 @@
 #include <utility>
 #include <vector>
 
-namespace cookcookhnya::render::shopping_list_create {
+namespace cookcookhnya::render::shopping_list {
 
 std::vector<api::IngredientId> renderShoppingListCreation(const std::vector<api::StorageId>& storageIds,
                                                           api::RecipeId recipeId,
@@ -110,4 +110,4 @@ void renderEditedShoppingListCreation(const std::vector<api::IngredientId>& ingr
         bot.editMessageText(text, chatId, *messageId, makeKeyboardMarkup(std::move(keyboard)));
 }
 
-} // namespace cookcookhnya::render::shopping_list_create
+} // namespace cookcookhnya::render::shopping_list
