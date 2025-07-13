@@ -69,15 +69,17 @@ IngredientsApi::search(std::string query, std::size_t size, std::size_t offset, 
 }
 
 std::vector<Ingredient> IngredientsApi::getCustomIngredients(UserId user) const {
-    return jsonGetAuthed<std::vector<Ingredient>>(user, "/my/ingredients/");
+    // return jsonGetAuthed<std::vector<Ingredient>>(user, "/my/ingredients/");
+    return std::vector<Ingredient>{{1, "customIng1"}, {2, "customIng2"}};
 }
 
 IngredientId IngredientsApi::createCustom(UserId user, const IngredientCreateBody& body) const {
-    return jsonPostWithJsonAuthed<IngredientId>(user, "/my/ingredients", body);
+    // return jsonPostWithJsonAuthed<IngredientId>(user, "/my/ingredients", body);
+    return 1;
 }
 
 void IngredientsApi::publishCustom(UserId user, IngredientId id) const {
-    jsonPostAuthed<void>(user, std::format("/my/ingredients/{}/publish", id));
+    // jsonPostAuthed<void>(user, std::format("/my/ingredients/{}/publish", id));
 }
 
 } // namespace cookcookhnya::api

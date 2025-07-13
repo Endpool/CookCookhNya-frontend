@@ -4,6 +4,7 @@
 
 #include <boost/json/serialize.hpp>
 #include <boost/json/string.hpp>
+#include <tgbot/TgTypeParser.h>
 #include <tgbot/net/HttpReqArg.h>
 #include <tgbot/types/InlineKeyboardButton.h>
 #include <tgbot/types/InlineKeyboardMarkup.h>
