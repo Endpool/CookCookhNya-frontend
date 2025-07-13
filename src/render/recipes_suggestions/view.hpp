@@ -15,10 +15,10 @@ InlineKeyboard constructNavigationsMarkup(size_t offset,
                                           api::models::recipe::RecipesList recipesList);
 
 void renderRecipesSuggestion(const std::vector<api::StorageId>& storageIds,
-                           size_t pageNo,
-                           UserId userId,
-                           ChatId chatId,
-                           BotRef bot,
-                           RecipesApiRef recipesApi);
+                             size_t pageNo,
+                             UserId userId,
+                             ChatId chatId,
+                             BotRef bot,
+                             RecipesApiRef recipesApi);
 
 } // namespace cookcookhnya::render::recipes_suggestions

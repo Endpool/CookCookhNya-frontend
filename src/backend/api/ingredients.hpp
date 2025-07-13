@@ -22,15 +22,15 @@ class IngredientsApi : ApiBase {
     IngredientId createCustom(UserId user, // NOLINT(*-nodiscard)
                               const models::ingredient::IngredientCreateBody& body) const;
 
-    void publishCustom(UserId user, IngredientId id) const;
+    void publishCustom(UserId user, IngredientId ingredient) const;
 
     [[nodiscard]] std::vector<models::ingredient::Ingredient> getStorageIngredients(UserId user,
                                                                                     StorageId storage) const;
-    void putToStorage(UserId user, StorageId storage, IngredientId id) const;
+    void putToStorage(UserId user, StorageId storage, IngredientId ingredient) const;
 
-    void deleteFromStorage(UserId user, StorageId storage, IngredientId id) const;
+    void deleteFromStorage(UserId user, StorageId storage, IngredientId ingredient) const;
 
-    [[nodiscard]] models::ingredient::Ingredient get(IngredientId id) const;
+    [[nodiscard]] models::ingredient::Ingredient get(IngredientId ingredient) const;
 
     [[nodiscard]] models::ingredient::IngredientSearchResponse
     search(std::string query, std::size_t size, std::size_t offset, std::size_t threshold) const;
@@ -38,10 +38,10 @@ class IngredientsApi : ApiBase {
     [[nodiscard]] models::ingredient::IngredientSearchForStorageResponse
     searchForStorage(UserId user, std::string query, StorageId storage, std::size_t count, std::size_t offset) const;
 
-    void putToRecipe(UserId user, RecipeId recipeId, IngredientId id) const;
+    void putToRecipe(UserId user, RecipeId recipe, IngredientId ingredient) const;
     [[nodiscard]] models::ingredient::IngredientSearchForRecipeResponse
-    searchForRecipe(UserId user, std::string query, RecipeId recipeId, std::size_t count, std::size_t offset) const;
-    void deleteFromRecipe(UserId user, RecipeId recipeId, IngredientId id) const;
+    searchForRecipe(UserId user, std::string query, RecipeId recipe, std::size_t count, std::size_t offset) const;
+    void deleteFromRecipe(UserId user, RecipeId recipe, IngredientId ingredient) const;
 };
 
 } // namespace cookcookhnya::api

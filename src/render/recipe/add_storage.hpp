@@ -8,11 +8,11 @@
 namespace cookcookhnya::render::recipe {
 
 void renderStoragesSuggestion(const std::vector<api::StorageId>& storageIdsToAccount,
-                             api::RecipeId recipeId,
-                             UserId userId,
-                             ChatId chatId,
-                             BotRef bot,
-                             ApiClient api);
+                              api::RecipeId recipeId,
+                              UserId userId,
+                              ChatId chatId,
+                              BotRef bot,
+                              ApiClient api);
 
 std::vector<api::StorageId> storagesToShow(const std::vector<api::models::recipe::IngredientInRecipe>& ingredients,
                                            const std::vector<api::StorageId>& storageIdsToAccount);

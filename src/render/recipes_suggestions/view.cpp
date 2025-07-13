@@ -110,11 +110,11 @@ constructMarkup(size_t pageNo, size_t numOfRecipesOnPage, api::models::recipe::R
 }
 
 void renderRecipesSuggestion(const std::vector<api::StorageId>& storageIds,
-                           size_t pageNo,
-                           UserId userId,
-                           ChatId chatId,
-                           BotRef bot,
-                           RecipesApiRef recipesApi) {
+                             size_t pageNo,
+                             UserId userId,
+                             ChatId chatId,
+                             BotRef bot,
+                             RecipesApiRef recipesApi) {
     const std::string pageInfo = utils::utf8str(u8"🔪 Рецепты подобранные специально для вас");
 
     auto messageId = message::getMessageId(userId);

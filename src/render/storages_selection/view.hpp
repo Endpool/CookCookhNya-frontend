@@ -8,9 +8,9 @@
 namespace cookcookhnya::render::select_storages {
 
 void renderStorageSelection(const std::vector<api::StorageId>& selected_storages,
-                         UserId userId,
-                         ChatId chatId,
-                         BotRef bot,
-                         StorageApiRef storageApi);
+                            UserId userId,
+                            ChatId chatId,
+                            BotRef bot,
+                            StorageApiRef storageApi);
 
 } // namespace cookcookhnya::render::select_storages

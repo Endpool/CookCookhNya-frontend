@@ -57,11 +57,11 @@ std::vector<api::StorageId> storagesToShow(const std::vector<api::models::recipe
 }
 
 void renderStoragesSuggestion(const std::vector<api::StorageId>& storageIdsToAccount, // storages which are selected
-                             api::RecipeId recipeId,
-                             UserId userId,
-                             ChatId chatId,
-                             BotRef bot,
-                             ApiClient api) {
+                              api::RecipeId recipeId,
+                              UserId userId,
+                              ChatId chatId,
+                              BotRef bot,
+                              ApiClient api) {
 
     auto storageApi = api.getStoragesApi();
 

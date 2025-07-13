@@ -17,21 +17,21 @@ std::vector<Ingredient> IngredientsApi::getStorageIngredients(UserId user, Stora
     return jsonGetAuthed<std::vector<Ingredient>>(user, std::format("/my/storages/{}/ingredients", storage));
 }
 
-void IngredientsApi::putToStorage(UserId user, StorageId storage, IngredientId id) const {
-    jsonPutAuthed<void>(user, std::format("/my/storages/{}/ingredients/{}", storage, id));
+void IngredientsApi::putToStorage(UserId user, StorageId storage, IngredientId ingredient) const {
+    jsonPutAuthed<void>(user, std::format("/my/storages/{}/ingredients/{}", storage, ingredient));
 }
 
-void IngredientsApi::deleteFromStorage(UserId user, StorageId storage, IngredientId id) const {
-    jsonDeleteAuthed<void>(user, std::format("/my/storages/{}/ingredients/{}", storage, id));
+void IngredientsApi::deleteFromStorage(UserId user, StorageId storage, IngredientId ingredient) const {
+    jsonDeleteAuthed<void>(user, std::format("/my/storages/{}/ingredients/{}", storage, ingredient));
 }
 
-Ingredient IngredientsApi::get(IngredientId id) const {
-    return jsonGet<Ingredient>(std::format("/ingredients/{}", id));
+Ingredient IngredientsApi::get(IngredientId ingredient) const {
+    return jsonGet<Ingredient>(std::format("/ingredients/{}", ingredient));
 }
 
 IngredientSearchForStorageResponse IngredientsApi::searchForStorage(
-    UserId userId, std::string query, StorageId storage, std::size_t count, std::size_t offset) const {
-    return jsonGetAuthed<IngredientSearchForStorageResponse>(userId,
+    UserId user, std::string query, StorageId storage, std::size_t count, std::size_t offset) const {
+    return jsonGetAuthed<IngredientSearchForStorageResponse>(user,
                                                              "/ingredients-for-storage",
                                                              {{"query", std::move(query)},
                                                               {"storage-id", std::to_string(storage)},
@@ -39,21 +39,20 @@ IngredientSearchForStorageResponse IngredientsApi::searchForStorage(
                                                               {"offset", std::to_string(offset)}});
 }
 
-void IngredientsApi::putToRecipe(UserId user, RecipeId recipeId, IngredientId id) const {
-    jsonPutAuthed<void>(user,
-                        std::format("/my/recipes/{}/ingredients/{}", recipeId, id)); // path analogically to ingredients
+void IngredientsApi::putToRecipe(UserId user, RecipeId recipe, IngredientId ingredient) const {
+    jsonPutAuthed<void>(user, std::format("/my/recipes/{}/ingredients/{}", recipe, ingredient));
 }
 
-void IngredientsApi::deleteFromRecipe(UserId user, RecipeId recipeId, IngredientId id) const {
-    jsonDeleteAuthed<void>(user, std::format("/my/recipes/{}/ingredients/{}", recipeId, id));
+void IngredientsApi::deleteFromRecipe(UserId user, RecipeId recipe, IngredientId ingredient) const {
+    jsonDeleteAuthed<void>(user, std::format("/my/recipes/{}/ingredients/{}", recipe, ingredient));
 }
 
 IngredientSearchForRecipeResponse IngredientsApi::searchForRecipe(
-    UserId userId, std::string query, RecipeId recipeId, std::size_t count, std::size_t offset) const {
-    return jsonGetAuthed<IngredientSearchForRecipeResponse>(userId,
+    UserId user, std::string query, RecipeId recipe, std::size_t count, std::size_t offset) const {
+    return jsonGetAuthed<IngredientSearchForRecipeResponse>(user,
                                                             "/ingredients-for-recipe",
                                                             {{"query", std::move(query)},
-                                                             {"recipe-id", std::to_string(recipeId)},
+                                                             {"recipe-id", std::to_string(recipe)},
                                                              {"size", std::to_string(count)},
                                                              {"offset", std::to_string(offset)}});
 }
@@ -69,17 +68,15 @@ IngredientsApi::search(std::string query, std::size_t size, std::size_t offset, 
 }
 
 std::vector<Ingredient> IngredientsApi::getCustomIngredients(UserId user) const {
-    // return jsonGetAuthed<std::vector<Ingredient>>(user, "/my/ingredients/");
-    return std::vector<Ingredient>{{1, "customIng1"}, {2, "customIng2"}};
+    return jsonGetAuthed<std::vector<Ingredient>>(user, "/my/ingredients/");
 }
 
 IngredientId IngredientsApi::createCustom(UserId user, const IngredientCreateBody& body) const {
-    // return jsonPostWithJsonAuthed<IngredientId>(user, "/my/ingredients", body);
-    return 1;
+    return jsonPostWithJsonAuthed<IngredientId>(user, "/my/ingredients", body);
 }
 
-void IngredientsApi::publishCustom(UserId user, IngredientId id) const {
-    // jsonPostAuthed<void>(user, std::format("/my/ingredients/{}/publish", id));
+void IngredientsApi::publishCustom(UserId user, IngredientId ingredient) const {
+    jsonPostAuthed<void>(user, std::format("/my/ingredients/{}/publish", ingredient));
 }
 
 } // namespace cookcookhnya::api

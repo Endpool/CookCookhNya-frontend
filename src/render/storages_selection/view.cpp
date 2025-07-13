@@ -17,10 +17,10 @@ namespace cookcookhnya::render::select_storages {
 using namespace tg_types;
 
 void renderStorageSelection(const std::vector<api::StorageId>& selected_storages,
-                         UserId userId,
-                         ChatId chatId,
-                         BotRef bot,
-                         StorageApiRef storageApi) {
+                            UserId userId,
+                            ChatId chatId,
+                            BotRef bot,
+                            StorageApiRef storageApi) {
     auto storages = storageApi.getStoragesList(userId);
     const std::size_t buttonRows = ((storages.size() + 1) / 2) + 1;
     InlineKeyboard keyboard(buttonRows);
