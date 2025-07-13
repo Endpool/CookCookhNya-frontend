@@ -4,9 +4,10 @@
 
 namespace cookcookhnya::handlers::storage::members {
 
-void addMember(StorageMemberAddition& state, MessageRef m, BotRef bot, SMRef stateManager, StorageApiRef storageApi);
+void handleStorageMemberAdditionMsg(
+    StorageMemberAddition& state, MessageRef m, BotRef bot, SMRef stateManager, StorageApiRef storageApi);
 
-void cancelStorageMemberAddition(
+void handleStorageMemberAdditionCQ(
     StorageMemberAddition& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, StorageApiRef storageApi);
 
 } // namespace cookcookhnya::handlers::storage::members

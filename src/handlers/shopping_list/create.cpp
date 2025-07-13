@@ -13,7 +13,7 @@ namespace cookcookhnya::handlers::shopping_list {
 using namespace render::shopping_list;
 using namespace render::recipe;
 
-void handleProductListSubmission(
+void handleShoppingListCreationCQ(
     ShoppingListCreation& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
     std::string data = cq.data;
     auto chatId = cq.message->chat->id;

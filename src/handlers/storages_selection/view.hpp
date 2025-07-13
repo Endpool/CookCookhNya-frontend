@@ -4,6 +4,7 @@
 
 namespace cookcookhnya::handlers::storages_selection {
 
-void selectStorages(StorageSelection& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api);
+void handleStoragesSelectionCQ(
+    StoragesSelection& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api);
 
 } // namespace cookcookhnya::handlers::storages_selection

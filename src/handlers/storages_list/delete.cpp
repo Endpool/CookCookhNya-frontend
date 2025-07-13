@@ -9,7 +9,7 @@ namespace cookcookhnya::handlers::storages_list {
 
 using namespace render::storages_list;
 
-void deleteStorage(
+void handleStorageDeletionCQ(
     StorageDeletion& /*unused*/, CallbackQueryRef cq, BotRef bot, SMRef stateManager, StorageApiRef storageApi) {
     bot.answerCallbackQuery(cq.id);
     if (cq.data.starts_with("st")) {

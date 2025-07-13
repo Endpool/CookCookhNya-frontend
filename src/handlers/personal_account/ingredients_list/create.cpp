@@ -12,11 +12,11 @@ namespace cookcookhnya::handlers::personal_account::ingredients {
 
 using namespace render::personal_account::ingredients;
 
-void customIngredientEnterName(CustomIngredientCreationEnterName& /*unused*/,
-                               MessageRef m,
-                               BotRef& bot,
-                               SMRef stateManager,
-                               IngredientsApiRef api) {
+void handleCustomIngredientCreationEnterNameMsg(CustomIngredientCreationEnterName& /*unused*/,
+                                                MessageRef m,
+                                                BotRef& bot,
+                                                SMRef stateManager,
+                                                IngredientsApiRef api) {
     auto name = m.text;
     auto userId = m.from->id;
     auto chatId = m.chat->id;
@@ -30,11 +30,11 @@ void customIngredientEnterName(CustomIngredientCreationEnterName& /*unused*/,
     stateManager.put(CustomIngredientConfirmation{name});
 }
 
-void customIngredientCancelCreation(CustomIngredientCreationEnterName& /*unused*/,
-                                    CallbackQueryRef cq,
-                                    BotRef& bot,
-                                    SMRef stateManager,
-                                    IngredientsApiRef api) {
+void handleCustomIngredientCreationEnterNameCQ(CustomIngredientCreationEnterName& /*unused*/,
+                                               CallbackQueryRef cq,
+                                               BotRef& bot,
+                                               SMRef stateManager,
+                                               IngredientsApiRef api) {
     bot.answerCallbackQuery(cq.id);
     auto userId = cq.from->id;
     auto chatId = cq.message->chat->id;
@@ -44,7 +44,7 @@ void customIngredientCancelCreation(CustomIngredientCreationEnterName& /*unused*
     }
 }
 
-void customIngredientConfirmation(
+void handleCustomIngredientConfirmationCQ(
     CustomIngredientConfirmation& state, CallbackQueryRef cq, BotRef& bot, SMRef stateManager, IngredientsApiRef api) {
     bot.answerCallbackQuery(cq.id);
     auto userId = cq.from->id;

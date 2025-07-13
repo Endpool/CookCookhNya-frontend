@@ -16,7 +16,8 @@ namespace cookcookhnya::handlers::storage::members {
 
 using namespace render::storage::members;
 
-void addMember(StorageMemberAddition& state, MessageRef m, BotRef bot, SMRef stateManager, StorageApiRef storageApi) {
+void handleStorageMemberAdditionMsg(
+    StorageMemberAddition& state, MessageRef m, BotRef bot, SMRef stateManager, StorageApiRef storageApi) {
     auto chatId = m.chat->id;
     auto userId = m.from->id;
 
@@ -48,7 +49,7 @@ void addMember(StorageMemberAddition& state, MessageRef m, BotRef bot, SMRef sta
     stateManager.put(StorageMemberView{state.storageId});
 };
 
-void cancelStorageMemberAddition(
+void handleStorageMemberAdditionCQ(
     StorageMemberAddition& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, StorageApiRef storageApi) {
     bot.answerCallbackQuery(cq.id);
     auto chatId = cq.message->chat->id;

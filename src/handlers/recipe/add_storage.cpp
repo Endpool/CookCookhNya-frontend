@@ -9,7 +9,7 @@ namespace cookcookhnya::handlers::recipe {
 
 using namespace render::recipe;
 
-void handleRecipeAddStorage(
+void handleRecipeStorageAdditionCQ(
     RecipeStorageAddition& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
     std::string data = cq.data;
     auto chatId = cq.message->chat->id;

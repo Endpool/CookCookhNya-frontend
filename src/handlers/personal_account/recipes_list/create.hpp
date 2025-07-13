@@ -4,9 +4,10 @@
 
 namespace cookcookhnya::handlers::personal_account::recipes {
 
-void createRecipe(CreateCustomRecipe&, MessageRef m, BotRef bot, SMRef stateManager, RecipesApiRef recipeApi);
+void handleCreateCustomRecipeMsg(
+    CreateCustomRecipe&, MessageRef m, BotRef bot, SMRef stateManager, RecipesApiRef recipeApi);
 
-void cancelRecipeCreation(
+void handleCreateCustomRecipeCQ(
     CreateCustomRecipe&, CallbackQueryRef cq, BotRef bot, SMRef stateManager, RecipesApiRef recipeApi);
 
 } // namespace cookcookhnya::handlers::personal_account::recipes

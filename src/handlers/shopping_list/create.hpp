@@ -4,7 +4,7 @@
 
 namespace cookcookhnya::handlers::shopping_list {
 
-void handleProductListSubmission(
+void handleShoppingListCreationCQ(
     ShoppingListCreation& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api);
 
 } // namespace cookcookhnya::handlers::shopping_list

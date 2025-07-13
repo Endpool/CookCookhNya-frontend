@@ -17,8 +17,7 @@ using namespace render::storage::members;
 using namespace render::storages_list;
 using namespace render::recipes_suggestions;
 
-void storageViewButtonCallback(
-    StorageView& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
+void handleStorageViewCQ(StorageView& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
     bot.answerCallbackQuery(cq.id);
     auto chatId = cq.message->chat->id;
     auto userId = cq.from->id;

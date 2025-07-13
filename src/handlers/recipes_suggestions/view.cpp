@@ -21,7 +21,7 @@ using namespace render::storage;
 using namespace render::recipe;
 using namespace render::main_menu;
 
-void changePageAndBack(
+void handleSuggestedRecipeListCQ(
     SuggestedRecipeList& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
     bot.answerCallbackQuery(cq.id);
     auto chatId = cq.message->chat->id;
@@ -39,7 +39,7 @@ void changePageAndBack(
                 stateManager.put(MainMenu{});
             } else {
                 renderStorageSelect(state.storageIds, userId, chatId, bot, api);
-                stateManager.put(StorageSelection{.storageIds = std::move(state.storageIds)});
+                stateManager.put(StoragesSelection{.storageIds = std::move(state.storageIds)});
             }
         }
         bot.answerCallbackQuery(cq.id);

@@ -9,7 +9,7 @@ namespace cookcookhnya::handlers::storage::members {
 
 using namespace render::storage::members;
 
-void deleteMember(
+void handleStorageMemberDeletionCQ(
     StorageMemberDeletion& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, StorageApiRef storageApi) {
     bot.answerCallbackQuery(cq.id);
 

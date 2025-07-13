@@ -56,7 +56,7 @@ struct StorageIngredientsList : detail::StorageIdMixin {
         : StorageIdMixin{storageId}, storageIngredients{std::move(ingredients)} {}
 };
 
-struct StorageSelection {
+struct StoragesSelection {
     std::vector<api::StorageId> storageIds;
 };
 struct SuggestedRecipeList {
@@ -133,7 +133,7 @@ using State = std::variant<MainMenu,
                            StorageMemberAddition,
                            StorageMemberDeletion,
                            StorageIngredientsList,
-                           StorageSelection,
+                           StoragesSelection,
                            SuggestedRecipeList,
                            RecipeView,
                            ShoppingListCreation,

@@ -11,7 +11,7 @@ namespace cookcookhnya::handlers::shopping_list {
 using namespace render::main_menu;
 using namespace render::shopping_list;
 
-void shoppingListButtonCallback(
+void handleShoppingListViewCQ(
     ShoppingListView& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
     bot.answerCallbackQuery(cq.id);
     auto userId = cq.from->id;

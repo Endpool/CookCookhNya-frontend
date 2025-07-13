@@ -19,7 +19,7 @@ using namespace render::storage;
 using namespace render::storage::ingredients;
 using namespace api::models::ingredient;
 
-void storageIngredientsSearchButtonCallback(
+void handleStorageIngredientsListCQ(
     StorageIngredientsList& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
     bot.answerCallbackQuery(cq.id);
     const auto userId = cq.from->id;
@@ -50,10 +50,10 @@ void storageIngredientsSearchButtonCallback(
     renderIngredientsListSearch(state, userId, chatId, bot);
 }
 
-void storageIngredientsSearchInlineQueryCallback(StorageIngredientsList& state,
-                                                 InlineQueryRef iq,
-                                                 BotRef bot,
-                                                 IngredientsApiRef api) {
+void handleStorageIngredientsListIQ(StorageIngredientsList& state,
+                                    InlineQueryRef iq,
+                                    BotRef bot,
+                                    IngredientsApiRef api) {
     const auto userId = iq.from->id;
     if (iq.query.empty()) {
         state.searchItems.clear();

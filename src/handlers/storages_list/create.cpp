@@ -12,7 +12,7 @@ namespace cookcookhnya::handlers::storages_list {
 
 using namespace render::storages_list;
 
-void createStorage(
+void handleStorageCreationEnterNameMsg(
     StorageCreationEnterName& /*unused*/, MessageRef m, BotRef bot, SMRef stateManager, StorageApiRef storageApi) {
     storageApi.create(m.from->id, api::models::storage::StorageCreateBody{m.text}); // Create storage body with new name
     auto text = utils::utf8str(u8"🏷 Введите новое имя хранилища");
@@ -24,11 +24,11 @@ void createStorage(
     stateManager.put(StorageList{});
 };
 
-void cancelStorageCreation(StorageCreationEnterName& /*unused*/,
-                           CallbackQueryRef cq,
-                           BotRef bot,
-                           SMRef stateManager,
-                           StorageApiRef storageApi) {
+void handleStorageCreationEnterNameCQ(StorageCreationEnterName& /*unused*/,
+                                      CallbackQueryRef cq,
+                                      BotRef bot,
+                                      SMRef stateManager,
+                                      StorageApiRef storageApi) {
     bot.answerCallbackQuery(cq.id);
     if (cq.data == "back") {
         renderStorageList(true, cq.from->id, cq.message->chat->id, bot, storageApi);

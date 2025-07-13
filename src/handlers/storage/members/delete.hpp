@@ -4,7 +4,7 @@
 
 namespace cookcookhnya::handlers::storage::members {
 
-void deleteMember(
+void handleStorageMemberDeletionCQ(
     StorageMemberDeletion& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, StorageApiRef storageApi);
 
 } // namespace cookcookhnya::handlers::storage::members

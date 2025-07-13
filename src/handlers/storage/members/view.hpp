@@ -4,7 +4,7 @@
 
 namespace cookcookhnya::handlers::storage::members {
 
-void storageMemberViewButtonCallback(
+void handleStorageMemberViewCQ(
     StorageMemberView& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, StorageApiRef storageApi);
 
 } // namespace cookcookhnya::handlers::storage::members

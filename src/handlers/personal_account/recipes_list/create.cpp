@@ -8,7 +8,8 @@ namespace cookcookhnya::handlers::personal_account::recipes {
 
 using namespace render::personal_account::recipes;
 
-void createRecipe(CreateCustomRecipe& state, MessageRef m, BotRef bot, SMRef stateManager, RecipesApiRef recipeApi) {
+void handleCreateCustomRecipeMsg(
+    CreateCustomRecipe& state, MessageRef m, BotRef bot, SMRef stateManager, RecipesApiRef recipeApi) {
     // UNCOMMENT WHEN BACKEND IS READY
     // state.recipeId = recipeApi.create(m.from->id, api::models::recipe::RecipeCreateBody{m.text});
 
@@ -18,7 +19,7 @@ void createRecipe(CreateCustomRecipe& state, MessageRef m, BotRef bot, SMRef sta
                                                                     // from RecipeView to RecipesList on 1st page
 };
 
-void cancelRecipeCreation(
+void handleCreateCustomRecipeCQ(
     CreateCustomRecipe& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, RecipesApiRef recipeApi) {
     bot.answerCallbackQuery(cq.id);
     if (cq.data == "cancel_recipe_creation") {

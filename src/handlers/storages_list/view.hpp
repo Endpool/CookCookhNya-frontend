@@ -4,6 +4,6 @@
 
 namespace cookcookhnya::handlers::storages_list {
 
-void storageListButtonCallback(StorageList&, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api);
+void handleStorageListCQ(StorageList&, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api);
 
 } // namespace cookcookhnya::handlers::storages_list

@@ -4,7 +4,7 @@
 
 namespace cookcookhnya::handlers::personal_account::ingredients {
 
-void customIngredientPublish(
+void handleCustomIngredientPublishCQ(
     CustomIngredientPublish& /*unused*/, CallbackQueryRef cq, BotRef& bot, SMRef stateManager, IngredientsApiRef api);
 
 } // namespace cookcookhnya::handlers::personal_account::ingredients

@@ -15,7 +15,7 @@ namespace cookcookhnya::handlers::initial {
 using namespace render::main_menu;
 using namespace std::literals;
 
-void start(MessageRef m, BotRef bot, SMRef stateManager, ApiClientRef api) {
+void handleStartCmd(MessageRef m, BotRef bot, SMRef stateManager, ApiClientRef api) {
     auto userId = m.from->id;
     renderMainMenu(false, m.from->id, m.chat->id, bot, api);
     stateManager.put(MainMenu{});

@@ -11,7 +11,7 @@ namespace cookcookhnya::handlers::personal_account::recipes {
 using namespace render::personal_account::recipes;
 using namespace render::recipe::ingredients;
 
-void handleCustomRecipeView(
+void handleRecipeCustomViewCQ(
     RecipeCustomView& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, RecipesApiRef recipesApi) {
     const std::string data = cq.data;
     auto chatId = cq.message->chat->id;

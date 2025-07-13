@@ -18,7 +18,7 @@ using namespace render::create_storage;
 using namespace render::delete_storage;
 using namespace render::storage;
 
-void storageListButtonCallback(
+void handleStorageListCQ(
     StorageList& /*unused*/, CallbackQueryRef cq, BotRef& bot, SMRef stateManager, ApiClientRef api) {
     bot.answerCallbackQuery(cq.id);
     auto userId = cq.from->id;

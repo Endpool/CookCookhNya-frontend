@@ -19,7 +19,7 @@ using namespace api::models::ingredient;
 using namespace render::recipe::ingredients;
 using namespace render::personal_account::recipes;
 
-void customRecipeIngredientsSearchButtonCallback(
+void handleCustomRecipeIngredientsSearchCQ(
     CustomRecipeIngredientsSearch& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
     auto ingredientsApi = api.getIngredientsApi();
 
@@ -49,10 +49,10 @@ void customRecipeIngredientsSearchButtonCallback(
         renderRecipeIngredientsSearchEdit(state.shownIngredients, state.pageNo, 1, *mMessageId, chatId, bot);
 }
 
-void customRecipeIngredientsSearchInlineQueryCallback(CustomRecipeIngredientsSearch& state,
-                                                      InlineQueryRef iq,
-                                                      BotRef bot,
-                                                      IngredientsApiRef api) {
+void handleCustomRecipeIngredientsSearchIQ(CustomRecipeIngredientsSearch& state,
+                                           InlineQueryRef iq,
+                                           BotRef bot,
+                                           IngredientsApiRef api) {
     if (!iq.query.empty()) {
         const auto userId = iq.from->id;
         const std::size_t count = 100;

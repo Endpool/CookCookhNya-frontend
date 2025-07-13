@@ -20,7 +20,7 @@ using namespace render::select_storages;
 using namespace render::shopping_list;
 using namespace render::personal_account;
 
-void mainMenuHandler(MainMenu& /*unused*/, CallbackQueryRef cq, BotRef& bot, SMRef stateManager, ApiClientRef api) {
+void handleMainMenuCQ(MainMenu& /*unused*/, CallbackQueryRef cq, BotRef& bot, SMRef stateManager, ApiClientRef api) {
     bot.answerCallbackQuery(cq.id);
     auto userId = cq.from->id;
     auto chatId = cq.message->chat->id;
@@ -38,7 +38,7 @@ void mainMenuHandler(MainMenu& /*unused*/, CallbackQueryRef cq, BotRef& bot, SMR
             return;
         }
         renderStorageSelect({}, userId, chatId, bot, api);
-        stateManager.put(StorageSelection{.storageIds = std::vector<api::StorageId>{}});
+        stateManager.put(StoragesSelection{.storageIds = std::vector<api::StorageId>{}});
         return;
     }
     if (cq.data == "shopping_list") {

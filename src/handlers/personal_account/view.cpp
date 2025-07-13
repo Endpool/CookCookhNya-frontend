@@ -13,7 +13,8 @@ using namespace render::personal_account::recipes;
 using namespace render::main_menu;
 using namespace render::personal_account::ingredients;
 
-void personalAccount(PersonalAccountMenu& /**/, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
+void handlePersonalAccountMenuCQ(
+    PersonalAccountMenu& /**/, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
     const std::string data = cq.data;
     bot.answerCallbackQuery(cq.id);
     auto chatId = cq.message->chat->id;

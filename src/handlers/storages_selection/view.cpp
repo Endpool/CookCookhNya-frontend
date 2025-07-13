@@ -17,7 +17,8 @@ using namespace render::recipes_suggestions;
 using namespace render::select_storages;
 using namespace render::main_menu;
 
-void selectStorages(StorageSelection& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
+void handleStoragesSelectionCQ(
+    StoragesSelection& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
     bot.answerCallbackQuery(cq.id);
     auto chatId = cq.message->chat->id;
     auto userId = cq.from->id;
@@ -41,13 +42,13 @@ void selectStorages(StorageSelection& state, CallbackQueryRef cq, BotRef bot, SM
             auto it = std::ranges::find(selectedStorages, *storageId);
             selectedStorages.erase(it);
             renderStorageSelect(selectedStorages, userId, chatId, bot, api);
-            stateManager.put(StorageSelection{.storageIds = selectedStorages});
+            stateManager.put(StoragesSelection{.storageIds = selectedStorages});
             return;
         }
         if (cq.data.starts_with("out")) {
             selectedStorages.push_back(*storageId);
             renderStorageSelect(selectedStorages, userId, chatId, bot, api);
-            stateManager.put(StorageSelection{.storageIds = selectedStorages});
+            stateManager.put(StoragesSelection{.storageIds = selectedStorages});
             return;
         }
     }
