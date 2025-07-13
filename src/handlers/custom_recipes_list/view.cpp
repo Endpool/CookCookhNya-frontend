@@ -47,7 +47,7 @@ void customRecipeList(CustomRecipesList& state, CallbackQueryRef cq, BotRef bot,
         return;
     }
 
-    if (data != "ㅤ") { // If it's not "empty" button then it's change of page
+    if (data != "dontHandle") {
         auto pageNo = utils::parseSafe<int>(data);
         if (pageNo) {
             state.pageNo = *pageNo;
