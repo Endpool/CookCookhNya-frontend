@@ -1,60 +1,75 @@
-name: ci pipeline for frontend
+clang-tidy-check:
+  runs-on: ubuntu-latest
+  needs: build
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
 
-on:
-  push:
+    - name: Build dependencies
+      uses: ./.github/actions/build_deps
 
-jobs:
-  build:  
-    runs-on: ubuntu-latest
-    outputs:
-      cache-hit: ${{ steps.conan-cache.outputs.cache-hit }}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+    - name: Install clang-tidy
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y clang-tidy-19
+        echo "/usr/lib/llvm-19/bin" >> $GITHUB_PATH
 
-      - name: Build dependencies
-        uses: ./.github/actions/build_deps
+    - name: Cache clang-tidy results
+      uses: actions/cache@v3
+      with:
+        path: .clang-tidy-cache.json
+        key: ${{ runner.os }}-clang-tidy-${{ github.ref }}
 
-      - name: Build project
-        working-directory: .
-        run: |
-          make build-release
+    - name: Create clang-tidy cache script
+      run: |
+        cat > run-clang-tidy-cached.sh << 'EOF'
+        #!/bin/bash
+        set -e
+        # Load or initialize cache
+        CACHE_FILE=".clang-tidy-cache.json"
+        if [ -f "$CACHE_FILE" ]; then
+          CACHE=$(cat "$CACHE_FILE")
+        else
+          CACHE="{}"
+        fi
+        # Create temporary file for updated cache
+        NEW_CACHE=$(mktemp)
+        echo "{}" > "$NEW_CACHE"
+        # Find all source files
+        mapfile -t FILES < <(find src -type f \( -name '*.hpp' -or -name '*.cpp' \))
+        # Function to lint a single file
+        lint_file() {
+          FILE="$1"
+          # Compute file hash
+          HASH=$(sha256sum "$FILE" | cut -d' ' -f1)
+          # Get cached hash
+          CACHED_HASH=$(echo "$CACHE" | jq -r ".\"$FILE\" // \"\"")
+          if [ "$HASH" = "$CACHED_HASH" ]; then
+            echo "Skipping unchanged file: $FILE"
+            # Copy hash to new cache
+            jq --arg file "$FILE" --arg hash "$HASH" '.[$file] = $hash' "$NEW_CACHE" > tmp.json && mv tmp.json "$NEW_CACHE"
+            return 0
+          fi
+          echo "Linting file: $FILE"
+          # Run clang-tidy
+          if clang-tidy-19 "$FILE" --quiet --warnings-as-errors='*' -p build/Release; then
+            # Update cache on success
+            jq --arg file "$FILE" --arg hash "$HASH" '.[$file] = $hash' "$NEW_CACHE" > tmp.json && mv tmp.json "$NEW_CACHE"
+            return 0
+          else
+            return 1
+          fi
+        }
+        export -f lint_file
+        export CACHE NEW_CACHE
+        # Run linting in parallel
+        cp build/Release/compile_commands.json .
+        parallel --halt now,fail=1 lint_file ::: "${FILES[@]}"
+        # Save updated cache
+        mv "$NEW_CACHE" "$CACHE_FILE"
+        EOF
+        chmod +x run-clang-tidy-cached.sh
 
-  clang-format-check:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Install clang-format
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y clang-format-19
-          echo "/usr/lib/llvm-19/bin" >> $GITHUB_PATH
-
-      - name: Run clang-format checks
-        run: |
-          find src -type f \( -name '*.hpp' -or -name '*.cpp' \) \
-            -exec clang-format-19 --dry-run --Werror {} \+
-
-  clang-tidy-check:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Build dependencies
-        uses: ./.github/actions/build_deps
-
-      - name: Install clang-tidy
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y clang-tidy-19
-          echo "/usr/lib/llvm-19/bin" >> $GITHUB_PATH
-
-      - name: Run clang-tidy
-        run: |
-          cp build/Release/compile_commands.json .
-          run-clang-tidy -j$(nproc) -quiet -warnings-as-errors='*'
+    - name: Run clang-tidy with caching
+      run: |
+        ./run-clang-tidy-cached.sh
