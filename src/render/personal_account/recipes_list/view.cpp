@@ -1,8 +1,11 @@
-#include "render/personal_account/recipes_list/view.hpp"
+#include "view.hpp"
+
 #include "backend/models/recipe.hpp"
 #include "message_tracker.hpp"
 #include "render/common.hpp"
+#include "render/personal_account/recipes_list/view.hpp"
 #include "utils.hpp"
+
 #include <algorithm>
 #include <cmath>
 #include <cstddef>
@@ -15,11 +18,11 @@ namespace cookcookhnya::render::personal_account::recipes {
 
 // offset is variable which defines amout of rows before beggining of paging
 // fullKeyBoardSize is self explanatory
-InlineKeyboard constuctNavigationsMarkup(size_t offset,
-                                         size_t fullKeyBoardSize,
-                                         size_t pageNo,
-                                         size_t numOfRecipesOnPage,
-                                         api::models::recipe::CustomRecipesList recipesList) {
+InlineKeyboard constructNavigationsMarkup(size_t offset,
+                                          size_t fullKeyBoardSize,
+                                          size_t pageNo,
+                                          size_t numOfRecipesOnPage,
+                                          api::models::recipe::CustomRecipesList recipesList) {
     const int amountOfRecipes = recipesList.recipesFound;
     int maxPageNum =
         static_cast<int>(std::ceil(static_cast<double>(amountOfRecipes) / static_cast<double>(numOfRecipesOnPage)));
@@ -95,7 +98,7 @@ constructMarkup(size_t pageNo, size_t numOfRecipesOnPage, api::models::recipe::C
     const size_t arrowsRow = offset + recipesToShow; // 1 because of the offset of add/delete row
 
     InlineKeyboard keyboard =
-        constuctNavigationsMarkup(offset, numOfRows + recipesToShow, pageNo, numOfRecipesOnPage, recipesList);
+        constructNavigationsMarkup(offset, numOfRows + recipesToShow, pageNo, numOfRecipesOnPage, recipesList);
     if (keyboard.empty()) { // If error happened
         return keyboard;
     }
