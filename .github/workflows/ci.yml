@@ -72,9 +72,8 @@ jobs:
           else
             CACHE="{}"
           fi
-          # Create temporary file for updated cache
-          NEW_CACHE=$(mktemp /tmp/clang-tidy-cache.XXXXXX.json)
-          echo "{}" > "$NEW_CACHE"
+          # Create temporary directory for per-file cache updates
+          TEMP_DIR=$(mktemp -d /tmp/clang-tidy-cache.XXXXXX)
           # Find all source files
           mapfile -t FILES < <(find src -type f \( -name '*.hpp' -or -name '*.cpp' \))
           # Function to lint a single file
@@ -84,31 +83,42 @@ jobs:
             HASH=$(sha256sum "$FILE" | cut -d' ' -f1)
             # Get cached hash
             CACHED_HASH=$(echo "$CACHE" | jq -r ".\"$FILE\" // \"\"")
+            # Create unique temp file for this file's cache update
+            TEMP_FILE="$TEMP_DIR/cache_$(echo "$FILE" | sha256sum | cut -d' ' -f1).json"
             if [ "$HASH" = "$CACHED_HASH" ]; then
               echo "Skipping unchanged file: $FILE"
-              # Atomically update cache
-              flock "$NEW_CACHE" jq --arg file "$FILE" --arg hash "$HASH" '.[$file] = $hash' "$NEW_CACHE" > "$NEW_CACHE.tmp"
-              mv "$NEW_CACHE.tmp" "$NEW_CACHE"
+              # Write hash to temp file
+              echo "{\"$FILE\": \"$HASH\"}" > "$TEMP_FILE"
               return 0
             fi
             echo "Linting file: $FILE"
             # Run clang-tidy without treating warnings as errors
             if clang-tidy-19 "$FILE" --quiet -p build/Release; then
-              # Atomically update cache
-              flock "$NEW_CACHE" jq --arg file "$FILE" --arg hash "$HASH" '.[$file] = $hash' "$NEW_CACHE" > "$NEW_CACHE.tmp"
-              mv "$NEW_CACHE.tmp" "$NEW_CACHE"
+              # Write hash to temp file
+              echo "{\"$FILE\": \"$HASH\"}" > "$TEMP_FILE"
               return 0
             else
               return 1
             fi
           }
           export -f lint_file
-          export CACHE NEW_CACHE
+          export CACHE TEMP_DIR
           # Run linting in parallel
           cp build/Release/compile_commands.json .
           parallel --halt now,fail=1 lint_file ::: "${FILES[@]}"
+          # Merge all temp cache files into final cache
+          NEW_CACHE=$(mktemp /tmp/clang-tidy-cache-final.XXXXXX.json)
+          echo "{}" > "$NEW_CACHE"
+          for TEMP_FILE in "$TEMP_DIR"/*.json; do
+            if [ -f "$TEMP_FILE" ]; then
+              jq -s 'reduce .[] as $item ({}; . * $item)' "$NEW_CACHE" "$TEMP_FILE" > "$NEW_CACHE.tmp"
+              mv "$NEW_CACHE.tmp" "$NEW_CACHE"
+            fi
+          done
           # Save updated cache
           mv "$NEW_CACHE" "$CACHE_FILE"
+          # Clean up temp directory
+          rm -rf "$TEMP_DIR"
           EOF
           chmod +x run-clang-tidy-cached.sh
 
