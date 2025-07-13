@@ -59,7 +59,7 @@ void handleStorageMemberAdditionCQ(
         stateManager.put(StorageMemberView{state.storageId});
     }
     if (cq.data == "create_link") {
-        addShareLinkButton(state.storageId, userId, chatId, bot, storageApi);
+        renderShareLinkMemberAddition(state.storageId, userId, chatId, bot, storageApi);
     }
 };
 

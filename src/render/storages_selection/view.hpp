@@ -7,7 +7,7 @@
 
 namespace cookcookhnya::render::select_storages {
 
-void renderStorageSelect(const std::vector<api::StorageId>& selected_storages,
+void renderStorageSelection(const std::vector<api::StorageId>& selected_storages,
                          UserId userId,
                          ChatId chatId,
                          BotRef bot,

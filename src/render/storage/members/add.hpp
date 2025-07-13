@@ -5,10 +5,10 @@
 
 namespace cookcookhnya::render::storage::members {
 
-void renderStorageMemberAdditionPrompt(
+void renderStorageMemberAddition(
     const api::StorageId& storageId, UserId userId, ChatId chatId, BotRef bot, StorageApiRef storageApi);
 
-void addShareLinkButton(
+void renderShareLinkMemberAddition(
     const api::StorageId& storageId, UserId userId, ChatId chatId, BotRef bot, StorageApiRef storageApi);
 
 } // namespace cookcookhnya::render::storage::members

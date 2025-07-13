@@ -13,7 +13,7 @@
 
 namespace cookcookhnya::render::storage::members {
 
-void renderStorageMemberAdditionPrompt(
+void renderStorageMemberAddition(
     const api::StorageId& storageId, UserId userId, ChatId chatId, BotRef bot, StorageApiRef storageApi) {
     auto storage = storageApi.get(userId, storageId);
 
@@ -30,7 +30,7 @@ void renderStorageMemberAdditionPrompt(
     }
 };
 
-void addShareLinkButton(
+void renderShareLinkMemberAddition(
     const api::StorageId& storageId, UserId userId, ChatId chatId, BotRef bot, StorageApiRef storageApi) {
     auto storage = storageApi.get(userId, storageId);
 

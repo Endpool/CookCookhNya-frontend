@@ -13,7 +13,7 @@ namespace cookcookhnya::render::personal_account::ingredients {
 
 using namespace tg_types;
 
-void renderCustomIngredientPublish(UserId userId, ChatId chatId, BotRef bot, IngredientsApiRef api) {
+void renderCustomIngredientPublication(UserId userId, ChatId chatId, BotRef bot, IngredientsApiRef api) {
     auto ingredients = api.getCustomIngredients(userId);
 
     const std::size_t buttonRows = ((ingredients.size() + 1) / 2) + 1;

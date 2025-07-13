@@ -12,7 +12,7 @@
 
 namespace cookcookhnya::render::personal_account::ingredients {
 
-void renderCustomIngredientCreate(UserId userId, ChatId chatId, BotRef bot) {
+void renderCustomIngredientCreation(UserId userId, ChatId chatId, BotRef bot) {
     InlineKeyboard keyboard(1);
     keyboard[0].push_back(makeCallbackButton(u8"↩️ Назад", "back"));
     auto text = utils::utf8str(u8"🥦 Введите новое имя ингредиента");
@@ -22,7 +22,7 @@ void renderCustomIngredientCreate(UserId userId, ChatId chatId, BotRef bot) {
     }
 }
 
-void renderCustomIngredientConfirm(
+void renderCustomIngredientConfirmation(
     std::string ingredientName, UserId userId, ChatId chatId, BotRef bot, IngredientsApiRef api) {
     InlineKeyboard keyboard(2);
     keyboard[0].push_back(makeCallbackButton(u8"▶️ Подтвердить", "confirm"));

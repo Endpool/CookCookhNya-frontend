@@ -33,11 +33,11 @@ void handleMainMenuCQ(MainMenu& /*unused*/, CallbackQueryRef cq, BotRef& bot, SM
     if (cq.data == "wanna_eat") {
         if (storages.size() == 1) {
             auto storageId = {storages[0].id};
-            editRecipesSuggestion(storageId, 0, userId, chatId, bot, api);
+            renderRecipesSuggestion(storageId, 0, userId, chatId, bot, api);
             stateManager.put(SuggestedRecipeList{.pageNo = 0, .storageIds = storageId, .fromStorage = false});
             return;
         }
-        renderStorageSelect({}, userId, chatId, bot, api);
+        renderStorageSelection({}, userId, chatId, bot, api);
         stateManager.put(StoragesSelection{.storageIds = std::vector<api::StorageId>{}});
         return;
     }

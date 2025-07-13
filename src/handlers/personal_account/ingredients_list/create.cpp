@@ -26,7 +26,7 @@ void handleCustomIngredientCreationEnterNameMsg(CustomIngredientCreationEnterNam
     if (messageId) {
         bot.editMessageText(text, chatId, *messageId);
     }
-    renderCustomIngredientConfirm(name, userId, chatId, bot, api);
+    renderCustomIngredientConfirmation(name, userId, chatId, bot, api);
     stateManager.put(CustomIngredientConfirmation{name});
 }
 

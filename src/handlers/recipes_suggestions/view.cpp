@@ -38,7 +38,7 @@ void handleSuggestedRecipeListCQ(
                 renderMainMenu(true, userId, chatId, bot, api);
                 stateManager.put(MainMenu{});
             } else {
-                renderStorageSelect(state.storageIds, userId, chatId, bot, api);
+                renderStorageSelection(state.storageIds, userId, chatId, bot, api);
                 stateManager.put(StoragesSelection{.storageIds = std::move(state.storageIds)});
             }
         }
@@ -67,7 +67,7 @@ void handleSuggestedRecipeListCQ(
             state.pageNo = *pageNo;
         }
         // Message is 100% exists as it was rendered by some another method
-        editRecipesSuggestion(state.storageIds, *pageNo, userId, chatId, bot, api);
+        renderRecipesSuggestion(state.storageIds, *pageNo, userId, chatId, bot, api);
         return;
     }
 }

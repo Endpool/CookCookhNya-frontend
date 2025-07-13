@@ -11,7 +11,7 @@
 
 namespace cookcookhnya::render::delete_storage {
 
-void renderStorageDelete(ChatId chatId, BotRef bot, UserId userId, StorageApiRef storageApi) {
+void renderStorageDeletion(ChatId chatId, BotRef bot, UserId userId, StorageApiRef storageApi) {
     auto storages = storageApi.getStoragesList(userId);
     size_t numStoragesOwner = 0;
     for (auto& storage : storages) {

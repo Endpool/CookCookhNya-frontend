@@ -4,6 +4,6 @@
 
 namespace cookcookhnya::render::create_storage {
 
-void renderStorageCreate(ChatId chatId, UserId userId, BotRef bot);
+void renderStorageCreation(ChatId chatId, UserId userId, BotRef bot);
 
 } // namespace cookcookhnya::render::create_storage

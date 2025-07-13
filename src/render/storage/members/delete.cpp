@@ -13,7 +13,7 @@
 
 namespace cookcookhnya::render::storage::members {
 
-void renderStorageMemberDeletionPrompt(
+void renderStorageMemberDeletion(
     const api::StorageId& storageId, UserId userId, ChatId chatId, BotRef bot, StorageApiRef storageApi) {
     auto storage = storageApi.get(userId, storageId);
 

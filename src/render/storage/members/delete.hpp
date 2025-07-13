@@ -5,7 +5,7 @@
 
 namespace cookcookhnya::render::storage::members {
 
-void renderStorageMemberDeletionPrompt(
+void renderStorageMemberDeletion(
     const api::StorageId& storageId, UserId userId, ChatId chatId, BotRef bot, StorageApiRef storageApi);
 
 } // namespace cookcookhnya::render::storage::members

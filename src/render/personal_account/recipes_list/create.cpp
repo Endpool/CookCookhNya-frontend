@@ -8,7 +8,7 @@
 
 namespace cookcookhnya::render::personal_account::recipes {
 
-void renderRecipeCreate(ChatId chatId, UserId userId, BotRef bot) { // BackendProvider bkn
+void renderRecipeCreation(ChatId chatId, UserId userId, BotRef bot) { // BackendProvider bkn
     InlineKeyboard keyboard(1);
     keyboard[0].push_back(makeCallbackButton(u8"🚫 Отмена", "cancel_recipe_creation"));
     auto text = utils::utf8str(u8"🏷 Введите новое имя рецепта");

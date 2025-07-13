@@ -109,7 +109,7 @@ constructMarkup(size_t pageNo, size_t numOfRecipesOnPage, api::models::recipe::R
     return keyboard;
 }
 
-void editRecipesSuggestion(const std::vector<api::StorageId>& storageIds,
+void renderRecipesSuggestion(const std::vector<api::StorageId>& storageIds,
                            size_t pageNo,
                            UserId userId,
                            ChatId chatId,

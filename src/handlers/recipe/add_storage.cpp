@@ -21,7 +21,7 @@ void handleRecipeStorageAdditionCQ(
         auto newStorageId = utils::parseSafe<api::StorageId>(newStorageIdStr);
         if (newStorageId) {
             state.storageIds.push_back(*newStorageId);
-            renderStorageSuggestion(state.storageIds, state.recipeId, userId, chatId, bot, api);
+            renderStoragesSuggestion(state.storageIds, state.recipeId, userId, chatId, bot, api);
         }
         bot.answerCallbackQuery(cq.id);
     }

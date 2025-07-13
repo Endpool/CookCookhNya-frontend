@@ -18,12 +18,12 @@ void handleCustomIngredientsListCQ(
     auto userId = cq.from->id;
     auto chatId = cq.message->chat->id;
     if (cq.data == "create") {
-        renderCustomIngredientCreate(userId, chatId, bot);
+        renderCustomIngredientCreation(userId, chatId, bot);
         stateManager.put(CustomIngredientCreationEnterName{});
         return;
     }
     if (cq.data == "publish") {
-        renderCustomIngredientPublish(userId, chatId, bot, api);
+        renderCustomIngredientPublication(userId, chatId, bot, api);
         stateManager.put(CustomIngredientPublish{});
         return;
     }

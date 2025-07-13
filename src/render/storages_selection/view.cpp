@@ -16,7 +16,7 @@ namespace cookcookhnya::render::select_storages {
 
 using namespace tg_types;
 
-void renderStorageSelect(const std::vector<api::StorageId>& selected_storages,
+void renderStorageSelection(const std::vector<api::StorageId>& selected_storages,
                          UserId userId,
                          ChatId chatId,
                          BotRef bot,

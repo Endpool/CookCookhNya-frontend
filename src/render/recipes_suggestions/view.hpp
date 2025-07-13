@@ -14,7 +14,7 @@ InlineKeyboard constructNavigationsMarkup(size_t offset,
                                           size_t numOfRecipesOnPage,
                                           api::models::recipe::RecipesList recipesList);
 
-void editRecipesSuggestion(const std::vector<api::StorageId>& storageIds,
+void renderRecipesSuggestion(const std::vector<api::StorageId>& storageIds,
                            size_t pageNo,
                            UserId userId,
                            ChatId chatId,

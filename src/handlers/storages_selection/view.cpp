@@ -25,7 +25,7 @@ void handleStoragesSelectionCQ(
     auto selectedStorages = state.storageIds;
 
     if (cq.data == "confirm") {
-        editRecipesSuggestion(selectedStorages, 0, userId, chatId, bot, api);
+        renderRecipesSuggestion(selectedStorages, 0, userId, chatId, bot, api);
         stateManager.put(
             SuggestedRecipeList{.pageNo = 0, .storageIds = std::move(selectedStorages), .fromStorage = false});
         return;
@@ -41,13 +41,13 @@ void handleStoragesSelectionCQ(
         if (cq.data.starts_with("in")) {
             auto it = std::ranges::find(selectedStorages, *storageId);
             selectedStorages.erase(it);
-            renderStorageSelect(selectedStorages, userId, chatId, bot, api);
+            renderStorageSelection(selectedStorages, userId, chatId, bot, api);
             stateManager.put(StoragesSelection{.storageIds = selectedStorages});
             return;
         }
         if (cq.data.starts_with("out")) {
             selectedStorages.push_back(*storageId);
-            renderStorageSelect(selectedStorages, userId, chatId, bot, api);
+            renderStorageSelection(selectedStorages, userId, chatId, bot, api);
             stateManager.put(StoragesSelection{.storageIds = selectedStorages});
             return;
         }

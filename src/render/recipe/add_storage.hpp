@@ -7,7 +7,7 @@
 
 namespace cookcookhnya::render::recipe {
 
-void renderStorageSuggestion(const std::vector<api::StorageId>& storageIdsToAccount,
+void renderStoragesSuggestion(const std::vector<api::StorageId>& storageIdsToAccount,
                              api::RecipeId recipeId,
                              UserId userId,
                              ChatId chatId,
