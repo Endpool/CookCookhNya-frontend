@@ -18,19 +18,20 @@ namespace cookcookhnya::render::recipes_suggestions {
 
 // offset is variable which defines amout of rows before beggining of paging
 // fullKeyBoardSize is self explanatory
-InlineKeyboard constuctNavigationsMarkup(size_t offset,
-                                         size_t fullKeyBoardSize,
-                                         size_t pageNo,
-                                         size_t numOfRecipesOnPage,
-                                         api::models::recipe::RecipesList recipesList) {
+InlineKeyboard constructNavigationsMarkup(size_t offset,
+                                          size_t fullKeyBoardSize,
+                                          size_t pageNo,
+                                          size_t numOfRecipesOnPage,
+                                          api::models::recipe::RecipesList recipesList) {
     const int amountOfRecipes = recipesList.recipesFound;
     int maxPageNum =
         static_cast<int>(std::ceil(static_cast<double>(amountOfRecipes) / static_cast<double>(numOfRecipesOnPage)));
 
     const size_t recipesToShow = std::min(numOfRecipesOnPage, recipesList.recipesPage.size());
-    const bool ifMaxPage = amountOfRecipes - (static_cast<int>(numOfRecipesOnPage) * (static_cast<int>(pageNo) + 1)) <=
-                           0; // + 1 because of the 0-indexing, as comparisson is between num of recipes gotten and that
-                              // will be actually shown
+    const bool ifMaxPage =
+        amountOfRecipes - (static_cast<int>(numOfRecipesOnPage) * (static_cast<int>(pageNo) + 1)) <= 0;
+    // + 1 because of the 0-indexing, as comparisson is between num of recipes gotten and that
+    // will be actually shown
     if (offset + recipesToShow > fullKeyBoardSize) { // IN ERROR HANDLING MAY USE ASSERT
         InlineKeyboard error(0);
         return error;
@@ -97,7 +98,7 @@ constructMarkup(size_t pageNo, size_t numOfRecipesOnPage, api::models::recipe::R
     const size_t arrowsRow = offset + recipesToShow; // 1 because of the offset of add/delete row
 
     InlineKeyboard keyboard =
-        constuctNavigationsMarkup(offset, numOfRows + recipesToShow, pageNo, numOfRecipesOnPage, recipesList);
+        constructNavigationsMarkup(offset, numOfRows + recipesToShow, pageNo, numOfRecipesOnPage, recipesList);
     if (keyboard.empty()) { // If error happened ADD PROPER ERROR HANDLING IF FUNCTION WILL BE REUSED
         return keyboard;
     }
