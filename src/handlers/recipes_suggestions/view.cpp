@@ -51,7 +51,7 @@ void handleSuggestedRecipeListCQ(
         auto recipeId = utils::parseSafe<api::RecipeId>(
             data.substr(data.find(' ', 0) + 1, data.size())); // +1 is to move from space and get pure number
         if (recipeId) {
-            renderRecipeViewAfterAddingStorage(state.storageIds, *recipeId, userId, chatId, bot, api);
+            renderRecipeView(state.storageIds, *recipeId, userId, chatId, bot, api);
             stateManager.put(RecipeView{.storageIds = state.storageIds,
                                         .recipeId = *recipeId,
                                         .fromStorage = state.fromStorage,

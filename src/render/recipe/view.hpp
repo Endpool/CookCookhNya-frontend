@@ -17,12 +17,12 @@ struct textGenInfo {
     bool isAtLeastOneIngredientLack;
 };
 
-void renderRecipeViewAfterAddingStorage(const std::vector<api::StorageId>& storageIds,
-                                        api::RecipeId recipeId,
-                                        UserId userId,
-                                        ChatId chatId,
-                                        BotRef bot,
-                                        ApiClient api);
+void renderRecipeView(const std::vector<api::StorageId>& storageIds,
+                      api::RecipeId recipeId,
+                      UserId userId,
+                      ChatId chatId,
+                      BotRef bot,
+                      ApiClient api);
 // Helper functions
 
 textGenInfo textGen(const std::vector<api::StorageId>& storageIds,

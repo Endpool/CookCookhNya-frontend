@@ -27,7 +27,7 @@ void handleRecipeStorageAdditionCQ(
     }
 
     if (data == "back_from_adding_storages") {
-        renderRecipeViewAfterAddingStorage(state.storageIds, state.recipeId, userId, chatId, bot, api);
+        renderRecipeView(state.storageIds, state.recipeId, userId, chatId, bot, api);
         stateManager.put(RecipeView{.storageIds = state.storageIds,
                                     .recipeId = state.recipeId,
                                     .fromStorage = state.fromStorage,

@@ -7,7 +7,6 @@
 #include "utils.hpp"
 
 #include <algorithm>
-#include <cmath>
 #include <cstddef>
 #include <format>
 #include <string>
@@ -100,12 +99,12 @@ textGenInfo textGen(const std::vector<api::StorageId>& storageIds,
                 isAtLeastOneIngredientLack}; // Many info may be needed from that function to make right markup
 }
 
-void renderRecipeViewAfterAddingStorage(const std::vector<api::StorageId>& storageIds,
-                                        api::RecipeId recipeId,
-                                        UserId userId,
-                                        ChatId chatId,
-                                        BotRef bot,
-                                        ApiClient api) {
+void renderRecipeView(const std::vector<api::StorageId>& storageIds,
+                      api::RecipeId recipeId,
+                      UserId userId,
+                      ChatId chatId,
+                      BotRef bot,
+                      ApiClient api) {
 
     auto recipesApi = api.getRecipesApi();
     auto recipeIngredients = recipesApi.getIngredientsInRecipe(userId, recipeId);

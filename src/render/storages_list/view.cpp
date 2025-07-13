@@ -13,7 +13,6 @@ namespace cookcookhnya::render::storages_list {
 using namespace tg_types;
 
 void renderStorageList(bool toBeEdited, UserId userId, ChatId chatId, BotRef bot, StorageApiRef storageApi) {
-
     auto storages = storageApi.getStoragesList(userId);
 
     const std::size_t buttonRows = storages.empty() ? 2 : ((storages.size() + 1) / 2) + 2; // ceiling
