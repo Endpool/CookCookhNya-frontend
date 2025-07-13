@@ -1,8 +1,8 @@
 #pragma once
 
 #include "backend/models/ingredient.hpp"
-
 #include "render/common.hpp"
+
 #include <cstddef>
 
 namespace cookcookhnya::render::recipe::ingredients {
@@ -16,4 +16,5 @@ void renderRecipeIngredientsSearchEdit(
     BotRef bot);
 
 void renderStorageIngredientsSearch(ChatId chatId, UserId userId, BotRef bot);
+
 } // namespace cookcookhnya::render::recipe::ingredients
