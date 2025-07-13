@@ -2,8 +2,8 @@
 
 #include "render/common.hpp"
 
-namespace cookcookhnya::render::view_custom_ingredients {
+namespace cookcookhnya::render::personal_account::ingredients {
 
 void renderCustomIngredientsList(bool toBeEdited, UserId userId, ChatId chatId, BotRef bot, IngredientsApiRef api);
 
-} // namespace cookcookhnya::render::view_custom_ingredients
+} // namespace cookcookhnya::render::personal_account::ingredients

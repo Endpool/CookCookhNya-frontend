@@ -2,7 +2,7 @@
 
 #include "handlers/common.hpp"
 
-namespace cookcookhnya::handlers::recipes_suggestion {
+namespace cookcookhnya::handlers::recipes_suggestions {
 
 /*
  * @brief  Back: check the number of storages passed to state.
@@ -14,4 +14,4 @@ namespace cookcookhnya::handlers::recipes_suggestion {
 void changePageAndBack(
     SuggestedRecipeList& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api);
 
-} // namespace cookcookhnya::handlers::recipes_suggestion
+} // namespace cookcookhnya::handlers::recipes_suggestions

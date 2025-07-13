@@ -3,7 +3,7 @@
 #include "backend/id_types.hpp"
 #include "render/common.hpp"
 
-namespace cookcookhnya::render::storage::member_list {
+namespace cookcookhnya::render::storage::members {
 
 void renderMemberList(bool toBeEdited,
                       const api::StorageId& storageId,
@@ -12,4 +12,4 @@ void renderMemberList(bool toBeEdited,
                       BotRef bot,
                       StorageApiRef storageApi);
 
-} // namespace cookcookhnya::render::storage::member_list
+} // namespace cookcookhnya::render::storage::members

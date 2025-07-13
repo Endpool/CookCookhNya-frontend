@@ -16,7 +16,7 @@
 #include <vector>
 
 namespace cookcookhnya::render::recipe {
-using namespace recipe_view;
+
 std::vector<api::StorageId> storagesToShow(const std::vector<api::models::recipe::IngredientInRecipe>& ingredients,
                                            const std::vector<api::StorageId>& storageIdsToAccount) {
     std::vector<api::StorageId> storageIdsToShow;

@@ -17,7 +17,7 @@ target_sources(main PRIVATE
     src/handlers/recipe/add_storage.cpp
     src/handlers/recipe/view.cpp
 
-    src/handlers/recipes_suggestion/view.cpp
+    src/handlers/recipes_suggestions/view.cpp
 
     src/handlers/shopping_list/create.cpp
     src/handlers/shopping_list/view.cpp

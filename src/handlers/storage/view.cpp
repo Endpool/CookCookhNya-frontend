@@ -1,10 +1,10 @@
 #include "view.hpp"
 
 #include "handlers/common.hpp"
-#include "render/recipes_suggestion/suggest.hpp"
-#include "render/storage_list/view.hpp"
-#include "render/storage_view/ingredients/view.hpp"
-#include "render/storage_view/members/view.hpp"
+#include "render/recipes_suggestions/view.hpp"
+#include "render/storage/ingredients/view.hpp"
+#include "render/storage/members/view.hpp"
+#include "render/storages_list/view.hpp"
 #include "states.hpp"
 
 #include <iterator>
@@ -13,9 +13,9 @@
 namespace cookcookhnya::handlers::storage {
 
 using namespace render::storage::ingredients;
-using namespace render::storage::member_list;
+using namespace render::storage::members;
 using namespace render::storages_list;
-using namespace render::recipes_suggestion;
+using namespace render::recipes_suggestions;
 
 void storageViewButtonCallback(
     StorageView& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {

@@ -4,8 +4,8 @@
 #include "backend/models/ingredient.hpp"
 #include "handlers/common.hpp"
 #include "message_tracker.hpp"
-#include "render/storage_view/ingredients/view.hpp"
-#include "render/storage_view/view.hpp"
+#include "render/storage/ingredients/view.hpp"
+#include "render/storage/view.hpp"
 #include "utils.hpp"
 
 #include <algorithm>
@@ -18,7 +18,6 @@ namespace cookcookhnya::handlers::storage::ingredients {
 using namespace render::storage;
 using namespace render::storage::ingredients;
 using namespace api::models::ingredient;
-using namespace tg_types;
 
 void storageIngredientsSearchButtonCallback(
     StorageIngredientsList& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {

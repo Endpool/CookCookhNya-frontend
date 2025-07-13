@@ -1,15 +1,14 @@
 #include "view.hpp"
 
 #include "handlers/common.hpp"
-#include "render/personal_account/ingredients/create.hpp"
-#include "render/personal_account/ingredients/publish.hpp"
+#include "render/personal_account/ingredients_list/create.hpp"
+#include "render/personal_account/ingredients_list/publish.hpp"
 #include "render/personal_account/view.hpp"
 
 #include "states.hpp"
 
 namespace cookcookhnya::handlers::personal_account::ingredients {
 
-using namespace render::create_custom_ingredient;
 using namespace render::personal_account::ingredients;
 using namespace render::personal_account;
 

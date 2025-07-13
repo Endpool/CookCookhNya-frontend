@@ -10,7 +10,7 @@
 #include <string>
 #include <utility>
 
-namespace cookcookhnya::render::create_custom_ingredient {
+namespace cookcookhnya::render::personal_account::ingredients {
 
 void renderCustomIngredientCreate(UserId userId, ChatId chatId, BotRef bot) {
     InlineKeyboard keyboard(1);
@@ -48,4 +48,4 @@ void renderCustomIngredientConfirm(
     message::addMessageId(userId, message->messageId);
 }
 
-} // namespace cookcookhnya::render::create_custom_ingredient
+} // namespace cookcookhnya::render::personal_account::ingredients

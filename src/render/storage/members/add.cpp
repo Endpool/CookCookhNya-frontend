@@ -11,7 +11,7 @@
 #include <string>
 #include <utility>
 
-namespace cookcookhnya::render::storage::add_member {
+namespace cookcookhnya::render::storage::members {
 
 void renderMemberAdditionPrompt(
     const api::StorageId& storageId, UserId userId, ChatId chatId, BotRef bot, StorageApiRef storageApi) {
@@ -55,4 +55,4 @@ void addShareLinkButton(
         bot.editMessageText(text, chatId, *messageId, makeKeyboardMarkup(std::move(keyboard)));
 };
 
-} // namespace cookcookhnya::render::storage::add_member
+} // namespace cookcookhnya::render::storage::members

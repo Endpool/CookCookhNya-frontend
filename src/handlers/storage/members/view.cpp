@@ -1,14 +1,13 @@
 #include "view.hpp"
 
 #include "handlers/common.hpp"
-#include "render/storage_view/members/add.hpp"
-#include "render/storage_view/members/delete.hpp"
-#include "render/storage_view/view.hpp"
+#include "render/storage/members/add.hpp"
+#include "render/storage/members/delete.hpp"
+#include "render/storage/view.hpp"
 
-namespace cookcookhnya::handlers::storage_members {
+namespace cookcookhnya::handlers::storage::members {
 
-using namespace render::storage::add_member;
-using namespace render::storage::delete_member;
+using namespace render::storage::members;
 using namespace render::storage;
 
 void storageMemberViewButtonCallback(
@@ -28,4 +27,4 @@ void storageMemberViewButtonCallback(
     }
 };
 
-} // namespace cookcookhnya::handlers::storage_members
+} // namespace cookcookhnya::handlers::storage::members

@@ -11,7 +11,7 @@
 #include <string>
 #include <utility>
 
-namespace cookcookhnya::render::view_custom_ingredients {
+namespace cookcookhnya::render::personal_account::ingredients {
 
 using namespace tg_types;
 
@@ -50,4 +50,4 @@ void renderCustomIngredientsList(bool toBeEdited, UserId userId, ChatId chatId, 
     }
 }
 
-} // namespace cookcookhnya::render::view_custom_ingredients
+} // namespace cookcookhnya::render::personal_account::ingredients

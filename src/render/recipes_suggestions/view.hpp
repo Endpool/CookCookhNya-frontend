@@ -2,7 +2,7 @@
 
 #include "render/common.hpp"
 
-namespace cookcookhnya::render::recipes_suggestion {
+namespace cookcookhnya::render::recipes_suggestions {
 using namespace tg_types;
 InlineKeyboard constructMarkup(size_t pageNo, size_t numOfRecipesOnPage, api::models::recipe::RecipesList& recipesList);
 InlineKeyboard constuctNavigationsMarkup(size_t offset,
@@ -17,4 +17,4 @@ void editRecipesSuggestion(const std::vector<api::StorageId>& storageIds,
                            BotRef bot,
                            RecipesApiRef recipesApi);
 
-} // namespace cookcookhnya::render::recipes_suggestion
+} // namespace cookcookhnya::render::recipes_suggestions

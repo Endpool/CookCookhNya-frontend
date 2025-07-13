@@ -4,18 +4,18 @@
 #include "backend/id_types.hpp"
 #include "handlers/common.hpp"
 #include "render/personal_account/view.hpp"
-#include "render/recipes_suggestion/storage_selection/select.hpp"
-#include "render/recipes_suggestion/suggest.hpp"
+#include "render/recipes_suggestions/view.hpp"
 #include "render/shopping_list/view.hpp"
-#include "render/storage_list/view.hpp"
-#include <iterator>
+#include "render/storages_list/view.hpp"
+#include "render/storages_selection/view.hpp"
 
+#include <iterator>
 #include <vector>
 
 namespace cookcookhnya::handlers::main_menu {
 
 using namespace render::storages_list;
-using namespace render::recipes_suggestion;
+using namespace render::recipes_suggestions;
 using namespace render::select_storages;
 using namespace render::shopping_list;
 using namespace render::personal_account;

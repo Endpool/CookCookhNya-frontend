@@ -4,9 +4,8 @@
 #include "backend/models/ingredient.hpp"
 #include "handlers/common.hpp"
 #include "message_tracker.hpp"
-#include "render/custom_recipes_list/custom_recipe/search.hpp" // REUSED THE SAME RENDER!!!
-#include "render/custom_recipes_list/custom_recipe/view.hpp"
-
+#include "render/personal_account/recipes_list/recipe/search.hpp"
+#include "render/personal_account/recipes_list/recipe/view.hpp"
 #include "utils.hpp"
 
 #include <algorithm>
@@ -18,7 +17,7 @@ namespace cookcookhnya::handlers::personal_account::recipes {
 
 using namespace api::models::ingredient;
 using namespace render::recipe::ingredients;
-using namespace render::custom_recipe_view;
+using namespace render::personal_account::recipes;
 
 void customRecipeIngredientsSearchButtonCallback(
     CustomRecipeIngredientsSearch& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {

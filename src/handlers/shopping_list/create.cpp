@@ -2,7 +2,7 @@
 
 #include "backend/id_types.hpp"
 #include "handlers/common.hpp"
-#include "render/recipes_suggestion/recipe/view.hpp"
+#include "render/recipe/view.hpp"
 #include "render/shopping_list/create.hpp"
 #include "utils.hpp"
 

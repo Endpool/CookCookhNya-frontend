@@ -1,15 +1,17 @@
 #include "view.hpp"
+
 #include "backend/id_types.hpp"
 #include "backend/models/recipe.hpp"
 #include "message_tracker.hpp"
 #include "render/common.hpp"
 #include "utils.hpp"
+
 #include <cstddef>
 #include <format>
 #include <string>
 #include <utility>
 
-namespace cookcookhnya::render::custom_recipe_view {
+namespace cookcookhnya::render::personal_account::recipes {
 
 void renderCustomRecipe(bool toBeEdited,
                         UserId userId,
@@ -44,4 +46,4 @@ void renderCustomRecipe(bool toBeEdited,
         message::addMessageId(userId, message->messageId);
     }
 }
-} // namespace cookcookhnya::render::custom_recipe_view
+} // namespace cookcookhnya::render::personal_account::recipes

@@ -3,15 +3,14 @@
 #include "backend/models/ingredient.hpp"
 #include "handlers/common.hpp"
 #include "message_tracker.hpp"
-#include "render/personal_account/ingredients/create.hpp"
-#include "render/personal_account/ingredients/view.hpp"
+#include "render/personal_account/ingredients_list/create.hpp"
+#include "render/personal_account/ingredients_list/view.hpp"
 #include "states.hpp"
 #include "utils.hpp"
 
 namespace cookcookhnya::handlers::personal_account::ingredients {
 
-using namespace render::view_custom_ingredients;
-using namespace render::create_custom_ingredient;
+using namespace render::personal_account::ingredients;
 
 void customIngredientEnterName(CustomIngredientCreationEnterName& /*unused*/,
                                MessageRef m,

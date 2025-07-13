@@ -1,15 +1,15 @@
 #include "view.hpp"
 
 #include "handlers/common.hpp"
-#include "render/recipes_suggestion/recipe/add_storage.hpp"
-#include "render/recipes_suggestion/suggest.hpp"
+#include "render/recipe/add_storage.hpp"
+#include "render/recipes_suggestions/view.hpp"
 #include "render/shopping_list/create.hpp"
 
 #include <string>
 
 namespace cookcookhnya::handlers::recipe {
 
-using namespace render::recipes_suggestion;
+using namespace render::recipes_suggestions;
 using namespace render::shopping_list;
 using namespace render::recipe;
 

@@ -4,9 +4,9 @@
 #include "backend/id_types.hpp"
 #include "handlers/common.hpp"
 #include "render/main_menu/view.hpp"
-#include "render/storage_list/create.hpp"
-#include "render/storage_list/delete.hpp"
-#include "render/storage_view/view.hpp"
+#include "render/storage/view.hpp"
+#include "render/storages_list/create.hpp"
+#include "render/storages_list/delete.hpp"
 #include "utils.hpp"
 
 #include <optional>

@@ -2,7 +2,7 @@
 
 #include "backend/id_types.hpp"
 #include "handlers/common.hpp"
-#include "render/storage_list/view.hpp"
+#include "render/storages_list/view.hpp"
 #include "utils.hpp"
 
 namespace cookcookhnya::handlers::storages_list {

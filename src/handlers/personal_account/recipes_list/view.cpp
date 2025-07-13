@@ -2,12 +2,13 @@
 
 #include "backend/id_types.hpp"
 #include "handlers/common.hpp"
-#include "render/custom_recipes_list/create.hpp"
-#include "render/custom_recipes_list/custom_recipe/view.hpp"
-#include "render/custom_recipes_list/view.hpp"
+#include "render/personal_account/recipes_list/create.hpp"
+#include "render/personal_account/recipes_list/recipe/view.hpp"
+#include "render/personal_account/recipes_list/view.hpp"
 #include "render/personal_account/view.hpp"
 #include "states.hpp"
 #include "utils.hpp"
+
 #include <string>
 
 namespace cookcookhnya::handlers::personal_account::recipes {
@@ -15,8 +16,6 @@ namespace cookcookhnya::handlers::personal_account::recipes {
 void customRecipeList(CustomRecipesList& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
     using namespace render::personal_account;
     using namespace render::personal_account::recipes;
-    using namespace render::personal_account::recipes;
-    using namespace render::custom_recipe_view;
 
     bot.answerCallbackQuery(cq.id);
 

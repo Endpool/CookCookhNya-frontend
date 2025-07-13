@@ -1,14 +1,13 @@
 #include "delete.hpp"
 
 #include "handlers/common.hpp"
-#include "render/common.hpp"
-#include "render/storage_view/members/view.hpp"
+#include "render/storage/members/view.hpp"
+#include "tg_types.hpp"
 #include "utils.hpp"
 
-namespace cookcookhnya::handlers::storages_list_member {
+namespace cookcookhnya::handlers::storage::members {
 
-using namespace render::storage::member_list;
-using namespace render;
+using namespace render::storage::members;
 
 void deleteMember(
     MemberDeletion& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, StorageApiRef storageApi) {
@@ -18,7 +17,7 @@ void deleteMember(
     auto userId = cq.from->id;
 
     if (cq.data.starts_with("mem_")) {
-        auto memberId = utils::parseSafe<UserId>(cq.data.substr(4));
+        auto memberId = utils::parseSafe<tg_types::UserId>(cq.data.substr(4));
         if (memberId) {
             storageApi.deleteMember(userId, state.storageId, *memberId);
         }
@@ -27,4 +26,4 @@ void deleteMember(
     stateManager.put(StorageMemberView{state.storageId});
 };
 
-} // namespace cookcookhnya::handlers::storages_list_member
+} // namespace cookcookhnya::handlers::storage::members

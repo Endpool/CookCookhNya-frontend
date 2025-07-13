@@ -19,7 +19,7 @@
 #include "recipe/add_storage.hpp"
 #include "recipe/view.hpp"
 
-#include "recipes_suggestion/view.hpp"
+#include "recipes_suggestions/view.hpp"
 
 #include "shopping_list/create.hpp"
 #include "shopping_list/view.hpp"
@@ -52,7 +52,7 @@ using namespace personal_account;
 using namespace personal_account::ingredients;
 using namespace personal_account::recipes;
 using namespace recipe;
-using namespace recipes_suggestion;
+using namespace recipes_suggestions;
 using namespace shopping_list;
 using namespace storage;
 using namespace storage::ingredients;

@@ -3,7 +3,7 @@
 #include "backend/id_types.hpp"
 #include "render/common.hpp"
 
-namespace cookcookhnya::render::storage::add_member {
+namespace cookcookhnya::render::storage::members {
 
 void renderMemberAdditionPrompt(
     const api::StorageId& storageId, UserId userId, ChatId chatId, BotRef bot, StorageApiRef storageApi);
@@ -11,4 +11,4 @@ void renderMemberAdditionPrompt(
 void addShareLinkButton(
     const api::StorageId& storageId, UserId userId, ChatId chatId, BotRef bot, StorageApiRef storageApi);
 
-} // namespace cookcookhnya::render::storage::add_member
+} // namespace cookcookhnya::render::storage::members

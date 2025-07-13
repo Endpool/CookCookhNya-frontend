@@ -2,14 +2,13 @@
 
 #include "backend/id_types.hpp"
 #include "handlers/common.hpp"
-#include "render/personal_account/ingredients/view.hpp"
-
+#include "render/personal_account/ingredients_list/view.hpp"
 #include "states.hpp"
 #include "utils.hpp"
 
 namespace cookcookhnya::handlers::personal_account::ingredients {
 
-using namespace render::view_custom_ingredients;
+using namespace render::personal_account::ingredients;
 
 void customIngredientPublish(
     CustomIngredientPublish& /*unused*/, CallbackQueryRef cq, BotRef& bot, SMRef stateManager, IngredientsApiRef api) {

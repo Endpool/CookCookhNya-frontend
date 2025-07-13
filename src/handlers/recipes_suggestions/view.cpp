@@ -3,20 +3,19 @@
 #include "backend/id_types.hpp"
 #include "handlers/common.hpp"
 #include "render/main_menu/view.hpp"
-#include "render/recipes_suggestion/recipe/view.hpp"
-#include "render/recipes_suggestion/storage_selection/select.hpp"
-#include "render/recipes_suggestion/suggest.hpp"
-#include "render/storage_view/view.hpp"
-
+#include "render/recipe/view.hpp"
+#include "render/recipes_suggestions/view.hpp"
+#include "render/storage/view.hpp"
+#include "render/storages_selection/view.hpp"
 #include "states.hpp"
 #include "utils.hpp"
 
 #include <string>
 #include <utility>
 
-namespace cookcookhnya::handlers::recipes_suggestion {
+namespace cookcookhnya::handlers::recipes_suggestions {
 
-using namespace render::recipes_suggestion;
+using namespace render::recipes_suggestions;
 using namespace render::select_storages;
 using namespace render::storage;
 using namespace render::recipe;
@@ -73,4 +72,4 @@ void changePageAndBack(
     }
 }
 
-} // namespace cookcookhnya::handlers::recipes_suggestion
+} // namespace cookcookhnya::handlers::recipes_suggestions

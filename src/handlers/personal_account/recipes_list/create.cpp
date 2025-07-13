@@ -1,12 +1,11 @@
 #include "create.hpp"
 
 #include "handlers/common.hpp"
-#include "render/custom_recipes_list/custom_recipe/view.hpp"
-#include "render/custom_recipes_list/view.hpp"
+#include "render/personal_account/recipes_list/recipe/view.hpp"
+#include "render/personal_account/recipes_list/view.hpp"
 
 namespace cookcookhnya::handlers::personal_account::recipes {
 
-using namespace render::custom_recipe_view;
 using namespace render::personal_account::recipes;
 
 void createRecipe(CreateCustomRecipe& state, MessageRef m, BotRef bot, SMRef stateManager, RecipesApiRef recipeApi) {

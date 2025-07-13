@@ -11,7 +11,7 @@
 #include <utility>
 #include <vector>
 
-namespace cookcookhnya::render::storage::delete_member {
+namespace cookcookhnya::render::storage::members {
 
 void renderMemberDeletionPrompt(
     const api::StorageId& storageId, UserId userId, ChatId chatId, BotRef bot, StorageApiRef storageApi) {
@@ -35,4 +35,4 @@ void renderMemberDeletionPrompt(
         bot.editMessageText(text, chatId, *messageId, makeKeyboardMarkup(std::move(keyboard)));
 };
 
-} // namespace cookcookhnya::render::storage::delete_member
+} // namespace cookcookhnya::render::storage::members

@@ -3,8 +3,9 @@
 #include "backend/models/storage.hpp"
 #include "handlers/common.hpp"
 #include "message_tracker.hpp"
-#include "render/storage_list/view.hpp"
+#include "render/storages_list/view.hpp"
 #include "utils.hpp"
+
 #include <optional>
 
 namespace cookcookhnya::handlers::storages_list {

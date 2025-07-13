@@ -1,8 +1,8 @@
 #include "view.hpp"
 
 #include "handlers/common.hpp"
-#include "render/custom_recipes_list/custom_recipe/search.hpp"
-#include "render/custom_recipes_list/view.hpp"
+#include "render/personal_account/recipes_list/recipe/search.hpp"
+#include "render/personal_account/recipes_list/view.hpp"
 
 #include <string>
 
