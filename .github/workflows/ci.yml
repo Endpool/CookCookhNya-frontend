@@ -73,7 +73,7 @@ jobs:
             CACHE="{}"
           fi
           # Create temporary file for updated cache
-          NEW_CACHE=$(mktemp)
+          NEW_CACHE=$(mktemp /tmp/clang-tidy-cache.XXXXXX.json)
           echo "{}" > "$NEW_CACHE"
           # Find all source files
           mapfile -t FILES < <(find src -type f \( -name '*.hpp' -or -name '*.cpp' \))
@@ -86,15 +86,17 @@ jobs:
             CACHED_HASH=$(echo "$CACHE" | jq -r ".\"$FILE\" // \"\"")
             if [ "$HASH" = "$CACHED_HASH" ]; then
               echo "Skipping unchanged file: $FILE"
-              # Copy hash to new cache
-              jq --arg file "$FILE" --arg hash "$HASH" '.[$file] = $hash' "$NEW_CACHE" > tmp.json && mv tmp.json "$NEW_CACHE"
+              # Atomically update cache
+              flock "$NEW_CACHE" jq --arg file "$FILE" --arg hash "$HASH" '.[$file] = $hash' "$NEW_CACHE" > "$NEW_CACHE.tmp"
+              mv "$NEW_CACHE.tmp" "$NEW_CACHE"
               return 0
             fi
             echo "Linting file: $FILE"
             # Run clang-tidy without treating warnings as errors
             if clang-tidy-19 "$FILE" --quiet -p build/Release; then
-              # Update cache even if there are warnings
-              jq --arg file "$FILE" --arg hash "$HASH" '.[$file] = $hash' "$NEW_CACHE" > tmp.json && mv tmp.json "$NEW_CACHE"
+              # Atomically update cache
+              flock "$NEW_CACHE" jq --arg file "$FILE" --arg hash "$HASH" '.[$file] = $hash' "$NEW_CACHE" > "$NEW_CACHE.tmp"
+              mv "$NEW_CACHE.tmp" "$NEW_CACHE"
               return 0
             else
               return 1
