@@ -7,7 +7,7 @@
 #include "states.hpp"
 #include "utils.hpp"
 
-namespace cookcookhnya::handlers::publish_custom_ingredients {
+namespace cookcookhnya::handlers::personal_account::ingredients {
 
 using namespace render::view_custom_ingredients;
 
@@ -24,4 +24,4 @@ void customIngredientPublish(
     renderCustomIngredientsList(true, userId, chatId, bot, api);
     stateManager.put(CustomIngredientsList{});
 }
-} // namespace cookcookhnya::handlers::publish_custom_ingredients
+} // namespace cookcookhnya::handlers::personal_account::ingredients

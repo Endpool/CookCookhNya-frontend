@@ -14,7 +14,7 @@
 #include <functional>
 #include <utility>
 
-namespace cookcookhnya::handlers::recipe::ingredients {
+namespace cookcookhnya::handlers::personal_account::recipes {
 
 using namespace api::models::ingredient;
 using namespace render::recipe::ingredients;
@@ -74,4 +74,4 @@ void customRecipeIngredientsSearchInlineQueryCallback(CustomRecipeIngredientsSea
     bot.answerInlineQuery(iq.id, {}, 0);
 }
 
-} // namespace cookcookhnya::handlers::recipe::ingredients
+} // namespace cookcookhnya::handlers::personal_account::recipes

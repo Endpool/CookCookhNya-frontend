@@ -7,7 +7,7 @@
 #include <string>
 #include <vector>
 
-namespace cookcookhnya::render::recipe_view {
+namespace cookcookhnya::render::recipe {
 
 struct textGenInfo {
     std::string text;
@@ -30,4 +30,4 @@ textGenInfo textGen(const std::vector<api::StorageId>& storageIds,
                     UserId userId,
                     ApiClient api);
 
-} // namespace cookcookhnya::render::recipe_view
+} // namespace cookcookhnya::render::recipe

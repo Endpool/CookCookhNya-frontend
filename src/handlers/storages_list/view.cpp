@@ -11,7 +11,7 @@
 
 #include <optional>
 
-namespace cookcookhnya::handlers::storage_list_view {
+namespace cookcookhnya::handlers::storages_list {
 
 using namespace render::main_menu;
 using namespace render::create_storage;
@@ -46,4 +46,4 @@ void storageListButtonCallback(
     }
 }
 
-} // namespace cookcookhnya::handlers::storage_list_view
+} // namespace cookcookhnya::handlers::storages_list

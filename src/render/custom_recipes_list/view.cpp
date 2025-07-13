@@ -11,7 +11,7 @@
 #include <string>
 #include <vector>
 
-namespace cookcookhnya::render::custom_recipes_list {
+namespace cookcookhnya::render::personal_account::recipes {
 
 // offset is variable which defines amout of rows before beggining of paging
 // fullKeyBoardSize is self explanatory
@@ -142,4 +142,4 @@ void renderCustomRecipesList(size_t pageNo, UserId userId, ChatId chatId, BotRef
                             makeKeyboardMarkup(constructMarkup(pageNo, numOfRecipesOnPage, recipesList)));
     }
 }
-} // namespace cookcookhnya::render::custom_recipes_list
+} // namespace cookcookhnya::render::personal_account::recipes

@@ -2,7 +2,7 @@
 
 #include "handlers/common.hpp"
 
-namespace cookcookhnya::handlers::create_custom_ingredients {
+namespace cookcookhnya::handlers::personal_account::ingredients {
 
 void customIngredientEnterName(CustomIngredientCreationEnterName& /*unused*/,
                                MessageRef m,
@@ -22,4 +22,4 @@ void customIngredientConfirmation(CustomIngredientConfirmation& /*unused*/,
                                   SMRef stateManager,
                                   IngredientsApiRef api);
 
-} // namespace cookcookhnya::handlers::create_custom_ingredients
+} // namespace cookcookhnya::handlers::personal_account::ingredients

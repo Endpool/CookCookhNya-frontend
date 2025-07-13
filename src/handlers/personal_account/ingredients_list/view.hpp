@@ -2,9 +2,9 @@
 
 #include "handlers/common.hpp"
 
-namespace cookcookhnya::handlers::custom_ingredients_view {
+namespace cookcookhnya::handlers::personal_account::ingredients {
 
 void customIngredientsList(
     CustomIngredientsList& /*unused*/, CallbackQueryRef cq, BotRef& bot, SMRef stateManager, ApiClientRef api);
 
-} // namespace cookcookhnya::handlers::custom_ingredients_view
+} // namespace cookcookhnya::handlers::personal_account::ingredients

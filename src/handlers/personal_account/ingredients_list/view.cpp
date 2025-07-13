@@ -7,10 +7,10 @@
 
 #include "states.hpp"
 
-namespace cookcookhnya::handlers::custom_ingredients_view {
+namespace cookcookhnya::handlers::personal_account::ingredients {
 
 using namespace render::create_custom_ingredient;
-using namespace render::publish_custom_ingredients;
+using namespace render::personal_account::ingredients;
 using namespace render::personal_account;
 
 void customIngredientsList(
@@ -34,4 +34,4 @@ void customIngredientsList(
         return;
     }
 }
-} // namespace cookcookhnya::handlers::custom_ingredients_view
+} // namespace cookcookhnya::handlers::personal_account::ingredients

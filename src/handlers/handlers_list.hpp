@@ -2,68 +2,63 @@
 
 // Handler callbacks
 #include "initial/start.hpp"
+
 #include "main_menu/view.hpp"
 
-#include "personal_account/ingredients/create.hpp"
-#include "personal_account/ingredients/publish.hpp"
-#include "personal_account/ingredients/view.hpp"
-#include "personal_account/view.hpp"
-#include "recipes_suggestion/recipe/add_storage.hpp"
+#include "personal_account/ingredients_list/create.hpp"
+#include "personal_account/ingredients_list/publish.hpp"
+#include "personal_account/ingredients_list/view.hpp"
 
-#include "recipes_suggestion/recipe/view.hpp"
-#include "recipes_suggestion/storage_selection/select.hpp"
-#include "recipes_suggestion/suggest.hpp"
+#include "personal_account/recipes_list/create.hpp"
+#include "personal_account/recipes_list/recipe/search.hpp"
+#include "personal_account/recipes_list/recipe/view.hpp"
+#include "personal_account/recipes_list/view.hpp"
+
+#include "personal_account/view.hpp"
+
+#include "recipe/add_storage.hpp"
+#include "recipe/view.hpp"
+
+#include "recipes_suggestion/view.hpp"
+
 #include "shopping_list/create.hpp"
 #include "shopping_list/view.hpp"
-#include "storage_list/create.hpp"
-#include "storage_list/delete.hpp"
-#include "storage_list/view.hpp"
 
-#include "storage_view/ingredients/view.hpp"
+#include "storage/ingredients/view.hpp"
 
-#include "storage_view/members/add.hpp"
-#include "storage_view/members/delete.hpp"
-#include "storage_view/members/view.hpp"
-#include "storage_view/view.hpp"
+#include "storage/members/add.hpp"
+#include "storage/members/delete.hpp"
+#include "storage/members/view.hpp"
 
-#include "custom_recipes_list/create.hpp"
-#include "custom_recipes_list/custom_recipe/search.hpp"
-#include "custom_recipes_list/custom_recipe/view.hpp"
-#include "custom_recipes_list/view.hpp"
+#include "storage/view.hpp"
+
+#include "storages_list/create.hpp"
+#include "storages_list/delete.hpp"
+#include "storages_list/view.hpp"
+
+#include "storages_selection/view.hpp"
 
 #include "handlers/common.hpp"
 
-#include <boost/mpl/aux_/na_fwd.hpp>
 #include <tg_stater/handler/event.hpp>
 #include <tg_stater/handler/handler.hpp>
 #include <tg_stater/handler/type.hpp>
 
 namespace cookcookhnya::handlers {
 
-using namespace init;
-using namespace main_menu_view;
-using namespace personal_account_view;
-using namespace create_custom_ingredients;
-using namespace publish_custom_ingredients;
-using namespace custom_ingredients_view;
-using namespace storage_create;
-using namespace storage_delete;
-using namespace storage_list_view;
-using namespace storage_view;
-using namespace storage_view_members;
-using namespace storage_add_member;
-using namespace storage_delete_member;
-using namespace storage::ingredients;
-using namespace storages_select;
+using namespace initial;
+using namespace main_menu;
+using namespace personal_account;
+using namespace personal_account::ingredients;
+using namespace personal_account::recipes;
+using namespace recipe;
 using namespace recipes_suggestion;
-using namespace recipe_view;
-using namespace shopping_list_create;
 using namespace shopping_list;
-using namespace custom_recipes_list;
-using namespace recipe_view;
-using namespace create_custom_recipe;
-using namespace recipe::ingredients;
-using namespace recipe_add_storage;
+using namespace storage;
+using namespace storage::ingredients;
+using namespace storage::members;
+using namespace storages_list;
+using namespace storages_selection;
 
 using namespace tg_stater;
 

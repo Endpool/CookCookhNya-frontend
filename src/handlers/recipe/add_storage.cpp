@@ -1,11 +1,13 @@
 #include "add_storage.hpp"
+
 #include "backend/id_types.hpp"
 #include "render/recipes_suggestion/recipe/add_storage.hpp"
 #include "render/recipes_suggestion/recipe/view.hpp"
 #include "utils.hpp"
-namespace cookcookhnya::handlers::recipe_add_storage {
-using namespace render::recipe_add_storage;
-using namespace render::recipe_view;
+
+namespace cookcookhnya::handlers::recipe {
+
+using namespace render::recipe;
 
 void handleRecipeAddStorage(
     RecipeAddStoradge& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
@@ -35,4 +37,4 @@ void handleRecipeAddStorage(
     }
 }
 
-} // namespace cookcookhnya::handlers::recipe_add_storage
+} // namespace cookcookhnya::handlers::recipe

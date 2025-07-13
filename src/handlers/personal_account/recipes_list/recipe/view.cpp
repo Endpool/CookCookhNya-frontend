@@ -3,11 +3,12 @@
 #include "handlers/common.hpp"
 #include "render/custom_recipes_list/custom_recipe/search.hpp"
 #include "render/custom_recipes_list/view.hpp"
+
 #include <string>
 
-namespace cookcookhnya::handlers::recipe_view {
+namespace cookcookhnya::handlers::personal_account::recipes {
 
-using namespace render::custom_recipes_list;
+using namespace render::personal_account::recipes;
 using namespace render::recipe::ingredients;
 
 void handleCustomRecipeView(
@@ -42,4 +43,4 @@ void handleCustomRecipeView(
     }
 }
 
-} // namespace cookcookhnya::handlers::recipe_view
+} // namespace cookcookhnya::handlers::personal_account::recipes

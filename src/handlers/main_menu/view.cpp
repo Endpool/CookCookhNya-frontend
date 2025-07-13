@@ -12,9 +12,9 @@
 
 #include <vector>
 
-namespace cookcookhnya::handlers::main_menu_view {
+namespace cookcookhnya::handlers::main_menu {
 
-using namespace render::storage_list;
+using namespace render::storages_list;
 using namespace render::recipes_suggestion;
 using namespace render::select_storages;
 using namespace render::shopping_list;
@@ -55,4 +55,4 @@ void mainMenuHandler(MainMenu& /*unused*/, CallbackQueryRef cq, BotRef& bot, SMR
     }
 }
 
-} // namespace cookcookhnya::handlers::main_menu_view
+} // namespace cookcookhnya::handlers::main_menu

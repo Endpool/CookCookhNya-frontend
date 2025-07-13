@@ -15,7 +15,7 @@
 #include <utility>
 #include <vector>
 
-namespace cookcookhnya::render::recipe_add_storage {
+namespace cookcookhnya::render::recipe {
 using namespace recipe_view;
 std::vector<api::StorageId> storagesToShow(const std::vector<api::models::recipe::IngredientInRecipe>& ingredients,
                                            const std::vector<api::StorageId>& storageIdsToAccount) {
@@ -118,4 +118,4 @@ void renderStorageSuggestion(const std::vector<api::StorageId>& storageIdsToAcco
         bot.editMessageText(toPrint, chatId, *messageId, "", "", nullptr, makeKeyboardMarkup(std::move(keyboard)));
     }
 }
-} // namespace cookcookhnya::render::recipe_add_storage
+} // namespace cookcookhnya::render::recipe

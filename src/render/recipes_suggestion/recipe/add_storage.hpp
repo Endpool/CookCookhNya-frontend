@@ -5,7 +5,7 @@
 
 #include <vector>
 
-namespace cookcookhnya::render::recipe_add_storage {
+namespace cookcookhnya::render::recipe {
 
 void renderStorageSuggestion(const std::vector<api::StorageId>& storageIdsToAccount,
                              api::RecipeId recipeId,
@@ -16,4 +16,4 @@ void renderStorageSuggestion(const std::vector<api::StorageId>& storageIdsToAcco
 
 std::vector<api::StorageId> storagesToShow(const std::vector<api::models::recipe::IngredientInRecipe>& ingredients,
                                            const std::vector<api::StorageId>& storageIdsToAccount);
-} // namespace cookcookhnya::render::recipe_add_storage
+} // namespace cookcookhnya::render::recipe

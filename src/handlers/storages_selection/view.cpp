@@ -1,4 +1,4 @@
-#include "select.hpp"
+#include "select_storage.hpp"
 
 #include "backend/id_types.hpp"
 #include "handlers/common.hpp"
@@ -11,7 +11,7 @@
 #include <utility>
 #include <vector>
 
-namespace cookcookhnya::handlers::storages_select {
+namespace cookcookhnya::handlers::storages_selection {
 
 using namespace render::recipes_suggestion;
 using namespace render::select_storages;
@@ -52,4 +52,4 @@ void selectStorages(StorageSelection& state, CallbackQueryRef cq, BotRef bot, SM
         }
     }
 }
-} // namespace cookcookhnya::handlers::storages_select
+} // namespace cookcookhnya::handlers::storages_selection

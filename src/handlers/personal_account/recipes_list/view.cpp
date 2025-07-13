@@ -10,12 +10,12 @@
 #include "utils.hpp"
 #include <string>
 
-namespace cookcookhnya::handlers::custom_recipes_list {
+namespace cookcookhnya::handlers::personal_account::recipes {
 
 void customRecipeList(CustomRecipesList& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
     using namespace render::personal_account;
-    using namespace render::custom_recipes_list;
-    using namespace render::create_custom_recipe;
+    using namespace render::personal_account::recipes;
+    using namespace render::personal_account::recipes;
     using namespace render::custom_recipe_view;
 
     bot.answerCallbackQuery(cq.id);
@@ -57,4 +57,4 @@ void customRecipeList(CustomRecipesList& state, CallbackQueryRef cq, BotRef bot,
     }
 }
 
-} // namespace cookcookhnya::handlers::custom_recipes_list
+} // namespace cookcookhnya::handlers::personal_account::recipes

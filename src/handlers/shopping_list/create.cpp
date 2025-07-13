@@ -11,7 +11,7 @@
 namespace cookcookhnya::handlers::shopping_list {
 
 using namespace render::shopping_list;
-using namespace render::recipe_view;
+using namespace render::recipe;
 
 void handleProductListSubmission(
     ShoppingListCreation& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {

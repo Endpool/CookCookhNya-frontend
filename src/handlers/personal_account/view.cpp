@@ -7,9 +7,9 @@
 
 #include <string>
 
-namespace cookcookhnya::handlers::personal_account_view {
+namespace cookcookhnya::handlers::personal_account {
 
-using namespace render::custom_recipes_list;
+using namespace render::personal_account::recipes;
 using namespace render::main_menu;
 using namespace render::view_custom_ingredients;
 
@@ -35,4 +35,4 @@ void personalAccount(PersonalAccountMenu& /**/, CallbackQueryRef cq, BotRef bot,
     }
 }
 
-} // namespace cookcookhnya::handlers::personal_account_view
+} // namespace cookcookhnya::handlers::personal_account

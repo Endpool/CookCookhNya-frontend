@@ -15,7 +15,7 @@
 #include <utility>
 #include <vector>
 
-namespace cookcookhnya::render::recipe_view {
+namespace cookcookhnya::render::recipe {
 
 textGenInfo textGen(const std::vector<api::StorageId>& storageIds,
                     const api::models::recipe::RecipeDetails& recipeIngredients,
@@ -145,4 +145,4 @@ void renderRecipeViewAfterAddingStorage(const std::vector<api::StorageId>& stora
     }
 }
 
-} // namespace cookcookhnya::render::recipe_view
+} // namespace cookcookhnya::render::recipe

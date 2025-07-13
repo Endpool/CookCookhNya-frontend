@@ -1,4 +1,4 @@
-#include "suggest.hpp"
+#include "view.hpp"
 
 #include "backend/id_types.hpp"
 #include "handlers/common.hpp"
@@ -19,7 +19,7 @@ namespace cookcookhnya::handlers::recipes_suggestion {
 using namespace render::recipes_suggestion;
 using namespace render::select_storages;
 using namespace render::storage;
-using namespace render::recipe_view;
+using namespace render::recipe;
 using namespace render::main_menu;
 
 void changePageAndBack(

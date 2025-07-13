@@ -3,7 +3,7 @@
 #include "render/common.hpp"
 #include <cstddef>
 
-namespace cookcookhnya::render::custom_recipes_list {
+namespace cookcookhnya::render::personal_account::recipes {
 
 void renderCustomRecipesList(size_t pageNo, UserId userId, ChatId chatId, BotRef bot, RecipesApiRef recipesApi);
 
@@ -14,4 +14,4 @@ InlineKeyboard constuctNavigationsMarkup(size_t offset,
                                          size_t pageNo,
                                          size_t numOfRecipesOnPage,
                                          api::models::recipe::CustomRecipesList recipesList);
-} // namespace cookcookhnya::render::custom_recipes_list
+} // namespace cookcookhnya::render::personal_account::recipes

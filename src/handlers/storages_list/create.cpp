@@ -7,9 +7,9 @@
 #include "utils.hpp"
 #include <optional>
 
-namespace cookcookhnya::handlers::storage_create {
+namespace cookcookhnya::handlers::storages_list {
 
-using namespace render::storage_list;
+using namespace render::storages_list;
 
 void createStorage(
     StorageCreationEnterName& /*unused*/, MessageRef m, BotRef bot, SMRef stateManager, StorageApiRef storageApi) {
@@ -35,4 +35,4 @@ void cancelStorageCreation(StorageCreationEnterName& /*unused*/,
     }
 };
 
-} // namespace cookcookhnya::handlers::storage_create
+} // namespace cookcookhnya::handlers::storages_list

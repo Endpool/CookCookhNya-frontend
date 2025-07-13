@@ -8,7 +8,7 @@
 #include "states.hpp"
 #include "utils.hpp"
 
-namespace cookcookhnya::handlers::create_custom_ingredients {
+namespace cookcookhnya::handlers::personal_account::ingredients {
 
 using namespace render::view_custom_ingredients;
 using namespace render::create_custom_ingredient;
@@ -62,4 +62,4 @@ void customIngredientConfirmation(
     }
 }
 
-} // namespace cookcookhnya::handlers::create_custom_ingredients
+} // namespace cookcookhnya::handlers::personal_account::ingredients

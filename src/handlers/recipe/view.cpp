@@ -7,11 +7,11 @@
 
 #include <string>
 
-namespace cookcookhnya::handlers::recipe_view {
+namespace cookcookhnya::handlers::recipe {
 
 using namespace render::recipes_suggestion;
 using namespace render::shopping_list;
-using namespace render::recipe_add_storage;
+using namespace render::recipe;
 
 void handleRecipeView(RecipeView& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
     std::string data = cq.data;
@@ -50,4 +50,4 @@ void handleRecipeView(RecipeView& state, CallbackQueryRef cq, BotRef bot, SMRef 
     }
 }
 
-} // namespace cookcookhnya::handlers::recipe_view
+} // namespace cookcookhnya::handlers::recipe

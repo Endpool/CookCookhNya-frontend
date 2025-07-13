@@ -2,7 +2,7 @@
 
 #include "handlers/common.hpp"
 
-namespace cookcookhnya::handlers::recipe::ingredients {
+namespace cookcookhnya::handlers::personal_account::recipes {
 
 void customRecipeIngredientsSearchButtonCallback(
     CustomRecipeIngredientsSearch& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api);
@@ -12,4 +12,4 @@ void customRecipeIngredientsSearchInlineQueryCallback(CustomRecipeIngredientsSea
                                                       BotRef bot,
                                                       IngredientsApiRef api);
 
-} // namespace cookcookhnya::handlers::recipe::ingredients
+} // namespace cookcookhnya::handlers::personal_account::recipes

@@ -10,7 +10,7 @@
 #include <string>
 #include <utility>
 
-namespace cookcookhnya::handlers::init {
+namespace cookcookhnya::handlers::initial {
 
 using namespace render::main_menu;
 using namespace std::literals;
@@ -46,4 +46,4 @@ void handleNoState(MessageRef m, BotRef bot) {
     bot.sendMessage(m.chat->id, "Use /start please");
 };
 
-} // namespace cookcookhnya::handlers::init
+} // namespace cookcookhnya::handlers::initial

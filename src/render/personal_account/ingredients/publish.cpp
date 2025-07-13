@@ -9,7 +9,7 @@
 #include <string>
 #include <utility>
 
-namespace cookcookhnya::render::publish_custom_ingredients {
+namespace cookcookhnya::render::personal_account::ingredients {
 
 using namespace tg_types;
 
@@ -35,4 +35,4 @@ void renderCustomIngredientPublish(UserId userId, ChatId chatId, BotRef bot, Ing
     }
 }
 
-} // namespace cookcookhnya::render::publish_custom_ingredients
+} // namespace cookcookhnya::render::personal_account::ingredients

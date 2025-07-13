@@ -5,9 +5,9 @@
 #include "render/storage_list/view.hpp"
 #include "utils.hpp"
 
-namespace cookcookhnya::handlers::storage_delete {
+namespace cookcookhnya::handlers::storages_list {
 
-using namespace render::storage_list;
+using namespace render::storages_list;
 
 void deleteStorage(
     StorageDeletion& /*unused*/, CallbackQueryRef cq, BotRef bot, SMRef stateManager, StorageApiRef storageApi) {
@@ -22,4 +22,4 @@ void deleteStorage(
     stateManager.put(StorageList{});
 };
 
-} // namespace cookcookhnya::handlers::storage_delete
+} // namespace cookcookhnya::handlers::storages_list

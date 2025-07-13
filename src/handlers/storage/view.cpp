@@ -14,7 +14,7 @@ namespace cookcookhnya::handlers::storage {
 
 using namespace render::storage::ingredients;
 using namespace render::storage::member_list;
-using namespace render::storage_list;
+using namespace render::storages_list;
 using namespace render::recipes_suggestion;
 
 void storageViewButtonCallback(

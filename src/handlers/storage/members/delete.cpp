@@ -5,7 +5,7 @@
 #include "render/storage_view/members/view.hpp"
 #include "utils.hpp"
 
-namespace cookcookhnya::handlers::storage_delete_member {
+namespace cookcookhnya::handlers::storages_list_member {
 
 using namespace render::storage::member_list;
 using namespace render;
@@ -27,4 +27,4 @@ void deleteMember(
     stateManager.put(StorageMemberView{state.storageId});
 };
 
-} // namespace cookcookhnya::handlers::storage_delete_member
+} // namespace cookcookhnya::handlers::storages_list_member

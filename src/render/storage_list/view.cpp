@@ -8,7 +8,7 @@
 #include <string>
 #include <utility>
 
-namespace cookcookhnya::render::storage_list {
+namespace cookcookhnya::render::storages_list {
 
 using namespace tg_types;
 
@@ -45,4 +45,4 @@ void renderStorageList(bool toBeEdited, UserId userId, ChatId chatId, BotRef bot
     }
 }
 
-} // namespace cookcookhnya::render::storage_list
+} // namespace cookcookhnya::render::storages_list
