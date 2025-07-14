@@ -29,7 +29,8 @@ Checks: "*,
         -cppcoreguidelines-pro-bounds-pointer-arithmetic,
         -cppcoreguidelines-avoid-do-while,
         -bugprone-easily-swappable-parameters,
-        -misc-non-private-member-variables-in-classes,"
+        -misc-non-private-member-variables-in-classes,
+        -llvm-header-guard,"
 CheckOptions:
   cppcoreguidelines-pro-type-member-init.IgnoreArrays: true
   readability-implicit-bool-conversion.AllowPointerConditions: true
