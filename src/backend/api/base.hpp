@@ -16,6 +16,17 @@
 
 namespace cookcookhnya::api {
 
+/**
+ *  Naming convention:
+ *  * Prefixes:
+ *    - `json` means that a method can return a json response of type JsonOut (may be void)
+ *    - no prefix is a plain text response
+ *  * Root of the word:
+ *    - the used REST method (e.g. POST)
+ *  * Suffixes:
+ *    - `WithJson` means that a method accepts a json body of type JsonIn
+ *    - `Authed` requires an authorization token
+ */
 class ApiBase {
   protected:
     using UserId = tg_types::UserId;
@@ -44,10 +55,29 @@ class ApiBase {
     }
 
     // POST
-    std::string post(const std::string& path, const httplib::Headers& headers = {}) const; // NOLINT(*nodiscard)
+    std::string post(const std::string& path, const httplib::Headers& headers = {}) const { // NOLINT(*nodiscard)
+        httplib::Result response = api.get().Post(path, headers);
+        assertSuccess(response);
+        return response->body;
+    }
 
     std::string postAuthed(UserId userId, const std::string& path) const { // NOLINT(*nodiscard)
         return post(path, {{"Authorization", "Bearer " + utils::to_string(userId)}});
+    }
+
+    template <typename JsonIn>
+    std::string postWithJson(const std::string& path, JsonIn&& body, const httplib::Headers& headers = {}) const {
+        using namespace boost::json;
+        std::string rawBody = serialize(value_from(std::forward<JsonIn>(body)));
+        httplib::Result response = api.get().Post(path, headers, rawBody, "application/json");
+        assertSuccess(response);
+        return response->body;
+    }
+
+    template <typename JsonIn>
+    std::string postWithJsonAuthed(UserId userId, const std::string& path, JsonIn&& body) const {
+        return postWithJson(
+            path, std::forward<JsonIn>(body), {{"Authorization", "Bearer " + utils::to_string(userId)}});
     }
 
     template <typename JsonOut>
@@ -84,12 +114,13 @@ class ApiBase {
     template <typename JsonOut>
     JsonOut
     jsonPut(const std::string& path, const httplib::Headers& headers = {}, const httplib::Params& params = {}) const {
+        using namespace boost::json;
         // this stupid library forces to put params into the request's body as form-urlencoded
         httplib::Result response =
             api.get().Put(httplib::append_query_params(path, params), headers, httplib::Params{});
         assertSuccess(response);
         if constexpr (!std::is_void_v<JsonOut>)
-            return value_to<JsonOut>(boost::json::parse(response->body));
+            return value_to<JsonOut>(parse(response->body));
     }
 
     template <typename JsonOut>
@@ -118,10 +149,11 @@ class ApiBase {
     JsonOut jsonDelete(const std::string& path,
                        const httplib::Headers& headers = {},
                        const httplib::Params& params = {}) const {
+        using namespace boost::json;
         httplib::Result response = api.get().Delete(httplib::append_query_params(path, params), headers);
         assertSuccess(response);
         if constexpr (!std::is_void_v<JsonOut>)
-            return boost::json::value_to<JsonOut>(boost::json::parse(response->body));
+            return value_to<JsonOut>(parse(response->body));
     }
 
     template <typename JsonOut>

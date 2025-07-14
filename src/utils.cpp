@@ -32,6 +32,11 @@ std::optional<Uuid> parseSafe<Uuid>(std::string_view s) {
     return {};
 }
 
+template <>
+Uuid parse<Uuid>(std::string_view s) noexcept(false) {
+    return boost::lexical_cast<Uuid>(s);
+}
+
 std::string to_string(const Uuid& u) {
     return boost::lexical_cast<std::string>(u);
 }

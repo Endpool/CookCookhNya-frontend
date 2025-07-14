@@ -2,6 +2,7 @@
 
 #include "backend/id_types.hpp"
 #include "backend/models/ingredient.hpp"
+#include "utils.hpp"
 
 #include <cstddef>
 #include <format>
@@ -73,7 +74,7 @@ std::vector<Ingredient> IngredientsApi::getCustomIngredients(UserId user) const 
 }
 
 IngredientId IngredientsApi::createCustom(UserId user, const IngredientCreateBody& body) const {
-    return jsonPostWithJsonAuthed<IngredientId>(user, "/my/ingredients", body);
+    return utils::parse<IngredientId>(postWithJsonAuthed(user, "/my/ingredients", body));
 }
 
 void IngredientsApi::publishCustom(UserId user, IngredientId id) const {

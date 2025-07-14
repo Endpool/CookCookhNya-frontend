@@ -2,6 +2,7 @@
 
 #include "backend/id_types.hpp"
 #include "backend/models/recipe.hpp"
+#include "utils.hpp"
 
 #include <httplib.h>
 
@@ -22,8 +23,7 @@ RecipesApi::getRecipeList(UserId userId, size_t size, size_t offset, const std::
     return jsonGetAuthed<RecipesList>(userId, "/recipes", params);
 }
 
-RecipeDetails RecipesApi::getIngredientsInRecipe(UserId userId, RecipeId recipeId)
-    const { // StorageIds are not needed in current implementation as backend doesnt return if ingredient is available
+RecipeDetails RecipesApi::getIngredientsInRecipe(UserId userId, RecipeId recipeId) const {
     return jsonGetAuthed<RecipeDetails>(userId, std::format("/recipes/{}", recipeId));
 }
 
@@ -33,16 +33,15 @@ CustomRecipesList RecipesApi::getPrivateRecipeList(UserId userId, size_t size, s
 }
 
 RecipeId RecipesApi::create(UserId userId, const RecipeCreateBody& body) const {
-    return jsonPostWithJsonAuthed<RecipeId>(userId, "/my/recipes", body); // path analogically to storages
+    return utils::parse<RecipeId>(postWithJsonAuthed(userId, "/my/recipes", body));
 }
 
 void RecipesApi::delete_(UserId userId, RecipeId recipeId) const {
-    jsonDeleteAuthed<void>(userId, std::format("/my/recipes/{}", recipeId)); // path analogically to storages
+    jsonDeleteAuthed<void>(userId, std::format("/my/recipes/{}", recipeId));
 }
 
 CustomRecipeDetails RecipesApi::get(UserId userId, RecipeId recipeId) const {
-    return jsonGetAuthed<CustomRecipeDetails>(userId,
-                                              std::format("/my/recipes/{}", recipeId)); // path analogically to storages
+    return jsonGetAuthed<CustomRecipeDetails>(userId, std::format("/my/recipes/{}", recipeId));
 }
 
 void RecipesApi::publishRecipe(UserId userId, RecipeId recipeId) const {
