@@ -79,12 +79,12 @@ InlineKeyboard constructNavigationsMarkup(size_t offset,
                 keyboard[arrowsRow].push_back(makeCallbackButton(u8"▶️", utils::to_string(pageNo + 1))); // right
             }
         } else {
-            keyboard[arrowsRow].push_back(makeCallbackButton(u8"ㅤ", "dontHandle"));
+            keyboard[arrowsRow].push_back(makeCallbackButton(u8"ㅤ", "dont_handle"));
         }
     }
     // Put pageNo as button
     keyboard[arrowsRow].insert(keyboard[arrowsRow].begin() + 1,
-                               makeCallbackButton(std::format("{} из {}", pageNo + 1, maxPageNum), "dontHandle"));
+                               makeCallbackButton(std::format("{} из {}", pageNo + 1, maxPageNum), "dont_handle"));
     return keyboard;
 }
 
@@ -103,9 +103,7 @@ constructMarkup(size_t pageNo, size_t numOfRecipesOnPage, api::models::recipe::R
         return keyboard;
     }
 
-    keyboard[arrowsRow + 1].push_back(
-        makeCallbackButton(u8"↩️ Назад",
-                           "backFromCustomRecipes")); // To LAST row add "backFromCustomRecipes"
+    keyboard[arrowsRow + 1].push_back(makeCallbackButton(u8"↩️ Назад", "back"));
     return keyboard;
 }
 
