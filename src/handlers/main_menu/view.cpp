@@ -4,23 +4,23 @@
 #include "backend/id_types.hpp"
 #include "handlers/common.hpp"
 #include "render/personal_account/view.hpp"
-#include "render/recipes_suggestion/storage_selection/select.hpp"
-#include "render/recipes_suggestion/suggest.hpp"
+#include "render/recipes_suggestions/view.hpp"
 #include "render/shopping_list/view.hpp"
-#include "render/storage_list/view.hpp"
-#include <iterator>
+#include "render/storages_list/view.hpp"
+#include "render/storages_selection/view.hpp"
 
+#include <iterator>
 #include <vector>
 
-namespace cookcookhnya::handlers::main_menu_view {
+namespace cookcookhnya::handlers::main_menu {
 
-using namespace render::storage_list;
-using namespace render::recipes_suggestion;
+using namespace render::storages_list;
+using namespace render::recipes_suggestions;
 using namespace render::select_storages;
 using namespace render::shopping_list;
 using namespace render::personal_account;
 
-void mainMenuHandler(MainMenu& /*unused*/, CallbackQueryRef cq, BotRef& bot, SMRef stateManager, ApiClientRef api) {
+void handleMainMenuCQ(MainMenu& /*unused*/, CallbackQueryRef cq, BotRef& bot, SMRef stateManager, ApiClientRef api) {
     bot.answerCallbackQuery(cq.id);
     auto userId = cq.from->id;
     auto chatId = cq.message->chat->id;
@@ -33,12 +33,12 @@ void mainMenuHandler(MainMenu& /*unused*/, CallbackQueryRef cq, BotRef& bot, SMR
     if (cq.data == "wanna_eat") {
         if (storages.size() == 1) {
             auto storageId = {storages[0].id};
-            editRecipesSuggestion(storageId, 0, userId, chatId, bot, api);
+            renderRecipesSuggestion(storageId, 0, userId, chatId, bot, api);
             stateManager.put(SuggestedRecipeList{.pageNo = 0, .storageIds = storageId, .fromStorage = false});
             return;
         }
-        renderStorageSelect({}, userId, chatId, bot, api);
-        stateManager.put(StorageSelection{.storageIds = std::vector<api::StorageId>{}});
+        renderStorageSelection({}, userId, chatId, bot, api);
+        stateManager.put(StoragesSelection{.storageIds = std::vector<api::StorageId>{}});
         return;
     }
     if (cq.data == "shopping_list") {
@@ -55,4 +55,4 @@ void mainMenuHandler(MainMenu& /*unused*/, CallbackQueryRef cq, BotRef& bot, SMR
     }
 }
 
-} // namespace cookcookhnya::handlers::main_menu_view
+} // namespace cookcookhnya::handlers::main_menu

@@ -1,7 +1,7 @@
 #include "backend/api/api.hpp"
 #include "handlers/handlers_list.hpp"
 #include "states.hpp"
-#include "utils.hpp"
+#include "utils/utils.hpp"
 
 #include <tg_stater/bot.hpp>
 #include <tg_stater/dependencies.hpp>
@@ -13,38 +13,38 @@ int main() {
     using namespace cookcookhnya::states;
     using namespace cookcookhnya::api;
 
-    Setup<State, Dependencies<ApiClient>>::Stater<noStateHandler,
-                                                  startHandler,
-                                                  mainMenuButtonHandler,
-                                                  customIngredientsListButtonHandler,
-                                                  customIngredientCreateHandler,
-                                                  customIngredientCancelCreationHandler,
-                                                  customIngredientConfirmHandler,
-                                                  customIngredientPublishHandler,
-                                                  storageCreateButtonHandler,
-                                                  storageDeleteButtonHandler,
-                                                  storageListButtonHandler,
-                                                  storageCreateHandler,
-                                                  storageViewButtonHandler,
-                                                  storageMemberViewButtonHandler,
-                                                  memberAdditionMessageHandler,
-                                                  cancelMemberAdditionButtonHandler,
-                                                  memberDeletionButtonHandler,
-                                                  storagesSelectionHandler,
-                                                  recipesSuggestionListHandler,
-                                                  storageIngredientsSearchButtonHandler,
-                                                  storageIngredientsSearchHandler,
-                                                  recipeViewHandler,
-                                                  shoppingListCreationHandler,
-                                                  shoppingListButtonHandler,
-                                                  customRecipesListHandler,
-                                                  personalAccountButtonHandler,
-                                                  customRecipeCreateHandler,
-                                                  customRecipeCreateButtonHandler,
-                                                  customRecipeViewHandler,
-                                                  customRecipeIngredientsSearchButtonHandler,
-                                                  customRecipeIngredientsSearchHandler,
-                                                  recipeAddStorageHandler>
+    Setup<State, Dependencies<ApiClient>>::Stater<startCmdHandler,
+                                                  noStateHandler,
+                                                  mainMenuCQHandler,
+                                                  customIngredientsListCQHandler,
+                                                  customIngredientCreationEnterNameMsgHandler,
+                                                  customIngredientCreationEnterNameCQHandler,
+                                                  customIngredientConfirmationCQHandler,
+                                                  customIngredientPublishCQHandler,
+                                                  storageListCQHandler,
+                                                  storageCreationEnterNameMsgHandler,
+                                                  storageCreationEnterNameCQHandler,
+                                                  storageDeletionCQHandler,
+                                                  storageViewCQHandler,
+                                                  storageMemberViewCQHandler,
+                                                  storageMemberAdditionMsgHandler,
+                                                  storageMemberAdditionCQHandler,
+                                                  storageMemberDeletionCQHandler,
+                                                  storageSelectionCQHandler,
+                                                  storageSelectionCQHandler,
+                                                  storageIngredientsListCQHandler,
+                                                  storageIngredientsListIQHandler,
+                                                  recipeViewCQHandler,
+                                                  recipeStorageAdditionCQHandler,
+                                                  shoppingListCreationCQHandler,
+                                                  shoppingListViewCQHandler,
+                                                  personalAccountMenuCQHandler,
+                                                  customRecipesListCQHandler,
+                                                  createCustomRecipeMsgHandler,
+                                                  createCustomRecipeCQHandler,
+                                                  recipeCustomViewCQHandler,
+                                                  customRecipeIngredientsSearchCQHandler,
+                                                  customRecipeIngredientsSearchIQHandler>
         bot{{}, {ApiClient{utils::getenvWithError("API_URL")}}};
 
     bot.start(TgBot::Bot{utils::getenvWithError("BOT_TOKEN")});

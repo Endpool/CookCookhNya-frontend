@@ -6,8 +6,8 @@ namespace cookcookhnya::api {
 
 using namespace models::user;
 
-void UsersApi::updateInfo(UserId userId, const UpdateUserInfoBody& body) const {
-    jsonPutWithJsonAuthed<void>(userId, "/users", body);
+void UsersApi::updateInfo(UserId user, const UpdateUserInfoBody& body) const {
+    jsonPutWithJsonAuthed<void>(user, "/users", body);
 }
 
 } // namespace cookcookhnya::api

@@ -2,25 +2,25 @@
 
 #include "backend/id_types.hpp"
 #include "handlers/common.hpp"
-#include "render/recipes_suggestion/recipe/view.hpp"
+#include "render/recipe/view.hpp"
 #include "render/shopping_list/create.hpp"
-#include "utils.hpp"
+#include "utils/parsing.hpp"
 
 #include <string>
 
-namespace cookcookhnya::handlers::shopping_list_create {
+namespace cookcookhnya::handlers::shopping_list {
 
-using namespace render::shopping_list_create;
-using namespace render::recipe_view;
+using namespace render::shopping_list;
+using namespace render::recipe;
 
-void handleProductListSubmission(
+void handleShoppingListCreationCQ(
     ShoppingListCreation& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
     std::string data = cq.data;
     auto chatId = cq.message->chat->id;
     auto userId = cq.from->id;
 
     if (data == "back") {
-        renderRecipeViewAfterAddingStorage(state.storageIdsFrom, state.recipeIdFrom, userId, chatId, bot, api);
+        renderRecipeView(state.storageIdsFrom, state.recipeIdFrom, userId, chatId, bot, api);
         stateManager.put(RecipeView{.storageIds = state.storageIdsFrom,
                                     .recipeId = state.recipeIdFrom,
                                     .fromStorage = state.fromStorage,
@@ -34,7 +34,7 @@ void handleProductListSubmission(
         shoppingApi.put(userId, state.ingredientIdsInList);
 
         // Return to previous state
-        renderRecipeViewAfterAddingStorage(state.storageIdsFrom, state.recipeIdFrom, userId, chatId, bot, api);
+        renderRecipeView(state.storageIdsFrom, state.recipeIdFrom, userId, chatId, bot, api);
         stateManager.put(RecipeView{.storageIds = state.storageIdsFrom,
                                     .recipeId = state.recipeIdFrom,
                                     .fromStorage = state.fromStorage,
@@ -59,4 +59,4 @@ void handleProductListSubmission(
         renderEditedShoppingListCreation(state.ingredientIdsInList, userId, chatId, bot, api);
     }
 }
-} // namespace cookcookhnya::handlers::shopping_list_create
+} // namespace cookcookhnya::handlers::shopping_list

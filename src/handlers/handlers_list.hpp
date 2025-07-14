@@ -2,151 +2,131 @@
 
 // Handler callbacks
 #include "initial/start.hpp"
+
 #include "main_menu/view.hpp"
 
-#include "personal_account/ingredients/create.hpp"
-#include "personal_account/ingredients/publish.hpp"
-#include "personal_account/ingredients/view.hpp"
-#include "personal_account/view.hpp"
-#include "recipes_suggestion/recipe/add_storage.hpp"
+#include "personal_account/ingredients_list/create.hpp"
+#include "personal_account/ingredients_list/publish.hpp"
+#include "personal_account/ingredients_list/view.hpp"
 
-#include "recipes_suggestion/recipe/view.hpp"
-#include "recipes_suggestion/storage_selection/select.hpp"
-#include "recipes_suggestion/suggest.hpp"
+#include "personal_account/recipes_list/create.hpp"
+#include "personal_account/recipes_list/recipe/search_ingredients.hpp"
+#include "personal_account/recipes_list/recipe/view.hpp"
+#include "personal_account/recipes_list/view.hpp"
+
+#include "personal_account/view.hpp"
+
+#include "recipe/add_storage.hpp"
+#include "recipe/view.hpp"
+
+#include "recipes_suggestions/view.hpp"
+
 #include "shopping_list/create.hpp"
 #include "shopping_list/view.hpp"
-#include "storage_list/create.hpp"
-#include "storage_list/delete.hpp"
-#include "storage_list/view.hpp"
 
-#include "storage_view/ingredients/view.hpp"
+#include "storage/ingredients/view.hpp"
 
-#include "storage_view/members/add.hpp"
-#include "storage_view/members/delete.hpp"
-#include "storage_view/members/view.hpp"
-#include "storage_view/view.hpp"
+#include "storage/members/add.hpp"
+#include "storage/members/delete.hpp"
+#include "storage/members/view.hpp"
 
-#include "custom_recipes_list/create.hpp"
-#include "custom_recipes_list/custom_recipe/search.hpp"
-#include "custom_recipes_list/custom_recipe/view.hpp"
-#include "custom_recipes_list/view.hpp"
+#include "storage/view.hpp"
+
+#include "storages_list/create.hpp"
+#include "storages_list/delete.hpp"
+#include "storages_list/view.hpp"
+
+#include "storages_selection/view.hpp"
 
 #include "handlers/common.hpp"
 
-#include <boost/mpl/aux_/na_fwd.hpp>
 #include <tg_stater/handler/event.hpp>
 #include <tg_stater/handler/handler.hpp>
 #include <tg_stater/handler/type.hpp>
 
 namespace cookcookhnya::handlers {
 
-using namespace init;
-using namespace main_menu_view;
-using namespace personal_account_view;
-using namespace create_custom_ingredients;
-using namespace publish_custom_ingredients;
-using namespace custom_ingredients_view;
-using namespace storage_create;
-using namespace storage_delete;
-using namespace storage_list_view;
-using namespace storage_view;
-using namespace storage_view_members;
-using namespace storage_add_member;
-using namespace storage_delete_member;
-using namespace storage::ingredients;
-using namespace storages_select;
-using namespace recipes_suggestion;
-using namespace recipe_view;
-using namespace shopping_list_create;
+using namespace initial;
+using namespace main_menu;
+using namespace personal_account;
+using namespace personal_account::ingredients;
+using namespace personal_account::recipes;
+using namespace recipe;
+using namespace recipes_suggestions;
 using namespace shopping_list;
-using namespace custom_recipes_list;
-using namespace recipe_view;
-using namespace create_custom_recipe;
-using namespace recipe::ingredients;
-using namespace recipe_add_storage;
+using namespace storage;
+using namespace storage::ingredients;
+using namespace storage::members;
+using namespace storages_list;
+using namespace storages_selection;
 
 using namespace tg_stater;
 
 namespace bot_handlers {
 
 // Init
-constexpr char startCmd[] = "start";                                        // NOLINT(*c-arrays)
-using startHandler = Handler<Events::Command{startCmd}, start, AnyState{}>; // NOLINT(*decay)
+constexpr char startCmd[] = "start";                                                    // NOLINT(*c-arrays)
+using startCmdHandler = Handler<Events::Command{startCmd}, handleStartCmd, AnyState{}>; // NOLINT(*decay)
 using noStateHandler = Handler<Events::AnyMessage{}, handleNoState, NoState{}>;
 
 // MainMenu
-using mainMenuButtonHandler = Handler<Events::CallbackQuery{}, mainMenuHandler>;
+using mainMenuCQHandler = Handler<Events::CallbackQuery{}, handleMainMenuCQ>;
 
-// // CustomIngredient
-using customIngredientsListButtonHandler = Handler<Events::CallbackQuery{}, customIngredientsList>;
-using customIngredientCreateHandler = Handler<Events::Message{}, customIngredientEnterName>;
-using customIngredientCancelCreationHandler = Handler<Events::CallbackQuery{}, customIngredientCancelCreation>;
-using customIngredientConfirmHandler = Handler<Events::CallbackQuery{}, customIngredientConfirmation>;
-using customIngredientPublishHandler = Handler<Events::CallbackQuery{}, customIngredientPublish>;
+// CustomIngredient
+using customIngredientsListCQHandler = Handler<Events::CallbackQuery{}, handleCustomIngredientsListCQ>;
+using customIngredientCreationEnterNameMsgHandler =
+    Handler<Events::Message{}, handleCustomIngredientCreationEnterNameMsg>;
+using customIngredientCreationEnterNameCQHandler =
+    Handler<Events::CallbackQuery{}, handleCustomIngredientCreationEnterNameCQ>;
+using customIngredientConfirmationCQHandler = Handler<Events::CallbackQuery{}, handleCustomIngredientConfirmationCQ>;
+using customIngredientPublishCQHandler = Handler<Events::CallbackQuery{}, handleCustomIngredientPublishCQ>;
 
 // StorageListCreate
-using storageCreateHandler = Handler<Events::Message{}, createStorage>;
-using storageCreateButtonHandler = Handler<Events::CallbackQuery{}, cancelStorageCreation>;
-
-// StorageListDelete
-using storageDeleteButtonHandler = Handler<Events::CallbackQuery{}, deleteStorage>;
-
-// StorageListView
-using storageListButtonHandler = Handler<Events::CallbackQuery{}, storageListButtonCallback>;
+using storageListCQHandler = Handler<Events::CallbackQuery{}, handleStorageListCQ>;
+using storageCreationEnterNameMsgHandler = Handler<Events::Message{}, handleStorageCreationEnterNameMsg>;
+using storageCreationEnterNameCQHandler = Handler<Events::CallbackQuery{}, handleStorageCreationEnterNameCQ>;
+using storageDeletionCQHandler = Handler<Events::CallbackQuery{}, handleStorageDeletionCQ>;
 
 // StorageView
-using storageViewButtonHandler = Handler<Events::CallbackQuery{}, storageViewButtonCallback>;
+using storageViewCQHandler = Handler<Events::CallbackQuery{}, handleStorageViewCQ>;
 
 // StorageViewMembers
-using storageMemberViewButtonHandler = Handler<Events::CallbackQuery{}, storageMemberViewButtonCallback>;
+using storageMemberViewCQHandler = Handler<Events::CallbackQuery{}, handleStorageMemberViewCQ>;
+using storageMemberAdditionMsgHandler = Handler<Events::Message{}, handleStorageMemberAdditionMsg>;
+using storageMemberAdditionCQHandler = Handler<Events::CallbackQuery{}, handleStorageMemberAdditionCQ>;
+using storageMemberDeletionCQHandler = Handler<Events::CallbackQuery{}, handleStorageMemberDeletionCQ>;
 
-// StorageAddMembers
-using memberAdditionMessageHandler = Handler<Events::Message{}, addMember>;
-using cancelMemberAdditionButtonHandler = Handler<Events::CallbackQuery{}, cancelMemberAddition>;
-
-// StorageDeleteMembers
-using memberDeletionButtonHandler = Handler<Events::CallbackQuery{}, deleteMember>;
-
-// StorageSelection
-using storagesSelectionHandler = Handler<Events::CallbackQuery{}, selectStorages>;
+// StoragesSelection
+using storageSelectionCQHandler = Handler<Events::CallbackQuery{}, handleStoragesSelectionCQ>;
 
 // SuggestedRecipeList
-using recipesSuggestionListHandler = Handler<Events::CallbackQuery{}, changePageAndBack>;
+using storageSelectionCQHandler = Handler<Events::CallbackQuery{}, handleStoragesSelectionCQ>;
 
 // StorageIngredientsList
-using storageIngredientsSearchButtonHandler = Handler<Events::CallbackQuery{}, storageIngredientsSearchButtonCallback>;
-using storageIngredientsSearchHandler = Handler<Events::InlineQuery{}, storageIngredientsSearchInlineQueryCallback>;
+using storageIngredientsListCQHandler = Handler<Events::CallbackQuery{}, handleStorageIngredientsListCQ>;
+using storageIngredientsListIQHandler = Handler<Events::InlineQuery{}, handleStorageIngredientsListIQ>;
 
 // RecipeView
-using recipeViewHandler = Handler<Events::CallbackQuery{}, handleRecipeView>;
-
-// Recipe Add Storage
-using recipeAddStorageHandler = Handler<Events::CallbackQuery{}, handleRecipeAddStorage>;
-
-// ShoppingListCreation
-using shoppingListCreationHandler = Handler<Events::CallbackQuery{}, handleProductListSubmission>;
+using recipeViewCQHandler = Handler<Events::CallbackQuery{}, handleRecipeViewCQ>;
+using recipeStorageAdditionCQHandler = Handler<Events::CallbackQuery{}, handleRecipeStorageAdditionCQ>;
+using shoppingListCreationCQHandler = Handler<Events::CallbackQuery{}, handleShoppingListCreationCQ>;
 
 // Shopping list
-using shoppingListButtonHandler = Handler<Events::CallbackQuery{}, shoppingListButtonCallback>;
+using shoppingListViewCQHandler = Handler<Events::CallbackQuery{}, handleShoppingListViewCQ>;
 
 // Personal account
-using personalAccountButtonHandler = Handler<Events::CallbackQuery{}, personalAccount>;
+using personalAccountMenuCQHandler = Handler<Events::CallbackQuery{}, handlePersonalAccountMenuCQ>;
 
 // Custom Recipes List
-using customRecipesListHandler = Handler<Events::CallbackQuery{}, customRecipeList>;
-
-// Custom Recipe Create
-using customRecipeCreateHandler = Handler<Events::Message{}, createRecipe>;
-using customRecipeCreateButtonHandler = Handler<Events::CallbackQuery{}, cancelRecipeCreation>;
+using customRecipesListCQHandler = Handler<Events::CallbackQuery{}, handleCustomRecipesListCQ>;
+using createCustomRecipeMsgHandler = Handler<Events::Message{}, handleCreateCustomRecipeMsg>;
+using createCustomRecipeCQHandler = Handler<Events::CallbackQuery{}, handleCreateCustomRecipeCQ>;
 
 // Custom Recipe View
-using customRecipeViewHandler = Handler<Events::CallbackQuery{}, handleCustomRecipeView>;
+using recipeCustomViewCQHandler = Handler<Events::CallbackQuery{}, handleRecipeCustomViewCQ>;
+using customRecipeIngredientsSearchCQHandler = Handler<Events::CallbackQuery{}, handleCustomRecipeIngredientsSearchCQ>;
+using customRecipeIngredientsSearchIQHandler = Handler<Events::InlineQuery{}, handleCustomRecipeIngredientsSearchIQ>;
 
-// Custom Recipe Ingredients Search
-using customRecipeIngredientsSearchButtonHandler =
-    Handler<Events::CallbackQuery{}, customRecipeIngredientsSearchButtonCallback>;
-using customRecipeIngredientsSearchHandler =
-    Handler<Events::InlineQuery{}, customRecipeIngredientsSearchInlineQueryCallback>;
 } // namespace bot_handlers
 
 } // namespace cookcookhnya::handlers

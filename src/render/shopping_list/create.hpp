@@ -3,7 +3,7 @@
 #include "backend/id_types.hpp"
 #include "render/common.hpp"
 
-namespace cookcookhnya::render::shopping_list_create {
+namespace cookcookhnya::render::shopping_list {
 
 std::vector<api::IngredientId> renderShoppingListCreation( // It returns ingredient Ids which are on the list
     const std::vector<api::StorageId>& storageIds,
@@ -19,4 +19,4 @@ void renderEditedShoppingListCreation(const std::vector<api::IngredientId>& ingr
                                       BotRef bot,
                                       IngredientsApiRef ingredientsApi);
 
-} // namespace cookcookhnya::render::shopping_list_create
+} // namespace cookcookhnya::render::shopping_list
