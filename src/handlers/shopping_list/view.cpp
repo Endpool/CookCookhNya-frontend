@@ -4,7 +4,7 @@
 #include "handlers/common.hpp"
 #include "render/main_menu/view.hpp"
 #include "render/shopping_list/view.hpp"
-#include "utils.hpp"
+#include "utils/utils.hpp"
 
 namespace cookcookhnya::handlers::shopping_list {
 

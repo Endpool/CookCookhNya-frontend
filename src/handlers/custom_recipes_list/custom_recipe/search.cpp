@@ -7,7 +7,7 @@
 #include "render/custom_recipes_list/custom_recipe/search.hpp" // REUSED THE SAME RENDER!!!
 #include "render/custom_recipes_list/custom_recipe/view.hpp"
 
-#include "utils.hpp"
+#include "utils/utils.hpp"
 
 #include <algorithm>
 #include <cstddef>

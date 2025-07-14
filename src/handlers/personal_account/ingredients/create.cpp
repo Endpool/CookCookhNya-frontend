@@ -6,7 +6,7 @@
 #include "render/personal_account/ingredients/create.hpp"
 #include "render/personal_account/ingredients/view.hpp"
 #include "states.hpp"
-#include "utils.hpp"
+#include "utils/utils.hpp"
 
 namespace cookcookhnya::handlers::create_custom_ingredients {
 

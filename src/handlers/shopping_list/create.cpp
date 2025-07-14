@@ -4,7 +4,7 @@
 #include "handlers/common.hpp"
 #include "render/recipes_suggestion/recipe/view.hpp"
 #include "render/shopping_list/create.hpp"
-#include "utils.hpp"
+#include "utils/utils.hpp"
 
 #include <string>
 

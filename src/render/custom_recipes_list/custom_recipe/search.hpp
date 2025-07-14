@@ -3,6 +3,7 @@
 #include "backend/models/ingredient.hpp"
 
 #include "render/common.hpp"
+
 #include <cstddef>
 
 namespace cookcookhnya::render::recipe::ingredients {

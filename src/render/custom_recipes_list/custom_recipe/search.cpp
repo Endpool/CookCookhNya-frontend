@@ -4,12 +4,14 @@
 #include "message_tracker.hpp"
 #include "patched_bot.hpp"
 #include "render/common.hpp"
-#include "utils.hpp"
-#include <ranges>
+#include "utils/to_string.hpp"
+#include "utils/utils.hpp"
+
 #include <tgbot/types/InlineKeyboardButton.h>
 
 #include <cstddef>
 #include <memory>
+#include <ranges>
 #include <string>
 #include <utility>
 #include <vector>

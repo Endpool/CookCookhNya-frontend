@@ -2,6 +2,7 @@
 
 #include "backend/id_types.hpp"
 #include "backend/models/shopping_list.hpp"
+#include "utils/to_string.hpp"
 
 #include <httplib.h>
 #include <string>

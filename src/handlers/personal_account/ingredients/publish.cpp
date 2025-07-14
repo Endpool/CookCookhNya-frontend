@@ -5,7 +5,7 @@
 #include "render/personal_account/ingredients/view.hpp"
 
 #include "states.hpp"
-#include "utils.hpp"
+#include "utils/utils.hpp"
 
 namespace cookcookhnya::handlers::publish_custom_ingredients {
 

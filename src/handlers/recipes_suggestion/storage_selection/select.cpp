@@ -5,7 +5,7 @@
 #include "render/main_menu/view.hpp"
 #include "render/recipes_suggestion/storage_selection/select.hpp"
 #include "render/recipes_suggestion/suggest.hpp"
-#include "utils.hpp"
+#include "utils/utils.hpp"
 
 #include <algorithm>
 #include <utility>
