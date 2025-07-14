@@ -10,12 +10,12 @@
 #include <string>
 #include <utility>
 
-namespace cookcookhnya::handlers::init {
+namespace cookcookhnya::handlers::initial {
 
 using namespace render::main_menu;
 using namespace std::literals;
 
-void start(MessageRef m, BotRef bot, SMRef stateManager, ApiClientRef api) {
+void handleStartCmd(MessageRef m, BotRef bot, SMRef stateManager, ApiClientRef api) {
     auto userId = m.from->id;
     renderMainMenu(false, m.from->id, m.chat->id, bot, api);
     stateManager.put(MainMenu{});
@@ -46,4 +46,4 @@ void handleNoState(MessageRef m, BotRef bot) {
     bot.sendMessage(m.chat->id, "Use /start please");
 };
 
-} // namespace cookcookhnya::handlers::init
+} // namespace cookcookhnya::handlers::initial

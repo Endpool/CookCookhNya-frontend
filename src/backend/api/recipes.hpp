@@ -4,9 +4,9 @@
 #include "backend/id_types.hpp"
 #include "backend/models/recipe.hpp"
 
-#include <cstddef>
 #include <httplib.h>
 
+#include <cstddef>
 #include <vector>
 
 namespace cookcookhnya::api {
@@ -18,16 +18,22 @@ class RecipesApi : ApiBase {
 
   public:
     [[nodiscard]] models::recipe::RecipesList
-    getRecipeList(UserId userId, size_t size, size_t offset, const std::vector<StorageId>& storageIds) const;
-    [[nodiscard]] models::recipe::RecipeDetails getIngredientsInRecipe(UserId userId, RecipeId recipeId) const;
-    [[nodiscard]] models::recipe::RecipeSummary getRecipeName(UserId userId, RecipeId recipeId) const;
-    [[nodiscard]] models::recipe::CustomRecipesList
-    getPrivateRecipeList(UserId userId, size_t size, size_t offset) const;
-    RecipeId create(UserId userId, // NOLINT(*-nodiscard)
+    getRecipeList(UserId user, size_t size, size_t offset, const std::vector<StorageId>& storages) const;
+
+    [[nodiscard]] models::recipe::RecipeDetails getIngredientsInRecipe(UserId user, RecipeId recipe) const;
+
+    [[nodiscard]] models::recipe::RecipeSummary getRecipeName(UserId user, RecipeId recipe) const;
+
+    [[nodiscard]] models::recipe::CustomRecipesList getPrivateRecipeList(UserId user, size_t size, size_t offset) const;
+
+    RecipeId create(UserId user, // NOLINT(*-nodiscard)
                     const models::recipe::RecipeCreateBody& body) const;
-    void delete_(UserId userId, RecipeId id) const;
-    [[nodiscard]] models::recipe::CustomRecipeDetails get(UserId userId, RecipeId id) const;
-    void publishRecipe(UserId userId, RecipeId recipeId) const;
+
+    void delete_(UserId user, RecipeId recipe) const;
+
+    [[nodiscard]] models::recipe::CustomRecipeDetails get(UserId user, RecipeId recipe) const;
+
+    void publishRecipe(UserId user, RecipeId recipe) const;
 };
 
 } // namespace cookcookhnya::api

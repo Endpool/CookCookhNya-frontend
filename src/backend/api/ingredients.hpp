@@ -36,7 +36,7 @@ class IngredientsApi : ApiBase {
     [[nodiscard]] std::vector<models::ingredient::Ingredient> getCustomIngredients(UserId user) const;
     IngredientId createCustom(UserId user, // NOLINT(*-nodiscard)
                               const models::ingredient::IngredientCreateBody& body) const;
-    void publishCustom(UserId user, IngredientId id) const;
+    void publishCustom(UserId user, IngredientId ingredient) const;
 };
 
 } // namespace cookcookhnya::api
