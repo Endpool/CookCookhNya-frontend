@@ -4,12 +4,14 @@
 #include "message_tracker.hpp"
 #include "patched_bot.hpp"
 #include "render/common.hpp"
-#include "utils.hpp"
-#include <ranges>
+#include "utils/to_string.hpp"
+#include "utils/utils.hpp"
+
 #include <tgbot/types/InlineKeyboardButton.h>
 
 #include <cstddef>
 #include <memory>
+#include <ranges>
 #include <string>
 #include <utility>
 #include <vector>
@@ -33,7 +35,7 @@ auto makeKeyboard(const std::vector<IngredientSearchForRecipeItem>& ingredients,
     keyboard[0].push_back(std::move(searchButton));
 
     for (auto [row, ing] : zip(std::ranges::views::drop(keyboard, 1), ingredients))
-        row.push_back(makeCallbackButton((ing.available ? "[+] " : "[-] ") + ing.name, std::to_string(ing.id)));
+        row.push_back(makeCallbackButton((ing.available ? "[+] " : "[-] ") + ing.name, utils::to_string(ing.id)));
 
     keyboard[1 + ingredients.size()].push_back(makeCallbackButton(u8"↩️ Назад", "back"));
 

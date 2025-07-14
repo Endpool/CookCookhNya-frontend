@@ -4,7 +4,7 @@
 #include "backend/models/recipe.hpp"
 #include "message_tracker.hpp"
 #include "render/common.hpp"
-#include "utils.hpp"
+#include "utils/utils.hpp"
 
 #include <algorithm>
 #include <cmath>
@@ -74,9 +74,9 @@ InlineKeyboard constructNavigationsMarkup(size_t offset,
             (uint8_t{0b1} << static_cast<uint8_t>(i))) {
             // if we need to place arrow then check the i, which represents bit which we are checking right now
             if (i == 1) {
-                keyboard[arrowsRow].push_back(makeCallbackButton(u8"◀️", std::to_string(pageNo - 1))); // left
+                keyboard[arrowsRow].push_back(makeCallbackButton(u8"◀️", utils::to_string(pageNo - 1))); // left
             } else {
-                keyboard[arrowsRow].push_back(makeCallbackButton(u8"▶️", std::to_string(pageNo + 1))); // right
+                keyboard[arrowsRow].push_back(makeCallbackButton(u8"▶️", utils::to_string(pageNo + 1))); // right
             }
         } else {
             keyboard[arrowsRow].push_back(makeCallbackButton(u8"ㅤ", "dontHandle"));

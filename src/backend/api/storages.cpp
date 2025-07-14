@@ -2,6 +2,7 @@
 
 #include "backend/id_types.hpp"
 #include "backend/models/storage.hpp"
+#include "utils/parsing.hpp"
 
 #include <format>
 #include <vector>
@@ -19,7 +20,7 @@ StorageDetails StoragesApi::get(UserId user, StorageId storage) const {
 }
 
 StorageId StoragesApi::create(UserId user, const StorageCreateBody& body) const {
-    return jsonPostWithJsonAuthed<StorageId>(user, "/my/storages", body);
+    return utils::parse<StorageId>(postWithJsonAuthed(user, "/my/storages", body));
 }
 
 void StoragesApi::delete_(UserId user, StorageId storage) const {

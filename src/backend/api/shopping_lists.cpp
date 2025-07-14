@@ -2,6 +2,7 @@
 
 #include "backend/id_types.hpp"
 #include "backend/models/shopping_list.hpp"
+#include "utils/to_string.hpp"
 
 #include <httplib.h>
 #include <string>
@@ -18,14 +19,14 @@ std::vector<ShoppingListItem> ShoppingListApi::get(UserId user) const {
 void ShoppingListApi::put(UserId user, const std::vector<IngredientId>& ingredients) const {
     httplib::Params params;
     for (const IngredientId id : ingredients)
-        params.insert({"ingredient-id", std::to_string(id)});
+        params.insert({"ingredient-id", utils::to_string(id)});
     jsonPutAuthed<void>(user, "/my/shopping-list", params);
 }
 
 void ShoppingListApi::remove(UserId user, const std::vector<IngredientId>& ingredients) const {
     httplib::Params params;
     for (const IngredientId id : ingredients)
-        params.insert({"ingredient-id", std::to_string(id)});
+        params.insert({"ingredient-id", utils::to_string(id)});
     jsonDeleteAuthed<void>(user, "/my/shopping-list", params);
 }
 

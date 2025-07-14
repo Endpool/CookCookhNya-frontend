@@ -2,7 +2,7 @@
 
 #include "message_tracker.hpp"
 #include "render/common.hpp"
-#include "utils.hpp"
+#include "utils/utils.hpp"
 
 #include <cstddef>
 #include <string>
@@ -29,7 +29,7 @@ void renderStorageList(bool toBeEdited, UserId userId, ChatId chatId, BotRef bot
     for (std::size_t i = 0; i < storages.size(); i++) {
         if (i % 2 == 0)
             keyboard[1 + (i / 2)].reserve(2);
-        keyboard[1 + (i / 2)].push_back(makeCallbackButton("🍱 " + storages[i].name, std::to_string(storages[i].id)));
+        keyboard[1 + (i / 2)].push_back(makeCallbackButton("🍱 " + storages[i].name, utils::to_string(storages[i].id)));
     }
     keyboard[buttonRows - 1].push_back(makeCallbackButton(u8"↩️ Назад", "back"));
     auto text = utils::utf8str(u8"🍱 Ваши хранилища");

@@ -4,7 +4,7 @@
 #include "backend/models/recipe.hpp"
 #include "message_tracker.hpp"
 #include "render/common.hpp"
-#include "utils.hpp"
+#include "utils/utils.hpp"
 #include "view.hpp" // Reuse textGen from here
 
 #include <cmath>
@@ -109,7 +109,7 @@ void renderStoragesSuggestion(const std::vector<api::StorageId>& storageIdsToAcc
         if (i % 2 == 0) {
             keyboard[std::floor(i / 2)].reserve(2);
         }
-        keyboard[std::floor(i / 2)].push_back(makeCallbackButton(name, "+" + std::to_string(storageId)));
+        keyboard[std::floor(i / 2)].push_back(makeCallbackButton(name, "+" + utils::to_string(storageId)));
         i++;
     }
     keyboard[std::floor((storageIdsToShow.size() + 1) / 2)].push_back(

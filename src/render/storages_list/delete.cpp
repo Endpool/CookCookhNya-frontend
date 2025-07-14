@@ -2,7 +2,7 @@
 
 #include "message_tracker.hpp"
 #include "render/common.hpp"
-#include "utils.hpp"
+#include "utils/utils.hpp"
 
 #include <cstddef>
 #include <format>
@@ -25,7 +25,7 @@ void renderStorageDeletion(ChatId chatId, BotRef bot, UserId userId, StorageApiR
     for (auto& storage : storages) {
         if (userId == storage.ownerId) {
             keyboard[k++].push_back(makeCallbackButton(std::format("{} {}", utils::utf8str(u8"🍱"), storage.name),
-                                                       "st__" + std::to_string(storage.id)));
+                                                       "st__" + utils::to_string(storage.id)));
         }
     }
     auto text = utils::utf8str(u8"🚮 Выберите хранилище для удаления");

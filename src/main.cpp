@@ -1,7 +1,7 @@
 #include "backend/api/api.hpp"
 #include "handlers/handlers_list.hpp"
 #include "states.hpp"
-#include "utils.hpp"
+#include "utils/utils.hpp"
 
 #include <tg_stater/bot.hpp>
 #include <tg_stater/dependencies.hpp>

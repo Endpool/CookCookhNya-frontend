@@ -5,7 +5,7 @@
 #include "backend/id_types.hpp"
 #include "message_tracker.hpp"
 #include "render/common.hpp"
-#include "utils.hpp"
+#include "utils/to_string.hpp"
 
 #include <cstddef>
 #include <cstdint>
@@ -59,7 +59,7 @@ std::vector<api::IngredientId> renderShoppingListCreation(const std::vector<api:
             keyboard[(i / 2)].reserve(2);
         }
         keyboard[i / 2].push_back(
-            makeCallbackButton(name, "i" + std::to_string(ingredientId))); // i stands for ingredient
+            makeCallbackButton(name, "i" + utils::to_string(ingredientId))); // i stands for ingredient
         i++;
     }
     keyboard[((ingredientIds.size() + 1) / 2)].push_back(makeCallbackButton(u8"▶️ Подтвердить", "confirm"));
@@ -99,7 +99,7 @@ void renderEditedShoppingListCreation(const std::vector<api::IngredientId>& ingr
             keyboard[i / 2].reserve(2);
         }
         // i stands for ingredient
-        keyboard[i / 2].push_back(makeCallbackButton(name, "i" + std::to_string(ingredientId)));
+        keyboard[i / 2].push_back(makeCallbackButton(name, "i" + utils::to_string(ingredientId)));
         i++;
     }
 

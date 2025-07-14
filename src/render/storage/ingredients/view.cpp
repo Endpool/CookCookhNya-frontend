@@ -5,7 +5,7 @@
 #include "patched_bot.hpp"
 #include "render/common.hpp"
 #include "states.hpp"
-#include "utils.hpp"
+#include "utils/utils.hpp"
 
 #include <tgbot/types/InlineKeyboardButton.h>
 
@@ -33,7 +33,7 @@ auto makeKeyboard(const states::StorageIngredientsList& state) {
     keyboard[0].push_back(std::move(searchButton));
 
     for (auto [row, ing] : zip(drop(keyboard, 1), state.searchItems))
-        row.push_back(makeCallbackButton((ing.available ? "[ + ] " : "[ㅤ] ") + ing.name, std::to_string(ing.id)));
+        row.push_back(makeCallbackButton((ing.available ? "[ + ] " : "[ㅤ] ") + ing.name, utils::to_string(ing.id)));
     keyboard[1 + state.searchItems.size()].push_back(makeCallbackButton(u8"↩️ Назад", "back"));
 
     return makeKeyboardMarkup(std::move(keyboard));
