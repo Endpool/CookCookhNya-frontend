@@ -105,7 +105,7 @@ jobs:
           export CACHE TEMP_DIR
           # Run linting in parallel with 2 jobs
           cp build/Release/compile_commands.json .
-          parallel --jobs 2 --halt now,fail=1 lint_file ::: "${FILES[@]}"
+          parallel --jobs 2 lint_file ::: "${FILES[@]}"
           # Merge all temp cache files into final cache
           NEW_CACHE=$(mktemp /tmp/clang-tidy-cache-final.XXXXXX.json)
           echo "{}" > "$NEW_CACHE"
