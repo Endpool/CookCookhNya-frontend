@@ -16,15 +16,15 @@ namespace cookcookhnya::api {
 using namespace models::ingredient;
 
 std::vector<Ingredient> IngredientsApi::getStorageIngredients(UserId user, StorageId storage) const {
-    return jsonGetAuthed<std::vector<Ingredient>>(user, std::format("/my/storages/{}/ingredients", storage));
+    return jsonGetAuthed<std::vector<Ingredient>>(user, std::format("/storages/{}/ingredients", storage));
 }
 
 void IngredientsApi::putToStorage(UserId user, StorageId storage, IngredientId ingredient) const {
-    jsonPutAuthed<void>(user, std::format("/my/storages/{}/ingredients/{}", storage, ingredient));
+    jsonPutAuthed<void>(user, std::format("/storages/{}/ingredients/{}", storage, ingredient));
 }
 
 void IngredientsApi::deleteFromStorage(UserId user, StorageId storage, IngredientId ingredient) const {
-    jsonDeleteAuthed<void>(user, std::format("/my/storages/{}/ingredients/{}", storage, ingredient));
+    jsonDeleteAuthed<void>(user, std::format("/storages/{}/ingredients/{}", storage, ingredient));
 }
 
 Ingredient IngredientsApi::get(IngredientId ingredient) const {
@@ -42,11 +42,11 @@ IngredientSearchForStorageResponse IngredientsApi::searchForStorage(
 }
 
 void IngredientsApi::putToRecipe(UserId user, RecipeId recipe, IngredientId ingredient) const {
-    jsonPutAuthed<void>(user, std::format("/my/recipes/{}/ingredients/{}", recipe, ingredient));
+    jsonPutAuthed<void>(user, std::format("/recipes/{}/ingredients/{}", recipe, ingredient));
 }
 
 void IngredientsApi::deleteFromRecipe(UserId user, RecipeId recipe, IngredientId ingredient) const {
-    jsonDeleteAuthed<void>(user, std::format("/my/recipes/{}/ingredients/{}", recipe, ingredient));
+    jsonDeleteAuthed<void>(user, std::format("/recipes/{}/ingredients/{}", recipe, ingredient));
 }
 
 IngredientSearchForRecipeResponse IngredientsApi::searchForRecipe(
@@ -70,15 +70,15 @@ IngredientsApi::search(std::string query, std::size_t size, std::size_t offset, 
 }
 
 std::vector<Ingredient> IngredientsApi::getCustomIngredients(UserId user) const {
-    return jsonGetAuthed<std::vector<Ingredient>>(user, "/my/ingredients/");
+    return jsonGetAuthed<std::vector<Ingredient>>(user, "/ingredients/");
 }
 
 IngredientId IngredientsApi::createCustom(UserId user, const IngredientCreateBody& body) const {
-    return utils::parse<IngredientId>(postWithJsonAuthed(user, "/my/ingredients", body));
+    return utils::parse<IngredientId>(postWithJsonAuthed(user, "/ingredients", body));
 }
 
 void IngredientsApi::publishCustom(UserId user, IngredientId ingredient) const {
-    jsonPostAuthed<void>(user, std::format("/my/ingredients/{}/publish", ingredient));
+    jsonPostAuthed<void>(user, std::format("/ingredients/{}/publish", ingredient));
 }
 
 } // namespace cookcookhnya::api
