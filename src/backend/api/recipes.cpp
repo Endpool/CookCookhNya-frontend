@@ -34,15 +34,15 @@ CustomRecipesList RecipesApi::getPrivateRecipeList(UserId userId, size_t size, s
 }
 
 RecipeId RecipesApi::create(UserId user, const RecipeCreateBody& body) const {
-    return utils::parse<RecipeId>(postWithJsonAuthed(user, "/my/recipes", body));
+    return utils::parse<RecipeId>(postWithJsonAuthed(user, "/recipes", body));
 }
 
 void RecipesApi::delete_(UserId user, RecipeId recipeId) const {
-    jsonDeleteAuthed<void>(user, std::format("/my/recipes/{}", recipeId));
+    jsonDeleteAuthed<void>(user, std::format("/recipes/{}", recipeId));
 }
 
 CustomRecipeDetails RecipesApi::get(UserId user, RecipeId recipe) const {
-    return jsonGetAuthed<CustomRecipeDetails>(user, std::format("/my/recipes/{}", recipe));
+    return jsonGetAuthed<CustomRecipeDetails>(user, std::format("/recipes/{}", recipe));
 }
 
 void RecipesApi::publishRecipe(UserId user, RecipeId recipe) const {

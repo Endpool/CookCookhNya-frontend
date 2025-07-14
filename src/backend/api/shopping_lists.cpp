@@ -13,21 +13,21 @@ namespace cookcookhnya::api {
 using namespace models::shopping_list;
 
 std::vector<ShoppingListItem> ShoppingListApi::get(UserId user) const {
-    return jsonGetAuthed<std::vector<ShoppingListItem>>(user, "/my/shopping-list");
+    return jsonGetAuthed<std::vector<ShoppingListItem>>(user, "/shopping-list");
 }
 
 void ShoppingListApi::put(UserId user, const std::vector<IngredientId>& ingredients) const {
     httplib::Params params;
     for (const IngredientId id : ingredients)
         params.insert({"ingredient-id", utils::to_string(id)});
-    jsonPutAuthed<void>(user, "/my/shopping-list", params);
+    jsonPutAuthed<void>(user, "/shopping-list", params);
 }
 
 void ShoppingListApi::remove(UserId user, const std::vector<IngredientId>& ingredients) const {
     httplib::Params params;
     for (const IngredientId id : ingredients)
         params.insert({"ingredient-id", utils::to_string(id)});
-    jsonDeleteAuthed<void>(user, "/my/shopping-list", params);
+    jsonDeleteAuthed<void>(user, "/shopping-list", params);
 }
 
 } // namespace cookcookhnya::api
