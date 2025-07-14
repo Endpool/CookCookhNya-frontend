@@ -7,7 +7,7 @@
 #include "render/common.hpp"
 #include "utils.hpp"
 
-#include <cmath>
+#include <cstddef>
 #include <cstdint>
 #include <format>
 #include <string>
@@ -15,7 +15,7 @@
 #include <utility>
 #include <vector>
 
-namespace cookcookhnya::render::shopping_list_create {
+namespace cookcookhnya::render::shopping_list {
 
 std::vector<api::IngredientId> renderShoppingListCreation(const std::vector<api::StorageId>& storageIds,
                                                           api::RecipeId recipeId,
@@ -44,11 +44,11 @@ std::vector<api::IngredientId> renderShoppingListCreation(const std::vector<api:
         if (!isHavingIngredient) {
             ingredientIds.push_back(ingredient.id);
             ingredientsName.push_back(ingredient.name);
-            text += std::format(
-                "- {}\n", ingredient.name); // Print only ingredients which are not in selected storages - вроде норм
+            // Print only ingredients which are not in selected storages - вроде норм
+            text += std::format("- {}\n", ingredient.name);
         }
     }
-    const int buttonRows = std::floor(((ingredientIds.size() + 1) / 2) + 2); // +1 for back, +1 for approve
+    const std::size_t buttonRows = ((ingredientIds.size() + 1) / 2) + 2; // +1 for back, +1 for approve
 
     InlineKeyboard keyboard(buttonRows);
     uint64_t i = 0;
@@ -56,14 +56,14 @@ std::vector<api::IngredientId> renderShoppingListCreation(const std::vector<api:
         const std::string& name =
             ingredientsName[i]; // NEED TO TEST if INGREDIENTS WILL MESS UP BETWEEN NAME AND ID - вроде норм
         if (i % 2 == 0) {
-            keyboard[std::floor(i / 2)].reserve(2);
+            keyboard[(i / 2)].reserve(2);
         }
-        keyboard[std::floor(i / 2)].push_back(
+        keyboard[i / 2].push_back(
             makeCallbackButton(name, "i" + std::to_string(ingredientId))); // i stands for ingredient
         i++;
     }
-    keyboard[std::floor((ingredientIds.size() + 1) / 2)].push_back(makeCallbackButton(u8"▶️ Подтвердить", "confirm"));
-    keyboard[std::floor(((ingredientIds.size() + 1) / 2) + 1)].push_back(makeCallbackButton(u8"↩️ Назад", "back"));
+    keyboard[((ingredientIds.size() + 1) / 2)].push_back(makeCallbackButton(u8"▶️ Подтвердить", "confirm"));
+    keyboard[(((ingredientIds.size() + 1) / 2) + 1)].push_back(makeCallbackButton(u8"↩️ Назад", "back"));
     auto messageId = message::getMessageId(userId);
     if (messageId)
         bot.editMessageText(text, chatId, *messageId, makeKeyboardMarkup(std::move(keyboard)));
@@ -88,7 +88,7 @@ void renderEditedShoppingListCreation(const std::vector<api::IngredientId>& ingr
         text += std::format("- {}\n", name);
     }
 
-    const int buttonRows = std::floor(((ingredientIds.size() + 1) / 2) + 2); // +1 for back
+    const std::size_t buttonRows = ((ingredientIds.size() + 1) / 2) + 2; // +1 for back
 
     InlineKeyboard keyboard(buttonRows);
     uint64_t i = 0;
@@ -96,18 +96,18 @@ void renderEditedShoppingListCreation(const std::vector<api::IngredientId>& ingr
         const std::string& name =
             ingredientsName[i]; // NEED TO TEST if INGREDIENTS WILL MESS UP BETWEEN NAME AND ID - вроде норм
         if (i % 2 == 0) {
-            keyboard[std::floor(i / 2)].reserve(2);
+            keyboard[i / 2].reserve(2);
         }
-        keyboard[std::floor(i / 2)].push_back(
-            makeCallbackButton(name, "i" + std::to_string(ingredientId))); // i stands for ingredient
+        // i stands for ingredient
+        keyboard[i / 2].push_back(makeCallbackButton(name, "i" + std::to_string(ingredientId)));
         i++;
     }
 
-    keyboard[std::floor((ingredientIds.size() + 1) / 2)].push_back(makeCallbackButton(u8"▶️ Подтвердить", "confirm"));
-    keyboard[std::floor(((ingredientIds.size() + 1) / 2) + 1)].push_back(makeCallbackButton(u8"↩️ Назад", "back"));
+    keyboard[(ingredientIds.size() + 1) / 2].push_back(makeCallbackButton(u8"▶️ Подтвердить", "confirm"));
+    keyboard[((ingredientIds.size() + 1) / 2) + 1].push_back(makeCallbackButton(u8"↩️ Назад", "back"));
     auto messageId = message::getMessageId(userId);
     if (messageId)
         bot.editMessageText(text, chatId, *messageId, makeKeyboardMarkup(std::move(keyboard)));
 }
 
-} // namespace cookcookhnya::render::shopping_list_create
+} // namespace cookcookhnya::render::shopping_list

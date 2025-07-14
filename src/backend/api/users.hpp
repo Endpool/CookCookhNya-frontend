@@ -13,7 +13,7 @@ class UsersApi : ApiBase {
     explicit UsersApi(httplib::Client& api) : ApiBase{api} {}
 
   public:
-    void updateInfo(UserId userId, // NOLINT(*-nodiscard)
+    void updateInfo(UserId user, // NOLINT(*-nodiscard)
                     const models::user::UpdateUserInfoBody& body) const;
 };
 

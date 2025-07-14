@@ -1,34 +1,36 @@
 target_sources(main PRIVATE
     src/render/main_menu/view.cpp
 
-    src/render/personal_account/view.cpp
-    src/render/personal_account/ingredients/view.cpp
-    src/render/personal_account/ingredients/create.cpp
-    src/render/personal_account/ingredients/publish.cpp
+    src/render/personal_account/ingredients_list/create.cpp
+    src/render/personal_account/ingredients_list/publish.cpp
+    src/render/personal_account/ingredients_list/view.cpp
 
-    src/render/recipes_suggestion/recipe/view.cpp
-    src/render/recipes_suggestion/storage_selection/select.cpp
-    src/render/recipes_suggestion/suggest.cpp
-    src/render/recipes_suggestion/recipe/add_storage.cpp
+    src/render/personal_account/recipes_list/create.cpp
+    src/render/personal_account/recipes_list/recipe/search_ingredients.cpp
+    src/render/personal_account/recipes_list/recipe/view.cpp
+    src/render/personal_account/recipes_list/view.cpp
+
+    src/render/personal_account/view.cpp
+
+    src/render/recipe/add_storage.cpp
+    src/render/recipe/view.cpp
+
+    src/render/recipes_suggestions/view.cpp
 
     src/render/shopping_list/create.cpp
     src/render/shopping_list/view.cpp
 
-    src/render/storage_list/create.cpp
-    src/render/storage_list/delete.cpp
-    src/render/storage_list/view.cpp
+    src/render/storage/ingredients/view.cpp
 
-    src/render/storage_view/ingredients/view.cpp
-    src/render/storage_view/members/add.cpp
-    src/render/storage_view/members/delete.cpp
-    src/render/storage_view/members/view.cpp
-    src/render/storage_view/view.cpp
+    src/render/storage/members/add.cpp
+    src/render/storage/members/delete.cpp
+    src/render/storage/members/view.cpp
 
-    src/render/custom_recipes_list/view.cpp
-    src/render/custom_recipes_list/create.cpp
-    src/render/custom_recipes_list/custom_recipe/view.cpp
+    src/render/storage/view.cpp
 
-    src/render/personal_account/view.cpp
+    src/render/storages_list/create.cpp
+    src/render/storages_list/delete.cpp
+    src/render/storages_list/view.cpp
 
-    src/render/custom_recipes_list/custom_recipe/search.cpp
+    src/render/storages_selection/view.cpp
 )
