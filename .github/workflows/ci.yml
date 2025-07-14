@@ -41,21 +41,22 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
+  
       - name: Build dependencies
         uses: ./.github/actions/build_deps
-
-      - name: Install clang-tidy
+  
+      - name: Install clang-tidy and parallel
         run: |
           sudo apt-get update
-          sudo apt-get install -y clang-tidy-19
+          sudo apt-get install -y clang-tidy-19 parallel
           echo "/usr/lib/llvm-19/bin" >> $GITHUB_PATH
+  
       - name: Cache clang-tidy results
         uses: actions/cache@v3
         with:
           path: .clang-tidy-cache.json
           key: ${{ runner.os }}-clang-tidy-${{ github.ref }}
-
+  
       - name: Create clang-tidy cache script
         run: |
           cat > run-clang-tidy-cached.sh << 'EOF'
@@ -75,6 +76,7 @@ jobs:
           # Function to lint a single file
           lint_file() {
             FILE="$1"
+            echo "Starting linting $FILE at $(date '+%H:%M:%S')"
             # Compute file hash
             HASH=$(sha256sum "$FILE" | cut -d' ' -f1)
             # Get cached hash
@@ -83,7 +85,6 @@ jobs:
             TEMP_FILE="$TEMP_DIR/cache_$(echo "$FILE" | sha256sum | cut -d' ' -f1).json"
             if [ "$HASH" = "$CACHED_HASH" ]; then
               echo "Skipping unchanged file: $FILE"
-              # Write hash to temp file
               echo "{\"$FILE\": \"$HASH\"}" > "$TEMP_FILE"
               return 0
             fi
@@ -92,19 +93,19 @@ jobs:
             OUTPUT=$(clang-tidy-19 "$FILE" --quiet --warnings-as-errors='*' -p build/Release 2>&1)
             STATUS=$?
             if [ $STATUS -eq 0 ] && ! echo "$OUTPUT" | grep -q "warning:"; then
-              # Write hash to temp file only if no warnings/errors
               echo "{\"$FILE\": \"$HASH\"}" > "$TEMP_FILE"
               return 0
             else
               echo "$OUTPUT"
               return 1
             fi
+            echo "Finished linting $FILE at $(date '+%H:%M:%S')"
           }
           export -f lint_file
           export CACHE TEMP_DIR
-          # Run linting in parallel
+          # Run linting in parallel with 2 jobs
           cp build/Release/compile_commands.json .
-          parallel --halt now,fail=1 lint_file ::: "${FILES[@]}"
+          parallel --jobs 2 lint_file ::: "${FILES[@]}"
           # Merge all temp cache files into final cache
           NEW_CACHE=$(mktemp /tmp/clang-tidy-cache-final.XXXXXX.json)
           echo "{}" > "$NEW_CACHE"
@@ -120,6 +121,7 @@ jobs:
           rm -rf "$TEMP_DIR"
           EOF
           chmod +x run-clang-tidy-cached.sh
+  
       - name: Run clang-tidy with caching
         run: |
-          ./run-clang-tidy-cached.sh
+          bash ./run-clang-tidy-cached.sh
