@@ -59,7 +59,7 @@ std::vector<api::IngredientId> renderShoppingListCreation(const std::vector<api:
             keyboard[std::floor(i / 2)].reserve(2);
         }
         keyboard[std::floor(i / 2)].push_back(
-            makeCallbackButton(name, "i" + std::to_string(ingredientId))); // i stands for ingredient
+            makeCallbackButton(name, "i" + utils::to_string(ingredientId))); // i stands for ingredient
         i++;
     }
     keyboard[std::floor((ingredientIds.size() + 1) / 2)].push_back(makeCallbackButton(u8"▶️ Подтвердить", "confirm"));
@@ -99,7 +99,7 @@ void renderEditedShoppingListCreation(const std::vector<api::IngredientId>& ingr
             keyboard[std::floor(i / 2)].reserve(2);
         }
         keyboard[std::floor(i / 2)].push_back(
-            makeCallbackButton(name, "i" + std::to_string(ingredientId))); // i stands for ingredient
+            makeCallbackButton(name, "i" + utils::to_string(ingredientId))); // i stands for ingredient
         i++;
     }
 

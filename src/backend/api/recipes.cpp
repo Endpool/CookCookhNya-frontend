@@ -3,9 +3,9 @@
 #include "backend/id_types.hpp"
 #include "backend/models/recipe.hpp"
 
-#include <cstddef>
 #include <httplib.h>
 
+#include <cstddef>
 #include <format>
 #include <string>
 #include <vector>
@@ -16,9 +16,9 @@ using namespace models::recipe;
 
 RecipesList
 RecipesApi::getRecipeList(UserId userId, size_t size, size_t offset, const std::vector<StorageId>& storageIds) const {
-    httplib::Params params = {{"size", std::to_string(size)}, {"offset", std::to_string(offset)}};
+    httplib::Params params = {{"size", utils::to_string(size)}, {"offset", std::to_string(offset)}};
     for (auto id : storageIds)
-        params.insert({"storageId", std::to_string(id)});
+        params.insert({"storageId", utils::to_string(id)});
     return jsonGetAuthed<RecipesList>(userId, "/recipes", params);
 }
 
@@ -28,7 +28,7 @@ RecipeDetails RecipesApi::getIngredientsInRecipe(UserId userId, RecipeId recipeI
 }
 
 CustomRecipesList RecipesApi::getPrivateRecipeList(UserId userId, size_t size, size_t offset) const {
-    const httplib::Params params = {{"size", std::to_string(size)}, {"offset", std::to_string(offset)}};
+    const httplib::Params params = {{"size", utils::to_string(size)}, {"offset", std::to_string(offset)}};
     return jsonGetAuthed<CustomRecipesList>(userId, "/recipes", params);
 }
 

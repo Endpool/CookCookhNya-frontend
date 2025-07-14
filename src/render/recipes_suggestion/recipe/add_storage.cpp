@@ -108,7 +108,7 @@ void renderStorageSuggestion(const std::vector<api::StorageId>& storageIdsToAcco
         if (i % 2 == 0) {
             keyboard[std::floor(i / 2)].reserve(2);
         }
-        keyboard[std::floor(i / 2)].push_back(makeCallbackButton(name, "+" + std::to_string(storageId)));
+        keyboard[std::floor(i / 2)].push_back(makeCallbackButton(name, "+" + utils::to_string(storageId)));
         i++;
     }
     keyboard[std::floor((storageIdsToShow.size() + 1) / 2)].push_back(

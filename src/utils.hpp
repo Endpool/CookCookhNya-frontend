@@ -1,5 +1,7 @@
 #pragma once
 
+#include "uuid.hpp"
+
 #include <charconv>
 #include <functional>
 #include <memory>
@@ -16,6 +18,7 @@ namespace cookcookhnya::utils {
 
 const char* getenvWithError(const char* key) noexcept(false);
 
+// parseSafe
 template <typename T>
 std::optional<T> parseSafe(std::string_view s) {
     T value;
@@ -24,6 +27,21 @@ std::optional<T> parseSafe(std::string_view s) {
     return std::nullopt;
 }
 
+template <>
+std::optional<Uuid> parseSafe<Uuid>(std::string_view s);
+
+// to_string
+template <typename T>
+    requires requires(T t) {
+        { std::to_string(t) };
+    }
+std::string to_string(const T& t) {
+    return std::to_string(t);
+}
+
+std::string to_string(const Uuid& u);
+
+// other
 std::string utf8str(std::u8string_view sv);
 
 template <typename T>

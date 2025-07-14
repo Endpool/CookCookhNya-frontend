@@ -35,6 +35,7 @@ add_executable(main
     src/utils.cpp
     src/message_tracker.cpp
     src/patched_bot.cpp
+    src/uuid.cpp
 )
 include(src/backend/CMakeLists.txt)
 include(src/handlers/CMakeLists.txt)

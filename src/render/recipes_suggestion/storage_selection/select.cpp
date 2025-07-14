@@ -33,7 +33,7 @@ void renderStorageSelect(const std::vector<api::StorageId>& selected_storages,
         std::string emoji = utils::utf8str(isSelected ? u8"[ + ]" : u8"[ᅠ]");
         const char* actionPrefix = isSelected ? "in__" : "out_";
         const std::string text = std::format("{} {}", emoji, storages[i].name);
-        const std::string data = actionPrefix + std::to_string(storages[i].id);
+        const std::string data = actionPrefix + utils::to_string(storages[i].id);
         keyboard[i / 2].push_back(makeCallbackButton(text, data));
     }
     keyboard[buttonRows - 1].reserve(2);

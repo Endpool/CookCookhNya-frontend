@@ -1,8 +1,11 @@
-#include "render/custom_recipes_list/view.hpp"
+#include "view.hpp"
+
 #include "backend/models/recipe.hpp"
 #include "message_tracker.hpp"
 #include "render/common.hpp"
+#include "render/custom_recipes_list/view.hpp"
 #include "utils.hpp"
+
 #include <algorithm>
 #include <cmath>
 #include <cstddef>
@@ -69,9 +72,9 @@ InlineKeyboard constuctNavigationsMarkup(size_t offset,
             (uint8_t{0b1} << static_cast<uint8_t>(i))) {
             // if we need to place arrow then check the i, which represents bit which we are checking right now
             if (i == 1) {
-                keyboard[arrowsRow].push_back(makeCallbackButton(u8"◀️", std::to_string(pageNo - 1))); // left
+                keyboard[arrowsRow].push_back(makeCallbackButton(u8"◀️", utils::to_string(pageNo - 1))); // left
             } else {
-                keyboard[arrowsRow].push_back(makeCallbackButton(u8"▶️", std::to_string(pageNo + 1))); // right
+                keyboard[arrowsRow].push_back(makeCallbackButton(u8"▶️", utils::to_string(pageNo + 1))); // right
             }
         } else {
             keyboard[arrowsRow].push_back(makeCallbackButton(u8"ㅤ", "dontHandle"));
@@ -121,25 +124,20 @@ void renderCustomRecipesList(size_t pageNo, UserId userId, ChatId chatId, BotRef
                                         (pageNo)*numOfRecipesOnPage); //*/
     // api::models::recipe::CustomRecipeSummary recipeExample1 = {.id = 1, .name = "asd"};
 
-    const std::vector<api::models::recipe::CustomRecipeSummary> recipesExample = {{.id = 1, .name = "asd"},
-                                                                                  {.id = 2, .name = "asasdd"},
-                                                                                  {.id = 2, .name = "asasdd"},
-                                                                                  {.id = 2, .name = "asasdd"},
-                                                                                  {.id = 2, .name = "asasdd"},
-                                                                                  {.id = 2, .name = "asasdd"},
-                                                                                  {.id = 2, .name = "asasdd"},
-                                                                                  {.id = 2, .name = "asasdd"},
-                                                                                  {.id = 2, .name = "asasdd"}};
+    const std::vector<api::models::recipe::CustomRecipeSummary> recipesExample = {{.id = {}, .name = "asd"},
+                                                                                  {.id = {}, .name = "asasdd"},
+                                                                                  {.id = {}, .name = "asasdd"},
+                                                                                  {.id = {}, .name = "asasdd"},
+                                                                                  {.id = {}, .name = "asasdd"},
+                                                                                  {.id = {}, .name = "asasdd"},
+                                                                                  {.id = {}, .name = "asasdd"},
+                                                                                  {.id = {}, .name = "asasdd"},
+                                                                                  {.id = {}, .name = "asasdd"}};
     api::models::recipe::CustomRecipesList recipesList{.recipesPage = recipesExample,
                                                        .recipesFound = static_cast<int>(recipesExample.size())};
     if (messageId) {
-        bot.editMessageText(pageInfo,
-                            chatId,
-                            *messageId,
-                            "",
-                            "",
-                            nullptr,
-                            makeKeyboardMarkup(constructMarkup(pageNo, numOfRecipesOnPage, recipesList)));
+        bot.editMessageText(
+            pageInfo, chatId, *messageId, makeKeyboardMarkup(constructMarkup(pageNo, numOfRecipesOnPage, recipesList)));
     }
 }
 } // namespace cookcookhnya::render::custom_recipes_list

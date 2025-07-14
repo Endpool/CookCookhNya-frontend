@@ -18,14 +18,14 @@ std::vector<ShoppingListItem> ShoppingListApi::get(UserId userId) const {
 void ShoppingListApi::put(UserId userId, const std::vector<IngredientId>& ingredientIds) const {
     httplib::Params params;
     for (const IngredientId id : ingredientIds)
-        params.insert({"ingredient-id", std::to_string(id)});
+        params.insert({"ingredient-id", utils::to_string(id)});
     jsonPutAuthed<void>(userId, "/my/shopping-list", params);
 }
 
 void ShoppingListApi::remove(UserId userId, const std::vector<IngredientId>& ingredientIds) const {
     httplib::Params params;
     for (const IngredientId id : ingredientIds)
-        params.insert({"ingredient-id", std::to_string(id)});
+        params.insert({"ingredient-id", utils::to_string(id)});
     jsonDeleteAuthed<void>(userId, "/my/shopping-list", params);
 }
 

@@ -21,7 +21,8 @@ void renderCustomIngredientPublish(UserId userId, ChatId chatId, BotRef bot, Ing
     for (std::size_t i = 0; i < ingredients.size(); i++) {
         if (i % 2 == 0)
             keyboard[(i / 2)].reserve(2);
-        keyboard[(i / 2)].push_back(makeCallbackButton("• " + ingredients[i].name, std::to_string(ingredients[i].id)));
+        keyboard[(i / 2)].push_back(
+            makeCallbackButton("• " + ingredients[i].name, utils::to_string(ingredients[i].id)));
     }
 
     keyboard[buttonRows - 1].push_back(makeCallbackButton(u8"↩️ Назад", "back"));
