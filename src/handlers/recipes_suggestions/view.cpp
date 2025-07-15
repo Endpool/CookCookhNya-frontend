@@ -29,7 +29,7 @@ void handleSuggestedRecipeListCQ(
 
     auto data = cq.data;
 
-    if (data[0] == 'b') { // Here is quite naive implementation: if first char is b then it's "backFromSuggestedRecipes"
+    if (data == "back") {
         if (state.fromStorage) {
             renderStorageView(state.storageIds[0], cq.from->id, chatId, bot, api);
             stateManager.put(StorageView{state.storageIds[0]}); // Go to the only one storage
@@ -61,7 +61,7 @@ void handleSuggestedRecipeListCQ(
         return;
     }
 
-    if (data != "dontHandle") {
+    if (data != "dont_handle") {
         auto pageNo = utils::parseSafe<int>(data);
         if (pageNo) {
             state.pageNo = *pageNo;

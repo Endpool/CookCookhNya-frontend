@@ -24,7 +24,7 @@ void handleCustomRecipesListCQ(
     auto userId = cq.from->id;
     auto data = cq.data;
 
-    if (data[0] == 'b') {
+    if (data == "back") {
         renderPersonalAccountMenu(userId, chatId, bot);
         stateManager.put(PersonalAccountMenu{});
         bot.answerCallbackQuery(cq.id);
@@ -32,7 +32,7 @@ void handleCustomRecipesListCQ(
     }
     if (data == "custom_recipe_create") {
         renderRecipeCreation(chatId, userId, bot);
-        stateManager.put(CreateCustomRecipe{.recipeId = 0, .pageNo = state.pageNo});
+        stateManager.put(CreateCustomRecipe{.recipeId = {0}, .pageNo = state.pageNo});
         bot.answerCallbackQuery(cq.id);
         return;
     }
@@ -47,7 +47,7 @@ void handleCustomRecipesListCQ(
         return;
     }
 
-    if (data != "ㅤ") { // If it's not "empty" button then it's change of page
+    if (data != "dont_handle") {
         auto pageNo = utils::parseSafe<int>(data);
         if (pageNo) {
             state.pageNo = *pageNo;

@@ -37,6 +37,9 @@ start-debug: build-debug
 	set -a && source .env && ./build/Debug/main
 start-debug-j5: build-debug-j5
 	set -a && source .env && ./build/Debug/main
+gdb-j5: build-debug-j5
+	set -a && source .env && gdb ./build/Debug/main
+
 gdb: build-debug
 	set -a && source .env && gdb ./build/Debug/main
 start-release: build-release

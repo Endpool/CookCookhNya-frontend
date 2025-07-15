@@ -78,12 +78,17 @@ InlineKeyboard constructNavigationsMarkup(size_t offset,
                 keyboard[arrowsRow].push_back(makeCallbackButton(u8"▶️", utils::to_string(pageNo + 1))); // right
             }
         } else {
-            keyboard[arrowsRow].push_back(makeCallbackButton(u8"ㅤ", "dontHandle"));
+            keyboard[arrowsRow].push_back(makeCallbackButton(u8"ㅤ", "dont_handle"));
         }
     }
     // Put pageNo as button
     keyboard[arrowsRow].insert(keyboard[arrowsRow].begin() + 1,
-                               makeCallbackButton(std::format("{} из {}", pageNo + 1, maxPageNum), "dontHandle"));
+                               makeCallbackButton(std::format("{} из {}", pageNo + 1, maxPageNum), "dont_handle"));
+    return keyboard;
+}
+
+InlineKeyboard constructOnlyCreate() {
+    InlineKeyboard keyboard(2);
     return keyboard;
 }
 
@@ -96,49 +101,32 @@ constructMarkup(size_t pageNo, size_t numOfRecipesOnPage, api::models::recipe::C
 
     const size_t recipesToShow = std::min(numOfRecipesOnPage, recipesList.recipesPage.size());
 
-    const size_t arrowsRow = offset + recipesToShow; // 1 because of the offset of add/delete row
+    const size_t arrowsRow =
+        recipesList.recipesFound == 0 ? 0 : offset + recipesToShow; // 1 because of the offset of add/delete row
 
     InlineKeyboard keyboard =
-        constructNavigationsMarkup(offset, numOfRows + recipesToShow, pageNo, numOfRecipesOnPage, recipesList);
+        recipesList.recipesFound == 0
+            ? constructOnlyCreate()
+            : constructNavigationsMarkup(offset, numOfRows + recipesToShow, pageNo, numOfRecipesOnPage, recipesList);
     if (keyboard.empty()) { // If error happened
         return keyboard;
     }
     keyboard[0].push_back(makeCallbackButton(u8"Создать", "custom_recipe_create"));
 
-    keyboard[arrowsRow + 1].push_back(
-        makeCallbackButton(u8"↩️ Назад",
-                           "backFromCustomRecipes")); // To LAST row add "backFromCustomRecipes"
+    keyboard[arrowsRow + 1].push_back(makeCallbackButton(u8"↩️ Назад", "back"));
+
     return keyboard;
 }
 
-void renderCustomRecipesList(size_t pageNo, UserId userId, ChatId chatId, BotRef bot, RecipesApiRef /*recipesApi*/) {
+void renderCustomRecipesList(size_t pageNo, UserId userId, ChatId chatId, BotRef bot, RecipesApiRef recipesApi) {
     const std::string pageInfo = utils::utf8str(u8"🔪 Рецепты созданные вами");
 
     auto messageId = message::getMessageId(userId);
 
     const int numOfRecipesOnPage = 5;
+    auto recipesList = recipesApi.getPrivateRecipeList(userId, numOfRecipesOnPage, (pageNo)*numOfRecipesOnPage);
 
-    // UNCOMMENT WHEN BACKEND IS READY
-    /*auto recipesList =
-        recipesApi.getPrivateRecipeList(userId,
-                                        numOfRecipesOnPage,
-                                        (pageNo)*numOfRecipesOnPage); //*/
-    // api::models::recipe::CustomRecipeSummary recipeExample1 = {.id = 1, .name = "asd"};
-
-    const std::vector<api::models::recipe::CustomRecipeSummary> recipesExample = {{.id = {}, .name = "asd"},
-                                                                                  {.id = {}, .name = "asasdd"},
-                                                                                  {.id = {}, .name = "asasdd"},
-                                                                                  {.id = {}, .name = "asasdd"},
-                                                                                  {.id = {}, .name = "asasdd"},
-                                                                                  {.id = {}, .name = "asasdd"},
-                                                                                  {.id = {}, .name = "asasdd"},
-                                                                                  {.id = {}, .name = "asasdd"},
-                                                                                  {.id = {}, .name = "asasdd"}};
-    api::models::recipe::CustomRecipesList recipesList{.recipesPage = recipesExample,
-                                                       .recipesFound = static_cast<int>(recipesExample.size())};
-    if (messageId) {
-        bot.editMessageText(
-            pageInfo, chatId, *messageId, makeKeyboardMarkup(constructMarkup(pageNo, numOfRecipesOnPage, recipesList)));
-    }
+    bot.editMessageText(
+        pageInfo, chatId, *messageId, makeKeyboardMarkup(constructMarkup(pageNo, numOfRecipesOnPage, recipesList)));
 }
 } // namespace cookcookhnya::render::personal_account::recipes

@@ -31,7 +31,6 @@ int main() {
                                                   storageMemberAdditionCQHandler,
                                                   storageMemberDeletionCQHandler,
                                                   storageSelectionCQHandler,
-                                                  storageSelectionCQHandler,
                                                   storageIngredientsListCQHandler,
                                                   storageIngredientsListIQHandler,
                                                   recipeViewCQHandler,
