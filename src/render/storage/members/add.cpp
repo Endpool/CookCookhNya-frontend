@@ -43,7 +43,6 @@ void renderShareLinkMemberAddition(
     auto inviteText = "Нажми на ссылку, чтобы стать участником хранилища 🍱**" + storage.name +
                       "** в CookCookhNya!\nhttps://t.me/" + telegramBotAlias + "?start=" + hash;
     inviteButton->url = "https://t.me/share/url?url=" + inviteText;
-    inviteButton->url = "https://github.com/orgs/Endpool/projects/2/views/1";
 
     keyboard[0].push_back(std::move(inviteButton));
     keyboard[1].push_back(makeCallbackButton(u8"↩️ Назад", "back"));
