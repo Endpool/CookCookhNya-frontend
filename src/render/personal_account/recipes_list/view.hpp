@@ -15,6 +15,6 @@ InlineKeyboard constructNavigationsMarkup(size_t offset,
                                           size_t fullKeyBoardSize,
                                           size_t pageNo,
                                           size_t numOfRecipesOnPage,
-                                          api::models::recipe::CustomRecipesList recipesList);
+                                          api::models::recipe::CustomRecipesList& recipesList);
 
 } // namespace cookcookhnya::render::personal_account::recipes

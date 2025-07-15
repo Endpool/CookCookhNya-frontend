@@ -82,8 +82,7 @@ void renderEditedShoppingListCreation(const std::vector<api::IngredientId>& ingr
     for (const api::IngredientId ingredientId : ingredientIds) {
         // IMPORTANT!: Probably can be optimized because this data is available at the recipe page
         // by Maxim Fomin
-        std::string name = ingredientsApi.get(ingredientId)
-                               .name; // NEED TO TEST if INGREDIENTS WILL MESS UP BETWEEN NAME AND ID - вроде норм
+        std::string name = ingredientsApi.get(userId, ingredientId).name;
         ingredientsName.push_back(name);
         text += std::format("- {}\n", name);
     }

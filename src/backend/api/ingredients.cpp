@@ -16,9 +16,18 @@ namespace cookcookhnya::api {
 
 using namespace models::ingredient;
 
+// GET /ingredients/{ingredientId}
+Ingredient IngredientsApi::get(UserId user, IngredientId ingredient) const {
+    return jsonGetAuthed<Ingredient>(user, std::format("/ingredients/{}", ingredient));
+}
+
 // GET /storages/{storageId}/ingredients
-std::vector<Ingredient> IngredientsApi::getStorageIngredients(UserId user, StorageId storage) const {
-    return jsonGetAuthed<std::vector<Ingredient>>(user, std::format("/storages/{}/ingredients", storage));
+std::vector<Ingredient>
+IngredientsApi::getStorageIngredients(UserId user, StorageId storage, std::size_t size, std::size_t offset) const {
+    return jsonGetAuthed<std::vector<Ingredient>>(
+        user,
+        std::format("/storages/{}/ingredients", storage),
+        {{"size", utils::to_string(size)}, {"offset", utils::to_string(offset)}});
 }
 
 // PUT /storages/{storageId}/ingredients/{ingredientId}
@@ -42,19 +51,24 @@ void IngredientsApi::deleteMultipleFromStorage(UserId user,
 }
 
 // GET /ingredients-for-storage
-IngredientSearchForStorageResponse IngredientsApi::searchForStorage(
-    UserId user, std::string query, StorageId storage, std::size_t count, std::size_t offset) const {
+IngredientSearchForStorageResponse IngredientsApi::searchForStorage(UserId user,
+                                                                    StorageId storage,
+                                                                    std::string query,
+                                                                    std::size_t threshold,
+                                                                    std::size_t size,
+                                                                    std::size_t offset) const {
     return jsonGetAuthed<IngredientSearchForStorageResponse>(user,
                                                              "/ingredients-for-storage",
                                                              {{"query", std::move(query)},
                                                               {"storage-id", utils::to_string(storage)},
-                                                              {"size", utils::to_string(count)},
+                                                              {"size", utils::to_string(size)},
+                                                              {"threshold", utils::to_string(threshold)},
                                                               {"offset", utils::to_string(offset)}});
 }
 
 // GET /public/ingredients
 IngredientSearchResponse
-IngredientsApi::publicSearch(std::string query, std::size_t size, std::size_t offset, std::size_t threshold) const {
+IngredientsApi::publicSearch(std::string query, std::size_t threshold, std::size_t size, std::size_t offset) const {
     return jsonGet<IngredientSearchResponse>("/public/ingredients",
                                              {},
                                              {{"query", std::move(query)},
@@ -95,14 +109,19 @@ void IngredientsApi::deleteFromRecipe(UserId user, RecipeId recipe, IngredientId
 }
 
 // GET /ingredients-for-recipe
-IngredientSearchForRecipeResponse IngredientsApi::searchForRecipe(
-    UserId user, std::string query, RecipeId recipe, std::size_t count, std::size_t offset) const {
+IngredientSearchForRecipeResponse IngredientsApi::searchForRecipe(UserId user,
+                                                                  RecipeId recipe,
+                                                                  std::string query,
+                                                                  std::size_t threshold,
+                                                                  std::size_t size,
+                                                                  std::size_t offset) const {
     return jsonGetAuthed<IngredientSearchForRecipeResponse>(user,
                                                             "/ingredients-for-recipe",
                                                             {{"query", std::move(query)},
-                                                             {"recipe-id", utils::to_string(recipe)},
-                                                             {"size", utils::to_string(count)},
-                                                             {"offset", utils::to_string(offset)}});
+                                                             {"threshold", utils::to_string(threshold)},
+                                                             {"size", utils::to_string(size)},
+                                                             {"offset", utils::to_string(offset)},
+                                                             {"recipe-id", utils::to_string(recipe)}});
 }
 
 // POST /ingredients

@@ -19,9 +19,9 @@ using namespace models::recipe;
 
 // GET /suggested-recipes
 RecipesList RecipesApi::getSuggestedRecipesList(UserId user,
+                                                const std::vector<StorageId>& storages,
                                                 size_t size,
-                                                size_t offset,
-                                                const std::vector<StorageId>& storages) const {
+                                                size_t offset) const {
     httplib::Params params = {{"size", utils::to_string(size)}, {"offset", std::to_string(offset)}};
     for (auto id : storages)
         params.insert({"storageId", utils::to_string(id)});
@@ -47,18 +47,6 @@ RecipeSearchResponse RecipesApi::getRecipesList(UserId user,
 // GET /recipes/{recipeId}
 RecipeDetails RecipesApi::getIngredientsInRecipe(UserId user, RecipeId recipe) const {
     return jsonGetAuthed<RecipeDetails>(user, std::format("/recipes/{}", recipe));
-}
-
-// GET /recipes
-CustomRecipesList RecipesApi::getPrivateRecipesList(
-    UserId user, std::string query, std::size_t threshold, std::size_t size, std::size_t offset) const {
-    return jsonGetAuthed<CustomRecipesList>(user,
-                                            "/recipes",
-                                            {{"query", std::move(query)},
-                                             {"threshold", utils::to_string(threshold)},
-                                             {"size", utils::to_string(size)},
-                                             {"offset", utils::to_string(offset)},
-                                             {"filter", filterStr(filterType::Custom)}});
 }
 
 // POST /recipes

@@ -7,7 +7,7 @@
 
 enum struct filterType : std::uint8_t { All, Custom, Public };
 
-static std::string filterStr(filterType value) { // NOLINT(*unused*)
+inline std::string filterStr(filterType value) {
     static const std::unordered_map<filterType, std::string> map = {
         {filterType::All, "All"}, {filterType::Custom, "Custom"}, {filterType::Public, "Public"}};
 
@@ -15,5 +15,5 @@ static std::string filterStr(filterType value) { // NOLINT(*unused*)
     if (it != map.end()) {
         return it->second;
     }
-    throw std::invalid_argument("Invalid filterValue value");
+    throw std::invalid_argument("Invalid filterType value");
 }

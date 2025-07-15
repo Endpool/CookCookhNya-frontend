@@ -1,5 +1,6 @@
 #include "view.hpp"
 
+#include "backend/api/common.hpp"
 #include "backend/models/ingredient.hpp"
 #include "message_tracker.hpp"
 #include "render/common.hpp"
@@ -16,8 +17,8 @@ namespace cookcookhnya::render::personal_account::ingredients {
 using namespace tg_types;
 
 void renderCustomIngredientsList(bool toBeEdited, UserId userId, ChatId chatId, BotRef bot, IngredientsApiRef api) {
-    auto ingredients = api.getCustomIngredients(userId);
-
+    auto ingredientsResp = api.search(userId, "", 0, 100, 0, filterType::Custom); // NOLINT(*magic*)
+    auto ingredients = ingredientsResp.page;
     const std::size_t buttonRows = ingredients.empty() ? 2 : 3;
     InlineKeyboard keyboard(buttonRows);
 

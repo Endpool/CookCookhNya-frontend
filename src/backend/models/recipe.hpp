@@ -6,7 +6,6 @@
 #include <boost/json/conversion.hpp>
 #include <boost/json/value.hpp>
 
-#include <optional>
 #include <string>
 #include <vector>
 
@@ -64,7 +63,7 @@ struct CustomRecipeDetails {
 };
 
 struct RecipesList {
-    std::vector<RecipeSummary> page;
+    std::vector<RecipeSummaryWithIngredients> page;
     std::size_t found;
 
     friend RecipesList tag_invoke(boost::json::value_to_tag<RecipesList>, const boost::json::value& j);

@@ -18,8 +18,10 @@ class RecipesApi : ApiBase {
     explicit RecipesApi(httplib::Client& api) : ApiBase{api} {}
 
   public:
-    [[nodiscard]] models::recipe::RecipesList
-    getSuggestedRecipesList(UserId user, size_t size, size_t offset, const std::vector<StorageId>& storages) const;
+    [[nodiscard]] models::recipe::RecipesList getSuggestedRecipesList(UserId user,
+                                                                      const std::vector<StorageId>& storages,
+                                                                      size_t size = 2,
+                                                                      size_t offset = 0) const;
 
     [[nodiscard]] models::recipe::RecipeSearchResponse getRecipesList(UserId user,
                                                                       std::string query,
@@ -30,10 +32,11 @@ class RecipesApi : ApiBase {
 
     [[nodiscard]] models::recipe::RecipeDetails getIngredientsInRecipe(UserId user, RecipeId recipe) const;
 
-    [[nodiscard]] models::recipe::RecipeSummary getRecipeName(UserId user, RecipeId recipe) const;
-
-    [[nodiscard]] models::recipe::CustomRecipesList getPrivateRecipesList(
-        UserId user, std::string query, std::size_t threshold, std::size_t size, std::size_t offset) const;
+    [[nodiscard]] models::recipe::CustomRecipesList getCustomRecipesList(UserId user,
+                                                                         std::string query = "",
+                                                                         std::size_t threshold = 50, // NOLINT(*magic*)
+                                                                         std::size_t size = 2,
+                                                                         std::size_t offset = 0) const;
 
     RecipeId create(UserId user, // NOLINT(*-nodiscard)
                     const models::recipe::RecipeCreateBody& body) const;

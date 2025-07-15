@@ -19,10 +19,10 @@ void handleStartCmd(MessageRef m, BotRef bot, SMRef stateManager, ApiClientRef a
     auto userId = m.from->id;
     renderMainMenu(false, m.from->id, m.chat->id, bot, api);
     stateManager.put(MainMenu{});
-    std::string fullname = m.from->firstName;
+    std::string fullName = m.from->firstName;
     if (!m.from->lastName.empty()) {
-        fullname += ' ';
-        fullname += m.from->lastName;
+        fullName += ' ';
+        fullName += m.from->lastName;
     }
     std::optional<std::string> alias;
     if (!m.from->username.empty())
@@ -30,7 +30,7 @@ void handleStartCmd(MessageRef m, BotRef bot, SMRef stateManager, ApiClientRef a
 
     api.getUsersApi().updateInfo(
         userId,
-        api::models::user::UpdateUserInfoBody{.alias = std::move(m.from->username), .fullname = std::move(fullname)});
+        api::models::user::UpdateUserInfoBody{.alias = std::move(m.from->username), .fullName = std::move(fullName)});
 
     auto startText = m.text;
     const int hashPos = "/start "sv.size();

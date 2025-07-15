@@ -23,14 +23,14 @@ InlineKeyboard constructNavigationsMarkup(size_t offset,
                                           size_t fullKeyBoardSize,
                                           size_t pageNo,
                                           size_t numOfRecipesOnPage,
-                                          api::models::recipe::CustomRecipesList recipesList) {
-    const int amountOfRecipes = recipesList.recipesFound;
+                                          api::models::recipe::CustomRecipesList& recipesList) {
+    const size_t amountOfRecipes = recipesList.found;
     int maxPageNum =
         static_cast<int>(std::ceil(static_cast<double>(amountOfRecipes) / static_cast<double>(numOfRecipesOnPage)));
 
-    const size_t recipesToShow = std::min(numOfRecipesOnPage, recipesList.recipesPage.size());
+    const size_t recipesToShow = std::min(numOfRecipesOnPage, recipesList.page.size());
 
-    const bool ifMaxPage = amountOfRecipes - (static_cast<int>(numOfRecipesOnPage) * (static_cast<int>(pageNo) + 1)) <=
+    const bool ifMaxPage = amountOfRecipes - numOfRecipesOnPage * pageNo + 1 <=
                            0; // + 1 because of the 0-indexing, as comparisson is between num of recipes gotten and that
                               // will be actually shown
 
@@ -45,8 +45,8 @@ InlineKeyboard constructNavigationsMarkup(size_t offset,
     for (std::size_t i = 0; i < recipesToShow; i++) {
         // Print on button in form "1. {Recipe}"
         keyboard[i + offset].push_back(makeCallbackButton(
-            std::format("{}. {}", 1 + counter + ((pageNo)*numOfRecipesOnPage), recipesList.recipesPage[counter].name),
-            std::format("recipe: {}", recipesList.recipesPage[counter].id))); // RECIPE ID
+            std::format("{}. {}", 1 + counter + ((pageNo)*numOfRecipesOnPage), recipesList.page[counter].name),
+            std::format("recipe: {}", recipesList.page[counter].id))); // RECIPE ID
         counter++;
     }
 
@@ -94,7 +94,7 @@ constructMarkup(size_t pageNo, size_t numOfRecipesOnPage, api::models::recipe::C
     const size_t numOfRows = 3;
     const size_t offset = 1; // Number of rows before list
 
-    const size_t recipesToShow = std::min(numOfRecipesOnPage, recipesList.recipesPage.size());
+    const size_t recipesToShow = std::min(numOfRecipesOnPage, recipesList.page.size());
 
     const size_t arrowsRow = offset + recipesToShow; // 1 because of the offset of add/delete row
 
@@ -134,8 +134,7 @@ void renderCustomRecipesList(size_t pageNo, UserId userId, ChatId chatId, BotRef
                                                                                   {.id = {}, .name = "asasdd"},
                                                                                   {.id = {}, .name = "asasdd"},
                                                                                   {.id = {}, .name = "asasdd"}};
-    api::models::recipe::CustomRecipesList recipesList{.recipesPage = recipesExample,
-                                                       .recipesFound = static_cast<int>(recipesExample.size())};
+    api::models::recipe::CustomRecipesList recipesList{.page = recipesExample, .found = recipesExample.size()};
     if (messageId) {
         bot.editMessageText(
             pageInfo, chatId, *messageId, makeKeyboardMarkup(constructMarkup(pageNo, numOfRecipesOnPage, recipesList)));
