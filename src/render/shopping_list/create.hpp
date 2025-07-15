@@ -6,9 +6,9 @@
 namespace cookcookhnya::render::shopping_list {
 
 std::vector<api::IngredientId> renderShoppingListCreation(const std::vector<api::IngredientId>& ingredientIds,
-                                                          std::vector<std::string> ingredientsName,
                                                           UserId userId,
                                                           ChatId chatId,
-                                                          BotRef bot);
+                                                          BotRef bot,
+                                                          api::IngredientsApi ingredientsApi);
 
 } // namespace cookcookhnya::render::shopping_list

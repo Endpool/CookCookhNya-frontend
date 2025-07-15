@@ -27,8 +27,8 @@ void IngredientsApi::deleteFromStorage(UserId user, StorageId storage, Ingredien
     jsonDeleteAuthed<void>(user, std::format("/storages/{}/ingredients/{}", storage, ingredient));
 }
 
-Ingredient IngredientsApi::get(IngredientId ingredient) const {
-    return jsonGet<Ingredient>(std::format("/ingredients/{}", ingredient));
+Ingredient IngredientsApi::get(UserId user, IngredientId ingredient) const {
+    return jsonGetAuthed<Ingredient>(user, std::format("/ingredients/{}", ingredient));
 }
 
 IngredientSearchForStorageResponse IngredientsApi::searchForStorage(

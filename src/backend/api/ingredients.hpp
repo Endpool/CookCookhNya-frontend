@@ -19,7 +19,7 @@ class IngredientsApi : ApiBase {
   public:
     [[nodiscard]] std::vector<models::ingredient::Ingredient> getStorageIngredients(UserId user,
                                                                                     StorageId storage) const;
-    [[nodiscard]] models::ingredient::Ingredient get(IngredientId ingredient) const;
+    [[nodiscard]] models::ingredient::Ingredient get(UserId user, IngredientId ingredient) const;
     [[nodiscard]] models::ingredient::IngredientSearchResponse
     search(std::string query, std::size_t size, std::size_t offset, std::size_t threshold) const;
 

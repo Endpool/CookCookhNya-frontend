@@ -33,6 +33,7 @@ int main() {
                                                   storageSelectionCQHandler,
                                                   storageIngredientsListCQHandler,
                                                   storageIngredientsListIQHandler,
+                                                  suggestedRecipeListCQHandler,
                                                   recipeViewCQHandler,
                                                   recipeStorageAdditionCQHandler,
                                                   shoppingListCreationCQHandler,

@@ -31,7 +31,6 @@ void handleRecipeViewCQ(RecipeView& state, CallbackQueryRef cq, BotRef bot, SMRe
 
         auto ingredients = recipesApi.getIngredientsInRecipe(userId, state.recipeId).ingredients;
         std::vector<api::IngredientId> ingredientIds;
-        std::vector<std::string> ingredientsName;
         bool isHavingIngredient = false;
 
         for (auto& ingredient : ingredients) { // Iterate through each ingredient
@@ -45,16 +44,14 @@ void handleRecipeViewCQ(RecipeView& state, CallbackQueryRef cq, BotRef bot, SMRe
             }
             if (!isHavingIngredient) {
                 ingredientIds.push_back(ingredient.id);
-                ingredientsName.push_back(ingredient.name);
             }
         }
-        renderShoppingListCreation(ingredientIds, ingredientsName, userId, chatId, bot);
+        renderShoppingListCreation(ingredientIds, userId, chatId, bot, api);
         stateManager.put(ShoppingListCreation{.storageIdsFrom = state.storageIds,
                                               .recipeIdFrom = state.recipeId,
                                               .ingredientIdsInList = ingredientIds,
                                               .fromStorage = state.fromStorage,
-                                              .pageNo = state.pageNo,
-                                              .ingredientsName = ingredientsName});
+                                              .pageNo = state.pageNo});
         bot.answerCallbackQuery(cq.id);
         return;
     }
