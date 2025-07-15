@@ -19,6 +19,8 @@
 #include "recipe/add_storage.hpp"
 #include "recipe/view.hpp"
 
+#include "recipes_suggestions/view.hpp"
+
 #include "shopping_list/create.hpp"
 #include "shopping_list/view.hpp"
 
