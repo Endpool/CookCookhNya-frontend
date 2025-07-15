@@ -55,6 +55,7 @@ using namespace storage::ingredients;
 using namespace storage::members;
 using namespace storages_list;
 using namespace storages_selection;
+using namespace recipes_suggestions;
 
 using namespace tg_stater;
 
@@ -96,7 +97,7 @@ using storageMemberDeletionCQHandler = Handler<Events::CallbackQuery{}, handleSt
 using storageSelectionCQHandler = Handler<Events::CallbackQuery{}, handleStoragesSelectionCQ>;
 
 // SuggestedRecipeList
-using storageSelectionCQHandler = Handler<Events::CallbackQuery{}, handleStoragesSelectionCQ>;
+using suggestedRecipeListCQHandler = Handler<Events::CallbackQuery{}, handleSuggestedRecipeListCQ>;
 
 // StorageIngredientsList
 using storageIngredientsListCQHandler = Handler<Events::CallbackQuery{}, handleStorageIngredientsListCQ>;

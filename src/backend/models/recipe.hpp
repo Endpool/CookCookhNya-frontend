@@ -3,6 +3,7 @@
 #include "backend/id_types.hpp"
 #include "backend/models/user.hpp"
 
+
 #include <boost/json/conversion.hpp>
 #include <boost/json/value.hpp>
 
@@ -36,6 +37,13 @@ struct IngredientInRecipe {
     std::vector<StorageId> inStorages;
 
     friend IngredientInRecipe tag_invoke(boost::json::value_to_tag<IngredientInRecipe>, const boost::json::value& j);
+};
+
+struct RecipeCreator {
+    tg_types::UserId id;
+    std::string fullName;
+
+    friend RecipeCreator tag_invoke(boost::json::value_to_tag<RecipeCreator>, const boost::json::value& j);
 };
 
 struct RecipeDetails {
@@ -73,6 +81,7 @@ struct RecipesList {
 struct CustomRecipeSummary {
     RecipeId id;
     std::string name;
+    std::string link;
 
     friend CustomRecipeSummary tag_invoke(boost::json::value_to_tag<CustomRecipeSummary>, const boost::json::value& j);
 };
@@ -83,18 +92,12 @@ struct CustomRecipesList {
 
     friend CustomRecipesList tag_invoke(boost::json::value_to_tag<CustomRecipesList>, const boost::json::value& j);
 };
-
 struct RecipeCreateBody {
     std::string name;
+    std::vector<IngredientId> ingredients;
+    std::string link;
 
-    friend void tag_invoke(boost::json::value_from_tag, boost::json::value& j, const RecipeCreateBody& body);
-};
-
-struct RecipeCreateResponse {
-    RecipeId id;
-
-    friend RecipeCreateResponse tag_invoke(boost::json::value_to_tag<RecipeCreateResponse>,
-                                           const boost::json::value& j);
+    friend void tag_invoke(boost::json::value_from_tag /*tag*/, boost::json::value& j, const RecipeCreateBody& body);
 };
 
 struct RecipeSearchResponse {

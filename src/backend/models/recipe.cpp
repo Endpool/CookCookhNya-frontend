@@ -2,6 +2,7 @@
 
 #include <boost/json/conversion.hpp>
 #include <boost/json/value.hpp>
+#include <boost/json/value_from.hpp>
 #include <boost/json/value_to.hpp>
 
 namespace cookcookhnya::api::models::recipe {
@@ -34,11 +35,7 @@ RecipesList tag_invoke(json::value_to_tag<RecipesList> /*tag*/, const json::valu
 }
 
 void tag_invoke(json::value_from_tag /*tag*/, json::value& j, const RecipeCreateBody& body) {
-    j = {{"name", body.name}};
-}
-
-RecipeCreateResponse tag_invoke(json::value_to_tag<RecipeCreateResponse> /*tag*/, const json::value& j) {
-    return {.id = value_to<decltype(RecipeSummary::id)>(j.at("id"))};
+    j = {{"name", body.name}, {"ingredients", boost::json::value_from(body.ingredients)}, {"sourceLink", body.link}};
 }
 
 IngredientInRecipe tag_invoke(json::value_to_tag<IngredientInRecipe> /*tag*/, const json::value& j) {
@@ -46,6 +43,14 @@ IngredientInRecipe tag_invoke(json::value_to_tag<IngredientInRecipe> /*tag*/, co
         .id = value_to<decltype(IngredientInRecipe::id)>(j.at("id")),
         .name = value_to<decltype(IngredientInRecipe::name)>(j.at("name")),
         .inStorages = value_to<decltype(IngredientInRecipe::inStorages)>(j.at("inStorages")),
+    };
+}
+
+RecipeCreator tag_invoke(json::value_to_tag<RecipeCreator> /*tag*/, const json::value& j) {
+    return {
+        .id = value_to<decltype(RecipeCreator::id)>(j.at("id")),
+        .fullName = value_to<decltype(RecipeCreator::fullName)>(j.at("fullName")),
+
     };
 }
 
@@ -60,8 +65,9 @@ RecipeDetails tag_invoke(json::value_to_tag<RecipeDetails> /*tag*/, const json::
 
 CustomRecipeSummary tag_invoke(json::value_to_tag<CustomRecipeSummary> /*tag*/, const json::value& j) {
     return {
-        .id = value_to<decltype(CustomRecipeSummary::id)>(j.at("id")),
+        .id = value_to<decltype(CustomRecipeSummary::id)>(j.at("recipeId")),
         .name = value_to<decltype(CustomRecipeSummary::name)>(j.at("name")),
+        .link = value_to<decltype(CustomRecipeSummary::link)>(j.at("sourceLink")),
     };
 }
 

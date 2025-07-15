@@ -39,8 +39,8 @@ class RecipesApi : ApiBase {
                                                                          std::size_t size = 2,
                                                                          std::size_t offset = 0) const;
 
-    RecipeId create(UserId user, // NOLINT(*-nodiscard)
-                    const models::recipe::RecipeCreateBody& body) const;
+    [[nodiscard]] RecipeId create(UserId user, // NOLINT(*-nodiscard)
+                                  const models::recipe::RecipeCreateBody& body) const;
 
     void delete_(UserId user, RecipeId recipe) const;
 

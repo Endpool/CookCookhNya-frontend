@@ -40,6 +40,7 @@ void IngredientsApi::deleteFromStorage(UserId user, StorageId storage, Ingredien
     jsonDeleteAuthed<void>(user, std::format("/storages/{}/ingredients/{}", storage, ingredient));
 }
 
+
 // DELETE /storages/{storageId}/ingredients
 void IngredientsApi::deleteMultipleFromStorage(UserId user,
                                                StorageId storage,
@@ -48,7 +49,7 @@ void IngredientsApi::deleteMultipleFromStorage(UserId user,
     for (auto id : ingredients)
         params.insert({"ingredient", utils::to_string(id)});
     jsonDeleteAuthed<void>(user, std::format("/storages/{}/ingredients/", storage), params);
-}
+
 
 // GET /ingredients-for-storage
 IngredientSearchForStorageResponse IngredientsApi::searchForStorage(UserId user,
@@ -107,6 +108,7 @@ void IngredientsApi::putToRecipe(UserId user, RecipeId recipe, IngredientId ingr
 void IngredientsApi::deleteFromRecipe(UserId user, RecipeId recipe, IngredientId ingredient) const {
     jsonDeleteAuthed<void>(user, std::format("/recipes/{}/ingredients/{}", recipe, ingredient));
 }
+
 
 // GET /ingredients-for-recipe
 IngredientSearchForRecipeResponse IngredientsApi::searchForRecipe(UserId user,

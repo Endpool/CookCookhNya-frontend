@@ -27,7 +27,7 @@ void handleCustomRecipeIngredientsSearchCQ(
     const auto userId = cq.from->id;
     const auto chatId = cq.message->chat->id;
     if (cq.data == "back") {
-        renderCustomRecipe(false, userId, chatId, state.recipeId, bot, api);
+        renderCustomRecipe(true, userId, chatId, state.recipeId, bot, api);
         stateManager.put(RecipeCustomView{.recipeId = state.recipeId, .pageNo = state.pageNo});
         return;
     }
@@ -38,12 +38,12 @@ void handleCustomRecipeIngredientsSearchCQ(
     auto it = std::ranges::find(state.shownIngredients, *mIngredient, &IngredientSearchForRecipeItem::id);
     if (it == state.shownIngredients.end())
         return;
-    if (it->available) {
+    if (it->isInRecipe) {
         ingredientsApi.deleteFromRecipe(userId, state.recipeId, *mIngredient);
     } else {
         ingredientsApi.putToRecipe(userId, state.recipeId, *mIngredient);
     }
-    it->available = !it->available;
+    it->isInRecipe = !it->isInRecipe;
 
     if (auto mMessageId = message::getMessageId(userId))
         renderRecipeIngredientsSearchEdit(state.shownIngredients, state.pageNo, 1, *mMessageId, chatId, bot);
@@ -56,7 +56,6 @@ void handleCustomRecipeIngredientsSearchIQ(CustomRecipeIngredientsSearch& state,
     if (!iq.query.empty()) {
         const auto userId = iq.from->id;
         const std::size_t count = 100;
-        // CHECK BACKEND WHEN IT'S READY
         auto response = api.searchForRecipe(userId, state.recipeId, iq.query, count, 0);
         if (response.found != state.totalFound || !std::ranges::equal(response.page,
                                                                       state.shownIngredients,
