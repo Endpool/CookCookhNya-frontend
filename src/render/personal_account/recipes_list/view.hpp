@@ -1,5 +1,6 @@
 #pragma once
 
+#include "backend/models/recipe.hpp"
 #include "render/common.hpp"
 
 #include <cstddef>

@@ -6,6 +6,7 @@
 #include <boost/json/conversion.hpp>
 #include <boost/json/value.hpp>
 
+#include <cstddef>
 #include <string>
 #include <vector>
 

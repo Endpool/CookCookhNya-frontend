@@ -4,6 +4,7 @@
 #include "render/common.hpp"
 
 #include <cstddef>
+#include <vector>
 
 namespace cookcookhnya::render::recipe::ingredients {
 

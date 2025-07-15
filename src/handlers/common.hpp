@@ -10,6 +10,7 @@
 #include <tg_stater/handler/type.hpp>
 #include <tgbot/Api.h>
 #include <tgbot/types/CallbackQuery.h>
+#include <tgbot/types/InlineQuery.h>
 #include <tgbot/types/Message.h>
 
 namespace cookcookhnya::handlers {

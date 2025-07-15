@@ -6,6 +6,7 @@
 #include "message_tracker.hpp"
 #include "render/common.hpp"
 #include "utils/to_string.hpp"
+#include "utils/utils.hpp"
 
 #include <cstddef>
 #include <cstdint>

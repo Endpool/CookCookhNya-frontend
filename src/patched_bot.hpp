@@ -4,6 +4,7 @@
 
 #include <tgbot/Api.h>
 #include <tgbot/types/InlineKeyboardMarkup.h>
+#include <tgbot/types/Message.h>
 
 #include <cstddef>
 #include <string_view>
