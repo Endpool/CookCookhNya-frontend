@@ -2,6 +2,7 @@
 
 #include "backend/id_types.hpp"
 #include "backend/models/storage.hpp"
+#include "backend/models/user.hpp"
 #include "utils/parsing.hpp"
 
 #include <format>
@@ -10,6 +11,7 @@
 namespace cookcookhnya::api {
 
 using namespace models::storage;
+using namespace models::user;
 
 std::vector<StorageSummary> StoragesApi::getStoragesList(UserId user) const {
     return jsonGetAuthed<std::vector<StorageSummary>>(user, "/storages");
@@ -27,8 +29,8 @@ void StoragesApi::delete_(UserId user, StorageId storage) const {
     jsonDeleteAuthed<void>(user, std::format("/storages/{}", storage));
 }
 
-std::vector<StorageMemberDetails> StoragesApi::getStorageMembers(UserId user, StorageId storage) const {
-    return jsonGetAuthed<std::vector<StorageMemberDetails>>(user, std::format("/storages/{}/members", storage));
+std::vector<UserDetails> StoragesApi::getStorageMembers(UserId user, StorageId storage) const {
+    return jsonGetAuthed<std::vector<UserDetails>>(user, std::format("/storages/{}/members", storage));
 }
 
 void StoragesApi::addMember(UserId user, StorageId storage, UserId member) const {

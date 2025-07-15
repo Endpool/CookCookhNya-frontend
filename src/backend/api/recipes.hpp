@@ -3,6 +3,7 @@
 #include "backend/api/base.hpp"
 #include "backend/id_types.hpp"
 #include "backend/models/recipe.hpp"
+#include "common.hpp"
 
 #include <httplib.h>
 
@@ -18,13 +19,21 @@ class RecipesApi : ApiBase {
 
   public:
     [[nodiscard]] models::recipe::RecipesList
-    getRecipeList(UserId user, size_t size, size_t offset, const std::vector<StorageId>& storages) const;
+    getSuggestedRecipesList(UserId user, size_t size, size_t offset, const std::vector<StorageId>& storages) const;
+
+    [[nodiscard]] models::recipe::RecipeSearchResponse getRecipesList(UserId user,
+                                                                      std::string query,
+                                                                      std::size_t threshold,
+                                                                      std::size_t size,
+                                                                      std::size_t offset,
+                                                                      filterType filter) const;
 
     [[nodiscard]] models::recipe::RecipeDetails getIngredientsInRecipe(UserId user, RecipeId recipe) const;
 
     [[nodiscard]] models::recipe::RecipeSummary getRecipeName(UserId user, RecipeId recipe) const;
 
-    [[nodiscard]] models::recipe::CustomRecipesList getPrivateRecipeList(UserId user, size_t size, size_t offset) const;
+    [[nodiscard]] models::recipe::CustomRecipesList getPrivateRecipesList(
+        UserId user, std::string query, std::size_t threshold, std::size_t size, std::size_t offset) const;
 
     RecipeId create(UserId user, // NOLINT(*-nodiscard)
                     const models::recipe::RecipeCreateBody& body) const;

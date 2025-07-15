@@ -6,7 +6,6 @@
 #include <boost/json/conversion.hpp>
 #include <boost/json/value.hpp>
 
-#include <optional>
 #include <string>
 
 namespace cookcookhnya::api::models::storage {
@@ -30,15 +29,6 @@ struct StorageCreateBody {
     std::string name;
 
     friend void tag_invoke(boost::json::value_from_tag, boost::json::value& j, const StorageCreateBody& body);
-};
-
-struct StorageMemberDetails {
-    tg_types::UserId userId;
-    std::optional<std::string> alias;
-    std::string fullName;
-
-    friend StorageMemberDetails tag_invoke(boost::json::value_to_tag<StorageMemberDetails>,
-                                           const boost::json::value& j);
 };
 
 } // namespace cookcookhnya::api::models::storage

@@ -12,15 +12,24 @@ RecipeSummary tag_invoke(json::value_to_tag<RecipeSummary> /*tag*/, const json::
     return {
         .id = value_to<decltype(RecipeSummary::id)>(j.at("id")),
         .name = value_to<decltype(RecipeSummary::name)>(j.at("name")),
-        .available = value_to<decltype(RecipeSummary::available)>(j.at("available")),
-        .total = value_to<decltype(RecipeSummary::total)>(j.at("total")),
+        .sourceLink = value_to<decltype(RecipeSummary::sourceLink)>(j.at("sourceLink")),
+    };
+}
+
+RecipeSummaryWithIngredients tag_invoke(json::value_to_tag<RecipeSummaryWithIngredients> /*tag*/,
+                                        const json::value& j) {
+    return {
+        .id = value_to<decltype(RecipeSummaryWithIngredients::id)>(j.at("id")),
+        .name = value_to<decltype(RecipeSummaryWithIngredients::name)>(j.at("name")),
+        .available = value_to<decltype(RecipeSummaryWithIngredients::available)>(j.at("available")),
+        .total = value_to<decltype(RecipeSummaryWithIngredients::total)>(j.at("total")),
     };
 }
 
 RecipesList tag_invoke(json::value_to_tag<RecipesList> /*tag*/, const json::value& j) {
     return {
-        .recipesPage = value_to<decltype(RecipesList::recipesPage)>(j.at("recipes")),
-        .recipesFound = value_to<decltype(RecipesList::recipesFound)>(j.at("recipesFound")),
+        .page = value_to<decltype(RecipesList::page)>(j.at("results")),
+        .found = value_to<decltype(RecipesList::found)>(j.at("found")),
     };
 }
 
@@ -45,6 +54,7 @@ RecipeDetails tag_invoke(json::value_to_tag<RecipeDetails> /*tag*/, const json::
         .ingredients = value_to<decltype(RecipeDetails::ingredients)>(j.at("ingredients")),
         .name = value_to<decltype(RecipeDetails::name)>(j.at("name")),
         .link = value_to<decltype(RecipeDetails::link)>(j.at("sourceLink")),
+        .creator = value_to<decltype(RecipeDetails::creator)>(j.at("creator")),
     };
 }
 
@@ -57,8 +67,8 @@ CustomRecipeSummary tag_invoke(json::value_to_tag<CustomRecipeSummary> /*tag*/, 
 
 CustomRecipesList tag_invoke(json::value_to_tag<CustomRecipesList> /*tag*/, const json::value& j) {
     return {
-        .recipesPage = value_to<decltype(CustomRecipesList::recipesPage)>(j.at("recipes")),
-        .recipesFound = value_to<decltype(CustomRecipesList::recipesFound)>(j.at("recipesFound")),
+        .page = value_to<decltype(CustomRecipesList::page)>(j.at("results")),
+        .found = value_to<decltype(CustomRecipesList::found)>(j.at("found")),
     };
 }
 
@@ -74,6 +84,13 @@ IngredientInCustomRecipe tag_invoke(json::value_to_tag<IngredientInCustomRecipe>
     return {
         .id = value_to<decltype(IngredientInCustomRecipe::id)>(j.at("id")),
         .name = value_to<decltype(IngredientInCustomRecipe::name)>(j.at("name")),
+    };
+}
+
+RecipeSearchResponse tag_invoke(json::value_to_tag<RecipeSearchResponse> /*tag*/, const json::value& j) {
+    return {
+        .page = value_to<decltype(RecipeSearchResponse::page)>(j.at("results")),
+        .found = value_to<decltype(RecipeSearchResponse::found)>(j.at("found")),
     };
 }
 } // namespace cookcookhnya::api::models::recipe
