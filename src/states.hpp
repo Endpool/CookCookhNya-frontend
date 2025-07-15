@@ -105,6 +105,7 @@ struct ShoppingListCreation {
     std::vector<api::IngredientId> ingredientIdsInList;
     bool fromStorage;
     std::size_t pageNo;
+    std::vector<std::string> ingredientsName;
 };
 
 struct RecipeIngredientsSearch {

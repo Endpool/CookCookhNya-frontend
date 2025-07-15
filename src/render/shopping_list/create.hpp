@@ -5,18 +5,10 @@
 
 namespace cookcookhnya::render::shopping_list {
 
-std::vector<api::IngredientId> renderShoppingListCreation( // It returns ingredient Ids which are on the list
-    const std::vector<api::StorageId>& storageIds,
-    api::RecipeId recipeId,
-    UserId userId,
-    ChatId chatId,
-    BotRef bot,
-    RecipesApiRef api);
-
-void renderEditedShoppingListCreation(const std::vector<api::IngredientId>& ingredientIds,
-                                      UserId userId,
-                                      ChatId chatId,
-                                      BotRef bot,
-                                      IngredientsApiRef ingredientsApi);
+std::vector<api::IngredientId> renderShoppingListCreation(const std::vector<api::IngredientId>& ingredientIds,
+                                                          std::vector<std::string> ingredientsName,
+                                                          UserId userId,
+                                                          ChatId chatId,
+                                                          BotRef bot);
 
 } // namespace cookcookhnya::render::shopping_list
