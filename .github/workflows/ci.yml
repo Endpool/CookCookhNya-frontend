@@ -19,6 +19,7 @@ jobs:
         working-directory: .
         run: |
           make build-release
+
   clang-format-check:
     runs-on: ubuntu-latest
     needs: build
@@ -29,12 +30,13 @@ jobs:
       - name: Install clang-format
         run: |
           sudo apt-get update
-          sudo apt-get install -y clang-format-19
+          sudo apt-get install --no-install-recommends -y clang-format-19
           echo "/usr/lib/llvm-19/bin" >> $GITHUB_PATH
       - name: Run clang-format checks
         run: |
           find src -type f \( -name '*.hpp' -or -name '*.cpp' \) \
             -exec clang-format-19 --dry-run --Werror {} \+
+
   clang-tidy-check:
     runs-on: ubuntu-latest
     needs: build
@@ -48,15 +50,17 @@ jobs:
       - name: Install clang-tidy and parallel
         run: |
           sudo apt-get update
-          sudo apt-get install -y clang-tidy-19 parallel
+          sudo apt-get install --no-install-recommends -y clang-tidy-19 parallel
           echo "/usr/lib/llvm-19/bin" >> $GITHUB_PATH
   
-      - name: Cache clang-tidy results
-        uses: actions/cache@v3
+      - name: Restore clang-tidy cache
+        uses: actions/cache/restore@v3
         with:
           path: .clang-tidy-cache.json
           key: ${{ runner.os }}-clang-tidy-${{ github.ref }}
-  
+          restore-keys: |
+            ${{ runner.os }}-clang-tidy-
+
       - name: Create clang-tidy cache script
         run: |
           cat > run-clang-tidy-cached.sh << 'EOF'
@@ -105,7 +109,8 @@ jobs:
           export CACHE TEMP_DIR
           # Run linting in parallel with 2 jobs
           cp build/Release/compile_commands.json .
-          parallel --jobs 2 lint_file ::: "${FILES[@]}"
+          parallel --jobs $(nproc) lint_file ::: "${FILES[@]}"
+          EXIT_STATUS=$?
           # Merge all temp cache files into final cache
           NEW_CACHE=$(mktemp /tmp/clang-tidy-cache-final.XXXXXX.json)
           echo "{}" > "$NEW_CACHE"
@@ -119,9 +124,30 @@ jobs:
           mv "$NEW_CACHE" "$CACHE_FILE"
           # Clean up temp directory
           rm -rf "$TEMP_DIR"
+          # Indicate if there were failures
+          if [ $EXIT_STATUS -ne 0 ]; then
+            touch /tmp/clang-tidy-failed
+          fi
+          # Always exit with 0 to allow cache saving
+          exit 0
           EOF
           chmod +x run-clang-tidy-cached.sh
   
       - name: Run clang-tidy with caching
         run: |
           bash ./run-clang-tidy-cached.sh
+
+      - name: Save clang-tidy cache
+        if: always()
+        uses: actions/cache/save@v3
+        with:
+          path: .clang-tidy-cache.json
+          key: ${{ runner.os }}-clang-tidy-${{ github.ref }}
+
+      - name: Check for linting failures
+        if: always()
+        run: |
+          if [ -f /tmp/clang-tidy-failed ]; then
+            echo "Linting failed for some files"
+            exit 1
+          fi
