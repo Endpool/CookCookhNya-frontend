@@ -20,16 +20,18 @@ RecipesList
 RecipesApi::getRecipeList(UserId user, size_t size, size_t offset, const std::vector<StorageId>& storages) const {
     httplib::Params params = {{"size", utils::to_string(size)}, {"offset", std::to_string(offset)}};
     for (auto id : storages)
-        params.insert({"storageId", utils::to_string(id)});
-    return jsonGetAuthed<RecipesList>(user, "/recipes", params);
+        params.insert({"storage-id", utils::to_string(id)});
+    return jsonGetAuthed<RecipesList>(user, "/suggested-recipes", params);
 }
 
 RecipeDetails RecipesApi::getIngredientsInRecipe(UserId user, RecipeId recipe) const {
     return jsonGetAuthed<RecipeDetails>(user, std::format("/recipes/{}", recipe));
 }
 
-CustomRecipesList RecipesApi::getPrivateRecipeList(UserId userId, size_t size, size_t offset) const {
-    const httplib::Params params = {{"size", utils::to_string(size)}, {"offset", std::to_string(offset)}};
+CustomRecipesList
+RecipesApi::getPrivateRecipeList(UserId userId, size_t size, size_t offset, std::string filter) const {
+    const httplib::Params params = {
+        {"size", utils::to_string(size)}, {"offset", std::to_string(offset)}, {"filter", filter}};
     return jsonGetAuthed<CustomRecipesList>(userId, "/recipes", params);
 }
 

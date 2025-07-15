@@ -56,7 +56,7 @@ void handleShoppingListCreationCQ(
             }
         }
 
-        renderEditedShoppingListCreation(state.ingredientIdsInList, userId, chatId, bot, api);
+        renderShoppingListCreation(state.ingredientIdsInList, userId, chatId, bot, api);
     }
 }
 } // namespace cookcookhnya::handlers::shopping_list

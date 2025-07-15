@@ -41,7 +41,7 @@ IngredientSearchForRecipeItem tag_invoke(json::value_to_tag<IngredientSearchForR
     return {
         .id = value_to<decltype(IngredientSearchForRecipeItem::id)>(j.at("id")),
         .name = value_to<decltype(IngredientSearchForRecipeItem::name)>(j.at("name")),
-        .available = value_to<decltype(IngredientSearchForRecipeItem::available)>(j.at("available")),
+        .isInRecipe = value_to<decltype(IngredientSearchForRecipeItem::isInRecipe)>(j.at("isInRecipe")),
     };
 }
 

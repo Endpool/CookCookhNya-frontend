@@ -27,8 +27,8 @@ void IngredientsApi::deleteFromStorage(UserId user, StorageId storage, Ingredien
     jsonDeleteAuthed<void>(user, std::format("/storages/{}/ingredients/{}", storage, ingredient));
 }
 
-Ingredient IngredientsApi::get(IngredientId ingredient) const {
-    return jsonGet<Ingredient>(std::format("/ingredients/{}", ingredient));
+Ingredient IngredientsApi::get(UserId user, IngredientId ingredient) const {
+    return jsonGetAuthed<Ingredient>(user, std::format("/ingredients/{}", ingredient));
 }
 
 IngredientSearchForStorageResponse IngredientsApi::searchForStorage(
@@ -51,6 +51,7 @@ void IngredientsApi::deleteFromRecipe(UserId user, RecipeId recipe, IngredientId
 
 IngredientSearchForRecipeResponse IngredientsApi::searchForRecipe(
     UserId user, std::string query, RecipeId recipe, std::size_t count, std::size_t offset) const {
+    // Use default threshhold = 50
     return jsonGetAuthed<IngredientSearchForRecipeResponse>(user,
                                                             "/ingredients-for-recipe",
                                                             {{"query", std::move(query)},

@@ -24,10 +24,12 @@ class RecipesApi : ApiBase {
 
     [[nodiscard]] models::recipe::RecipeSummary getRecipeName(UserId user, RecipeId recipe) const;
 
-    [[nodiscard]] models::recipe::CustomRecipesList getPrivateRecipeList(UserId user, size_t size, size_t offset) const;
+    [[nodiscard]] models::recipe::CustomRecipesList
+    getPrivateRecipeList(UserId user, size_t size, size_t offset, std::string filter = "custom")
+        const; // Set default variable to keep code distinct for personal account instances
 
-    RecipeId create(UserId user, // NOLINT(*-nodiscard)
-                    const models::recipe::RecipeCreateBody& body) const;
+    [[nodiscard]] RecipeId create(UserId user, // NOLINT(*-nodiscard)
+                                  const models::recipe::RecipeCreateBody& body) const;
 
     void delete_(UserId user, RecipeId recipe) const;
 

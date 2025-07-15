@@ -1,7 +1,6 @@
 #include "create.hpp"
 
 #include "backend/api/ingredients.hpp"
-#include "backend/api/recipes.hpp"
 #include "backend/id_types.hpp"
 #include "message_tracker.hpp"
 #include "render/common.hpp"
@@ -9,52 +8,42 @@
 
 #include <cstddef>
 #include <cstdint>
-#include <format>
 #include <string>
-#include <unordered_set>
 #include <utility>
 #include <vector>
 
 namespace cookcookhnya::render::shopping_list {
 
-std::vector<api::IngredientId> renderShoppingListCreation(const std::vector<api::StorageId>& storageIds,
-                                                          api::RecipeId recipeId,
+std::vector<api::IngredientId> renderShoppingListCreation(const std::vector<api::IngredientId>& ingredientIds,
                                                           UserId userId,
                                                           ChatId chatId,
                                                           BotRef bot,
-                                                          RecipesApiRef recipesApi) {
-    const std::unordered_set<api::StorageId> storageIdsSet(storageIds.begin(), storageIds.end());
+                                                          api::IngredientsApi ingredientsApi) {
+
     std::string text = utils::utf8str(u8"Основываясь на недостающих ингредиентах, составили для вас продукты "
                                       u8"которые можно добавить в список покупок:\n *В самом низу выберите "
                                       u8"ингредиенты которые вы хотите исключить из списка покупок\n");
-
-    auto ingredients = recipesApi.getIngredientsInRecipe(userId, recipeId).ingredients;
-    std::vector<api::IngredientId> ingredientIds;
-    std::vector<std::string> ingredientsName; // To minimise queries to backend
-    bool isHavingIngredient = false;
-
-    for (auto& ingredient : ingredients) { // Iterate through each ingredient
-        isHavingIngredient = false;
-        for (const api::StorageId storage : ingredient.inStorages) {
-            if (storageIdsSet.contains(storage)) { // Then for this ingredient one of possible storages already selected
-                isHavingIngredient = true;
-                break; // No need to iterate further
-            }
-        }
-        if (!isHavingIngredient) {
-            ingredientIds.push_back(ingredient.id);
-            ingredientsName.push_back(ingredient.name);
-            // Print only ingredients which are not in selected storages - вроде норм
-            text += std::format("- {}\n", ingredient.name);
-        }
+    std::vector<std::string> ingredientsName;
+    for (const api::IngredientId ingredientId : ingredientIds) {
+        // IMPORTANT!: Probably can be optimized because this data is available at the recipe page
+        // by Maxim Fomin
+        // (1) I believe that both ways are expensive: or it's run through string of textGen or it's several small
+        // queries to backend. While i understand that working with string is faster then sending such queries i think
+        // that it's better not to overengineering frontend in this aspect.
+        //
+        // (2) Besides this also lays on frontend additional work on maintaining ingredientsName vector (in this case
+        // deletion from it).
+        // by Ilia Kliantsevich
+        std::string name = ingredientsApi.get(userId, ingredientId).name;
+        ingredientsName.push_back(name);
+        text += std::format("- {}\n", name);
     }
     const std::size_t buttonRows = ((ingredientIds.size() + 1) / 2) + 2; // +1 for back, +1 for approve
 
     InlineKeyboard keyboard(buttonRows);
     uint64_t i = 0;
     for (auto ingredientId : ingredientIds) {
-        const std::string& name =
-            ingredientsName[i]; // NEED TO TEST if INGREDIENTS WILL MESS UP BETWEEN NAME AND ID - вроде норм
+        const std::string& name = ingredientsName[i];
         if (i % 2 == 0) {
             keyboard[(i / 2)].reserve(2);
         }
@@ -68,46 +57,6 @@ std::vector<api::IngredientId> renderShoppingListCreation(const std::vector<api:
     if (messageId)
         bot.editMessageText(text, chatId, *messageId, makeKeyboardMarkup(std::move(keyboard)));
     return ingredientIds;
-}
-
-void renderEditedShoppingListCreation(const std::vector<api::IngredientId>& ingredientIds,
-                                      UserId userId,
-                                      ChatId chatId,
-                                      BotRef bot,
-                                      IngredientsApiRef ingredientsApi) {
-    std::vector<std::string> ingredientsName;
-    std::string text = utils::utf8str(u8"Основываясь на недостающих ингредиентах, составили для вас продукты "
-                                      u8"которые можно добавить в список покупок:\n *В самом низу выберите "
-                                      u8"ингредиенты которые вы хотите исключить из списка покупок\n");
-    for (const api::IngredientId ingredientId : ingredientIds) {
-        // IMPORTANT!: Probably can be optimized because this data is available at the recipe page
-        // by Maxim Fomin
-        std::string name = ingredientsApi.get(ingredientId)
-                               .name; // NEED TO TEST if INGREDIENTS WILL MESS UP BETWEEN NAME AND ID - вроде норм
-        ingredientsName.push_back(name);
-        text += std::format("- {}\n", name);
-    }
-
-    const std::size_t buttonRows = ((ingredientIds.size() + 1) / 2) + 2; // +1 for back
-
-    InlineKeyboard keyboard(buttonRows);
-    uint64_t i = 0;
-    for (auto ingredientId : ingredientIds) {
-        const std::string& name =
-            ingredientsName[i]; // NEED TO TEST if INGREDIENTS WILL MESS UP BETWEEN NAME AND ID - вроде норм
-        if (i % 2 == 0) {
-            keyboard[i / 2].reserve(2);
-        }
-        // i stands for ingredient
-        keyboard[i / 2].push_back(makeCallbackButton(name, "i" + utils::to_string(ingredientId)));
-        i++;
-    }
-
-    keyboard[(ingredientIds.size() + 1) / 2].push_back(makeCallbackButton(u8"▶️ Подтвердить", "confirm"));
-    keyboard[((ingredientIds.size() + 1) / 2) + 1].push_back(makeCallbackButton(u8"↩️ Назад", "back"));
-    auto messageId = message::getMessageId(userId);
-    if (messageId)
-        bot.editMessageText(text, chatId, *messageId, makeKeyboardMarkup(std::move(keyboard)));
 }
 
 } // namespace cookcookhnya::render::shopping_list
