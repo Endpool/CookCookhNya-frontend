@@ -32,11 +32,13 @@ build-debug-j5: build/Release/CMakeCache.txt
 	cmake --build . --preset=conan-debug -- -j5
 
 # Run bot
-.PHONY: start-debug gdb start-release
+.PHONY: start-debug start-debug-j5 start-debug-webhook gdb start-release
 start-debug: build-debug
 	set -a && source .env && ./build/Debug/main
 start-debug-j5: build-debug-j5
 	set -a && source .env && ./build/Debug/main
+start-debug-webhook: build-debug
+	set -a && source .env && ./build/Debug/main --webhook
 gdb: build-debug
 	set -a && source .env && gdb ./build/Debug/main
 start-release: build-release
