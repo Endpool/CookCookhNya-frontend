@@ -21,17 +21,9 @@ RecipeSummary tag_invoke(json::value_to_tag<RecipeSummary> /*tag*/, const json::
 RecipesList tag_invoke(json::value_to_tag<RecipesList> /*tag*/, const json::value& j) {
     return {
         .recipesPage = value_to<decltype(RecipesList::recipesPage)>(j.at("recipes")),
-        .recipesFound = value_to<decltype(RecipesList::recipesFound)>(j.at("recipesFound")),
+        .recipesFound = value_to<decltype(RecipesList::recipesFound)>(j.at("found")),
     };
 }
-
-/*RecipeCreateBody tag_invoke(json::value_to_tag<RecipeCreateBody> /*tag, const json::value& j) {
-    return {
-        .name = value_to<decltype(RecipeCreateBody::name)>(j.at("name")),
-        .ingredients = value_to<decltype(RecipeCreateBody::ingredients)>(j.at("ingredients")),
-        .link = value_to<decltype(RecipeCreateBody::link)>(j.at("sourceLink")),
-    };
-}*/
 
 void tag_invoke(json::value_from_tag /*tag*/, json::value& j, const RecipeCreateBody& body) {
     j = {{"name", body.name}, {"ingredients", boost::json::value_from(body.ingredients)}, {"sourceLink", body.link}};

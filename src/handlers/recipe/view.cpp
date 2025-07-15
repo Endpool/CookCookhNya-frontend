@@ -4,8 +4,8 @@
 #include "render/recipe/add_storage.hpp"
 #include "render/recipes_suggestions/view.hpp"
 #include "render/shopping_list/create.hpp"
-
 #include <string>
+#include <unordered_set>
 
 namespace cookcookhnya::handlers::recipe {
 
@@ -23,10 +23,33 @@ void handleRecipeViewCQ(RecipeView& state, CallbackQueryRef cq, BotRef bot, SMRe
         return;
     }
     if (data == "make_product_list") {
-        auto ingredientsInList = renderShoppingListCreation(state.storageIds, state.recipeId, userId, chatId, bot, api);
+        // Next lines of code is necessary preparation for making product list. Need to re-verify products which are
+        // certanly not in storage
+        // Besides we exactly need ingredient Ids, as then it will be sent on backend
+        const std::unordered_set<api::StorageId> storageIdsSet(state.storageIds.begin(), state.storageIds.end());
+        auto recipesApi = api.getRecipesApi();
+
+        auto ingredients = recipesApi.getIngredientsInRecipe(userId, state.recipeId).ingredients;
+        std::vector<api::IngredientId> ingredientIds;
+        bool isHavingIngredient = false;
+
+        for (auto& ingredient : ingredients) { // Iterate through each ingredient
+            isHavingIngredient = false;
+            for (const api::StorageId storage : ingredient.inStorages) {
+                // Then for this ingredient one of possible storages already selected
+                if (storageIdsSet.contains(storage)) {
+                    isHavingIngredient = true;
+                    break; // No need to iterate further
+                }
+            }
+            if (!isHavingIngredient) {
+                ingredientIds.push_back(ingredient.id);
+            }
+        }
+        renderShoppingListCreation(ingredientIds, userId, chatId, bot, api);
         stateManager.put(ShoppingListCreation{.storageIdsFrom = state.storageIds,
                                               .recipeIdFrom = state.recipeId,
-                                              .ingredientIdsInList = ingredientsInList,
+                                              .ingredientIdsInList = ingredientIds,
                                               .fromStorage = state.fromStorage,
                                               .pageNo = state.pageNo});
         bot.answerCallbackQuery(cq.id);

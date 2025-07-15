@@ -20,7 +20,7 @@ RecipesList
 RecipesApi::getRecipeList(UserId user, size_t size, size_t offset, const std::vector<StorageId>& storages) const {
     httplib::Params params = {{"size", utils::to_string(size)}, {"offset", std::to_string(offset)}};
     for (auto id : storages)
-        params.insert({"storageId", utils::to_string(id)});
+        params.insert({"storage-id", utils::to_string(id)});
     return jsonGetAuthed<RecipesList>(user, "/suggested-recipes", params);
 }
 
