@@ -87,6 +87,11 @@ InlineKeyboard constructNavigationsMarkup(size_t offset,
     return keyboard;
 }
 
+InlineKeyboard constructOnlyCreate() {
+    InlineKeyboard keyboard(2);
+    return keyboard;
+}
+
 InlineKeyboard
 constructMarkup(size_t pageNo, size_t numOfRecipesOnPage, api::models::recipe::CustomRecipesList& recipesList) {
     // 1 for back button return, 1 for arrows (ALWAYS ACCOUNT ARROWS), 1
@@ -96,16 +101,20 @@ constructMarkup(size_t pageNo, size_t numOfRecipesOnPage, api::models::recipe::C
 
     const size_t recipesToShow = std::min(numOfRecipesOnPage, recipesList.recipesPage.size());
 
-    const size_t arrowsRow = offset + recipesToShow; // 1 because of the offset of add/delete row
+    const size_t arrowsRow =
+        recipesList.recipesFound == 0 ? 0 : offset + recipesToShow; // 1 because of the offset of add/delete row
 
     InlineKeyboard keyboard =
-        constructNavigationsMarkup(offset, numOfRows + recipesToShow, pageNo, numOfRecipesOnPage, recipesList);
+        recipesList.recipesFound == 0
+            ? constructOnlyCreate()
+            : constructNavigationsMarkup(offset, numOfRows + recipesToShow, pageNo, numOfRecipesOnPage, recipesList);
     if (keyboard.empty()) { // If error happened
         return keyboard;
     }
     keyboard[0].push_back(makeCallbackButton(u8"Создать", "custom_recipe_create"));
 
     keyboard[arrowsRow + 1].push_back(makeCallbackButton(u8"↩️ Назад", "back"));
+
     return keyboard;
 }
 

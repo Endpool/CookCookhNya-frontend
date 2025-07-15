@@ -44,7 +44,7 @@ struct IngredientSearchForStorageResponse {
 struct IngredientSearchForRecipeItem {
     IngredientId id;
     std::string name;
-    bool available;
+    bool isInRecipe;
 
     friend IngredientSearchForRecipeItem tag_invoke(boost::json::value_to_tag<IngredientSearchForRecipeItem>,
                                                     const boost::json::value& j);
