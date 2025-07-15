@@ -42,7 +42,7 @@ class RecipesApi : ApiBase {
 
     [[nodiscard]] models::recipe::CustomRecipeDetails get(UserId user, RecipeId recipe) const;
 
-    void publishRecipe(UserId user, RecipeId recipe) const;
+    void publishCustom(UserId user, RecipeId recipe) const;
 };
 
 } // namespace cookcookhnya::api

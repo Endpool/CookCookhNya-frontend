@@ -16,22 +16,22 @@ namespace cookcookhnya::api {
 
 using namespace models::ingredient;
 
-// /storages/{storageId}/ingredients
+// GET /storages/{storageId}/ingredients
 std::vector<Ingredient> IngredientsApi::getStorageIngredients(UserId user, StorageId storage) const {
     return jsonGetAuthed<std::vector<Ingredient>>(user, std::format("/storages/{}/ingredients", storage));
 }
 
-// /storages/{storageId}/ingredients/{ingredientId}
+// PUT /storages/{storageId}/ingredients/{ingredientId}
 void IngredientsApi::putToStorage(UserId user, StorageId storage, IngredientId ingredient) const {
     jsonPutAuthed<void>(user, std::format("/storages/{}/ingredients/{}", storage, ingredient));
 }
 
-// /storages/{storageId}/ingredients/{ingredientId}
+// DELETE /storages/{storageId}/ingredients/{ingredientId}
 void IngredientsApi::deleteFromStorage(UserId user, StorageId storage, IngredientId ingredient) const {
     jsonDeleteAuthed<void>(user, std::format("/storages/{}/ingredients/{}", storage, ingredient));
 }
 
-// /storages/{storageId}/ingredients
+// DELETE /storages/{storageId}/ingredients
 void IngredientsApi::deleteMultipleFromStorage(UserId user,
                                                StorageId storage,
                                                const std::vector<IngredientId>& ingredients) const {
@@ -41,7 +41,7 @@ void IngredientsApi::deleteMultipleFromStorage(UserId user,
     jsonDeleteAuthed<void>(user, std::format("/storages/{}/ingredients/", storage), params);
 }
 
-// /ingredients-for-storage
+// GET /ingredients-for-storage
 IngredientSearchForStorageResponse IngredientsApi::searchForStorage(
     UserId user, std::string query, StorageId storage, std::size_t count, std::size_t offset) const {
     return jsonGetAuthed<IngredientSearchForStorageResponse>(user,
@@ -52,7 +52,7 @@ IngredientSearchForStorageResponse IngredientsApi::searchForStorage(
                                                               {"offset", utils::to_string(offset)}});
 }
 
-// /public/ingredients
+// GET /public/ingredients
 IngredientSearchResponse
 IngredientsApi::publicSearch(std::string query, std::size_t size, std::size_t offset, std::size_t threshold) const {
     return jsonGet<IngredientSearchResponse>("/public/ingredients",
@@ -63,7 +63,7 @@ IngredientsApi::publicSearch(std::string query, std::size_t size, std::size_t of
                                               {"offset", utils::to_string(offset)}});
 }
 
-// /ingredients
+// GET /ingredients
 IngredientSearchResponse IngredientsApi::search(UserId user,
                                                 std::string query,
                                                 std::size_t threshold,
@@ -79,22 +79,22 @@ IngredientSearchResponse IngredientsApi::search(UserId user,
                                                     {"filter", filterStr(filter)}});
 }
 
-// /public/ingredients/{ingredientId}
+// GET /public/ingredients/{ingredientId}
 Ingredient IngredientsApi::getPublicIngredient(IngredientId ingredient) const {
     return jsonGet<Ingredient>(std::format("/public/ingredients/{}", ingredient));
 }
 
-// /recipes/{recipeId}/ingredients/{ingredientId}
+// PUT /recipes/{recipeId}/ingredients/{ingredientId}
 void IngredientsApi::putToRecipe(UserId user, RecipeId recipe, IngredientId ingredient) const {
     jsonPutAuthed<void>(user, std::format("/recipes/{}/ingredients/{}", recipe, ingredient));
 }
 
-// /recipes/{recipeId}/ingredients/{ingredientId}
+// DELETE /recipes/{recipeId}/ingredients/{ingredientId}
 void IngredientsApi::deleteFromRecipe(UserId user, RecipeId recipe, IngredientId ingredient) const {
     jsonDeleteAuthed<void>(user, std::format("/recipes/{}/ingredients/{}", recipe, ingredient));
 }
 
-// /ingredients-for-recipe
+// GET /ingredients-for-recipe
 IngredientSearchForRecipeResponse IngredientsApi::searchForRecipe(
     UserId user, std::string query, RecipeId recipe, std::size_t count, std::size_t offset) const {
     return jsonGetAuthed<IngredientSearchForRecipeResponse>(user,
@@ -105,12 +105,12 @@ IngredientSearchForRecipeResponse IngredientsApi::searchForRecipe(
                                                              {"offset", utils::to_string(offset)}});
 }
 
-// /ingredients
+// POST /ingredients
 IngredientId IngredientsApi::createCustom(UserId user, const IngredientCreateBody& body) const {
     return utils::parse<IngredientId>(postWithJsonAuthed(user, "/ingredients", body));
 }
 
-// /recipes/{ingredientId}/request-publication
+// POST /recipes/{ingredientId}/request-publication
 void IngredientsApi::publishCustom(UserId user, IngredientId ingredient) const {
     jsonPostAuthed<void>(user, std::format("/ingredients/{}/request-publication", ingredient));
 }

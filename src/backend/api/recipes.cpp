@@ -17,7 +17,7 @@ namespace cookcookhnya::api {
 
 using namespace models::recipe;
 
-// /suggested-recipes
+// GET /suggested-recipes
 RecipesList RecipesApi::getSuggestedRecipesList(UserId user,
                                                 size_t size,
                                                 size_t offset,
@@ -28,7 +28,7 @@ RecipesList RecipesApi::getSuggestedRecipesList(UserId user,
     return jsonGetAuthed<RecipesList>(user, "/suggested-recipes", params);
 }
 
-// /recipes
+// GET /recipes
 RecipeSearchResponse RecipesApi::getRecipesList(UserId user,
                                                 std::string query,
                                                 std::size_t threshold,
@@ -44,12 +44,12 @@ RecipeSearchResponse RecipesApi::getRecipesList(UserId user,
                                                 {"filter", filterStr(filter)}});
 }
 
-// /recipes
+// GET /recipes/{recipeId}
 RecipeDetails RecipesApi::getIngredientsInRecipe(UserId user, RecipeId recipe) const {
     return jsonGetAuthed<RecipeDetails>(user, std::format("/recipes/{}", recipe));
 }
 
-// /recipes
+// GET /recipes
 CustomRecipesList RecipesApi::getPrivateRecipesList(
     UserId user, std::string query, std::size_t threshold, std::size_t size, std::size_t offset) const {
     return jsonGetAuthed<CustomRecipesList>(user,
@@ -61,23 +61,23 @@ CustomRecipesList RecipesApi::getPrivateRecipesList(
                                              {"filter", filterStr(filterType::Custom)}});
 }
 
-// /recipes
+// POST /recipes
 RecipeId RecipesApi::create(UserId user, const RecipeCreateBody& body) const {
     return utils::parse<RecipeId>(postWithJsonAuthed(user, "/recipes", body));
 }
 
-// /recipes/{recipeId}
+// DELETE /recipes/{recipeId}
 void RecipesApi::delete_(UserId user, RecipeId recipeId) const {
     jsonDeleteAuthed<void>(user, std::format("/recipes/{}", recipeId));
 }
 
-// /recipes/{recipeId}
+// GET /recipes/{recipeId}
 CustomRecipeDetails RecipesApi::get(UserId user, RecipeId recipe) const {
     return jsonGetAuthed<CustomRecipeDetails>(user, std::format("/recipes/{}", recipe));
 }
 
-// /recipes/{recipeId}/request-publication
-void RecipesApi::publishRecipe(UserId user, RecipeId recipe) const {
+// POST /recipes/{recipeId}/request-publication
+void RecipesApi::publishCustom(UserId user, RecipeId recipe) const {
     jsonPostAuthed<void>(user, std::format("my/recipes/{}/request-publication", recipe));
 }
 
