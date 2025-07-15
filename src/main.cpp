@@ -1,17 +1,34 @@
 #include "backend/api/api.hpp"
 #include "handlers/handlers_list.hpp"
 #include "states.hpp"
+#include "utils/parsing.hpp"
 #include "utils/utils.hpp"
 
 #include <tg_stater/bot.hpp>
 #include <tg_stater/dependencies.hpp>
 
-int main() {
+#include <algorithm>
+#include <iostream>
+#include <string>
+#include <string_view>
+#include <utility>
+
+int main(int argc, char* argv[]) {
+    using namespace std::literals;
     using namespace tg_stater;
     using namespace cookcookhnya;
     using namespace cookcookhnya::handlers::bot_handlers;
     using namespace cookcookhnya::states;
     using namespace cookcookhnya::api;
+
+    bool useWebhook = false;
+    if (argc > 1) {
+        if (std::find(argv + 1, argv + argc, "--webhook"sv) == argv + argc) {
+            std::cout << "The only option is \"--webhook\"\n";
+            return 1;
+        }
+        useWebhook = true;
+    }
 
     Setup<State, Dependencies<ApiClient>>::Stater<startCmdHandler,
                                                   noStateHandler,
@@ -47,5 +64,14 @@ int main() {
                                                   customRecipeIngredientsSearchIQHandler>
         bot{{}, {ApiClient{utils::getenvWithError("API_URL")}}};
 
-    bot.start(TgBot::Bot{utils::getenvWithError("BOT_TOKEN")});
+    TgBot::Bot tgBot{utils::getenvWithError("BOT_TOKEN")};
+    if (useWebhook) {
+        std::string path = "/"s + utils::getenvWithError("WEBHOOK_SECRET");
+        bot.startWebhook(std::move(tgBot),
+                         utils::parse<unsigned short>(utils::getenvWithError("WEBHOOK_PORT")),
+                         utils::getenvWithError("WEBHOOK_HOST") + path,
+                         path);
+    } else {
+        bot.start(std::move(tgBot));
+    }
 }

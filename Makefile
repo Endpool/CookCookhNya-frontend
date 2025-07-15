@@ -23,24 +23,25 @@ build/Release/CMakeCache.txt: conanfile.txt
 	$(MAKE) cmake-release
 
 # Build using cmake
-.PHONY: build-debug build-release
+.PHONY: build-debug build-release build-debug-j5
 build-debug: build/Debug/CMakeCache.txt
 	cmake --build --preset=conan-debug
-build-release: build/Release/CMakeCache.txt
-	cmake --build --preset=conan-release
 build-debug-j5: build/Release/CMakeCache.txt
 	cmake --build . --preset=conan-debug -- -j5
+build-release: build/Release/CMakeCache.txt
+	cmake --build --preset=conan-release
 
 # Run bot
-.PHONY: start-debug gdb start-release
+.PHONY: start-debug start-debug-j5 start-debug-webhook gdb gdb-j5 start-release
 start-debug: build-debug
 	set -a && source .env && ./build/Debug/main
 start-debug-j5: build-debug-j5
 	set -a && source .env && ./build/Debug/main
-gdb-j5: build-debug-j5
-	set -a && source .env && gdb ./build/Debug/main
-
+start-debug-webhook: build-debug
+	set -a && source .env && ./build/Debug/main --webhook
 gdb: build-debug
+	set -a && source .env && gdb ./build/Debug/main
+gdb-j5: build-debug-j5
 	set -a && source .env && gdb ./build/Debug/main
 start-release: build-release
 	set -a && source .env && ./build/Release/main
