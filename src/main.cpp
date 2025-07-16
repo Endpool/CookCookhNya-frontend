@@ -11,6 +11,7 @@
 #include <iostream>
 #include <string>
 #include <string_view>
+#include <tgbot/types/InputFile.h>
 #include <utility>
 
 int main(int argc, char* argv[]) {
@@ -67,10 +68,12 @@ int main(int argc, char* argv[]) {
     TgBot::Bot tgBot{utils::getenvWithError("BOT_TOKEN")};
     if (useWebhook) {
         std::string path = "/"s + utils::getenvWithError("WEBHOOK_SECRET");
-        bot.startWebhook(std::move(tgBot),
-                         utils::parse<unsigned short>(utils::getenvWithError("WEBHOOK_PORT")),
-                         utils::getenvWithError("WEBHOOK_HOST") + path,
-                         path);
+        bot.startWebhook(
+            std::move(tgBot),
+            utils::parse<unsigned short>(utils::getenvWithError("WEBHOOK_PORT")),
+            utils::getenvWithError("WEBHOOK_HOST") + path,
+            path,
+            TgBot::InputFile::fromFile(utils::getenvWithError("WEBHOOK_CERTIFICATE_PATH"), "application/x-pem-file"));
     } else {
         bot.start(std::move(tgBot));
     }
