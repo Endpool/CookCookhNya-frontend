@@ -1,5 +1,6 @@
 #pragma once
 
+#include "backend/id_types.hpp"
 #include "render/common.hpp"
 
 namespace cookcookhnya::render::storage {

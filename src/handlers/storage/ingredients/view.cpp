@@ -60,7 +60,7 @@ void handleStorageIngredientsListIQ(StorageIngredientsList& state,
         renderIngredientsListSearch(state, userId, userId, bot);
     } else {
         const std::size_t count = 100;
-        auto response = api.searchForStorage(userId, iq.query, state.storageId, count, 0);
+        auto response = api.searchForStorage(userId, state.storageId, iq.query, count, 0);
         if (response.found != state.totalFound || !std::ranges::equal(response.page,
                                                                       state.searchItems,
                                                                       std::ranges::equal_to{},

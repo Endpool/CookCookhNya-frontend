@@ -28,7 +28,7 @@ void renderCustomIngredientConfirmation(
     keyboard[0].push_back(makeCallbackButton(u8"▶️ Подтвердить", "confirm"));
     keyboard[1].push_back(makeCallbackButton(u8"↩️ Назад", "back"));
 
-    auto similarIngredients = api.search(std::move(ingredientName), 5, 0, 70).page; // NOLINT(*magic-numbers*)
+    auto similarIngredients = api.search(userId, std::move(ingredientName), 70, 5, 0).page; // NOLINT(*magic-numbers*)
 
     std::string text;
     if (!similarIngredients.empty()) {

@@ -5,6 +5,7 @@
 #include "message_tracker.hpp"
 #include "render/common.hpp"
 #include "utils/to_string.hpp"
+#include "utils/utils.hpp"
 
 #include <cstddef>
 #include <cstdint>
@@ -58,5 +59,4 @@ std::vector<api::IngredientId> renderShoppingListCreation(const std::vector<api:
         bot.editMessageText(text, chatId, *messageId, makeKeyboardMarkup(std::move(keyboard)));
     return ingredientIds;
 }
-
 } // namespace cookcookhnya::render::shopping_list

@@ -4,8 +4,9 @@
 #include "backend/models/recipe.hpp"
 #include "message_tracker.hpp"
 #include "render/common.hpp"
+#include "utils/to_string.hpp"
 #include "utils/utils.hpp"
-#include "view.hpp" // Reuse textGen from here
+#include "view.hpp"
 
 #include <cmath>
 #include <cstddef>

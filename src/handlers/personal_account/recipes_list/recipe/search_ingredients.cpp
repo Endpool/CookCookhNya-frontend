@@ -56,7 +56,7 @@ void handleCustomRecipeIngredientsSearchIQ(CustomRecipeIngredientsSearch& state,
     if (!iq.query.empty()) {
         const auto userId = iq.from->id;
         const std::size_t count = 100;
-        auto response = api.searchForRecipe(userId, iq.query, state.recipeId, count, 0);
+        auto response = api.searchForRecipe(userId, state.recipeId, iq.query, count, 0);
         if (response.found != state.totalFound || !std::ranges::equal(response.page,
                                                                       state.shownIngredients,
                                                                       std::ranges::equal_to{},

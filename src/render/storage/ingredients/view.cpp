@@ -5,6 +5,7 @@
 #include "patched_bot.hpp"
 #include "render/common.hpp"
 #include "states.hpp"
+#include "utils/to_string.hpp"
 #include "utils/utils.hpp"
 
 #include <tgbot/types/InlineKeyboardButton.h>

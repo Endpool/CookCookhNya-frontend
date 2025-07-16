@@ -10,6 +10,9 @@ RUN wget https://github.com/conan-io/conan/releases/download/2.15.1/conan-2.15.1
  && mv bin/* /bin \
  && rm conan-2.15.1-linux-x86_64.tgz
 
+# pre install dependencies
+RUN conan install --requires=boost/1.83.0
+
 RUN conan profile detect \
  && sed -i 's/compiler.cppstd=.*/compiler.cppstd=23/' ~/.conan2/profiles/default
 

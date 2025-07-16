@@ -38,7 +38,7 @@ void handleRecipeCustomViewCQ(
     }
 
     if (data == "publish") { // Should also create backend endpoint to track status of publish
-        recipesApi.publishRecipe(userId, state.recipeId);
+        recipesApi.publishCustom(userId, state.recipeId);
         return;
     }
 }

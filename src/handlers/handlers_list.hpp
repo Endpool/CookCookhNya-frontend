@@ -42,7 +42,6 @@
 
 #include <tg_stater/handler/event.hpp>
 #include <tg_stater/handler/handler.hpp>
-#include <tg_stater/handler/type.hpp>
 
 namespace cookcookhnya::handlers {
 
@@ -52,7 +51,6 @@ using namespace personal_account;
 using namespace personal_account::ingredients;
 using namespace personal_account::recipes;
 using namespace recipe;
-using namespace recipes_suggestions;
 using namespace shopping_list;
 using namespace storage;
 using namespace storage::ingredients;
