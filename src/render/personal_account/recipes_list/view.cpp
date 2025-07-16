@@ -102,10 +102,10 @@ constructMarkup(size_t pageNo, size_t numOfRecipesOnPage, api::models::recipe::C
     const size_t recipesToShow = std::min(numOfRecipesOnPage, recipesList.page.size());
 
     const size_t arrowsRow =
-        recipesList.recipesFound == 0 ? 0 : offset + recipesToShow; // 1 because of the offset of add/delete row
+        recipesList.found == 0 ? 0 : offset + recipesToShow; // 1 because of the offset of add/delete row
 
     InlineKeyboard keyboard =
-        recipesList.recipesFound == 0
+        recipesList.found == 0
             ? constructOnlyCreate()
             : constructNavigationsMarkup(offset, numOfRows + recipesToShow, pageNo, numOfRecipesOnPage, recipesList);
     if (keyboard.empty()) { // If error happened
@@ -124,7 +124,7 @@ void renderCustomRecipesList(size_t pageNo, UserId userId, ChatId chatId, BotRef
     auto messageId = message::getMessageId(userId);
 
     const int numOfRecipesOnPage = 5;
-    auto recipesList = recipesApi.getPrivateRecipeList(userId, numOfRecipesOnPage, (pageNo)*numOfRecipesOnPage);
+    auto recipesList = recipesApi.getCustomRecipesList(userId, "", numOfRecipesOnPage, (pageNo)*numOfRecipesOnPage);
 
     bot.editMessageText(
         pageInfo, chatId, *messageId, makeKeyboardMarkup(constructMarkup(pageNo, numOfRecipesOnPage, recipesList)));
