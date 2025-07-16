@@ -1,5 +1,7 @@
 #include "view.hpp"
 
+#include "backend/api/common.hpp"
+#include "backend/api/recipes.hpp"
 #include "backend/models/recipe.hpp"
 #include "message_tracker.hpp"
 #include "render/common.hpp"
@@ -23,7 +25,7 @@ InlineKeyboard constructNavigationsMarkup(size_t offset,
                                           size_t fullKeyBoardSize,
                                           size_t pageNo,
                                           size_t numOfRecipesOnPage,
-                                          api::models::recipe::CustomRecipesList& recipesList) {
+                                          api::models::recipe::RecipeSearchResponse& recipesList) {
     const size_t amountOfRecipes = recipesList.found;
     int maxPageNum =
         static_cast<int>(std::ceil(static_cast<double>(amountOfRecipes) / static_cast<double>(numOfRecipesOnPage)));
@@ -93,7 +95,7 @@ InlineKeyboard constructOnlyCreate() {
 }
 
 InlineKeyboard
-constructMarkup(size_t pageNo, size_t numOfRecipesOnPage, api::models::recipe::CustomRecipesList& recipesList) {
+constructMarkup(size_t pageNo, size_t numOfRecipesOnPage, api::models::recipe::RecipeSearchResponse& recipesList) {
     // 1 for back button return, 1 for arrows (ALWAYS ACCOUNT ARROWS), 1
     // for adding new recipe - other buttons are recipes
     const size_t numOfRows = 3;
@@ -123,8 +125,9 @@ void renderCustomRecipesList(size_t pageNo, UserId userId, ChatId chatId, BotRef
 
     auto messageId = message::getMessageId(userId);
 
-    const int numOfRecipesOnPage = 5;
-    auto recipesList = recipesApi.getCustomRecipesList(userId, "", numOfRecipesOnPage, (pageNo)*numOfRecipesOnPage);
+    const std::size_t numOfRecipesOnPage = 5;
+    auto recipesList =
+        recipesApi.getRecipesList(userId, "", 0, numOfRecipesOnPage, pageNo * numOfRecipesOnPage, filterType::Custom);
 
     bot.editMessageText(
         pageInfo, chatId, *messageId, makeKeyboardMarkup(constructMarkup(pageNo, numOfRecipesOnPage, recipesList)));

@@ -33,12 +33,6 @@ class RecipesApi : ApiBase {
 
     [[nodiscard]] models::recipe::RecipeDetails getIngredientsInRecipe(UserId user, RecipeId recipe) const;
 
-    [[nodiscard]] models::recipe::CustomRecipesList getCustomRecipesList(UserId user,
-                                                                         std::string query = "",
-                                                                         std::size_t threshold = 50, // NOLINT(*magic*)
-                                                                         std::size_t size = 2,
-                                                                         std::size_t offset = 0) const;
-
     [[nodiscard]] RecipeId create(UserId user, // NOLINT(*-nodiscard)
                                   const models::recipe::RecipeCreateBody& body) const;
 
