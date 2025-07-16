@@ -54,7 +54,7 @@ InlineKeyboard constructNavigationsMarkup(size_t offset,
     keyboard[0].push_back(std::move(searchButton));
 
     for (auto [row, ing] : zip(drop(keyboard, 1), state.searchItems))
-        row.push_back(makeCallbackButton((ing.available ? "[ + ] " : "[ㅤ] ") + ing.name, utils::to_string(ing.id)));
+        row.push_back(makeCallbackButton((ing.isInStorage ? "[ + ] " : "[ㅤ] ") + ing.name, utils::to_string(ing.id)));
 
     if (state.pageNo == 0 && ifMaxPage) {
         // instead of arrows row

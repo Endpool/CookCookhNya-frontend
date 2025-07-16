@@ -65,13 +65,13 @@ int main(int argc, char* argv[]) {
         bot{{}, {ApiClient{utils::getenvWithError("API_URL")}}};
 
     TgBot::Bot tgBot{utils::getenvWithError("BOT_TOKEN")};
-    /*if (useWebhook) {
+    if (useWebhook) {
         std::string path = "/"s + utils::getenvWithError("WEBHOOK_SECRET");
         bot.startWebhook(std::move(tgBot),
                          utils::parse<unsigned short>(utils::getenvWithError("WEBHOOK_PORT")),
                          utils::getenvWithError("WEBHOOK_HOST") + path,
                          path);
-    } else {*/
-    bot.start(std::move(tgBot));
-    // }
+    } else {
+        bot.start(std::move(tgBot));
+    }
 }

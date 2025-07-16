@@ -41,8 +41,9 @@ void handleCustomRecipesListCQ(
         auto recipeId = utils::parseSafe<api::RecipeId>(
             data.substr(data.find(' ', 0) + 1, data.size())); // +1 is to move from space and get pure number
         if (recipeId) {
-            renderCustomRecipe(true, userId, chatId, recipeId.value(), bot, api);
-            stateManager.put(RecipeCustomView{.recipeId = recipeId.value(), .pageNo = state.pageNo});
+            auto ingredients = renderCustomRecipe(true, userId, chatId, recipeId.value(), bot, api);
+            stateManager.put(
+                RecipeCustomView{.recipeId = recipeId.value(), .pageNo = state.pageNo, .ingredients = ingredients});
         }
         return;
     }

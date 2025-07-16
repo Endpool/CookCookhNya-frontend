@@ -74,14 +74,14 @@ void handleStorageIngredientsListCQ(
         if (it == state.searchItems.end())
             return;
 
-        if (it->available) {
+        if (it->isInStorage) {
             api.getIngredientsApi().deleteFromStorage(userId, state.storageId, *mIngredient);
             state.storageIngredients.remove(*mIngredient);
         } else {
             api.getIngredientsApi().putToStorage(userId, state.storageId, *mIngredient);
             state.storageIngredients.put({.id = it->id, .name = it->name});
         }
-        it->available = !it->available;
+        it->isInStorage = !it->isInStorage;
         renderIngredientsListSearch(state, numOfIngredientsOnPage, userId, chatId, bot);
     }
 }
