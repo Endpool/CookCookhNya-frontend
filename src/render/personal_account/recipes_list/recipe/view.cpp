@@ -10,6 +10,7 @@
 #include <format>
 #include <string>
 #include <utility>
+#include <vector>
 
 namespace cookcookhnya::render::personal_account::recipes {
 

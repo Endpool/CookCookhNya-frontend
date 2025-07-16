@@ -7,6 +7,7 @@
 #include "render/storages_list/view.hpp"
 #include "states.hpp"
 
+#include <cstddef>
 #include <iterator>
 #include <vector>
 

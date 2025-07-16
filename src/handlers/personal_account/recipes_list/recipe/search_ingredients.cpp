@@ -6,6 +6,7 @@
 #include "message_tracker.hpp"
 #include "render/personal_account/recipes_list/recipe/search_ingredients.hpp"
 #include "render/personal_account/recipes_list/recipe/view.hpp"
+#include "tg_types.hpp"
 #include "utils/parsing.hpp"
 
 #include <algorithm>

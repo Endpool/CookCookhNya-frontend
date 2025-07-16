@@ -1,11 +1,13 @@
 #include "view.hpp"
 
+#include "backend/id_types.hpp"
 #include "handlers/common.hpp"
 #include "render/recipe/add_storage.hpp"
 #include "render/recipes_suggestions/view.hpp"
 #include "render/shopping_list/create.hpp"
 #include <string>
 #include <unordered_set>
+#include <vector>
 
 namespace cookcookhnya::handlers::recipe {
 

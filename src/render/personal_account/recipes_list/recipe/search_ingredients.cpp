@@ -10,6 +10,9 @@
 
 #include <tgbot/types/InlineKeyboardButton.h>
 
+#include <cmath>
+#include <cstddef>
+#include <cstdint>
 #include <format>
 #include <memory>
 #include <ranges>

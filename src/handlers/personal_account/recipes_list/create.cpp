@@ -1,5 +1,6 @@
 #include "create.hpp"
 
+#include "backend/models/recipe.hpp"
 #include "handlers/common.hpp"
 #include "render/personal_account/recipes_list/recipe/view.hpp"
 #include "render/personal_account/recipes_list/view.hpp"
