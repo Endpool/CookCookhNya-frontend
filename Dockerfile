@@ -14,7 +14,7 @@ RUN conan profile detect \
  && sed -i 's/compiler.cppstd=.*/compiler.cppstd=23/' ~/.conan2/profiles/default
 
 # pre install dependencies
-RUN conan install --requires=boost/1.83.0
+RUN conan install --requires=boost/1.83.0 --build=missing
 
 WORKDIR /deps
 RUN wget https://github.com/Makcal/TgBotStater/archive/refs/tags/v0.4.1.tar.gz -O tgbotstater.tar.gz \
