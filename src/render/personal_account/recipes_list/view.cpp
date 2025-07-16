@@ -32,17 +32,18 @@ InlineKeyboard constructNavigationsMarkup(size_t offset,
 
     const size_t recipesToShow = std::min(numOfRecipesOnPage, recipesList.page.size());
 
-    const bool ifMaxPage = amountOfRecipes - numOfRecipesOnPage * pageNo + 1 <=
-                           0; // + 1 because of the 0-indexing, as comparisson is between num of recipes gotten and that
-                              // will be actually shown
+    const bool ifMaxPage =
+        static_cast<int>(amountOfRecipes) - static_cast<int>(numOfRecipesOnPage) * (static_cast<int>(pageNo) + 1) <=
+        0; // + 1 because of the 0-indexing, as comparisson is between num of recipes gotten and that
+           // will be actually shown
 
     if (offset + recipesToShow >= fullKeyBoardSize) {
         InlineKeyboard error(0);
         return error;
     }
     const size_t arrowsRow = offset + recipesToShow;
-
-    InlineKeyboard keyboard(fullKeyBoardSize);
+    // Don't reserve for arrows if it's first page is max(im)
+    InlineKeyboard keyboard(pageNo == 0 && ifMaxPage ? fullKeyBoardSize - 1 : fullKeyBoardSize);
     int counter = 0;
     for (std::size_t i = 0; i < recipesToShow; i++) {
         // Print on button in form "1. {Recipe}"
@@ -51,7 +52,11 @@ InlineKeyboard constructNavigationsMarkup(size_t offset,
             std::format("recipe: {}", recipesList.page[counter].id))); // RECIPE ID
         counter++;
     }
-
+    if (pageNo == 0 && ifMaxPage) {
+        // instead of arrows row
+        keyboard[arrowsRow].push_back(makeCallbackButton(u8"↩️ Назад", "back"));
+        return keyboard;
+    }
     keyboard[arrowsRow].reserve(3);
 
     // Helps to reduce code. Power of C++ YEAH BABE!
@@ -86,11 +91,13 @@ InlineKeyboard constructNavigationsMarkup(size_t offset,
     // Put pageNo as button
     keyboard[arrowsRow].insert(keyboard[arrowsRow].begin() + 1,
                                makeCallbackButton(std::format("{} из {}", pageNo + 1, maxPageNum), "dont_handle"));
+    keyboard[arrowsRow + 1].push_back(makeCallbackButton(u8"↩️ Назад", "back"));
     return keyboard;
 }
 
 InlineKeyboard constructOnlyCreate() {
     InlineKeyboard keyboard(2);
+    keyboard[1].push_back(makeCallbackButton(u8"↩️ Назад", "back"));
     return keyboard;
 }
 
@@ -103,9 +110,6 @@ constructMarkup(size_t pageNo, size_t numOfRecipesOnPage, api::models::recipe::R
 
     const size_t recipesToShow = std::min(numOfRecipesOnPage, recipesList.page.size());
 
-    const size_t arrowsRow =
-        recipesList.found == 0 ? 0 : offset + recipesToShow; // 1 because of the offset of add/delete row
-
     InlineKeyboard keyboard =
         recipesList.found == 0
             ? constructOnlyCreate()
@@ -114,8 +118,6 @@ constructMarkup(size_t pageNo, size_t numOfRecipesOnPage, api::models::recipe::R
         return keyboard;
     }
     keyboard[0].push_back(makeCallbackButton(u8"Создать", "custom_recipe_create"));
-
-    keyboard[arrowsRow + 1].push_back(makeCallbackButton(u8"↩️ Назад", "back"));
 
     return keyboard;
 }

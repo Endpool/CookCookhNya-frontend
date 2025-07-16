@@ -15,7 +15,6 @@ namespace cookcookhnya::api::models::recipe {
 struct RecipeSummary {
     RecipeId id;
     std::string name;
-    std::string sourceLink;
 
     friend RecipeSummary tag_invoke(boost::json::value_to_tag<RecipeSummary>, const boost::json::value& j);
 };

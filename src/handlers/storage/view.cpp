@@ -21,12 +21,14 @@ void handleStorageViewCQ(StorageView& state, CallbackQueryRef cq, BotRef bot, SM
     bot.answerCallbackQuery(cq.id);
     auto chatId = cq.message->chat->id;
     auto userId = cq.from->id;
+    const size_t numOfIngredientsOnPage = 5;
     if (cq.data == "ingredients") {
         auto ingredients = api.getIngredientsApi().getStorageIngredients(userId, state.storageId);
         stateManager.put(StorageIngredientsList{
             state.storageId,
             {std::make_move_iterator(ingredients.begin()), std::make_move_iterator(ingredients.end())}});
-        renderIngredientsListSearch(std::get<StorageIngredientsList>(*stateManager.get()), userId, chatId, bot);
+        renderIngredientsListSearch(
+            std::get<StorageIngredientsList>(*stateManager.get()), numOfIngredientsOnPage, userId, chatId, bot);
     } else if (cq.data == "members") {
         renderMemberList(true, state.storageId, userId, chatId, bot, api);
         stateManager.put(StorageMemberView{state.storageId});

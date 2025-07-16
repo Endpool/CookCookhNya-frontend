@@ -32,8 +32,10 @@ void handleRecipeCustomViewCQ(
 
     if (data == "delete") {
         recipesApi.delete_(userId, state.recipeId);
-        renderCustomRecipesList(state.pageNo, userId, chatId, bot, recipesApi);
-        stateManager.put(CustomRecipesList{.pageNo = state.pageNo});
+        // If some recipe was deleted then return to first page
+        // Made to avoid bug when delete last recipe on page -> will return to the non-existent page
+        renderCustomRecipesList(0, userId, chatId, bot, recipesApi);
+        stateManager.put(CustomRecipesList{.pageNo = 0});
         return;
     }
 
