@@ -1,11 +1,11 @@
 #pragma once
 
+#include <boost/json/fwd.hpp>
 #include <boost/json/value.hpp>
-#include <boost/json/value_to.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/uuid/uuid.hpp>
-#include <boost/uuid/uuid_hash.hpp>
-#include <boost/uuid/uuid_io.hpp>
+#include <boost/uuid/uuid_hash.hpp> // NOLINT
+#include <boost/uuid/uuid_io.hpp>   // NOLINT
 
 #include <format>
 #include <string>

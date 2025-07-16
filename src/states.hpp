@@ -9,6 +9,7 @@
 #include <tg_stater/state_storage/memory.hpp>
 
 #include <cstddef>
+#include <string>
 #include <utility>
 #include <variant>
 #include <vector>

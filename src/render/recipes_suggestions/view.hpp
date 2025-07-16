@@ -1,6 +1,11 @@
 #pragma once
 
+#include "backend/id_types.hpp"
+#include "backend/models/recipe.hpp"
 #include "render/common.hpp"
+
+#include <cstddef>
+#include <vector>
 
 namespace cookcookhnya::render::recipes_suggestions {
 

@@ -1,5 +1,7 @@
 #include "view.hpp"
 
+#include "backend/api/common.hpp"
+#include "backend/api/recipes.hpp"
 #include "backend/models/recipe.hpp"
 #include "message_tracker.hpp"
 #include "render/common.hpp"
@@ -23,14 +25,14 @@ InlineKeyboard constructNavigationsMarkup(size_t offset,
                                           size_t fullKeyBoardSize,
                                           size_t pageNo,
                                           size_t numOfRecipesOnPage,
-                                          api::models::recipe::CustomRecipesList recipesList) {
-    const int amountOfRecipes = recipesList.recipesFound;
+                                          api::models::recipe::RecipeSearchResponse& recipesList) {
+    const size_t amountOfRecipes = recipesList.found;
     int maxPageNum =
         static_cast<int>(std::ceil(static_cast<double>(amountOfRecipes) / static_cast<double>(numOfRecipesOnPage)));
 
-    const size_t recipesToShow = std::min(numOfRecipesOnPage, recipesList.recipesPage.size());
+    const size_t recipesToShow = std::min(numOfRecipesOnPage, recipesList.page.size());
 
-    const bool ifMaxPage = amountOfRecipes - (static_cast<int>(numOfRecipesOnPage) * (static_cast<int>(pageNo) + 1)) <=
+    const bool ifMaxPage = amountOfRecipes - numOfRecipesOnPage * pageNo + 1 <=
                            0; // + 1 because of the 0-indexing, as comparisson is between num of recipes gotten and that
                               // will be actually shown
 
@@ -45,8 +47,8 @@ InlineKeyboard constructNavigationsMarkup(size_t offset,
     for (std::size_t i = 0; i < recipesToShow; i++) {
         // Print on button in form "1. {Recipe}"
         keyboard[i + offset].push_back(makeCallbackButton(
-            std::format("{}. {}", 1 + counter + ((pageNo)*numOfRecipesOnPage), recipesList.recipesPage[counter].name),
-            std::format("recipe: {}", recipesList.recipesPage[counter].id))); // RECIPE ID
+            std::format("{}. {}", 1 + counter + ((pageNo)*numOfRecipesOnPage), recipesList.page[counter].name),
+            std::format("recipe: {}", recipesList.page[counter].id))); // RECIPE ID
         counter++;
     }
 
@@ -93,19 +95,19 @@ InlineKeyboard constructOnlyCreate() {
 }
 
 InlineKeyboard
-constructMarkup(size_t pageNo, size_t numOfRecipesOnPage, api::models::recipe::CustomRecipesList& recipesList) {
+constructMarkup(size_t pageNo, size_t numOfRecipesOnPage, api::models::recipe::RecipeSearchResponse& recipesList) {
     // 1 for back button return, 1 for arrows (ALWAYS ACCOUNT ARROWS), 1
     // for adding new recipe - other buttons are recipes
     const size_t numOfRows = 3;
     const size_t offset = 1; // Number of rows before list
 
-    const size_t recipesToShow = std::min(numOfRecipesOnPage, recipesList.recipesPage.size());
+    const size_t recipesToShow = std::min(numOfRecipesOnPage, recipesList.page.size());
 
     const size_t arrowsRow =
-        recipesList.recipesFound == 0 ? 0 : offset + recipesToShow; // 1 because of the offset of add/delete row
+        recipesList.found == 0 ? 0 : offset + recipesToShow; // 1 because of the offset of add/delete row
 
     InlineKeyboard keyboard =
-        recipesList.recipesFound == 0
+        recipesList.found == 0
             ? constructOnlyCreate()
             : constructNavigationsMarkup(offset, numOfRows + recipesToShow, pageNo, numOfRecipesOnPage, recipesList);
     if (keyboard.empty()) { // If error happened
@@ -123,8 +125,9 @@ void renderCustomRecipesList(size_t pageNo, UserId userId, ChatId chatId, BotRef
 
     auto messageId = message::getMessageId(userId);
 
-    const int numOfRecipesOnPage = 5;
-    auto recipesList = recipesApi.getPrivateRecipeList(userId, numOfRecipesOnPage, (pageNo)*numOfRecipesOnPage);
+    const std::size_t numOfRecipesOnPage = 5;
+    auto recipesList =
+        recipesApi.getRecipesList(userId, "", 0, numOfRecipesOnPage, pageNo * numOfRecipesOnPage, filterType::Custom);
 
     bot.editMessageText(
         pageInfo, chatId, *messageId, makeKeyboardMarkup(constructMarkup(pageNo, numOfRecipesOnPage, recipesList)));

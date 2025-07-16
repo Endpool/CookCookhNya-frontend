@@ -4,6 +4,7 @@
 #include "backend/models/recipe.hpp"
 #include "message_tracker.hpp"
 #include "render/common.hpp"
+#include "utils/to_string.hpp"
 #include "utils/utils.hpp"
 
 #include <algorithm>
@@ -23,13 +24,11 @@ InlineKeyboard constructNavigationsMarkup(size_t offset,
                                           size_t pageNo,
                                           size_t numOfRecipesOnPage,
                                           api::models::recipe::RecipesList recipesList) {
-    const int amountOfRecipes = recipesList.recipesFound;
-    int maxPageNum =
-        static_cast<int>(std::ceil(static_cast<double>(amountOfRecipes) / static_cast<double>(numOfRecipesOnPage)));
+    const size_t amountOfRecipes = recipesList.found;
+    std::size_t maxPageNum = std::ceil(static_cast<double>(amountOfRecipes) / static_cast<double>(numOfRecipesOnPage));
 
-    const size_t recipesToShow = std::min(numOfRecipesOnPage, recipesList.recipesPage.size());
-    const bool ifMaxPage =
-        amountOfRecipes - (static_cast<int>(numOfRecipesOnPage) * (static_cast<int>(pageNo) + 1)) <= 0;
+    const size_t recipesToShow = std::min(numOfRecipesOnPage, recipesList.page.size());
+    const bool ifMaxPage = amountOfRecipes - numOfRecipesOnPage * pageNo + 1 <= 0;
     // + 1 because of the 0-indexing, as comparisson is between num of recipes gotten and that
     // will be actually shown
     if (offset + recipesToShow > fullKeyBoardSize) { // IN ERROR HANDLING MAY USE ASSERT
@@ -45,10 +44,10 @@ InlineKeyboard constructNavigationsMarkup(size_t offset,
         keyboard[i + offset].push_back(
             makeCallbackButton(std::format("{}. {} [{} из {}]",
                                            1 + counter + ((pageNo)*numOfRecipesOnPage),
-                                           recipesList.recipesPage[counter].name,
-                                           recipesList.recipesPage[counter].available,
-                                           recipesList.recipesPage[counter].total),
-                               std::format("recipe: {}", recipesList.recipesPage[counter].id))); // RECIPE ID
+                                           recipesList.page[counter].name,
+                                           recipesList.page[counter].available,
+                                           recipesList.page[counter].total),
+                               std::format("recipe: {}", recipesList.page[counter].id))); // RECIPE ID
         counter++;
     }
     keyboard[arrowsRow].reserve(3);
@@ -93,7 +92,7 @@ constructMarkup(size_t pageNo, size_t numOfRecipesOnPage, api::models::recipe::R
 
     const size_t numOfRows = 2; // 1 for back button return, 1 for arrows (ALWAYS ACCOUNT ARROWS)
     const size_t offset = 0;    // Number of rows before list
-    const size_t recipesToShow = std::min(numOfRecipesOnPage, recipesList.recipesPage.size());
+    const size_t recipesToShow = std::min(numOfRecipesOnPage, recipesList.page.size());
 
     const size_t arrowsRow = offset + recipesToShow; // 1 because of the offset of add/delete row
 
@@ -119,10 +118,7 @@ void renderRecipesSuggestion(const std::vector<api::StorageId>& storageIds,
 
     const size_t numOfRecipesOnPage = 5;
 
-    auto recipesList = recipesApi.getRecipeList(userId,
-                                                numOfRecipesOnPage,
-                                                static_cast<size_t>((pageNo)*numOfRecipesOnPage),
-                                                storageIds); // Take storages of user from backend
+    auto recipesList = recipesApi.getSuggestedRecipesList(userId, storageIds, 0, pageNo * numOfRecipesOnPage);
 
     if (messageId) {
         bot.editMessageText(pageInfo,

@@ -5,6 +5,7 @@
 #include "render/common.hpp"
 
 #include <string>
+#include <unordered_set>
 #include <vector>
 
 namespace cookcookhnya::render::recipe {

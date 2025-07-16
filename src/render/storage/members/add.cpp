@@ -19,7 +19,6 @@ void renderStorageMemberAddition(
 
     const int buttonRows = 2;
     InlineKeyboard keyboard(buttonRows);
-
     keyboard[0].push_back(makeCallbackButton(u8"🔗 Создать ссылку", "create_link"));
     keyboard[1].push_back(makeCallbackButton(u8"↩️ Назад", "back"));
     auto text =
@@ -44,7 +43,6 @@ void renderShareLinkMemberAddition(
     auto inviteText = "Нажми на ссылку, чтобы стать участником хранилища 🍱**" + storage.name +
                       "** в CookCookhNya!\nhttps://t.me/" + telegramBotAlias + "?start=" + hash;
     inviteButton->url = "https://t.me/share/url?url=" + inviteText;
-    inviteButton->callbackData = "user_sended_link";
 
     keyboard[0].push_back(std::move(inviteButton));
     keyboard[1].push_back(makeCallbackButton(u8"↩️ Назад", "back"));
