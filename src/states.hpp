@@ -114,8 +114,10 @@ struct RecipeIngredientsSearch {
 };
 
 struct ShoppingListView {
-    using ItemsDb = utils::FastSortedDb<api::models::shopping_list::ShoppingListItem,
-                                        &api::models::shopping_list::ShoppingListItem::ingredientId>;
+    struct SelectableItem : api::models::shopping_list::ShoppingListItem {
+        bool selected = false;
+    };
+    using ItemsDb = utils::FastSortedDb<SelectableItem, &api::models::shopping_list::ShoppingListItem::ingredientId>;
 
     ItemsDb items;
 };
