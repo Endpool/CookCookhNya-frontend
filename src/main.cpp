@@ -6,12 +6,12 @@
 
 #include <tg_stater/bot.hpp>
 #include <tg_stater/dependencies.hpp>
-#include <tgbot/types/InputFile.h>
 
 #include <algorithm>
 #include <iostream>
 #include <string>
 #include <string_view>
+#include <tg_types.hpp>
 #include <utility>
 
 int main(int argc, char* argv[]) {
@@ -67,7 +67,7 @@ int main(int argc, char* argv[]) {
 
     TgBot::Bot tgBot{utils::getenvWithError("BOT_TOKEN")};
     if (useWebhook) {
-        std::string path = "/"s + utils::getenvWithError("WEBHOOK_SECRET");
+        const std::string path = "/"s + utils::getenvWithError("WEBHOOK_SECRET");
         bot.startWebhook(std::move(tgBot),
                          utils::parse<unsigned short>(utils::getenvWithError("WEBHOOK_PORT")),
                          utils::getenvWithError("WEBHOOK_HOST") + path,

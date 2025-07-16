@@ -1,6 +1,7 @@
 #include "view.hpp"
 
 #include "backend/id_types.hpp"
+#include "backend/models/ingredient.hpp"
 #include "backend/models/recipe.hpp"
 #include "message_tracker.hpp"
 #include "render/common.hpp"
