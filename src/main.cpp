@@ -6,6 +6,7 @@
 
 #include <tg_stater/bot.hpp>
 #include <tg_stater/dependencies.hpp>
+#include <tgbot/types/InputFile.h>
 
 #include <algorithm>
 #include <iostream>
