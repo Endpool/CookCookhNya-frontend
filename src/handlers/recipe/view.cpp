@@ -1,5 +1,6 @@
 #include "view.hpp"
 
+#include "backend/id_types.hpp"
 #include "handlers/common.hpp"
 #include "render/recipe/add_storage.hpp"
 #include "render/recipes_suggestions/view.hpp"
@@ -22,10 +23,7 @@ void handleRecipeViewCQ(RecipeView& state, CallbackQueryRef cq, BotRef bot, SMRe
         // TODO: add state of begginig of cooking
         return;
     }
-    if (data == "make_product_list") {
-        // Next lines of code is necessary preparation for making product list. Need to re-verify products which are
-        // certanly not in storage
-        // Besides we exactly need ingredient Ids, as then it will be sent on backend
+    if (data == "shopping_list") {
         const std::unordered_set<api::StorageId> storageIdsSet(state.storageIds.begin(), state.storageIds.end());
         auto recipesApi = api.getRecipesApi();
 
@@ -63,7 +61,7 @@ void handleRecipeViewCQ(RecipeView& state, CallbackQueryRef cq, BotRef bot, SMRe
         return;
     }
 
-    if (data[0] == '?') {
+    if (data == "add_storages") {
         renderStoragesSuggestion(state.storageIds, state.recipeId, userId, chatId, bot, api);
         stateManager.put(RecipeStorageAddition{.storageIds = state.storageIds,
                                                .recipeId = state.recipeId,

@@ -46,7 +46,7 @@ void appendToJson(std::string& json, std::string_view varName, std::string_view 
         appendToJson(result, "callback_data", object->callbackData);
     else if (!object->url.empty())
         appendToJson(result, "url", object->url);
-    else if (!object->switchInlineQueryCurrentChat.empty())
+    else
         appendToJson(result, "switch_inline_query_current_chat", object->switchInlineQueryCurrentChat);
     removeLastComma(result);
     result += '}';
@@ -79,13 +79,17 @@ void appendToJson(std::string& json, std::string_view varName, std::string_view 
 TgBot::Message::Ptr // NOLINT(*nodiscard)
 PatchedBot::sendMessage(tg_types::ChatId chatId,
                         std::string_view text,
-                        const TgBot::InlineKeyboardMarkup::Ptr& replyMarkup) const {
+                        const TgBot::InlineKeyboardMarkup::Ptr& replyMarkup, 
+                        std::string_view parseMode) const {
     std::vector<TgBot::HttpReqArg> args;
     args.reserve(3);
     args.emplace_back("chat_id", chatId);
     args.emplace_back("text", text);
     if (replyMarkup)
         args.emplace_back("reply_markup", parseInlineKeyboardMarkup(replyMarkup));
+    if (!parseMode.empty()) {
+        args.emplace_back("parse_mode", parseMode);
+    }
     return _tgTypeParser.parseJsonAndGetMessage(sendRequest("sendMessage", args));
 }
 
@@ -93,7 +97,8 @@ TgBot::Message::Ptr // NOLINT(*nodiscard)
 PatchedBot::editMessageText(std::string_view text,
                             tg_types::ChatId chatId,
                             tg_types::MessageId messageId,
-                            const TgBot::InlineKeyboardMarkup::Ptr& replyMarkup) const {
+                            const TgBot::InlineKeyboardMarkup::Ptr& replyMarkup, 
+                            std::string_view parseMode) const {
     std::vector<TgBot::HttpReqArg> args;
     args.reserve(4);
     args.emplace_back("text", text);
@@ -101,6 +106,9 @@ PatchedBot::editMessageText(std::string_view text,
     args.emplace_back("message_id", messageId);
     if (replyMarkup) {
         args.emplace_back("reply_markup", parseInlineKeyboardMarkup(replyMarkup));
+    }
+    if (!parseMode.empty()) {
+        args.emplace_back("parse_mode", parseMode);
     }
     return _tgTypeParser.parseJsonAndGetMessage(sendRequest("editMessageText", args));
 }

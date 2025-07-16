@@ -1,33 +1,29 @@
 #pragma once
 
 #include "backend/id_types.hpp"
-#include "backend/models/recipe.hpp"
+#include "handlers/recipes_suggestions/view.hpp"
 #include "render/common.hpp"
 
-#include <string>
-#include <unordered_set>
+
 #include <vector>
 
 namespace cookcookhnya::render::recipe {
 
 struct textGenInfo {
     std::string text;
-    bool isSuggestionMade{};
-    std::unordered_set<api::StorageId> suggestedStorageIds;
-    std::vector<std::string> foundInStoragesStrings;
-    bool isAtLeastOneIngredientLack;
+    bool isIngredientNotAvailable;
+    bool isIngredientIsOtherStorages;
 };
 
-void renderRecipeView(const std::vector<api::StorageId>& storageIds,
+void renderRecipeView(const std::vector<std::pair<api::models::recipe::IngredientInRecipe, handlers::recipes_suggestions::IngredientAvailability>>& inStoragesAvailability,
                       api::RecipeId recipeId,
                       UserId userId,
                       ChatId chatId,
                       BotRef bot,
                       ApiClient api);
-// Helper functions
 
-textGenInfo textGen(const std::vector<api::StorageId>& storageIds,
-                    const api::models::recipe::RecipeDetails& recipeIngredients,
+textGenInfo recipeView(const std::vector<std::pair<api::models::recipe::IngredientInRecipe, handlers::recipes_suggestions::IngredientAvailability>>& inStoragesAvailability,
+                    api::RecipeId recipeId,
                     UserId userId,
                     ApiClient api);
 

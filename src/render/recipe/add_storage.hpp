@@ -2,19 +2,27 @@
 
 #include "backend/id_types.hpp"
 #include "backend/models/recipe.hpp"
+#include "backend/models/storage.hpp"
+#include "handlers/recipes_suggestions/view.hpp"
 #include "render/common.hpp"
+#include "render/recipe/view.hpp"
 
 #include <vector>
 
 namespace cookcookhnya::render::recipe {
 
-void renderStoragesSuggestion(const std::vector<api::StorageId>& storageIdsToAccount,
-                              api::RecipeId recipeId,
-                              UserId userId,
-                              ChatId chatId,
-                              BotRef bot,
-                              ApiClient api);
+textGenInfo storageAdditionView(const std::vector<std::pair<api::models::recipe::IngredientInRecipe, handlers::recipes_suggestions::IngredientAvailability>>& inStoragesAvailability,
+                    const std::vector<api::models::storage::StorageSummary>& selectedStorages,
+                    api::RecipeId recipeId,
+                    UserId userId,
+                    ApiClient api);
 
-std::vector<api::StorageId> storagesToShow(const std::vector<api::models::recipe::IngredientInRecipe>& ingredients,
-                                           const std::vector<api::StorageId>& storageIdsToAccount);
+void renderStoragesSuggestion(const std::vector<std::pair<api::models::recipe::IngredientInRecipe, handlers::recipes_suggestions::IngredientAvailability>>& inStoragesAvailability,
+                      const std::vector<api::models::storage::StorageSummary>& selectedStorages,
+                      api::RecipeId recipeId,
+                      UserId userId,
+                      ChatId chatId,
+                      BotRef bot,
+                      ApiClient api);
+                    
 } // namespace cookcookhnya::render::recipe

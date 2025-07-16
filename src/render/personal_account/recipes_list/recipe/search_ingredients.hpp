@@ -16,6 +16,6 @@ void renderRecipeIngredientsSearchEdit(
     ChatId chatId,
     BotRef bot);
 
-void renderStorageIngredientsSearch(ChatId chatId, UserId userId, BotRef bot);
+void renderRecipeIngredientsSearch(ChatId chatId, UserId userId, BotRef bot);
 
 } // namespace cookcookhnya::render::recipe::ingredients

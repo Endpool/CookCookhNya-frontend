@@ -35,7 +35,7 @@ auto makeKeyboard(const std::vector<IngredientSearchForRecipeItem>& ingredients,
     keyboard[0].push_back(std::move(searchButton));
 
     for (auto [row, ing] : zip(std::ranges::views::drop(keyboard, 1), ingredients))
-        row.push_back(makeCallbackButton((ing.isInRecipe ? "[+] " : "[-] ") + ing.name, utils::to_string(ing.id)));
+        row.push_back(makeCallbackButton((ing.isInRecipe ? "[ + ] " : "[ - ] ") + ing.name, utils::to_string(ing.id)));
 
     keyboard[1 + ingredients.size()].push_back(makeCallbackButton(u8"↩️ Назад", "back"));
 
@@ -54,10 +54,10 @@ void renderRecipeIngredientsSearchEdit(const std::vector<IngredientSearchForReci
     patchedBot.editMessageReplyMarkup(chatId, message, makeKeyboard(ingredients, pageNo, totalPages));
 }
 
-void renderStorageIngredientsSearch(ChatId chatId, UserId userId, BotRef bot) {
+void renderRecipeIngredientsSearch(ChatId chatId, UserId userId, BotRef bot) {
     const PatchedBot& patchedBot{bot};
     if (auto mMessageId = message::getMessageId(userId)) {
-        patchedBot.editMessageText(utils::utf8str(u8"Используй кнопку ниже как поисковик чтобы найти ингредиент"),
+        patchedBot.editMessageText(utils::utf8str(u8"📝Нажмите на кнопку ✏️ Редактировать и начните вводить названия продуктов"),
                                    chatId,
                                    *mMessageId,
                                    makeKeyboard({}, 0, 0));

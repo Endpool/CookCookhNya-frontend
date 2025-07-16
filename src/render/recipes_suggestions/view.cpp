@@ -19,12 +19,12 @@ namespace cookcookhnya::render::recipes_suggestions {
 
 // offset is variable which defines amout of rows before beggining of paging
 // fullKeyBoardSize is self explanatory
-InlineKeyboard constructNavigationsMarkup(size_t offset,
-                                          size_t fullKeyBoardSize,
-                                          size_t pageNo,
-                                          size_t numOfRecipesOnPage,
+InlineKeyboard constructNavigationsMarkup(std::size_t offset,
+                                          std::size_t fullKeyBoardSize,
+                                          std::size_t pageNo,
+                                          std::size_t numOfRecipesOnPage,
                                           api::models::recipe::RecipesList recipesList) {
-    const size_t amountOfRecipes = recipesList.found;
+    const std::size_t amountOfRecipes = recipesList.found;
     std::size_t maxPageNum = std::ceil(static_cast<double>(amountOfRecipes) / static_cast<double>(numOfRecipesOnPage));
 
     const size_t recipesToShow = std::min(numOfRecipesOnPage, recipesList.page.size());
@@ -38,7 +38,7 @@ InlineKeyboard constructNavigationsMarkup(size_t offset,
     const size_t arrowsRow = offset + recipesToShow;
 
     InlineKeyboard keyboard(fullKeyBoardSize);
-    int counter = 0;
+    std::size_t counter = 0;
     for (std::size_t i = 0; i < recipesToShow; i++) {
         // Print on button in form "1. {Recipe}"
         keyboard[i + offset].push_back(
@@ -118,7 +118,7 @@ void renderRecipesSuggestion(const std::vector<api::StorageId>& storageIds,
 
     const size_t numOfRecipesOnPage = 5;
 
-    auto recipesList = recipesApi.getSuggestedRecipesList(userId, storageIds, 0, pageNo * numOfRecipesOnPage);
+    auto recipesList = recipesApi.getSuggestedRecipesList(userId, storageIds, (pageNo + 1) * numOfRecipesOnPage);
 
     if (messageId) {
         bot.editMessageText(pageInfo,

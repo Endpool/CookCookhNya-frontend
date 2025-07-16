@@ -32,7 +32,6 @@ auto makeKeyboard(const states::StorageIngredientsList& state) {
     searchButton->text = utils::utf8str(u8"✏️ Редактировать");
     searchButton->switchInlineQueryCurrentChat = "";
     keyboard[0].push_back(std::move(searchButton));
-
     for (auto [row, ing] : zip(drop(keyboard, 1), state.searchItems))
         row.push_back(makeCallbackButton((ing.available ? "[ + ] " : "[ㅤ] ") + ing.name, utils::to_string(ing.id)));
     keyboard[1 + state.searchItems.size()].push_back(makeCallbackButton(u8"↩️ Назад", "back"));
@@ -51,7 +50,6 @@ void renderIngredientsListSearch(const states::StorageIngredientsList& state,
 
     std::string list = state.storageIngredients.getAll() |
                        transform([](auto& i) { return std::format("• {}\n", i.name); }) | join | to<std::string>();
-
     auto text = utils::utf8str(u8"🍗 Ваши ингредиенты:\n\n") + std::move(list);
     if (auto messageId = message::getMessageId(userId))
         bot.editMessageText(text, chatId, *messageId, makeKeyboard(state));

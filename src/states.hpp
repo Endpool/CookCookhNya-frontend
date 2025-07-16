@@ -3,6 +3,7 @@
 #include "backend/id_types.hpp"
 #include "backend/models/ingredient.hpp"
 #include "backend/models/shopping_list.hpp"
+#include "handlers/recipes_suggestions/view.cpp"
 #include "utils/fast_sorted_db.hpp"
 
 #include <tg_stater/state_storage/common.hpp>

@@ -18,7 +18,7 @@ void renderStorageMemberDeletion(
     auto storage = storageApi.get(userId, storageId);
 
     auto members = storageApi.getStorageMembers(userId, storageId);
-    const unsigned int buttonRows = members.size();
+    const std::size_t buttonRows = members.size();
     InlineKeyboard keyboard(buttonRows);
     keyboard[0].push_back(makeCallbackButton(u8"↩️ Назад", "cancel_member_deletion"));
     size_t k = 1;

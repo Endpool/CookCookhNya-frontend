@@ -2,122 +2,94 @@
 
 #include "backend/id_types.hpp"
 #include "backend/models/recipe.hpp"
+#include "backend/models/storage.hpp"
 #include "message_tracker.hpp"
 #include "render/common.hpp"
-#include "utils/to_string.hpp"
 #include "utils/utils.hpp"
 #include "view.hpp"
 
 #include <cmath>
-#include <cstddef>
-#include <cstdint>
 #include <format>
 #include <string>
-#include <unordered_set>
 #include <utility>
 #include <vector>
 
 namespace cookcookhnya::render::recipe {
 
-std::vector<api::StorageId> storagesToShow(const std::vector<api::models::recipe::IngredientInRecipe>& ingredients,
-                                           const std::vector<api::StorageId>& storageIdsToAccount) {
-    std::vector<api::StorageId> storageIdsToShow;
+using namespace handlers::recipes_suggestions;
 
-    std::unordered_set<api::StorageId> toAdd; // If there will be only one element of storageId then remove
-    bool isFound = false;
-    for (const auto& ingredient : ingredients) {
-        isFound = false; // Iterate through each ingredient
-        for (const api::StorageId inStorage :
-             ingredient.inStorages) { // Iterate through each storage where ingredient is present
-            for (const api::StorageId stId : storageIdsToAccount) {
-                if (stId == inStorage) {
-                    isFound = true;
-                    break;
-                }
+textGenInfo storageAdditionView(const std::vector<std::pair<api::models::recipe::IngredientInRecipe, handlers::recipes_suggestions::IngredientAvailability>>& inStoragesAvailability,
+                    const std::vector<api::models::storage::StorageSummary>& selectedStorages,
+                    api::RecipeId recipeId,
+                    UserId userId,
+                    ApiClient api){
+    auto recipeIngredients = api.getRecipesApi().getIngredientsInRecipe(userId, recipeId);
+
+    bool isIngredientNotAvailable = false;
+    bool isIngredientIsOtherStorages = false;
+    const std::string recipeName = recipeIngredients.name;
+    auto text = std::format("{} Выбранные хранилища: ", utils::utf8str(u8"🍱"));
+            for (std::size_t i = 0; i != selectedStorages.size(); ++i){
+                text += selectedStorages[i].name;
+                text += i != selectedStorages.size() - 1 ? ", " : "\n";
             }
-            if (isFound) {
-                break;
+    text += std::format("{} Ингредиенты для *{}* \n\n", utils::utf8str(u8"📖"), recipeName);
+
+    for (const auto& infoPair : inStoragesAvailability){
+        if (infoPair.second.available == AvailabiltiyType::available){
+            text += "`[+]` " + infoPair.first.name + "\n";
+        } else if (infoPair.second.available == AvailabiltiyType::other_storages){
+            text += "`[?]` " + infoPair.first.name + "\n";
+            isIngredientIsOtherStorages = true;
+            text += "__Доступно в: ";
+            auto storages = infoPair.second.storages;
+            for (std::size_t i = 0; i != storages.size(); ++i){
+                text += storages[i].name;
+                text += i != storages.size() - 1 ? ", " : "\n";
             }
-        }
-        if (!isFound) {
-            // Proof that ingredient doesn't have "toxic" storages. Toxic storage is a storage which has some
-            // ingredient so because of it other storages with that ingredient are not needed
-            // But storages may be redeemed if they are in set of storages of ingredient where there is no toxic one
-            for (const api::StorageId temp : ingredient.inStorages) {
-                toAdd.insert(temp);
-            }
+        } else {
+            text += "`[ ]` " + infoPair.first.name + "\n";
+            isIngredientNotAvailable = true;
         }
     }
+    text += "\n🌐 Источник: " + recipeIngredients.link;
 
-    storageIdsToShow.reserve(toAdd.size());
-    for (auto add : toAdd) {
-        storageIdsToShow.push_back(add);
-    }
-
-    return storageIdsToShow;
+    return {.text = text, .isIngredientNotAvailable = isIngredientNotAvailable, .isIngredientIsOtherStorages = isIngredientIsOtherStorages};
 }
 
-void renderStoragesSuggestion(const std::vector<api::StorageId>& storageIdsToAccount, // storages which are selected
-                              api::RecipeId recipeId,
-                              UserId userId,
-                              ChatId chatId,
-                              BotRef bot,
-                              ApiClient api) {
-
-    auto storageApi = api.getStoragesApi();
-
-    auto recipesApi = api.getRecipesApi();
-    auto recipeIngredients = recipesApi.getIngredientsInRecipe(userId, recipeId);
-    auto ingredients = recipeIngredients.ingredients;
-
-    const std::vector<api::StorageId> storageIdsToShow = storagesToShow(ingredients, storageIdsToAccount);
-
-    const textGenInfo text = textGen(storageIdsToAccount, recipeIngredients, userId, api);
-    auto toPrint = text.text;
-
-    auto suggestionStrings = text.foundInStoragesStrings;
-    size_t counterOfSuggestionsFound = 0;
-    bool ifSuggestionEcountered = false;
-
-    // This for can be moved to distinct function
-    for (size_t i = 0; i < toPrint.size(); i++) { // Put suggestions here
-        if (toPrint[i] == '\n' && ifSuggestionEcountered) {
-            toPrint.insert(i + 1, suggestionStrings[counterOfSuggestionsFound]);
-            counterOfSuggestionsFound++;
-            ifSuggestionEcountered = false;
-        }
-        if (toPrint[i] == '?') {
-            ifSuggestionEcountered = true;
-        }
-    }
-    // This for is similar to suggested storages can be unionaized with this part of textGen (which will be incredibly
-    // difficult to keep consistency of textGen fenction) To print storages which were added
-    std::string storagesWhichAccount = utils::utf8str(u8"Выбранные хранилища: ");
-    for (size_t i = 0; i < storageIdsToAccount.size(); i++) {
-        auto storage = storageApi.get(userId, storageIdsToAccount[i]);
-        storagesWhichAccount += std::format("\"{}\" ", storage.name);
-        if (i == storageIdsToAccount.size() - 1) {
-            storagesWhichAccount += "\n";
-        }
-    }
-    toPrint.insert(0, storagesWhichAccount);
-    const int buttonRows = std::floor(((storageIdsToShow.size() + 1) / 2) + 1); // +1 for back
+void renderStoragesSuggestion(const std::vector<std::pair<api::models::recipe::IngredientInRecipe, handlers::recipes_suggestions::IngredientAvailability>>& inStoragesAvailability,
+                      const std::vector<api::models::storage::StorageSummary>& selectedStorages,
+                      api::RecipeId recipeId,
+                      UserId userId,
+                      ChatId chatId,
+                      BotRef bot,
+                      ApiClient api) {
+    auto textGen = storageAdditionView(inStoragesAvailability, selectedStorages, recipeId, userId, api);
+    auto storages = api.getStoragesApi().getStoragesList(userId);
+    const size_t buttonRows = ((storages.size() + 1) / 2) + 1;
     InlineKeyboard keyboard(buttonRows);
+    
+    for (std::size_t i = 0; i < storages.size(); ++i) {
+        if (i % 2 == 0)
+            keyboard[i / 2].reserve(2);
+        const bool isSelected = std::ranges::find(selectedStorages, storages[i].id, &api::models::storage::StorageSummary::id) != selectedStorages.end();
 
-    uint64_t i = 0;
-    for (auto storageId : storageIdsToShow) {
-        const std::string name = storageApi.get(userId, storageId).name;
-        if (i % 2 == 0) {
-            keyboard[std::floor(i / 2)].reserve(2);
-        }
-        keyboard[std::floor(i / 2)].push_back(makeCallbackButton(name, "+" + utils::to_string(storageId)));
-        i++;
+        std::string emoji = utils::utf8str(isSelected ? u8"[ + ]" : u8"[ᅠ]");
+        const char* actionPrefix = isSelected ? "in__" : "out_";
+        const std::string text = std::format("{} {}", emoji, storages[i].name);
+        const std::string data = actionPrefix + utils::to_string(storages[i].id);
+        keyboard[i / 2].push_back(makeCallbackButton(text, data));
     }
-    keyboard[std::floor((storageIdsToShow.size() + 1) / 2)].push_back(
-        makeCallbackButton(u8"↩️ Назад", "back_from_adding_storages"));
+    keyboard[buttonRows - 1].reserve(2);
+    keyboard[buttonRows - 1].push_back(makeCallbackButton(u8"↩️ Назад", "cancel"));
+    if (!selectedStorages.empty()) {
+        keyboard[buttonRows - 1].push_back(makeCallbackButton(u8"▶️ Подтвердить", "confirm"));
+    }
+    
     auto messageId = message::getMessageId(userId);
     if (messageId) {
-        bot.editMessageText(toPrint, chatId, *messageId, "", "", nullptr, makeKeyboardMarkup(std::move(keyboard)));
+        // Only on difference between function above
+        bot.editMessageText(textGen.text, chatId, *messageId, makeKeyboardMarkup(std::move(keyboard)), "MarkdownV2");
     }
 }
 } // namespace cookcookhnya::render::recipe

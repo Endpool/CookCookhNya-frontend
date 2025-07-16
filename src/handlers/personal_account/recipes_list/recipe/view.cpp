@@ -24,7 +24,7 @@ void handleRecipeCustomViewCQ(
 
     if (data == "change") {
         // Reuse search render
-        renderStorageIngredientsSearch(chatId, userId, bot);
+        renderRecipeIngredientsSearch(chatId, userId, bot);
         stateManager.put(CustomRecipeIngredientsSearch{
             .recipeId = state.recipeId, .shownIngredients = {}, .totalFound = 0, .pageNo = 0});
         return;

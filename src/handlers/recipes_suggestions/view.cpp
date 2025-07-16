@@ -1,16 +1,18 @@
 #include "view.hpp"
 
 #include "backend/id_types.hpp"
+#include "backend/models/recipe.hpp"
+#include "backend/models/storage.hpp"
 #include "handlers/common.hpp"
 #include "render/main_menu/view.hpp"
 #include "render/recipe/view.hpp"
 #include "render/recipes_suggestions/view.hpp"
 #include "render/storage/view.hpp"
 #include "render/storages_selection/view.hpp"
-#include "states.hpp"
 #include "utils/parsing.hpp"
 
 #include <string>
+#include <unordered_map>
 #include <utility>
 
 namespace cookcookhnya::handlers::recipes_suggestions {
@@ -20,6 +22,56 @@ using namespace render::select_storages;
 using namespace render::storage;
 using namespace render::recipe;
 using namespace render::main_menu;
+
+namespace {
+
+using namespace api;
+
+std::vector<std::pair<models::recipe::IngredientInRecipe, IngredientAvailability>> inStoragesAvailability(std::vector<StorageId>& selectedStorages, const RecipeId recipeId, UserId userId, ApiClientRef api){
+    auto allStorages = api.getStoragesApi().getStoragesList(userId);
+    auto recipe = api.getRecipesApi().getIngredientsInRecipe(userId, recipeId);
+
+    std::unordered_set<StorageId> selectedStoragesSet(selectedStorages.begin(), selectedStorages.end());
+
+    std::unordered_map<StorageId, models::storage::StorageSummary> allStoragesMap;
+    for (const auto& storage : allStorages) {
+        allStoragesMap.emplace(storage.id, storage);
+    }
+
+    std::vector<std::pair<models::recipe::IngredientInRecipe, IngredientAvailability>> result;
+
+    for (const auto& ingredient : recipe.ingredients) {
+        IngredientAvailability availability;
+        std::vector<models::storage::StorageSummary> otherStorages;
+
+        bool hasInSelected = false;
+
+        for (const auto& storageId : ingredient.inStorages) {
+            auto it = allStoragesMap.find(storageId);
+            if (it == allStoragesMap.end()) 
+                continue;
+            if (selectedStoragesSet.contains(storageId)) {
+                hasInSelected = true;
+            } else {
+                otherStorages.push_back(it->second);
+            }
+        }
+
+        if (hasInSelected) {
+            availability.available = AvailabiltiyType::available;
+        } else if (!otherStorages.empty()) {
+            availability.available = AvailabiltiyType::other_storages;
+            availability.storages = std::move(otherStorages);
+        } else {
+            availability.available = AvailabiltiyType::not_available;
+        }
+
+        result.emplace_back(ingredient, std::move(availability));
+    }
+
+    return result;
+}
+} // namespace
 
 void handleSuggestedRecipeListCQ(
     SuggestedRecipeList& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
@@ -51,7 +103,8 @@ void handleSuggestedRecipeListCQ(
         auto recipeId = utils::parseSafe<api::RecipeId>(
             data.substr(data.find(' ', 0) + 1, data.size())); // +1 is to move from space and get pure number
         if (recipeId) {
-            renderRecipeView(state.storageIds, *recipeId, userId, chatId, bot, api);
+            auto inStorage = inStoragesAvailability(state.storageIds, *recipeId, userId, api);
+            renderRecipeView(inStorage, *recipeId, userId, chatId, bot, api);
             stateManager.put(RecipeView{.storageIds = state.storageIds,
                                         .recipeId = *recipeId,
                                         .fromStorage = state.fromStorage,
@@ -62,7 +115,7 @@ void handleSuggestedRecipeListCQ(
     }
 
     if (data != "dont_handle") {
-        auto pageNo = utils::parseSafe<int>(data);
+        auto pageNo = utils::parseSafe<std::size_t>(data);
         if (pageNo) {
             state.pageNo = *pageNo;
         }
