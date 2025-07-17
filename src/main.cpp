@@ -9,6 +9,7 @@
 #include <tgbot/Bot.h>
 
 #include <algorithm>
+#include <exception>
 #include <iostream>
 #include <string>
 #include <string_view>
@@ -65,10 +66,10 @@ int main(int argc, char* argv[]) {
                                                       customRecipeIngredientsSearchCQHandler,
                                                       customRecipeIngredientsSearchIQHandler>
             bot{{}, {ApiClient{utils::getenvWithError("API_URL")}}};
-    
+
         TgBot::Bot tgBot{utils::getenvWithError("BOT_TOKEN")};
         if (useWebhook) {
-            const std::string path = "/"s + utils::getenvWithError("WEBHOOK_SECRET");
+            const std::string path = "/"s + utils::getenvWithError("WEBHOOK_SECRET"); // NOLINT(*include*)
             bot.startWebhook(std::move(tgBot),
                              utils::parse<unsigned short>(utils::getenvWithError("WEBHOOK_PORT")),
                              utils::getenvWithError("WEBHOOK_HOST") + path,
