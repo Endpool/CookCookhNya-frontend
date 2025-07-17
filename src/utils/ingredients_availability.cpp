@@ -1,7 +1,6 @@
 #include "ingredients_availability.hpp"
 
 #include "backend/id_types.hpp"
-#include "handlers/common.hpp"
 
 #include <ranges>
 #include <unordered_map>
@@ -12,10 +11,10 @@ using namespace api;
 using namespace tg_types;
 
 std::vector<std::pair<models::recipe::IngredientInRecipe, IngredientAvailability>>
-inStoragesAvailability(std::vector<api::models::storage::StorageSummary>& selectedStorages,
-                       const RecipeId recipeId,
+inStoragesAvailability(std::vector<models::storage::StorageSummary>& selectedStorages,
+                       RecipeId recipeId,
                        UserId userId,
-                       handlers::ApiClientRef api) {
+                       const api::ApiClient& api) {
     auto allStorages = api.getStoragesApi().getStoragesList(userId);
     auto recipe = api.getRecipesApi().getIngredientsInRecipe(userId, recipeId);
 

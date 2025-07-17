@@ -47,7 +47,7 @@ void handleSuggestedRecipeListCQ(
     }
 
     if (data[0] == 'r') {
-        auto recipeId = utils::parseSafe<api::RecipeId>(data.substr(data.find(' ', 0) + 1, data.size()));
+        auto recipeId = utils::parseSafe<api::RecipeId>(data.substr(1, data.size()));
         if (recipeId) {
             auto inStorage = utils::inStoragesAvailability(state.storages, *recipeId, userId, api);
             renderRecipeView(inStorage, *recipeId, userId, chatId, bot, api);
