@@ -46,7 +46,7 @@ void IngredientsApi::deleteMultipleFromStorage(UserId user,
                                                const std::vector<IngredientId>& ingredients) const {
     httplib::Params params = {};
     for (auto id : ingredients)
-        params.insert({"ingredient", utils::to_string(id)});
+        params.emplace("ingredient", utils::to_string(id));
     jsonDeleteAuthed<void>(user, std::format("/storages/{}/ingredients/", storage), params);
 }
 

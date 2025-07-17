@@ -23,7 +23,7 @@ class ShoppingListApi : ApiBase {
 
     void remove(UserId user, const std::vector<IngredientId>& ingredients) const;
 
-    void buy(UserId user, const std::vector<IngredientId>& ingredients) const;
+    void buy(UserId user, StorageId storage, const std::vector<IngredientId>& ingredients) const;
 };
 
 } // namespace cookcookhnya::api

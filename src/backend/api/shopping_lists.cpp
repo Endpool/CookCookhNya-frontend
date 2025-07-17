@@ -23,7 +23,7 @@ std::vector<ShoppingListItem> ShoppingListApi::get(UserId user, std::size_t coun
 void ShoppingListApi::put(UserId user, const std::vector<IngredientId>& ingredients) const {
     httplib::Params params;
     for (const IngredientId id : ingredients)
-        params.insert({"ingredient-id", utils::to_string(id)});
+        params.emplace("ingredient-id", utils::to_string(id));
     jsonPutAuthed<void>(user, "/shopping-list", params);
 }
 
@@ -31,15 +31,16 @@ void ShoppingListApi::put(UserId user, const std::vector<IngredientId>& ingredie
 void ShoppingListApi::remove(UserId user, const std::vector<IngredientId>& ingredients) const {
     httplib::Params params;
     for (const IngredientId id : ingredients)
-        params.insert({"ingredient-id", utils::to_string(id)});
+        params.emplace("ingredient-id", utils::to_string(id));
     jsonDeleteAuthed<void>(user, "/shopping-list", params);
 }
 
 // PUT /shopping-list/buy
-void ShoppingListApi::buy(UserId user, const std::vector<IngredientId>& ingredients) const {
+void ShoppingListApi::buy(UserId user, StorageId storage, const std::vector<IngredientId>& ingredients) const {
     httplib::Params params;
     for (const IngredientId id : ingredients)
-        params.insert({"ingredient-id", utils::to_string(id)});
+        params.emplace("ingredient-id", utils::to_string(id));
+    params.emplace("storage-id", utils::to_string(storage));
     jsonPutAuthed<void>(user, "/shopping-list/buy", params);
 }
 
