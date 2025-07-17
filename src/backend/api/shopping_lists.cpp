@@ -4,6 +4,7 @@
 #include "backend/models/shopping_list.hpp"
 #include "utils/to_string.hpp"
 
+#include <cstddef>
 #include <httplib.h>
 #include <string>
 #include <vector>
@@ -13,8 +14,9 @@ namespace cookcookhnya::api {
 using namespace models::shopping_list;
 
 // GET /shopping-list
-std::vector<ShoppingListItem> ShoppingListApi::get(UserId user) const {
-    return jsonGetAuthed<std::vector<ShoppingListItem>>(user, "/shopping-list");
+std::vector<ShoppingListItem> ShoppingListApi::get(UserId user, std::size_t count, std::size_t offset) const {
+    return jsonGetAuthed<std::vector<ShoppingListItem>>(
+        user, "/shopping-list", {{"size", utils::to_string(count)}, {"offset", utils::to_string(offset)}});
 }
 
 // PUT /shopping-list

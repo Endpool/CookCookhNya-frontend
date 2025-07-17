@@ -8,7 +8,9 @@
 #include <tg_stater/state_storage/common.hpp>
 #include <tg_stater/state_storage/memory.hpp>
 
+#include <concepts>
 #include <cstddef>
+#include <ranges>
 #include <string>
 #include <utility>
 #include <variant>
@@ -53,8 +55,11 @@ struct StorageIngredientsList : detail::StorageIdMixin {
     std::size_t pageNo = 0;
     std::vector<api::models::ingredient::IngredientSearchForStorageItem> searchItems;
     std::string inlineQuery;
-    StorageIngredientsList(api::StorageId storageId, IngredientsDb::Set ingredients, std::string iq)
-        : StorageIdMixin{storageId}, storageIngredients{std::move(ingredients)}, inlineQuery(std::move(iq)) {}
+
+    template <std::ranges::range R>
+        requires std::convertible_to<std::ranges::range_value_t<R>, IngredientsDb::mapped_type>
+    StorageIngredientsList(api::StorageId storageId, R&& ingredients, std::string iq)
+        : StorageIdMixin{storageId}, storageIngredients{std::forward<R>(ingredients)}, inlineQuery(std::move(iq)) {}
 };
 
 struct StoragesSelection {
@@ -69,42 +74,45 @@ struct RecipeView {
     std::vector<api::StorageId> storageIds;
     api::RecipeId recipeId;
     bool fromStorage;
-    size_t pageNo;
+    std::size_t pageNo;
 };
 
 struct RecipeStorageAddition {
     std::vector<api::StorageId> storageIds;
     api::RecipeId recipeId;
     bool fromStorage;
-    size_t pageNo;
+    std::size_t pageNo;
 };
 
 struct CustomRecipesList {
-    size_t pageNo;
+    std::size_t pageNo;
 };
 
 struct CustomRecipeIngredientsSearch {
     using IngredientsDb = utils::FastSortedDb<api::models::ingredient::Ingredient>;
+
     api::RecipeId recipeId;
     IngredientsDb recipeIngredients;
+    std::string query;
     std::size_t totalFound = 0;
     std::size_t pageNo = 0;
     std::vector<api::models::ingredient::IngredientSearchForRecipeItem> searchItems;
-    std::string inlineQuery;
 
-    CustomRecipeIngredientsSearch(api::RecipeId recipeId, IngredientsDb::Set ingredients, std::string iq)
-        : recipeId(recipeId), recipeIngredients{std::move(ingredients)}, inlineQuery(std::move(iq)) {}
+    template <std::ranges::range R>
+        requires std::convertible_to<std::ranges::range_value_t<R>, IngredientsDb::mapped_type>
+    CustomRecipeIngredientsSearch(api::RecipeId recipeId, R&& ingredients, std::string inlineQuery)
+        : recipeId(recipeId), recipeIngredients{std::forward<R>(ingredients)}, query(std::move(inlineQuery)) {}
 };
 
 struct RecipeCustomView {
     api::RecipeId recipeId;
-    size_t pageNo;
+    std::size_t pageNo;
     std::vector<api::models::ingredient::Ingredient> ingredients;
 };
 
 struct CreateCustomRecipe {
     api::RecipeId recipeId;
-    size_t pageNo;
+    std::size_t pageNo;
 };
 
 struct ShoppingListCreation {
@@ -117,16 +125,17 @@ struct ShoppingListCreation {
 
 struct RecipeIngredientsSearch {
     api::RecipeId recipeId;
-    size_t pageNo;
+    std::size_t pageNo;
 };
 
-struct ShoppingListView {
+struct ShoppingListView { // NOLINT(*member-init) // Strange. Flags only this struct due to ItemsDb
     struct SelectableItem : api::models::shopping_list::ShoppingListItem {
         bool selected = false;
     };
     using ItemsDb = utils::FastSortedDb<SelectableItem, &api::models::shopping_list::ShoppingListItem::ingredientId>;
 
     ItemsDb items;
+    bool canBuy;
 };
 
 using State = std::variant<MainMenu,

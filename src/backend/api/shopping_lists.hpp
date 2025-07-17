@@ -16,7 +16,8 @@ class ShoppingListApi : ApiBase {
     explicit ShoppingListApi(httplib::Client& api) : ApiBase{api} {}
 
   public:
-    [[nodiscard]] std::vector<models::shopping_list::ShoppingListItem> get(UserId user) const;
+    [[nodiscard]] std::vector<models::shopping_list::ShoppingListItem>
+    get(UserId user, std::size_t count = 500, std::size_t offset = 0) const; // NOLINT(*magic-number*)
 
     void put(UserId user, const std::vector<IngredientId>& ingredients) const;
 
