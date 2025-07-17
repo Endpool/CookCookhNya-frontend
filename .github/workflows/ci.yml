@@ -3,6 +3,10 @@ name: ci pipeline for frontend
 on:
   push:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:  
     runs-on: ubuntu-latest
@@ -10,7 +14,7 @@ jobs:
       cache-hit: ${{ steps.conan-cache.outputs.cache-hit }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Build dependencies
         uses: ./.github/actions/build_deps
@@ -30,9 +34,8 @@ jobs:
       - name: Install clang-format
         run: |
           sudo apt-get update
-          sudo apt-get install -y clang-format-19
+          sudo apt-get install --no-install-recommends -y clang-format-19
           echo "/usr/lib/llvm-19/bin" >> $GITHUB_PATH
-
       - name: Run clang-format checks
         run: |
           find src -type f \( -name '*.hpp' -or -name '*.cpp' \) \
@@ -44,17 +47,152 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
+  
       - name: Build dependencies
         uses: ./.github/actions/build_deps
-
-      - name: Install clang-tidy
+  
+      - name: Install clang-tidy and parallel
         run: |
           sudo apt-get update
-          sudo apt-get install -y clang-tidy-19
+          sudo apt-get install --no-install-recommends -y clang-tidy-19 parallel
           echo "/usr/lib/llvm-19/bin" >> $GITHUB_PATH
+  
+      - name: Restore clang-tidy cache
+        id: cache-restore
+        uses: actions/cache/restore@v4
+        with:
+          path: .clang-tidy-cache.json
+          key: ${{ runner.os }}-clang-tidy-${{ github.ref }}-${{ github.run_id }}
+          restore-keys: |
+            ${{ runner.os }}-clang-tidy-${{ github.ref }}-
+            ${{ runner.os }}-clang-tidy-refs/heads/main
 
-      - name: Run clang-tidy
+      - name: Initialize empty clang-tidy cache
+        if: steps.cache-restore.outputs.cache-hit != 'true'
         run: |
+          echo "{}" > .clang-tidy-cache.json
+
+      - name: Copy original cache file
+        if: steps.cache-restore.outputs.cache-hit == 'true'
+        run: |
+          cp .clang-tidy-cache.json .clang-tidy-cache.json.orig
+
+      - name: Create clang-tidy cache script
+        run: |
+          cat > run-clang-tidy-cached.sh << 'EOF'
+          #!/bin/bash
+          set -e
+          # Load or initialize cache
+          CACHE_FILE=".clang-tidy-cache.json"
+          if [ -f "$CACHE_FILE" ]; then
+            CACHE=$(cat "$CACHE_FILE")
+          else
+            CACHE="{}"
+          fi
+          # Create temporary directory for per-file cache updates
+          TEMP_DIR=$(mktemp -d /tmp/clang-tidy-cache.XXXXXX)
+          # Find all source files
+          mapfile -t FILES < <(find src -type f \( -name '*.hpp' -or -name '*.cpp' \))
+          # Function to lint a single file
+          lint_file() {
+            FILE="$1"
+            echo "Starting linting $FILE at $(date '+%H:%M:%S')"
+            # Compute file hash
+            HASH=$(sha256sum "$FILE" | cut -d' ' -f1)
+            # Get cached hash
+            CACHED_HASH=$(echo "$CACHE" | jq -r ".\"$FILE\" // \"\"")
+            # Create unique temp file for this file's cache update
+            TEMP_FILE="$TEMP_DIR/cache_$(echo "$FILE" | sha256sum | cut -d' ' -f1).json"
+            if [ "$HASH" = "$CACHED_HASH" ]; then
+              echo "Skipping unchanged file: $FILE"
+              echo "{\"$FILE\": \"$HASH\"}" > "$TEMP_FILE"
+              return 0
+            fi
+            echo "Linting file: $FILE"
+            # Run clang-tidy with warnings as errors
+            OUTPUT=$(clang-tidy-19 "$FILE" --quiet --warnings-as-errors='*' -p build/Release 2>&1)
+            STATUS=$?
+            if [ $STATUS -eq 0 ] && ! echo "$OUTPUT" | grep -q "warning:"; then
+              echo "{\"$FILE\": \"$HASH\"}" > "$TEMP_FILE"
+              return 0
+            else
+              echo "$OUTPUT"
+              return 1
+            fi
+            echo "Finished linting $FILE at $(date '+%H:%M:%S')"
+          }
+          export -f lint_file
+          export CACHE TEMP_DIR
+          # Run linting in parallel with 2 jobs
           cp build/Release/compile_commands.json .
-          run-clang-tidy -j$(nproc) -quiet -warnings-as-errors='*'
+          set +e
+          parallel --jobs $(nproc) lint_file ::: "${FILES[@]}"
+          EXIT_STATUS=$?
+          set -e
+          # Merge all temp cache files into final cache
+          NEW_CACHE=$(mktemp /tmp/clang-tidy-cache-final.XXXXXX.json)
+          echo "{}" > "$NEW_CACHE"
+          for TEMP_FILE in "$TEMP_DIR"/*.json; do
+            if [ -f "$TEMP_FILE" ]; then
+              jq -s 'reduce .[] as $item ({}; . * $item)' "$NEW_CACHE" "$TEMP_FILE" > "$NEW_CACHE.tmp"
+              mv "$NEW_CACHE.tmp" "$NEW_CACHE"
+            fi
+          done
+          # Save updated cache
+          mv "$NEW_CACHE" "$CACHE_FILE"
+          # Clean up temp directory
+          rm -rf "$TEMP_DIR"
+          # Indicate if there were failures
+          if [ $EXIT_STATUS -ne 0 ]; then
+            touch /tmp/clang-tidy-failed
+          fi
+          # Always exit with 0 to allow cache saving
+          exit 0
+          EOF
+          chmod +x run-clang-tidy-cached.sh
+  
+      - name: Run clang-tidy with caching
+        run: |
+          bash ./run-clang-tidy-cached.sh
+
+      - name: Check if cache file changed
+        id: cache-changed
+        run: |
+          if [ -f .clang-tidy-cache.json.orig ]; then
+            if cmp -s .clang-tidy-cache.json .clang-tidy-cache.json.orig; then
+              echo "Cache file unchanged"
+              echo "changed=false" >> $GITHUB_OUTPUT
+            else
+              echo "Cache file changed"
+              echo "changed=true" >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "No original cache file, assuming changed"
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Debug cache state
+        run: |
+          echo "Cache hit: ${{ steps.cache-restore.outputs.cache-hit }}"
+          echo "Cache key: ${{ runner.os }}-clang-tidy-${{ github.ref }}-${{ github.run_id }}"
+          if [ -f .clang-tidy-cache.json ]; then
+            echo "Cache file contents:"
+            cat .clang-tidy-cache.json
+          else
+            echo "No cache file found"
+          fi
+
+      - name: Save clang-tidy cache
+        if: always() && steps.cache-changed.outputs.changed == 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: .clang-tidy-cache.json
+          key: ${{ runner.os }}-clang-tidy-${{ github.ref }}-${{ github.run_id }}
+
+      - name: Check for linting failures
+        if: always()
+        run: |
+          if [ -f /tmp/clang-tidy-failed ]; then
+            echo "Linting failed for some files"
+            exit 1
+          fi

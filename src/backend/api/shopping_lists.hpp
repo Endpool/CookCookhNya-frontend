@@ -16,11 +16,13 @@ class ShoppingListApi : ApiBase {
     explicit ShoppingListApi(httplib::Client& api) : ApiBase{api} {}
 
   public:
-    [[nodiscard]] std::vector<models::shopping_list::ShoppingListItem> get(UserId userId) const;
+    [[nodiscard]] std::vector<models::shopping_list::ShoppingListItem> get(UserId user) const;
 
-    void put(UserId userId, const std::vector<IngredientId>& ingredientIds) const;
+    void put(UserId user, const std::vector<IngredientId>& ingredients) const;
 
-    void remove(UserId userId, const std::vector<IngredientId>& ingredientIds) const;
+    void remove(UserId user, const std::vector<IngredientId>& ingredients) const;
+
+    void buy(UserId user, const std::vector<IngredientId>& ingredients) const;
 };
 
 } // namespace cookcookhnya::api

@@ -2,6 +2,7 @@
 
 #include "backend/id_types.hpp"
 #include "backend/models/shopping_list.hpp"
+#include "utils/to_string.hpp"
 
 #include <httplib.h>
 #include <string>
@@ -11,22 +12,33 @@ namespace cookcookhnya::api {
 
 using namespace models::shopping_list;
 
-std::vector<ShoppingListItem> ShoppingListApi::get(UserId userId) const {
-    return jsonGetAuthed<std::vector<ShoppingListItem>>(userId, "/my/shopping-list");
+// GET /shopping-list
+std::vector<ShoppingListItem> ShoppingListApi::get(UserId user) const {
+    return jsonGetAuthed<std::vector<ShoppingListItem>>(user, "/shopping-list");
 }
 
-void ShoppingListApi::put(UserId userId, const std::vector<IngredientId>& ingredientIds) const {
+// PUT /shopping-list
+void ShoppingListApi::put(UserId user, const std::vector<IngredientId>& ingredients) const {
     httplib::Params params;
-    for (const IngredientId id : ingredientIds)
-        params.insert({"ingredient-id", std::to_string(id)});
-    jsonPutAuthed<void>(userId, "/my/shopping-list", params);
+    for (const IngredientId id : ingredients)
+        params.insert({"ingredient-id", utils::to_string(id)});
+    jsonPutAuthed<void>(user, "/shopping-list", params);
 }
 
-void ShoppingListApi::remove(UserId userId, const std::vector<IngredientId>& ingredientIds) const {
+// DELETE /shopping-list
+void ShoppingListApi::remove(UserId user, const std::vector<IngredientId>& ingredients) const {
     httplib::Params params;
-    for (const IngredientId id : ingredientIds)
-        params.insert({"ingredient-id", std::to_string(id)});
-    jsonDeleteAuthed<void>(userId, "/my/shopping-list", params);
+    for (const IngredientId id : ingredients)
+        params.insert({"ingredient-id", utils::to_string(id)});
+    jsonDeleteAuthed<void>(user, "/shopping-list", params);
+}
+
+// PUT /shopping-list/buy
+void ShoppingListApi::buy(UserId user, const std::vector<IngredientId>& ingredients) const {
+    httplib::Params params;
+    for (const IngredientId id : ingredients)
+        params.insert({"ingredient-id", utils::to_string(id)});
+    jsonPutAuthed<void>(user, "/shopping-list/buy", params);
 }
 
 } // namespace cookcookhnya::api

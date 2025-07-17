@@ -13,11 +13,14 @@ RUN wget https://github.com/conan-io/conan/releases/download/2.15.1/conan-2.15.1
 RUN conan profile detect \
  && sed -i 's/compiler.cppstd=.*/compiler.cppstd=23/' ~/.conan2/profiles/default
 
+# pre install dependencies
+RUN conan install --requires=boost/1.83.0 --build=missing
+
 WORKDIR /deps
-RUN wget https://github.com/Makcal/TgBotStater/archive/refs/tags/v0.3.8.tar.gz -O tgbotstater.tar.gz \
+RUN wget https://github.com/Makcal/TgBotStater/archive/refs/tags/v0.4.1.tar.gz -O tgbotstater.tar.gz \
  && tar -xf tgbotstater.tar.gz \
  && rm tgbotstater.tar.gz \
- && cd TgBotStater-0.3.8 \
+ && cd TgBotStater-0.4.1 \
  && conan create . --build=missing
 
 WORKDIR /app
@@ -39,4 +42,4 @@ RUN useradd -m appuser \
 
 USER appuser
 
-CMD ["./main"]
+ENTRYPOINT ["./main"]

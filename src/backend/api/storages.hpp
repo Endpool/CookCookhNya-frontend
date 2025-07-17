@@ -3,6 +3,7 @@
 #include "backend/api/base.hpp"
 #include "backend/id_types.hpp"
 #include "backend/models/storage.hpp"
+#include "backend/models/user.hpp"
 
 #include <httplib.h>
 
@@ -16,17 +17,16 @@ class StoragesApi : ApiBase {
     explicit StoragesApi(httplib::Client& api) : ApiBase{api} {}
 
   public:
-    [[nodiscard]] std::vector<models::storage::StorageSummary> getStoragesList(UserId userId) const;
-    [[nodiscard]] models::storage::StorageDetails get(UserId userId, StorageId id) const;
-    StorageId create(UserId userId, // NOLINT(*-nodiscard)
+    [[nodiscard]] std::vector<models::storage::StorageSummary> getStoragesList(UserId user) const;
+    [[nodiscard]] models::storage::StorageDetails get(UserId user, StorageId storage) const;
+    StorageId create(UserId user, // NOLINT(*-nodiscard)
                      const models::storage::StorageCreateBody& body) const;
-    void delete_(UserId userId, StorageId id) const;
-    [[nodiscard]] std::vector<models::storage::StorageMemberDetails> getStorageMembers(UserId userId,
-                                                                                       StorageId id) const;
-    void addMember(UserId userId, StorageId id, UserId memberId) const;
-    void deleteMember(UserId userId, StorageId id, UserId memberId) const;
-    [[nodiscard]] InvitationId inviteMember(UserId userId, StorageId storageId) const;
-    void activate(UserId userId, InvitationId id) const;
+    void delete_(UserId user, StorageId storage) const;
+    [[nodiscard]] std::vector<models::user::UserDetails> getStorageMembers(UserId user, StorageId storage) const;
+    void addMember(UserId user, StorageId storage, UserId member) const;
+    void deleteMember(UserId user, StorageId storage, UserId member) const;
+    [[nodiscard]] InvitationId inviteMember(UserId user, StorageId storage) const;
+    void activate(UserId user, InvitationId invitation) const;
 };
 
 } // namespace cookcookhnya::api

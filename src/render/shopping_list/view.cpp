@@ -3,10 +3,10 @@
 #include "message_tracker.hpp"
 #include "render/common.hpp"
 #include "states.hpp"
-#include "utils.hpp"
+#include "utils/to_string.hpp"
+#include "utils/utils.hpp"
 
 #include <ranges>
-#include <string>
 #include <utility>
 
 namespace cookcookhnya::render::shopping_list {
@@ -14,7 +14,7 @@ namespace cookcookhnya::render::shopping_list {
 void renderShoppingList(const states::ShoppingListView::ItemsDb::Set& items, UserId userId, ChatId chatId, BotRef bot) {
     InlineKeyboard keyboard(1 + items.size());
     for (auto [i, item] : std::views::enumerate(items))
-        keyboard[i].push_back(makeCallbackButton(item.name, std::to_string(item.ingredientId)));
+        keyboard[i].push_back(makeCallbackButton(item.name, utils::to_string(item.ingredientId)));
     keyboard[items.size()].push_back(makeCallbackButton(u8"↩️ Назад", "back"));
     auto messageId = message::getMessageId(userId);
     if (messageId) {

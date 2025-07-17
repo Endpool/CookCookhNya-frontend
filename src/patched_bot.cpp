@@ -44,6 +44,8 @@ void appendToJson(std::string& json, std::string_view varName, std::string_view 
     appendToJson(result, "text", object->text);
     if (!object->callbackData.empty())
         appendToJson(result, "callback_data", object->callbackData);
+    else if (!object->url.empty())
+        appendToJson(result, "url", object->url);
     else
         appendToJson(result, "switch_inline_query_current_chat", object->switchInlineQueryCurrentChat);
     removeLastComma(result);

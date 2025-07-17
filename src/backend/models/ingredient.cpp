@@ -24,7 +24,7 @@ IngredientSearchForStorageItem tag_invoke(json::value_to_tag<IngredientSearchFor
     return {
         .id = value_to<decltype(IngredientSearchForStorageItem::id)>(j.at("id")),
         .name = value_to<decltype(IngredientSearchForStorageItem::name)>(j.at("name")),
-        .available = value_to<decltype(IngredientSearchForStorageItem::available)>(j.at("available")),
+        .isInStorage = value_to<decltype(IngredientSearchForStorageItem::isInStorage)>(j.at("isInStorage")),
     };
 }
 
@@ -41,7 +41,7 @@ IngredientSearchForRecipeItem tag_invoke(json::value_to_tag<IngredientSearchForR
     return {
         .id = value_to<decltype(IngredientSearchForRecipeItem::id)>(j.at("id")),
         .name = value_to<decltype(IngredientSearchForRecipeItem::name)>(j.at("name")),
-        .available = value_to<decltype(IngredientSearchForRecipeItem::available)>(j.at("available")),
+        .isInRecipe = value_to<decltype(IngredientSearchForRecipeItem::isInRecipe)>(j.at("isInRecipe")),
     };
 }
 

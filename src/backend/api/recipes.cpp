@@ -1,52 +1,73 @@
 #include "backend/api/recipes.hpp"
 
+#include "backend/api/common.hpp"
 #include "backend/id_types.hpp"
 #include "backend/models/recipe.hpp"
+#include "utils/parsing.hpp"
+#include "utils/to_string.hpp"
 
-#include <cstddef>
 #include <httplib.h>
 
+#include <cstddef>
 #include <format>
 #include <string>
+#include <utility>
 #include <vector>
 
 namespace cookcookhnya::api {
 
 using namespace models::recipe;
 
-RecipesList
-RecipesApi::getRecipeList(UserId userId, size_t size, size_t offset, const std::vector<StorageId>& storageIds) const {
-    httplib::Params params = {{"size", std::to_string(size)}, {"offset", std::to_string(offset)}};
-    for (auto id : storageIds)
-        params.insert({"storageId", std::to_string(id)});
-    return jsonGetAuthed<RecipesList>(userId, "/recipes", params);
+// GET /suggested-recipes
+RecipesList RecipesApi::getSuggestedRecipesList(UserId user,
+                                                const std::vector<StorageId>& storages,
+                                                size_t size,
+                                                size_t offset) const {
+    httplib::Params params = {{"size", utils::to_string(size)}, {"offset", std::to_string(offset)}};
+    for (auto id : storages)
+        params.insert({"storage-id", utils::to_string(id)});
+    return jsonGetAuthed<RecipesList>(user, "/suggested-recipes", params);
 }
 
-RecipeDetails RecipesApi::getIngredientsInRecipe(UserId userId, RecipeId recipeId)
-    const { // StorageIds are not needed in current implementation as backend doesnt return if ingredient is available
-    return jsonGetAuthed<RecipeDetails>(userId, std::format("/recipes/{}", recipeId));
+// GET /recipes
+RecipeSearchResponse RecipesApi::getRecipesList(UserId user,
+                                                std::string query,
+                                                std::size_t threshold,
+                                                std::size_t size,
+                                                std::size_t offset,
+                                                filterType filter) const {
+    return jsonGetAuthed<RecipeSearchResponse>(user,
+                                               "/recipes",
+                                               {{"query", std::move(query)},
+                                                {"threshold", utils::to_string(threshold)},
+                                                {"size", utils::to_string(size)},
+                                                {"offset", utils::to_string(offset)},
+                                                {"filter", filterStr(filter)}});
 }
 
-CustomRecipesList RecipesApi::getPrivateRecipeList(UserId userId, size_t size, size_t offset) const {
-    const httplib::Params params = {{"size", std::to_string(size)}, {"offset", std::to_string(offset)}};
-    return jsonGetAuthed<CustomRecipesList>(userId, "/recipes", params);
+// GET /recipes/{recipeId}
+RecipeDetails RecipesApi::getIngredientsInRecipe(UserId user, RecipeId recipe) const {
+    return jsonGetAuthed<RecipeDetails>(user, std::format("/recipes/{}", recipe));
 }
 
-RecipeId RecipesApi::create(UserId userId, const RecipeCreateBody& body) const {
-    return jsonPostWithJsonAuthed<RecipeId>(userId, "/my/recipes", body); // path analogically to storages
+// POST /recipes
+RecipeId RecipesApi::create(UserId user, const RecipeCreateBody& body) const {
+    return utils::parse<RecipeId>(postWithJsonAuthed(user, "/recipes", body));
 }
 
-void RecipesApi::delete_(UserId userId, RecipeId recipeId) const {
-    jsonDeleteAuthed<void>(userId, std::format("/my/recipes/{}", recipeId)); // path analogically to storages
+// DELETE /recipes/{recipeId}
+void RecipesApi::delete_(UserId user, RecipeId recipeId) const {
+    jsonDeleteAuthed<void>(user, std::format("/recipes/{}", recipeId));
 }
 
-CustomRecipeDetails RecipesApi::get(UserId userId, RecipeId recipeId) const {
-    return jsonGetAuthed<CustomRecipeDetails>(userId,
-                                              std::format("/my/recipes/{}", recipeId)); // path analogically to storages
+// GET /recipes/{recipeId}
+CustomRecipeDetails RecipesApi::get(UserId user, RecipeId recipe) const {
+    return jsonGetAuthed<CustomRecipeDetails>(user, std::format("/recipes/{}", recipe));
 }
 
-void RecipesApi::publishRecipe(UserId userId, RecipeId recipeId) const {
-    jsonPostAuthed<void>(userId, std::format("my/recipes/{}/publish", recipeId));
+// POST /recipes/{recipeId}/request-publication
+void RecipesApi::publishCustom(UserId user, RecipeId recipe) const {
+    jsonPostAuthed<void>(user, std::format("my/recipes/{}/request-publication", recipe));
 }
 
 } // namespace cookcookhnya::api

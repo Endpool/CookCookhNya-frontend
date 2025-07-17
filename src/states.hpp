@@ -3,12 +3,13 @@
 #include "backend/id_types.hpp"
 #include "backend/models/ingredient.hpp"
 #include "backend/models/shopping_list.hpp"
-#include "utils.hpp"
+#include "utils/fast_sorted_db.hpp"
 
 #include <tg_stater/state_storage/common.hpp>
 #include <tg_stater/state_storage/memory.hpp>
 
 #include <cstddef>
+#include <string>
 #include <utility>
 #include <variant>
 #include <vector>
@@ -41,9 +42,8 @@ struct StorageCreationEnterName {};
 struct StorageView : detail::StorageIdMixin {};
 
 struct StorageMemberView : detail::StorageIdMixin {};
-struct PackMemberView : detail::StorageIdMixin {};
-struct MemberAddition : detail::StorageIdMixin {};
-struct MemberDeletion : detail::StorageIdMixin {};
+struct StorageMemberAddition : detail::StorageIdMixin {};
+struct StorageMemberDeletion : detail::StorageIdMixin {};
 
 struct StorageIngredientsList : detail::StorageIdMixin {
     using IngredientsDb = utils::FastSortedDb<api::models::ingredient::Ingredient>;
@@ -52,12 +52,12 @@ struct StorageIngredientsList : detail::StorageIdMixin {
     std::size_t totalFound = 0;
     std::size_t pageNo = 0;
     std::vector<api::models::ingredient::IngredientSearchForStorageItem> searchItems;
-
-    StorageIngredientsList(api::StorageId storageId, IngredientsDb::Set ingredients)
-        : StorageIdMixin{storageId}, storageIngredients{std::move(ingredients)} {}
+    std::string inlineQuery;
+    StorageIngredientsList(api::StorageId storageId, IngredientsDb::Set ingredients, std::string iq)
+        : StorageIdMixin{storageId}, storageIngredients{std::move(ingredients)}, inlineQuery(std::move(iq)) {}
 };
 
-struct StorageSelection {
+struct StoragesSelection {
     std::vector<api::StorageId> storageIds;
 };
 struct SuggestedRecipeList {
@@ -72,7 +72,7 @@ struct RecipeView {
     size_t pageNo;
 };
 
-struct RecipeAddStoradge {
+struct RecipeStorageAddition {
     std::vector<api::StorageId> storageIds;
     api::RecipeId recipeId;
     bool fromStorage;
@@ -84,15 +84,22 @@ struct CustomRecipesList {
 };
 
 struct CustomRecipeIngredientsSearch {
+    using IngredientsDb = utils::FastSortedDb<api::models::ingredient::Ingredient>;
     api::RecipeId recipeId;
-    std::vector<api::models::ingredient::IngredientSearchForRecipeItem> shownIngredients;
-    std::size_t totalFound;
-    size_t pageNo;
+    IngredientsDb recipeIngredients;
+    std::size_t totalFound = 0;
+    std::size_t pageNo = 0;
+    std::vector<api::models::ingredient::IngredientSearchForRecipeItem> searchItems;
+    std::string inlineQuery;
+
+    CustomRecipeIngredientsSearch(api::RecipeId recipeId, IngredientsDb::Set ingredients, std::string iq)
+        : recipeId(recipeId), recipeIngredients{std::move(ingredients)}, inlineQuery(std::move(iq)) {}
 };
 
 struct RecipeCustomView {
     api::RecipeId recipeId;
     size_t pageNo;
+    std::vector<api::models::ingredient::Ingredient> ingredients;
 };
 
 struct CreateCustomRecipe {
@@ -131,11 +138,10 @@ using State = std::variant<MainMenu,
                            StorageCreationEnterName,
                            StorageView,
                            StorageMemberView,
-                           PackMemberView,
-                           MemberAddition,
-                           MemberDeletion,
+                           StorageMemberAddition,
+                           StorageMemberDeletion,
                            StorageIngredientsList,
-                           StorageSelection,
+                           StoragesSelection,
                            SuggestedRecipeList,
                            RecipeView,
                            ShoppingListCreation,
@@ -144,7 +150,7 @@ using State = std::variant<MainMenu,
                            RecipeCustomView,
                            CustomRecipeIngredientsSearch,
                            CustomRecipesList,
-                           RecipeAddStoradge,
+                           RecipeStorageAddition,
                            RecipeIngredientsSearch>;
 
 using StateManager = tg_stater::StateProxy<tg_stater::MemoryStateStorage<State>>;

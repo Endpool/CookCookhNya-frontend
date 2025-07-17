@@ -8,21 +8,22 @@
 
 #include <optional>
 #include <string>
+#include <string_view>
 #include <utility>
 
-namespace cookcookhnya::handlers::init {
+namespace cookcookhnya::handlers::initial {
 
 using namespace render::main_menu;
 using namespace std::literals;
 
-void start(MessageRef m, BotRef bot, SMRef stateManager, ApiClientRef api) {
+void handleStartCmd(MessageRef m, BotRef bot, SMRef stateManager, ApiClientRef api) {
     auto userId = m.from->id;
     renderMainMenu(false, m.from->id, m.chat->id, bot, api);
     stateManager.put(MainMenu{});
-    std::string fullname = m.from->firstName;
+    std::string fullName = m.from->firstName;
     if (!m.from->lastName.empty()) {
-        fullname += ' ';
-        fullname += m.from->lastName;
+        fullName += ' ';
+        fullName += m.from->lastName;
     }
     std::optional<std::string> alias;
     if (!m.from->username.empty())
@@ -30,7 +31,7 @@ void start(MessageRef m, BotRef bot, SMRef stateManager, ApiClientRef api) {
 
     api.getUsersApi().updateInfo(
         userId,
-        api::models::user::UpdateUserInfoBody{.alias = std::move(m.from->username), .fullname = std::move(fullname)});
+        api::models::user::UpdateUserInfoBody{.alias = std::move(m.from->username), .fullName = std::move(fullName)});
 
     auto startText = m.text;
     const int hashPos = "/start "sv.size();
@@ -46,4 +47,4 @@ void handleNoState(MessageRef m, BotRef bot) {
     bot.sendMessage(m.chat->id, "Use /start please");
 };
 
-} // namespace cookcookhnya::handlers::init
+} // namespace cookcookhnya::handlers::initial
