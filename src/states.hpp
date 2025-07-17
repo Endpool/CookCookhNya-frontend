@@ -52,9 +52,9 @@ struct StorageIngredientsList : detail::StorageIdMixin {
     std::size_t totalFound = 0;
     std::size_t pageNo = 0;
     std::vector<api::models::ingredient::IngredientSearchForStorageItem> searchItems;
-
-    StorageIngredientsList(api::StorageId storageId, IngredientsDb::Set ingredients)
-        : StorageIdMixin{storageId}, storageIngredients{std::move(ingredients)} {}
+    std::string inlineQuery;
+    StorageIngredientsList(api::StorageId storageId, IngredientsDb::Set ingredients, std::string iq)
+        : StorageIdMixin{storageId}, storageIngredients{std::move(ingredients)}, inlineQuery(std::move(iq)) {}
 };
 
 struct StoragesSelection {
@@ -84,15 +84,22 @@ struct CustomRecipesList {
 };
 
 struct CustomRecipeIngredientsSearch {
+    using IngredientsDb = utils::FastSortedDb<api::models::ingredient::Ingredient>;
     api::RecipeId recipeId;
-    std::vector<api::models::ingredient::IngredientSearchForRecipeItem> shownIngredients;
-    std::size_t totalFound;
-    size_t pageNo;
+    IngredientsDb recipeIngredients;
+    std::size_t totalFound = 0;
+    std::size_t pageNo = 0;
+    std::vector<api::models::ingredient::IngredientSearchForRecipeItem> searchItems;
+    std::string inlineQuery;
+
+    CustomRecipeIngredientsSearch(api::RecipeId recipeId, IngredientsDb::Set ingredients, std::string iq)
+        : recipeId(recipeId), recipeIngredients{std::move(ingredients)}, inlineQuery(std::move(iq)) {}
 };
 
 struct RecipeCustomView {
     api::RecipeId recipeId;
     size_t pageNo;
+    std::vector<api::models::ingredient::Ingredient> ingredients;
 };
 
 struct CreateCustomRecipe {

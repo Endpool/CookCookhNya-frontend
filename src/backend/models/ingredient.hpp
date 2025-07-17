@@ -27,7 +27,7 @@ struct IngredientCreateBody {
 struct IngredientSearchForStorageItem {
     IngredientId id;
     std::string name;
-    bool available;
+    bool isInStorage;
 
     friend IngredientSearchForStorageItem tag_invoke(boost::json::value_to_tag<IngredientSearchForStorageItem>,
                                                      const boost::json::value& j);
