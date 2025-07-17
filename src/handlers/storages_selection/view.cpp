@@ -1,6 +1,7 @@
 #include "view.hpp"
 
 #include "backend/id_types.hpp"
+#include "backend/models/storage.hpp"
 #include "handlers/common.hpp"
 #include "render/main_menu/view.hpp"
 #include "render/recipes_suggestions/view.hpp"
@@ -22,12 +23,12 @@ void handleStoragesSelectionCQ(
     bot.answerCallbackQuery(cq.id);
     auto chatId = cq.message->chat->id;
     auto userId = cq.from->id;
-    auto selectedStorages = state.storageIds;
+    auto selectedStorages = state.storages;
 
     if (cq.data == "confirm") {
         renderRecipesSuggestion(selectedStorages, 0, userId, chatId, bot, api);
         stateManager.put(
-            SuggestedRecipeList{.pageNo = 0, .storageIds = std::move(selectedStorages), .fromStorage = false});
+            SuggestedRecipeList{.pageNo = 0, .storages = std::move(selectedStorages), .fromStorage = false});
         return;
     }
     if (cq.data == "cancel") {
@@ -36,19 +37,21 @@ void handleStoragesSelectionCQ(
         return;
     }
 
-    auto storageId = utils::parseSafe<api::StorageId>(cq.data.substr(4));
+    auto storageId = utils::parseSafe<api::StorageId>(cq.data.substr(1));
     if (storageId) {
-        if (cq.data.starts_with("in")) {
-            auto it = std::ranges::find(selectedStorages, *storageId);
+        if (cq.data[0] == '+') {
+            auto it = std::ranges::find(selectedStorages, *storageId, &api::models::storage::StorageSummary::id);
             selectedStorages.erase(it);
             renderStorageSelection(selectedStorages, userId, chatId, bot, api);
-            stateManager.put(StoragesSelection{.storageIds = selectedStorages});
+            stateManager.put(StoragesSelection{.storages = selectedStorages});
             return;
         }
-        if (cq.data.starts_with("out")) {
-            selectedStorages.push_back(*storageId);
+        if (cq.data[0] == '-') {
+            auto storageDetails = api.getStoragesApi().get(userId, *storageId);
+            selectedStorages.push_back(
+                {.id = *storageId, .name = storageDetails.name, .ownerId = storageDetails.ownerId});
             renderStorageSelection(selectedStorages, userId, chatId, bot, api);
-            stateManager.put(StoragesSelection{.storageIds = selectedStorages});
+            stateManager.put(StoragesSelection{.storages = selectedStorages});
             return;
         }
     }

@@ -3,8 +3,9 @@
 #include "backend/id_types.hpp"
 #include "backend/models/ingredient.hpp"
 #include "backend/models/shopping_list.hpp"
-#include "handlers/recipes_suggestions/view.cpp"
+#include "backend/models/storage.hpp"
 #include "utils/fast_sorted_db.hpp"
+#include "utils/ingredients_availability.hpp"
 
 #include <tg_stater/state_storage/common.hpp>
 #include <tg_stater/state_storage/memory.hpp>
@@ -59,22 +60,26 @@ struct StorageIngredientsList : detail::StorageIdMixin {
 };
 
 struct StoragesSelection {
-    std::vector<api::StorageId> storageIds;
+    std::vector<api::models::storage::StorageSummary> storages;
 };
 struct SuggestedRecipeList {
     std::size_t pageNo;
-    std::vector<api::StorageId> storageIds;
+    std::vector<api::models::storage::StorageSummary> storages;
     bool fromStorage;
 };
 struct RecipeView {
-    std::vector<api::StorageId> storageIds;
+    std::vector<api::models::storage::StorageSummary> storages;
+    std::vector<std::pair<cookcookhnya::api::models::recipe::IngredientInRecipe, utils::IngredientAvailability>>
+        availability;
     api::RecipeId recipeId;
     bool fromStorage;
     size_t pageNo;
 };
 
 struct RecipeStorageAddition {
-    std::vector<api::StorageId> storageIds;
+    std::vector<api::models::storage::StorageSummary> storages;
+    std::vector<std::pair<cookcookhnya::api::models::recipe::IngredientInRecipe, utils::IngredientAvailability>>
+        availability;
     api::RecipeId recipeId;
     bool fromStorage;
     size_t pageNo;
@@ -102,9 +107,11 @@ struct CreateCustomRecipe {
 };
 
 struct ShoppingListCreation {
-    std::vector<api::StorageId> storageIdsFrom;
-    api::RecipeId recipeIdFrom;
-    std::vector<api::IngredientId> ingredientIdsInList;
+    std::vector<api::models::storage::StorageSummary> storages;
+    std::vector<std::pair<cookcookhnya::api::models::recipe::IngredientInRecipe, utils::IngredientAvailability>>
+        availability;
+    api::RecipeId recipeId;
+    std::vector<api::models::ingredient::Ingredient> selectedIngredients;
     bool fromStorage;
     std::size_t pageNo;
 };

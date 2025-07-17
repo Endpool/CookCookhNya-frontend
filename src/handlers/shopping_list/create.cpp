@@ -1,11 +1,13 @@
 #include "create.hpp"
 
 #include "backend/id_types.hpp"
+#include "backend/models/ingredient.hpp"
 #include "handlers/common.hpp"
 #include "render/recipe/view.hpp"
 #include "render/shopping_list/create.hpp"
 #include "utils/parsing.hpp"
 
+#include <algorithm>
 #include <string>
 
 namespace cookcookhnya::handlers::shopping_list {
@@ -20,43 +22,49 @@ void handleShoppingListCreationCQ(
     auto userId = cq.from->id;
 
     if (data == "back") {
-        renderRecipeView(state.storageIdsFrom, state.recipeIdFrom, userId, chatId, bot, api);
-        stateManager.put(RecipeView{.storageIds = state.storageIdsFrom,
-                                    .recipeId = state.recipeIdFrom,
+        renderRecipeView(state.availability, state.recipeId, userId, chatId, bot, api);
+        stateManager.put(RecipeView{.storages = state.storages,
+                                    .availability = state.availability,
+                                    .recipeId = state.recipeId,
                                     .fromStorage = state.fromStorage,
                                     .pageNo = state.pageNo});
         bot.answerCallbackQuery(cq.id);
         return;
     }
     if (data == "confirm") {
-        // Put ingredients in list
         auto shoppingApi = api.getShoppingListApi();
-        shoppingApi.put(userId, state.ingredientIdsInList);
-
-        // Return to previous state
-        renderRecipeView(state.storageIdsFrom, state.recipeIdFrom, userId, chatId, bot, api);
-        stateManager.put(RecipeView{.storageIds = state.storageIdsFrom,
-                                    .recipeId = state.recipeIdFrom,
+        std::vector<api::IngredientId> putIds;
+        putIds.reserve(state.selectedIngredients.size());
+        for (const auto& ingredient : state.selectedIngredients) {
+            putIds.push_back(ingredient.id);
+        }
+        shoppingApi.put(userId, putIds);
+        renderRecipeView(state.availability, state.recipeId, userId, chatId, bot, api);
+        stateManager.put(RecipeView{.storages = state.storages,
+                                    .availability = state.availability,
+                                    .recipeId = state.recipeId,
                                     .fromStorage = state.fromStorage,
                                     .pageNo = state.pageNo});
         bot.answerCallbackQuery(cq.id);
         return;
     }
-    if (data[0] == 'i') {
-        auto newIngredientIdStr =
-            data.substr(1, data.size()); // Here we got all selected storages and new one as last in string
-        auto ingredientIdToRemove = utils::parseSafe<api::IngredientId>(newIngredientIdStr);
-        // Remove ingredient which was chosen
-        if (ingredientIdToRemove) {
-            for (auto ingredientId = state.ingredientIdsInList.begin(); ingredientId < state.ingredientIdsInList.end();
-                 ingredientId++) {
-                if (*ingredientId == *ingredientIdToRemove) {
-                    state.ingredientIdsInList.erase(ingredientId);
-                }
-            }
+    if (data[0] == '+') {
+        auto newIngredientIdStr = data.substr(1, data.size());
+        auto newIngredientId = utils::parseSafe<api::IngredientId>(newIngredientIdStr);
+        if (newIngredientId) {
+            auto ingredient = api.getIngredientsApi().get(userId, *newIngredientId);
+            state.selectedIngredients.push_back(ingredient);
         }
-
-        renderShoppingListCreation(state.ingredientIdsInList, userId, chatId, bot, api);
+        renderShoppingListCreation(state.selectedIngredients, userId, chatId, bot);
+    }
+    if (data[0] == '-') {
+        auto newIngredientIdStr = data.substr(1, data.size());
+        auto newIngredientId = utils::parseSafe<api::IngredientId>(newIngredientIdStr);
+        if (newIngredientId) {
+            state.selectedIngredients.erase(std::ranges::find(
+                state.selectedIngredients, *newIngredientId, &api::models::ingredient::Ingredient::id));
+        }
+        renderShoppingListCreation(state.selectedIngredients, userId, chatId, bot);
     }
 }
 } // namespace cookcookhnya::handlers::shopping_list

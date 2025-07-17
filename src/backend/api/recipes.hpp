@@ -3,6 +3,7 @@
 #include "backend/api/base.hpp"
 #include "backend/id_types.hpp"
 #include "backend/models/recipe.hpp"
+#include "backend/models/storage.hpp"
 #include "common.hpp"
 
 #include <httplib.h>
@@ -19,10 +20,11 @@ class RecipesApi : ApiBase {
     explicit RecipesApi(httplib::Client& api) : ApiBase{api} {}
 
   public:
-    [[nodiscard]] models::recipe::RecipesList getSuggestedRecipesList(UserId user,
-                                                                      const std::vector<StorageId>& storages,
-                                                                      size_t size = 2,
-                                                                      size_t offset = 0) const;
+    [[nodiscard]] models::recipe::RecipesList
+    getSuggestedRecipesList(UserId user,
+                            std::vector<api::models::storage::StorageSummary>& storages,
+                            size_t size = 2,
+                            size_t offset = 0) const;
 
     [[nodiscard]] models::recipe::RecipeSearchResponse getRecipesList(UserId user,
                                                                       std::string query,

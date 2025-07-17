@@ -38,7 +38,7 @@ class PatchedBot : TgBot::Api {
                                     std::string_view text,
                                     std::nullptr_t /*unused*/,
                                     std::nullptr_t /*unused*/,
-                                    const TgBot::InlineKeyboardMarkup::Ptr& replyMarkup, 
+                                    const TgBot::InlineKeyboardMarkup::Ptr& replyMarkup,
                                     std::string_view parseMode = "") const {
         return sendMessage(chatId, text, replyMarkup, parseMode);
     }

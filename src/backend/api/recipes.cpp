@@ -3,6 +3,7 @@
 #include "backend/api/common.hpp"
 #include "backend/id_types.hpp"
 #include "backend/models/recipe.hpp"
+#include "backend/models/storage.hpp"
 #include "utils/parsing.hpp"
 #include "utils/to_string.hpp"
 
@@ -20,12 +21,12 @@ using namespace models::recipe;
 
 // GET /suggested-recipes
 RecipesList RecipesApi::getSuggestedRecipesList(UserId user,
-                                                const std::vector<StorageId>& storages,
+                                                std::vector<api::models::storage::StorageSummary>& storages,
                                                 size_t size,
                                                 size_t offset) const {
     httplib::Params params = {{"size", utils::to_string(size)}, {"offset", std::to_string(offset)}};
-    for (auto id : storages)
-        params.insert({"storage-id", utils::to_string(id)});
+    for (const auto& storage : storages)
+        params.insert({"storage-id", utils::to_string(storage.id)});
     return jsonGetAuthed<RecipesList>(user, "/suggested-recipes", params);
 }
 

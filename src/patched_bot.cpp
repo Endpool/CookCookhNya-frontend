@@ -79,7 +79,7 @@ void appendToJson(std::string& json, std::string_view varName, std::string_view 
 TgBot::Message::Ptr // NOLINT(*nodiscard)
 PatchedBot::sendMessage(tg_types::ChatId chatId,
                         std::string_view text,
-                        const TgBot::InlineKeyboardMarkup::Ptr& replyMarkup, 
+                        const TgBot::InlineKeyboardMarkup::Ptr& replyMarkup,
                         std::string_view parseMode) const {
     std::vector<TgBot::HttpReqArg> args;
     args.reserve(3);
@@ -97,7 +97,7 @@ TgBot::Message::Ptr // NOLINT(*nodiscard)
 PatchedBot::editMessageText(std::string_view text,
                             tg_types::ChatId chatId,
                             tg_types::MessageId messageId,
-                            const TgBot::InlineKeyboardMarkup::Ptr& replyMarkup, 
+                            const TgBot::InlineKeyboardMarkup::Ptr& replyMarkup,
                             std::string_view parseMode) const {
     std::vector<TgBot::HttpReqArg> args;
     args.reserve(4);

@@ -57,10 +57,11 @@ void renderRecipeIngredientsSearchEdit(const std::vector<IngredientSearchForReci
 void renderRecipeIngredientsSearch(ChatId chatId, UserId userId, BotRef bot) {
     const PatchedBot& patchedBot{bot};
     if (auto mMessageId = message::getMessageId(userId)) {
-        patchedBot.editMessageText(utils::utf8str(u8"📝Нажмите на кнопку ✏️ Редактировать и начните вводить названия продуктов"),
-                                   chatId,
-                                   *mMessageId,
-                                   makeKeyboard({}, 0, 0));
+        patchedBot.editMessageText(
+            utils::utf8str(u8"📝Нажмите на кнопку ✏️ Редактировать и начните вводить названия продуктов"),
+            chatId,
+            *mMessageId,
+            makeKeyboard({}, 0, 0));
     }
 }
 

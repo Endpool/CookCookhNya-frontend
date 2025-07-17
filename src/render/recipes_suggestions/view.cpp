@@ -1,7 +1,7 @@
 #include "view.hpp"
 
-#include "backend/id_types.hpp"
 #include "backend/models/recipe.hpp"
+#include "backend/models/storage.hpp"
 #include "message_tracker.hpp"
 #include "render/common.hpp"
 #include "utils/to_string.hpp"
@@ -41,13 +41,12 @@ InlineKeyboard constructNavigationsMarkup(std::size_t offset,
     std::size_t counter = 0;
     for (std::size_t i = 0; i < recipesToShow; i++) {
         // Print on button in form "1. {Recipe}"
-        keyboard[i + offset].push_back(
-            makeCallbackButton(std::format("{}. {} [{} из {}]",
-                                           1 + counter + ((pageNo)*numOfRecipesOnPage),
-                                           recipesList.page[counter].name,
-                                           recipesList.page[counter].available,
-                                           recipesList.page[counter].total),
-                               std::format("recipe: {}", recipesList.page[counter].id))); // RECIPE ID
+        keyboard[i + offset].push_back(makeCallbackButton(std::format("{}. {} [{} из {}]",
+                                                                      1 + counter + ((pageNo)*numOfRecipesOnPage),
+                                                                      recipesList.page[counter].name,
+                                                                      recipesList.page[counter].available,
+                                                                      recipesList.page[counter].total),
+                                                          std::format("r", recipesList.page[counter].id)));
         counter++;
     }
     keyboard[arrowsRow].reserve(3);
@@ -106,7 +105,7 @@ constructMarkup(size_t pageNo, size_t numOfRecipesOnPage, api::models::recipe::R
     return keyboard;
 }
 
-void renderRecipesSuggestion(const std::vector<api::StorageId>& storageIds,
+void renderRecipesSuggestion(std::vector<api::models::storage::StorageSummary>& storages,
                              size_t pageNo,
                              UserId userId,
                              ChatId chatId,
@@ -118,16 +117,11 @@ void renderRecipesSuggestion(const std::vector<api::StorageId>& storageIds,
 
     const size_t numOfRecipesOnPage = 5;
 
-    auto recipesList = recipesApi.getSuggestedRecipesList(userId, storageIds, (pageNo + 1) * numOfRecipesOnPage);
+    auto recipesList = recipesApi.getSuggestedRecipesList(userId, storages, (pageNo + 1) * numOfRecipesOnPage);
 
     if (messageId) {
-        bot.editMessageText(pageInfo,
-                            chatId,
-                            *messageId,
-                            "",
-                            "",
-                            nullptr,
-                            makeKeyboardMarkup(constructMarkup(pageNo, numOfRecipesOnPage, recipesList)));
+        bot.editMessageText(
+            pageInfo, chatId, *messageId, makeKeyboardMarkup(constructMarkup(pageNo, numOfRecipesOnPage, recipesList)));
     }
 }
 

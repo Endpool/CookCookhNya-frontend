@@ -61,7 +61,6 @@ void handleStorageIngredientsListIQ(StorageIngredientsList& state,
     } else {
         const std::size_t count = 15;
         auto response = api.searchForStorage(userId, state.storageId, iq.query, 50, count); // NOLINT (*magic*)
-        std::cerr << response.found << response.page[0].name;
         if (response.found != state.totalFound || !std::ranges::equal(response.page,
                                                                       state.searchItems,
                                                                       std::ranges::equal_to{},

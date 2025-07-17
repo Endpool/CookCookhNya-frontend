@@ -46,7 +46,7 @@ InlineKeyboard constructNavigationsMarkup(size_t offset,
         // Print on button in form "1. {Recipe}"
         keyboard[i + offset].push_back(makeCallbackButton(
             std::format("{}. {}", 1 + counter + ((pageNo)*numOfRecipesOnPage), recipesList.page[counter].name),
-            std::format("recipe: {}", recipesList.page[counter].id))); // RECIPE ID
+            std::format("r", recipesList.page[counter].id))); // RECIPE ID
         counter++;
     }
 
@@ -105,9 +105,9 @@ constructMarkup(size_t pageNo, size_t numOfRecipesOnPage, api::models::recipe::R
         recipesList.found == 0 ? 0 : offset + recipesToShow; // 1 because of the offset of add/delete row
 
     InlineKeyboard keyboard =
-        recipesList.found == 0
-            ? constructOnlyCreate()
-            : constructNavigationsMarkup(offset, numOfRows + recipesToShow, (pageNo + 1), numOfRecipesOnPage, recipesList);
+        recipesList.found == 0 ? constructOnlyCreate()
+                               : constructNavigationsMarkup(
+                                     offset, numOfRows + recipesToShow, (pageNo + 1), numOfRecipesOnPage, recipesList);
     if (keyboard.empty()) { // If error happened
         return keyboard;
     }
@@ -124,8 +124,8 @@ void renderCustomRecipesList(size_t pageNo, UserId userId, ChatId chatId, BotRef
     auto messageId = message::getMessageId(userId);
 
     const std::size_t numOfRecipesOnPage = 5;
-    auto recipesList =
-        recipesApi.getRecipesList(userId, "", 0, numOfRecipesOnPage, (pageNo + 1) * numOfRecipesOnPage, FilterType::Custom);
+    auto recipesList = recipesApi.getRecipesList(
+        userId, "", 0, numOfRecipesOnPage, (pageNo + 1) * numOfRecipesOnPage, FilterType::Custom);
 
     bot.editMessageText(
         pageInfo, chatId, *messageId, makeKeyboardMarkup(constructMarkup(pageNo, numOfRecipesOnPage, recipesList)));

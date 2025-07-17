@@ -2,25 +2,23 @@
 
 #include "backend/id_types.hpp"
 #include "backend/models/recipe.hpp"
-#include "handlers/recipes_suggestions/view.hpp"
 #include "message_tracker.hpp"
 #include "render/common.hpp"
+#include "utils/ingredients_availability.hpp"
 #include "utils/utils.hpp"
 
 #include <format>
 #include <string>
 #include <utility>
-#include <vector>
 
 namespace cookcookhnya::render::recipe {
 
-using namespace handlers::recipes_suggestions;
-
-
-textGenInfo recipeView(const std::vector<std::pair<api::models::recipe::IngredientInRecipe, IngredientAvailability>>& inStoragesAvailability,
-                    api::RecipeId recipeId,
-                    UserId userId,
-                    ApiClient api) {
+textGenInfo
+recipeView(const std::vector<std::pair<api::models::recipe::IngredientInRecipe, utils::IngredientAvailability>>&
+               inStoragesAvailability,
+           api::RecipeId recipeId,
+           UserId userId,
+           ApiClient api) {
     auto recipeIngredients = api.getRecipesApi().getIngredientsInRecipe(userId, recipeId);
 
     bool isIngredientNotAvailable = false;
@@ -28,10 +26,10 @@ textGenInfo recipeView(const std::vector<std::pair<api::models::recipe::Ingredie
     const std::string recipeName = recipeIngredients.name;
     auto text = std::format("{} Ингредиенты для *{}* \n\n", utils::utf8str(u8"📖"), recipeName);
 
-    for (const auto& infoPair : inStoragesAvailability){
-        if (infoPair.second.available == AvailabiltiyType::available){
+    for (const auto& infoPair : inStoragesAvailability) {
+        if (infoPair.second.available == utils::AvailabiltiyType::available) {
             text += "`[+]` " + infoPair.first.name + "\n";
-        } else if (infoPair.second.available == AvailabiltiyType::other_storages){
+        } else if (infoPair.second.available == utils::AvailabiltiyType::other_storages) {
             text += "`[?]` " + infoPair.first.name + "\n";
             isIngredientIsOtherStorages = true;
         } else {
@@ -41,10 +39,13 @@ textGenInfo recipeView(const std::vector<std::pair<api::models::recipe::Ingredie
     }
     text += "\n🌐 Источник: " + recipeIngredients.link;
 
-    return {.text = text, .isIngredientNotAvailable = isIngredientNotAvailable, .isIngredientIsOtherStorages = isIngredientIsOtherStorages};
+    return {.text = text,
+            .isIngredientNotAvailable = isIngredientNotAvailable,
+            .isIngredientIsOtherStorages = isIngredientIsOtherStorages};
 }
 
-void renderRecipeView(const std::vector<std::pair<api::models::recipe::IngredientInRecipe, IngredientAvailability>>& inStoragesAvailability,
+void renderRecipeView(std::vector<std::pair<api::models::recipe::IngredientInRecipe, utils::IngredientAvailability>>&
+                          inStoragesAvailability,
                       api::RecipeId recipeId,
                       UserId userId,
                       ChatId chatId,

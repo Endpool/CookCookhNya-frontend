@@ -1,6 +1,7 @@
 #include "add_storage.hpp"
 
 #include "backend/id_types.hpp"
+#include "backend/models/storage.hpp"
 #include "handlers/common.hpp"
 #include "render/recipe/add_storage.hpp"
 #include "render/recipe/view.hpp"
@@ -15,28 +16,39 @@ using namespace render::recipe;
 
 void handleRecipeStorageAdditionCQ(
     RecipeStorageAddition& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
+    bot.answerCallbackQuery(cq.id);
     std::string data = cq.data;
     auto chatId = cq.message->chat->id;
     auto userId = cq.from->id;
 
     if (data[0] == '+') {
-        auto newStorageIdStr =
-            data.substr(1, data.size()); // Here we got all selected storages and new one as last in string
+        auto newStorageIdStr = data.substr(1, data.size());
         auto newStorageId = utils::parseSafe<api::StorageId>(newStorageIdStr);
         if (newStorageId) {
-            state.storageIds.push_back(*newStorageId);
-            renderStoragesSuggestion(state.storageIds, state.recipeId, userId, chatId, bot, api);
+            auto newStorageDetails = api.getStoragesApi().get(userId, *newStorageId);
+            api::models::storage::StorageSummary newStorage = {
+                .id = *newStorageId, .name = newStorageDetails.name, .ownerId = newStorageDetails.ownerId};
+            state.storages.push_back(newStorage);
+            renderStoragesSuggestion(state.availability, state.storages, state.recipeId, userId, chatId, bot, api);
         }
-        bot.answerCallbackQuery(cq.id);
+    }
+    if (data[0] == '-') {
+        auto newStorageIdStr = data.substr(1, data.size());
+        auto newStorageId = utils::parseSafe<api::StorageId>(newStorageIdStr);
+        if (newStorageId) {
+            state.storages.erase(
+                std::ranges::find(state.storages, newStorageId, &api::models::storage::StorageSummary::id));
+            renderStoragesSuggestion(state.availability, state.storages, state.recipeId, userId, chatId, bot, api);
+        }
     }
 
-    if (data == "back_from_adding_storages") {
-        renderRecipeView(state.storageIds, state.recipeId, userId, chatId, bot, api);
-        stateManager.put(RecipeView{.storageIds = state.storageIds,
+    if (data == "back") {
+        renderRecipeView(state.availability, state.recipeId, userId, chatId, bot, api);
+        stateManager.put(RecipeView{.storages = state.storages,
+                                    .availability = state.availability,
                                     .recipeId = state.recipeId,
                                     .fromStorage = state.fromStorage,
                                     .pageNo = state.pageNo});
-        bot.answerCallbackQuery(cq.id);
         return;
     }
 }

@@ -1,7 +1,7 @@
 #include "view.hpp"
 
 #include "backend/api/storages.hpp"
-#include "backend/id_types.hpp"
+#include "backend/models/storage.hpp"
 #include "handlers/common.hpp"
 #include "render/personal_account/view.hpp"
 #include "render/recipes_suggestions/view.hpp"
@@ -32,13 +32,13 @@ void handleMainMenuCQ(MainMenu& /*unused*/, CallbackQueryRef cq, BotRef& bot, SM
     }
     if (cq.data == "wanna_eat") {
         if (storages.size() == 1) {
-            auto storageId = {storages[0].id};
-            renderRecipesSuggestion(storageId, 0, userId, chatId, bot, api);
-            stateManager.put(SuggestedRecipeList{.pageNo = 0, .storageIds = storageId, .fromStorage = false});
+            std::vector<api::models::storage::StorageSummary> storage = {storages[0]};
+            renderRecipesSuggestion(storage, 0, userId, chatId, bot, api);
+            stateManager.put(SuggestedRecipeList{.pageNo = 0, .storages = storage, .fromStorage = false});
             return;
         }
         renderStorageSelection({}, userId, chatId, bot, api);
-        stateManager.put(StoragesSelection{.storageIds = std::vector<api::StorageId>{}});
+        stateManager.put(StoragesSelection{.storages = std::vector<api::models::storage::StorageSummary>{}});
         return;
     }
     if (cq.data == "shopping_list") {

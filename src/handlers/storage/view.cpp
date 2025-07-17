@@ -1,5 +1,6 @@
 #include "view.hpp"
 
+#include "backend/models/storage.hpp"
 #include "handlers/common.hpp"
 #include "render/recipes_suggestions/view.hpp"
 #include "render/storage/ingredients/view.hpp"
@@ -34,9 +35,12 @@ void handleStorageViewCQ(StorageView& state, CallbackQueryRef cq, BotRef bot, SM
         renderStorageList(true, userId, chatId, bot, api);
         stateManager.put(StorageList{});
     } else if (cq.data == "wanna_eat") {
-        renderRecipesSuggestion({state.storageId}, 0, userId, chatId, bot, api);
-        stateManager.put(
-            SuggestedRecipeList{.pageNo = 0, .storageIds = std::vector{state.storageId}, .fromStorage = true});
+        auto storageDetails = api.getStoragesApi().get(userId, state.storageId);
+        api::models::storage::StorageSummary storage = {
+            .id = state.storageId, .name = storageDetails.name, .ownerId = storageDetails.ownerId};
+        std::vector<api::models::storage::StorageSummary> storages = {storage};
+        renderRecipesSuggestion(storages, 0, userId, chatId, bot, api);
+        stateManager.put(SuggestedRecipeList{.pageNo = 0, .storages = std::vector{storage}, .fromStorage = true});
         return;
     }
 }
