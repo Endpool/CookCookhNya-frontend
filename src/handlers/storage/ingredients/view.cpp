@@ -22,13 +22,17 @@ using namespace api::models::ingredient;
 
 // Global vars
 const size_t numOfIngredientsOnPage = 5;
-const size_t threshhold = 50;
+const size_t threshhold = 70;
 
 namespace {
 void updateSearch(StorageIngredientsList& state, BotRef bot, tg_types::UserId userId, IngredientsApiRef api) {
 
-    auto response = api.searchForStorage(
-        userId, state.storageId, "", threshhold, numOfIngredientsOnPage, state.pageNo * numOfIngredientsOnPage);
+    auto response = api.searchForStorage(userId,
+                                         state.storageId,
+                                         state.inlineQuery,
+                                         threshhold,
+                                         numOfIngredientsOnPage,
+                                         state.pageNo * numOfIngredientsOnPage);
     if (response.found != state.totalFound || !std::ranges::equal(response.page,
                                                                   state.searchItems,
                                                                   std::ranges::equal_to{},
@@ -92,6 +96,7 @@ void handleStorageIngredientsListIQ(StorageIngredientsList& state,
                                     IngredientsApiRef api) {
     const size_t numOfIngredientsOnPage = 5;
     const auto userId = iq.from->id;
+    state.inlineQuery = iq.query;
     if (iq.query.empty()) {
         state.searchItems.clear();
         // When query is empty then search shouldn't happen

@@ -27,7 +27,8 @@ void handleStorageViewCQ(StorageView& state, CallbackQueryRef cq, BotRef bot, SM
         auto ingredients = api.getIngredientsApi().getStorageIngredients(userId, state.storageId);
         stateManager.put(StorageIngredientsList{
             state.storageId,
-            {std::make_move_iterator(ingredients.begin()), std::make_move_iterator(ingredients.end())}});
+            {std::make_move_iterator(ingredients.begin()), std::make_move_iterator(ingredients.end())},
+            ""});
         renderIngredientsListSearch(
             std::get<StorageIngredientsList>(*stateManager.get()), numOfIngredientsOnPage, userId, chatId, bot);
     } else if (cq.data == "members") {

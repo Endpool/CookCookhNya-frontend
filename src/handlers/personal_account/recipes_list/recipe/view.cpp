@@ -29,7 +29,8 @@ void handleRecipeCustomViewCQ(
     if (data == "change") {
         stateManager.put(CustomRecipeIngredientsSearch{
             state.recipeId,
-            {std::make_move_iterator(state.ingredients.begin()), std::make_move_iterator(state.ingredients.end())}});
+            {std::make_move_iterator(state.ingredients.begin()), std::make_move_iterator(state.ingredients.end())},
+            ""});
         renderRecipeIngredientsSearch(
             std::get<CustomRecipeIngredientsSearch>(*stateManager.get()), numOfIngredientsOnPage, userId, chatId, bot);
         return;

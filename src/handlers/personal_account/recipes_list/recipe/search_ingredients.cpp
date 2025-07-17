@@ -23,13 +23,17 @@ using namespace render::personal_account::recipes;
 
 // Global vars
 const size_t numOfIngredientsOnPage = 5;
-const size_t threshhold = 50;
+const size_t threshhold = 70;
 
 namespace {
 void updateSearch(CustomRecipeIngredientsSearch& state, BotRef bot, tg_types::UserId userId, IngredientsApiRef api) {
 
-    auto response = api.searchForRecipe(
-        userId, state.recipeId, "", threshhold, numOfIngredientsOnPage, state.pageNo * numOfIngredientsOnPage);
+    auto response = api.searchForRecipe(userId,
+                                        state.recipeId,
+                                        state.inlineQuery,
+                                        threshhold,
+                                        numOfIngredientsOnPage,
+                                        state.pageNo * numOfIngredientsOnPage);
     if (response.found != state.totalFound || !std::ranges::equal(response.page,
                                                                   state.searchItems,
                                                                   std::ranges::equal_to{},
@@ -94,6 +98,7 @@ void handleCustomRecipeIngredientsSearchIQ(CustomRecipeIngredientsSearch& state,
                                            BotRef bot,
                                            IngredientsApiRef api) {
     const size_t numOfIngredientsOnPage = 5;
+    state.inlineQuery = iq.query;
     const auto userId = iq.from->id;
     if (iq.query.empty()) {
         state.searchItems.clear();
