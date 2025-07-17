@@ -130,8 +130,10 @@ void renderRecipesSuggestion(const std::vector<api::StorageId>& storageIds,
     auto messageId = message::getMessageId(userId);
 
     const size_t numOfRecipesOnPage = 5;
+    const size_t numOfRecipes = 500;
 
-    auto recipesList = recipesApi.getSuggestedRecipesList(userId, storageIds, 0, pageNo * numOfRecipesOnPage);
+    auto recipesList =
+        recipesApi.getSuggestedRecipesList(userId, storageIds, numOfRecipes, pageNo * numOfRecipesOnPage);
 
     if (messageId) {
         bot.editMessageText(pageInfo,
