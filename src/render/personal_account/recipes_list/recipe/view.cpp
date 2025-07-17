@@ -1,6 +1,7 @@
 #include "view.hpp"
 
 #include "backend/id_types.hpp"
+#include "backend/models/ingredient.hpp"
 #include "backend/models/recipe.hpp"
 #include "message_tracker.hpp"
 #include "render/common.hpp"
@@ -10,19 +11,27 @@
 #include <format>
 #include <string>
 #include <utility>
+#include <vector>
 
 namespace cookcookhnya::render::personal_account::recipes {
 
-void renderCustomRecipe(
+std::vector<api::models::ingredient::Ingredient> renderCustomRecipe(
     bool toBeEdited, UserId userId, ChatId chatId, api::RecipeId recipeId, BotRef bot, RecipesApiRef recipesApi) {
     auto recipeDetails = recipesApi.get(userId, recipeId);
+    std::vector<api::models::ingredient::Ingredient> ingredients;
 
     const std::size_t rows = 4; // 1 for publish, 1 for delete, 1 for back, 1 for change
     InlineKeyboard keyboard(rows);
     std::string toPrint;
     toPrint += (utils::utf8str(u8"Рецепт: ") + recipeDetails.name + "\n");
-    for (auto& it : recipeDetails.ingredients)
+    for (auto& it : recipeDetails.ingredients) {
         toPrint += std::format("• {}\n", it.name);
+        ingredients.push_back({
+            .id = it.id,
+            .name = it.name,
+        });
+    }
+
     toPrint += recipeDetails.link;
     keyboard[0].push_back(makeCallbackButton(u8"🚮 Удалить", "delete"));
     keyboard[1].push_back(makeCallbackButton(u8"✏️ Редактировать", "change"));
@@ -37,5 +46,6 @@ void renderCustomRecipe(
         auto message = bot.sendMessage(chatId, toPrint, makeKeyboardMarkup(std::move(keyboard)));
         message::addMessageId(userId, message->messageId);
     }
+    return ingredients;
 }
 } // namespace cookcookhnya::render::personal_account::recipes

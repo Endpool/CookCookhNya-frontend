@@ -6,8 +6,10 @@
 
 #include <tg_stater/bot.hpp>
 #include <tg_stater/dependencies.hpp>
+#include <tgbot/Bot.h>
 
 #include <algorithm>
+#include <exception>
 #include <iostream>
 #include <string>
 #include <string_view>
@@ -30,48 +32,56 @@ int main(int argc, char* argv[]) {
         useWebhook = true;
     }
 
-    Setup<State, Dependencies<ApiClient>>::Stater<startCmdHandler,
-                                                  noStateHandler,
-                                                  mainMenuCQHandler,
-                                                  customIngredientsListCQHandler,
-                                                  customIngredientCreationEnterNameMsgHandler,
-                                                  customIngredientCreationEnterNameCQHandler,
-                                                  customIngredientConfirmationCQHandler,
-                                                  customIngredientPublishCQHandler,
-                                                  storageListCQHandler,
-                                                  storageCreationEnterNameMsgHandler,
-                                                  storageCreationEnterNameCQHandler,
-                                                  storageDeletionCQHandler,
-                                                  storageViewCQHandler,
-                                                  storageMemberViewCQHandler,
-                                                  storageMemberAdditionMsgHandler,
-                                                  storageMemberAdditionCQHandler,
-                                                  storageMemberDeletionCQHandler,
-                                                  storageSelectionCQHandler,
-                                                  storageIngredientsListCQHandler,
-                                                  storageIngredientsListIQHandler,
-                                                  suggestedRecipeListCQHandler,
-                                                  recipeViewCQHandler,
-                                                  recipeStorageAdditionCQHandler,
-                                                  shoppingListCreationCQHandler,
-                                                  shoppingListViewCQHandler,
-                                                  personalAccountMenuCQHandler,
-                                                  customRecipesListCQHandler,
-                                                  createCustomRecipeMsgHandler,
-                                                  createCustomRecipeCQHandler,
-                                                  recipeCustomViewCQHandler,
-                                                  customRecipeIngredientsSearchCQHandler,
-                                                  customRecipeIngredientsSearchIQHandler>
-        bot{{}, {ApiClient{utils::getenvWithError("API_URL")}}};
+    try {
+        Setup<State, Dependencies<ApiClient>>::Stater<startCmdHandler,
+                                                      noStateHandler,
+                                                      mainMenuCQHandler,
+                                                      customIngredientsListCQHandler,
+                                                      customIngredientCreationEnterNameMsgHandler,
+                                                      customIngredientCreationEnterNameCQHandler,
+                                                      customIngredientConfirmationCQHandler,
+                                                      customIngredientPublishCQHandler,
+                                                      storageListCQHandler,
+                                                      storageCreationEnterNameMsgHandler,
+                                                      storageCreationEnterNameCQHandler,
+                                                      storageDeletionCQHandler,
+                                                      storageViewCQHandler,
+                                                      storageMemberViewCQHandler,
+                                                      storageMemberAdditionMsgHandler,
+                                                      storageMemberAdditionCQHandler,
+                                                      storageMemberDeletionCQHandler,
+                                                      storageSelectionCQHandler,
+                                                      storageIngredientsListCQHandler,
+                                                      storageIngredientsListIQHandler,
+                                                      suggestedRecipeListCQHandler,
+                                                      recipeViewCQHandler,
+                                                      recipeStorageAdditionCQHandler,
+                                                      shoppingListCreationCQHandler,
+                                                      shoppingListViewCQHandler,
+                                                      personalAccountMenuCQHandler,
+                                                      customRecipesListCQHandler,
+                                                      createCustomRecipeMsgHandler,
+                                                      createCustomRecipeCQHandler,
+                                                      recipeCustomViewCQHandler,
+                                                      customRecipeIngredientsSearchCQHandler,
+                                                      customRecipeIngredientsSearchIQHandler>
+            bot{{}, {ApiClient{utils::getenvWithError("API_URL")}}};
 
-    TgBot::Bot tgBot{utils::getenvWithError("BOT_TOKEN")};
-    if (useWebhook) {
-        std::string path = "/"s + utils::getenvWithError("WEBHOOK_SECRET");
-        bot.startWebhook(std::move(tgBot),
-                         utils::parse<unsigned short>(utils::getenvWithError("WEBHOOK_PORT")),
-                         utils::getenvWithError("WEBHOOK_HOST") + path,
-                         path);
-    } else {
-        bot.start(std::move(tgBot));
+        TgBot::Bot tgBot{utils::getenvWithError("BOT_TOKEN")};
+        if (useWebhook) {
+            const std::string path = "/"s + utils::getenvWithError("WEBHOOK_SECRET"); // NOLINT(*include*)
+            bot.startWebhook(std::move(tgBot),
+                             utils::parse<unsigned short>(utils::getenvWithError("WEBHOOK_PORT")),
+                             utils::getenvWithError("WEBHOOK_HOST") + path,
+                             path);
+        } else {
+            bot.start(std::move(tgBot));
+        }
+    } catch (std::exception& e) {
+        std::cout << e.what() << '\n';
+        return 1;
+    } catch (...) {
+        std::cout << "Unknown exception in main\n";
+        return 1;
     }
 }

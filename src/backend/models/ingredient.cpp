@@ -24,7 +24,7 @@ IngredientSearchForStorageItem tag_invoke(json::value_to_tag<IngredientSearchFor
     return {
         .id = value_to<decltype(IngredientSearchForStorageItem::id)>(j.at("id")),
         .name = value_to<decltype(IngredientSearchForStorageItem::name)>(j.at("name")),
-        .available = value_to<decltype(IngredientSearchForStorageItem::available)>(j.at("available")),
+        .isInStorage = value_to<decltype(IngredientSearchForStorageItem::isInStorage)>(j.at("isInStorage")),
     };
 }
 

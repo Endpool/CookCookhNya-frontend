@@ -7,6 +7,7 @@
 #include "utils/utils.hpp"
 
 #include <cstddef>
+#include <format>
 #include <string>
 #include <utility>
 #include <vector>

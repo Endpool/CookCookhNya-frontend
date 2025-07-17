@@ -8,6 +8,7 @@
 #include "render/shopping_list/create.hpp"
 
 #include <string>
+#include <vector>
 
 namespace cookcookhnya::handlers::recipe {
 

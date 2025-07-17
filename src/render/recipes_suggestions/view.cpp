@@ -28,17 +28,19 @@ InlineKeyboard constructNavigationsMarkup(std::size_t offset,
     std::size_t maxPageNum = std::ceil(static_cast<double>(amountOfRecipes) / static_cast<double>(numOfRecipesOnPage));
 
     const size_t recipesToShow = std::min(numOfRecipesOnPage, recipesList.page.size());
-    const bool ifMaxPage = amountOfRecipes - numOfRecipesOnPage * pageNo + 1 <= 0;
     // + 1 because of the 0-indexing, as comparisson is between num of recipes gotten and that
     // will be actually shown
+    const bool ifMaxPage =
+        static_cast<int>(amountOfRecipes) - static_cast<int>(numOfRecipesOnPage) * (static_cast<int>(pageNo) + 1) <= 0;
+
     if (offset + recipesToShow > fullKeyBoardSize) { // IN ERROR HANDLING MAY USE ASSERT
         InlineKeyboard error(0);
         return error;
     }
     const size_t arrowsRow = offset + recipesToShow;
 
-    InlineKeyboard keyboard(fullKeyBoardSize);
-    std::size_t counter = 0;
+    InlineKeyboard keyboard(pageNo == 0 && ifMaxPage ? fullKeyBoardSize - 1 : fullKeyBoardSize);
+    int counter = 0;
     for (std::size_t i = 0; i < recipesToShow; i++) {
         // Print on button in form "1. {Recipe}"
         keyboard[i + offset].push_back(makeCallbackButton(std::format("{}. {} [{} из {}]",
@@ -48,6 +50,11 @@ InlineKeyboard constructNavigationsMarkup(std::size_t offset,
                                                                       recipesList.page[counter].total),
                                                           std::format("r", recipesList.page[counter].id)));
         counter++;
+    }
+    if (pageNo == 0 && ifMaxPage) {
+        // instead of arrows row
+        keyboard[arrowsRow].push_back(makeCallbackButton(u8"↩️ Назад", "back"));
+        return keyboard;
     }
     keyboard[arrowsRow].reserve(3);
 
@@ -83,6 +90,13 @@ InlineKeyboard constructNavigationsMarkup(std::size_t offset,
     // Put pageNo as button
     keyboard[arrowsRow].insert(keyboard[arrowsRow].begin() + 1,
                                makeCallbackButton(std::format("{} из {}", pageNo + 1, maxPageNum), "dont_handle"));
+    keyboard[arrowsRow + 1].push_back(makeCallbackButton(u8"↩️ Назад", "back"));
+    return keyboard;
+}
+
+InlineKeyboard constructOnlyBack() {
+    InlineKeyboard keyboard(1);
+    keyboard[0].push_back(makeCallbackButton(u8"↩️ Назад", "back"));
     return keyboard;
 }
 
@@ -93,15 +107,14 @@ constructMarkup(size_t pageNo, size_t numOfRecipesOnPage, api::models::recipe::R
     const size_t offset = 0;    // Number of rows before list
     const size_t recipesToShow = std::min(numOfRecipesOnPage, recipesList.page.size());
 
-    const size_t arrowsRow = offset + recipesToShow; // 1 because of the offset of add/delete row
-
     InlineKeyboard keyboard =
-        constructNavigationsMarkup(offset, numOfRows + recipesToShow, pageNo, numOfRecipesOnPage, recipesList);
+        recipesList.found == 0
+            ? constructOnlyBack()
+            : constructNavigationsMarkup(offset, numOfRows + recipesToShow, pageNo, numOfRecipesOnPage, recipesList);
     if (keyboard.empty()) { // If error happened ADD PROPER ERROR HANDLING IF FUNCTION WILL BE REUSED
         return keyboard;
     }
 
-    keyboard[arrowsRow + 1].push_back(makeCallbackButton(u8"↩️ Назад", "back"));
     return keyboard;
 }
 
@@ -116,8 +129,9 @@ void renderRecipesSuggestion(std::vector<api::models::storage::StorageSummary>& 
     auto messageId = message::getMessageId(userId);
 
     const size_t numOfRecipesOnPage = 5;
+    const size_t numOfRecipes = 500;
 
-    auto recipesList = recipesApi.getSuggestedRecipesList(userId, storages, (pageNo + 1) * numOfRecipesOnPage);
+    auto recipesList = recipesApi.getSuggestedRecipesList(userId, storages, numOfRecipes, pageNo * numOfRecipesOnPage);
 
     if (messageId) {
         bot.editMessageText(

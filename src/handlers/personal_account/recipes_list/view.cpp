@@ -40,8 +40,9 @@ void handleCustomRecipesListCQ(
     if (data[0] == 'r') {
         auto recipeId = utils::parseSafe<api::RecipeId>(data.substr(1, data.size()));
         if (recipeId) {
-            renderCustomRecipe(true, userId, chatId, recipeId.value(), bot, api);
-            stateManager.put(RecipeCustomView{.recipeId = recipeId.value(), .pageNo = state.pageNo});
+            auto ingredients = renderCustomRecipe(true, userId, chatId, recipeId.value(), bot, api);
+            stateManager.put(
+                RecipeCustomView{.recipeId = recipeId.value(), .pageNo = state.pageNo, .ingredients = ingredients});
         }
         return;
     }

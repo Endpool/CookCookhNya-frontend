@@ -12,7 +12,7 @@ namespace cookcookhnya::render::recipes_suggestions {
 using namespace tg_types;
 
 InlineKeyboard constructMarkup(size_t pageNo, size_t numOfRecipesOnPage, api::models::recipe::RecipesList& recipesList);
-
+InlineKeyboard constructOnlyBack();
 InlineKeyboard constructNavigationsMarkup(size_t offset,
                                           size_t fullKeyBoardSize,
                                           size_t pageNo,
