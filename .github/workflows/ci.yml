@@ -3,6 +3,10 @@ name: ci pipeline for frontend
 on:
   push:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:  
     runs-on: ubuntu-latest
@@ -54,12 +58,23 @@ jobs:
           echo "/usr/lib/llvm-19/bin" >> $GITHUB_PATH
   
       - name: Restore clang-tidy cache
+        id: cache-restore
         uses: actions/cache/restore@v4
         with:
           path: .clang-tidy-cache.json
           key: ${{ runner.os }}-clang-tidy-${{ github.ref }}
           restore-keys: |
-            ${{ runner.os }}-clang-tidy-${{ github.ref }}
+            ${{ runner.os }}-clang-tidy-dev
+
+      - name: Initialize empty clang-tidy cache
+        if: steps.cache-restore.outputs.cache-hit != 'true'
+        run: |
+          echo "{}" > .clang-tidy-cache.json
+
+      - name: Copy original cache file
+        if: steps.cache-restore.outputs.cache-hit == 'true'
+        run: |
+          cp .clang-tidy-cache.json .clang-tidy-cache.json.orig
 
       - name: Create clang-tidy cache script
         run: |
@@ -139,8 +154,24 @@ jobs:
         run: |
           bash ./run-clang-tidy-cached.sh
 
+      - name: Check if cache file changed
+        id: cache-changed
+        run: |
+          if [ -f .clang-tidy-cache.json.orig ]; then
+            if cmp -s .clang-tidy-cache.json .clang-tidy-cache.json.orig; then
+              echo "Cache file unchanged"
+              echo "changed=false" >> $GITHUB_OUTPUT
+            else
+              echo "Cache file changed"
+              echo "changed=true" >> $GITHUB_OUTPUT
+            fi
+          else
+            echo "No original cache file, assuming changed"
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+
       - name: Save clang-tidy cache
-        if: always()
+        if: always() && steps.cache-changed.outputs.changed == 'true'
         uses: actions/cache/save@v4
         with:
           path: .clang-tidy-cache.json
