@@ -10,7 +10,7 @@ jobs:
       cache-hit: ${{ steps.conan-cache.outputs.cache-hit }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Build dependencies
         uses: ./.github/actions/build_deps
@@ -54,12 +54,12 @@ jobs:
           echo "/usr/lib/llvm-19/bin" >> $GITHUB_PATH
   
       - name: Restore clang-tidy cache
-        uses: actions/cache/restore@v3
+        uses: actions/cache/restore@v4
         with:
           path: .clang-tidy-cache.json
           key: ${{ runner.os }}-clang-tidy-${{ github.ref }}
           restore-keys: |
-            ${{ runner.os }}-clang-tidy-
+            ${{ runner.os }}-clang-tidy-${{ github.ref }}
 
       - name: Create clang-tidy cache script
         run: |
@@ -141,7 +141,7 @@ jobs:
 
       - name: Save clang-tidy cache
         if: always()
-        uses: actions/cache/save@v3
+        uses: actions/cache/save@v4
         with:
           path: .clang-tidy-cache.json
           key: ${{ runner.os }}-clang-tidy-${{ github.ref }}
