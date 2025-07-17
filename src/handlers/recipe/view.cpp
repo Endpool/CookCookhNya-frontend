@@ -5,6 +5,7 @@
 #include "render/recipe/add_storage.hpp"
 #include "render/recipes_suggestions/view.hpp"
 #include "render/shopping_list/create.hpp"
+
 #include <string>
 #include <unordered_set>
 #include <vector>
