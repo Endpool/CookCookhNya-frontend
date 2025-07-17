@@ -14,7 +14,7 @@ namespace {
 std::unordered_map<UserId, MessageId> map{}; // NOLINT(*non-const*)
 
 } // namespace
-// hihi check hash work :)
+
 std::optional<MessageId> getMessageId(UserId userId) {
     auto it = map.find(userId);
     return it != map.end() ? std::optional{it->second} : std::nullopt;
