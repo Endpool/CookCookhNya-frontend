@@ -4,6 +4,7 @@
 #include "render/personal_account/recipes_list/recipe/search_ingredients.hpp"
 #include "render/personal_account/recipes_list/view.hpp"
 #include "states.hpp"
+
 #include <cstddef>
 #include <iterator>
 #include <string>
