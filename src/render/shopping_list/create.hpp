@@ -1,5 +1,7 @@
 #pragma once
 
+#include "backend/api/ingredients.hpp"
+
 #include "backend/id_types.hpp"
 #include "render/common.hpp"
 

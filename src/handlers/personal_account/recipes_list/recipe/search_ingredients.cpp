@@ -6,12 +6,14 @@
 #include "message_tracker.hpp"
 #include "render/personal_account/recipes_list/recipe/search_ingredients.hpp"
 #include "render/personal_account/recipes_list/recipe/view.hpp"
+#include "tg_types.hpp"
 #include "utils/parsing.hpp"
 
 #include <algorithm>
 #include <cstddef>
 #include <functional>
 #include <utility>
+#include <vector>
 
 namespace cookcookhnya::handlers::personal_account::recipes {
 
@@ -19,54 +21,87 @@ using namespace api::models::ingredient;
 using namespace render::recipe::ingredients;
 using namespace render::personal_account::recipes;
 
+// Global vars
+const size_t numOfIngredientsOnPage = 5;
+const size_t threshhold = 50;
+
+namespace {
+void updateSearch(CustomRecipeIngredientsSearch& state, BotRef bot, tg_types::UserId userId, IngredientsApiRef api) {
+
+    auto response = api.searchForRecipe(
+        userId, state.recipeId, "", threshhold, numOfIngredientsOnPage, state.pageNo * numOfIngredientsOnPage);
+    if (response.found != state.totalFound || !std::ranges::equal(response.page,
+                                                                  state.searchItems,
+                                                                  std::ranges::equal_to{},
+                                                                  &IngredientSearchForRecipeItem::id,
+                                                                  &IngredientSearchForRecipeItem::id)) {
+        state.searchItems = std::move(response.page);
+        state.totalFound = response.found;
+        if (auto mMessageId = message::getMessageId(userId))
+            renderRecipeIngredientsSearch(state, numOfIngredientsOnPage, userId, userId, bot);
+    }
+}
+} // namespace
+
 void handleCustomRecipeIngredientsSearchCQ(
     CustomRecipeIngredientsSearch& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
-    auto ingredientsApi = api.getIngredientsApi();
-
     bot.answerCallbackQuery(cq.id);
     const auto userId = cq.from->id;
     const auto chatId = cq.message->chat->id;
+
     if (cq.data == "back") {
         renderCustomRecipe(true, userId, chatId, state.recipeId, bot, api);
-        stateManager.put(RecipeCustomView{.recipeId = state.recipeId, .pageNo = state.pageNo});
+        std::vector<api::models::ingredient::Ingredient> ingredient;
+        ingredient.assign(state.recipeIngredients.getAll().begin(), state.recipeIngredients.getAll().end());
+        stateManager.put(RecipeCustomView{.recipeId = state.recipeId, .pageNo = 0, .ingredients = ingredient});
+        return;
+    }
+    if (cq.data == "prev") {
+        state.pageNo -= 1;
+        updateSearch(state, bot, userId, api);
         return;
     }
 
-    auto mIngredient = utils::parseSafe<api::IngredientId>(cq.data);
-    if (!mIngredient)
+    if (cq.data == "next") {
+        state.pageNo += 1;
+        updateSearch(state, bot, userId, api);
         return;
-    auto it = std::ranges::find(state.shownIngredients, *mIngredient, &IngredientSearchForRecipeItem::id);
-    if (it == state.shownIngredients.end())
-        return;
-    if (it->isInRecipe) {
-        ingredientsApi.deleteFromRecipe(userId, state.recipeId, *mIngredient);
-    } else {
-        ingredientsApi.putToRecipe(userId, state.recipeId, *mIngredient);
     }
-    it->isInRecipe = !it->isInRecipe;
 
-    if (auto mMessageId = message::getMessageId(userId))
-        renderRecipeIngredientsSearchEdit(state.shownIngredients, state.pageNo, 1, *mMessageId, chatId, bot);
+    if (cq.data != "dont_handle") {
+
+        auto mIngredient = utils::parseSafe<api::IngredientId>(cq.data);
+        if (!mIngredient)
+            return;
+        auto it = std::ranges::find(state.searchItems, *mIngredient, &IngredientSearchForRecipeItem::id);
+        if (it == state.searchItems.end())
+            return;
+
+        if (it->isInRecipe) {
+            api.getIngredientsApi().deleteFromRecipe(userId, state.recipeId, *mIngredient);
+            state.recipeIngredients.remove(*mIngredient);
+        } else {
+            api.getIngredientsApi().putToRecipe(userId, state.recipeId, *mIngredient);
+            state.recipeIngredients.put({.id = it->id, .name = it->name});
+        }
+        it->isInRecipe = !it->isInRecipe;
+        renderRecipeIngredientsSearch(state, numOfIngredientsOnPage, userId, chatId, bot);
+    }
 }
 
 void handleCustomRecipeIngredientsSearchIQ(CustomRecipeIngredientsSearch& state,
                                            InlineQueryRef iq,
                                            BotRef bot,
                                            IngredientsApiRef api) {
-    if (!iq.query.empty()) {
-        const auto userId = iq.from->id;
-        const std::size_t count = 100;
-        auto response = api.searchForRecipe(userId, state.recipeId, iq.query, count, 0);
-        if (response.found != state.totalFound || !std::ranges::equal(response.page,
-                                                                      state.shownIngredients,
-                                                                      std::ranges::equal_to{},
-                                                                      &IngredientSearchForRecipeItem::id,
-                                                                      &IngredientSearchForRecipeItem::id)) {
-            state.shownIngredients = std::move(response.page);
-            state.totalFound = response.found;
-            if (auto mMessageId = message::getMessageId(userId))
-                renderRecipeIngredientsSearchEdit(state.shownIngredients, state.pageNo, 1, *mMessageId, userId, bot);
-        }
+    const size_t numOfIngredientsOnPage = 5;
+    const auto userId = iq.from->id;
+    if (iq.query.empty()) {
+        state.searchItems.clear();
+        // When query is empty then search shouldn't happen
+        state.totalFound = 0;
+        renderRecipeIngredientsSearch(state, numOfIngredientsOnPage, userId, userId, bot);
+    } else {
+        updateSearch(state, bot, userId, api);
     }
     // Cache is not disabled on Windows and Linux desktops. Works on Android and Web
     bot.answerInlineQuery(iq.id, {}, 0);

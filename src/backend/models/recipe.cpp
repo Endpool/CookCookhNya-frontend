@@ -11,9 +11,8 @@ namespace json = boost::json;
 
 RecipeSummary tag_invoke(json::value_to_tag<RecipeSummary> /*tag*/, const json::value& j) {
     return {
-        .id = value_to<decltype(RecipeSummary::id)>(j.at("id")),
+        .id = value_to<decltype(RecipeSummary::id)>(j.at("recipeId")),
         .name = value_to<decltype(RecipeSummary::name)>(j.at("name")),
-        .sourceLink = value_to<decltype(RecipeSummary::sourceLink)>(j.at("sourceLink")),
     };
 }
 

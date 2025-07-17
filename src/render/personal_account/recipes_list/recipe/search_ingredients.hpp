@@ -1,21 +1,14 @@
 #pragma once
 
-#include "backend/models/ingredient.hpp"
 #include "render/common.hpp"
-
+#include "states.hpp"
 #include <cstddef>
-#include <vector>
-
 namespace cookcookhnya::render::recipe::ingredients {
 
-void renderRecipeIngredientsSearchEdit(
-    const std::vector<api::models::ingredient::IngredientSearchForRecipeItem>& ingredients,
-    std::size_t pageNo,
-    std::size_t totalPages,
-    MessageId message,
-    ChatId chatId,
-    BotRef bot);
-
-void renderStorageIngredientsSearch(ChatId chatId, UserId userId, BotRef bot);
+void renderRecipeIngredientsSearch(const states::CustomRecipeIngredientsSearch& state,
+                                   size_t numOfIngredientsOnPage,
+                                   UserId userId,
+                                   ChatId chatId,
+                                   BotRef bot);
 
 } // namespace cookcookhnya::render::recipe::ingredients

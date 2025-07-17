@@ -1,5 +1,6 @@
 #include "create.hpp"
 
+#include "backend/models/recipe.hpp"
 #include "handlers/common.hpp"
 #include "render/personal_account/recipes_list/recipe/view.hpp"
 #include "render/personal_account/recipes_list/view.hpp"
@@ -16,9 +17,10 @@ void handleCreateCustomRecipeMsg(
         m.from->id, api::models::recipe::RecipeCreateBody{.name = m.text, .ingredients = {}, .link = ""}); //
 
     renderCustomRecipe(false, m.from->id, m.chat->id, state.recipeId, bot, recipeApi);
-    stateManager.put(
-        RecipeCustomView{.recipeId = state.recipeId, .pageNo = 0}); // If it went from creation then as user will return
-                                                                    // from RecipeView to RecipesList on 1st page
+    stateManager.put(RecipeCustomView{.recipeId = state.recipeId,
+                                      .pageNo = 0,
+                                      .ingredients = {}}); // If it went from creation then as user will return
+                                                           // from RecipeView to RecipesList on 1st page
 };
 
 void handleCreateCustomRecipeCQ(

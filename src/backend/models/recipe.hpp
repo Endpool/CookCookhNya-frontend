@@ -3,9 +3,9 @@
 #include "backend/id_types.hpp"
 #include "backend/models/user.hpp"
 
+#include "tg_types.hpp"
 #include <boost/json/conversion.hpp>
 #include <boost/json/value.hpp>
-
 #include <cstddef>
 #include <string>
 #include <vector>
@@ -15,7 +15,6 @@ namespace cookcookhnya::api::models::recipe {
 struct RecipeSummary {
     RecipeId id;
     std::string name;
-    std::string sourceLink;
 
     friend RecipeSummary tag_invoke(boost::json::value_to_tag<RecipeSummary>, const boost::json::value& j);
 };
