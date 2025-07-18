@@ -10,6 +10,7 @@
 #include "tg_types.hpp"
 #include "utils/utils.hpp"
 
+#include <cstddef>
 #include <initializer_list>
 #include <memory>
 #include <string_view>
@@ -70,5 +71,39 @@ inline std::shared_ptr<TgBot::InlineKeyboardMarkup> makeKeyboardMarkup(InlineKey
     markup->inlineKeyboard = std::move(keyboard);
     return markup;
 }
+
+struct NewRow {};
+
+class InlineKeyboardBuilder {
+    InlineKeyboard keyboard;
+
+  public:
+    explicit InlineKeyboardBuilder(std::size_t reserve = 0) {
+        keyboard.reserve(reserve);
+        keyboard.emplace_back();
+    }
+
+    InlineKeyboardBuilder& operator<<(TgBot::InlineKeyboardButton::Ptr&& button) {
+        keyboard.back().push_back(std::move(button));
+        return *this;
+    }
+
+    InlineKeyboardBuilder& operator<<(NewRow /*tag*/) {
+        keyboard.emplace_back();
+        return *this;
+    }
+
+    void operator++(int) {
+        keyboard.emplace_back();
+    }
+
+    TgBot::InlineKeyboardMarkup::Ptr build() && {
+        return makeKeyboardMarkup(std::move(keyboard));
+    }
+
+    operator TgBot::InlineKeyboardMarkup::Ptr() && { // NOLINT(*explicit*)
+        return makeKeyboardMarkup(std::move(keyboard));
+    }
+};
 
 } // namespace cookcookhnya::render

@@ -1,25 +1,28 @@
 #include "view.hpp"
 
 #include "handlers/common.hpp"
-#include "render/personal_account/recipes_list/recipe/search_ingredients.hpp"
+#include "render/personal_account/recipe/search_ingredients.hpp"
 #include "render/personal_account/recipes_list/view.hpp"
 #include "states.hpp"
 
 #include <cstddef>
-#include <iterator>
+#include <ranges>
 #include <string>
 
 namespace cookcookhnya::handlers::personal_account::recipes {
 
 using namespace render::personal_account::recipes;
 using namespace render::recipe::ingredients;
+using namespace std::views;
+
+const std::size_t numOfIngredientsOnPage = 5;
 
 void handleRecipeCustomViewCQ(
     RecipeCustomView& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
     const std::string data = cq.data;
     auto chatId = cq.message->chat->id;
     auto userId = cq.from->id;
-    const size_t numOfIngredientsOnPage = 5;
+
     if (data == "back") {
         renderCustomRecipesList(state.pageNo, userId, chatId, bot, api);
         stateManager.put(CustomRecipesList{.pageNo = state.pageNo});
@@ -27,10 +30,7 @@ void handleRecipeCustomViewCQ(
     }
 
     if (data == "change") {
-        stateManager.put(CustomRecipeIngredientsSearch{
-            state.recipeId,
-            {std::make_move_iterator(state.ingredients.begin()), std::make_move_iterator(state.ingredients.end())},
-            ""});
+        stateManager.put(CustomRecipeIngredientsSearch{state.recipeId, state.ingredients | as_rvalue, ""});
         renderRecipeIngredientsSearch(
             std::get<CustomRecipeIngredientsSearch>(*stateManager.get()), numOfIngredientsOnPage, userId, chatId, bot);
         return;

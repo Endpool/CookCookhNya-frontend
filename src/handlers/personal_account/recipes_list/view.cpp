@@ -2,8 +2,8 @@
 
 #include "backend/id_types.hpp"
 #include "handlers/common.hpp"
+#include "render/personal_account/recipe/view.hpp"
 #include "render/personal_account/recipes_list/create.hpp"
-#include "render/personal_account/recipes_list/recipe/view.hpp"
 #include "render/personal_account/recipes_list/view.hpp"
 #include "render/personal_account/view.hpp"
 #include "states.hpp"
