@@ -44,6 +44,7 @@ using states::StoragesSelection;
 using states::SuggestedRecipeList;
 
 using states::ShoppingListCreation;
+using states::ShoppingListStorageSelectionToBuy;
 using states::ShoppingListView;
 
 using states::CreateCustomRecipe;
@@ -57,6 +58,7 @@ using UserApiRef = const api::UsersApi&;
 using StorageApiRef = const api::StoragesApi&;
 using IngredientsApiRef = const api::IngredientsApi&;
 using RecipesApiRef = const api::RecipesApi&;
+using ShoppingListApiRef = const api::ShoppingListApi&;
 
 using BotRef = const TgBot::Api&;
 using SMRef = const states::StateManager&;

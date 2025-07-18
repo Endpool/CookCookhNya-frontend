@@ -8,6 +8,7 @@
 #include <cstddef>
 #include <ranges>
 #include <string>
+#include <utility>
 
 namespace cookcookhnya::handlers::personal_account::recipes {
 
@@ -30,9 +31,9 @@ void handleRecipeCustomViewCQ(
     }
 
     if (data == "change") {
-        stateManager.put(CustomRecipeIngredientsSearch{state.recipeId, state.ingredients | as_rvalue, ""});
-        renderRecipeIngredientsSearch(
-            std::get<CustomRecipeIngredientsSearch>(*stateManager.get()), numOfIngredientsOnPage, userId, chatId, bot);
+        auto newState = CustomRecipeIngredientsSearch{state.recipeId, state.ingredients | as_rvalue, ""};
+        renderRecipeIngredientsSearch(newState, numOfIngredientsOnPage, userId, chatId, bot);
+        stateManager.put(std::move(newState));
         return;
     }
 

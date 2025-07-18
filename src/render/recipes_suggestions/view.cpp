@@ -136,13 +136,8 @@ void renderRecipesSuggestion(const std::vector<api::StorageId>& storageIds,
         recipesApi.getSuggestedRecipesList(userId, storageIds, numOfRecipes, pageNo * numOfRecipesOnPage);
 
     if (messageId) {
-        bot.editMessageText(pageInfo,
-                            chatId,
-                            *messageId,
-                            "",
-                            "",
-                            nullptr,
-                            makeKeyboardMarkup(constructMarkup(pageNo, numOfRecipesOnPage, recipesList)));
+        bot.editMessageText(
+            pageInfo, chatId, *messageId, makeKeyboardMarkup(constructMarkup(pageNo, numOfRecipesOnPage, recipesList)));
     }
 }
 

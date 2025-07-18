@@ -21,6 +21,7 @@ target_sources(main PRIVATE
     src/handlers/recipes_suggestions/view.cpp
 
     src/handlers/shopping_list/create.cpp
+    src/handlers/shopping_list/storage_selection_to_buy.cpp
     src/handlers/shopping_list/view.cpp
 
     src/handlers/storage/ingredients/view.cpp

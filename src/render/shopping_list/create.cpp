@@ -29,13 +29,17 @@ std::vector<api::IngredientId> renderShoppingListCreation(const std::vector<api:
     for (const api::IngredientId ingredientId : ingredientIds) {
         // IMPORTANT!: Probably can be optimized because this data is available at the recipe page
         // by Maxim Fomin
+        //
         // (1) I believe that both ways are expensive: or it's run through string of textGen or it's several small
         // queries to backend. While i understand that working with string is faster then sending such queries i think
         // that it's better not to overengineering frontend in this aspect.
-        //
         // (2) Besides this also lays on frontend additional work on maintaining ingredientsName vector (in this case
         // deletion from it).
         // by Ilia Kliantsevich
+        //
+        // Cry about it. It is frontend who is responsible for maintaining data being rendered and optimise render time.
+        // Even one network query is more expensive than most terrible dynamic allocations.
+        // by Maxim Fomin
         std::string name = ingredientsApi.get(userId, ingredientId).name;
         ingredientsName.push_back(name);
         text += std::format("- {}\n", name);

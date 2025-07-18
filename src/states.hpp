@@ -3,6 +3,7 @@
 #include "backend/id_types.hpp"
 #include "backend/models/ingredient.hpp"
 #include "backend/models/shopping_list.hpp"
+#include "backend/models/storage.hpp"
 #include "utils/fast_sorted_db.hpp"
 
 #include <tg_stater/state_storage/common.hpp>
@@ -137,6 +138,11 @@ struct ShoppingListView { // NOLINT(*member-init) // Strange. Flags only this st
     ItemsDb items;
     bool canBuy;
 };
+struct ShoppingListStorageSelectionToBuy {
+    ShoppingListView prevState;
+    std::vector<api::IngredientId> selectedIngredients;
+    std::vector<api::models::storage::StorageSummary> storages;
+};
 
 using State = std::variant<MainMenu,
                            PersonalAccountMenu,
@@ -157,6 +163,7 @@ using State = std::variant<MainMenu,
                            RecipeView,
                            ShoppingListCreation,
                            ShoppingListView,
+                           ShoppingListStorageSelectionToBuy,
                            CreateCustomRecipe,
                            RecipeCustomView,
                            CustomRecipeIngredientsSearch,

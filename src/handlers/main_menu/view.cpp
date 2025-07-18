@@ -51,8 +51,9 @@ void handleMainMenuCQ(MainMenu& /*unused*/, CallbackQueryRef cq, BotRef& bot, SM
         ShoppingListView::ItemsDb itemsDb{
             items | transform([](auto& i) { return ShoppingListView::SelectableItem{std::move(i)}; })};
 
-        stateManager.put(ShoppingListView{.items = std::move(itemsDb), .canBuy = canBuy});
-        renderShoppingList(std::get<ShoppingListView>(*stateManager.get()), userId, chatId, bot);
+        auto newState = ShoppingListView{.items = std::move(itemsDb), .canBuy = canBuy};
+        renderShoppingList(newState, userId, chatId, bot);
+        stateManager.put(std::move(newState));
         return;
     }
 

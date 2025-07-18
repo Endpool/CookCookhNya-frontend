@@ -32,14 +32,15 @@ void handleSuggestedRecipeListCQ(
     if (data == "back") {
         if (state.fromStorage) {
             renderStorageView(state.storageIds[0], cq.from->id, chatId, bot, api);
-            stateManager.put(StorageView{state.storageIds[0]}); // Go to the only one storage
+            stateManager.put(StorageView{state.storageIds[0]}); // Go to the only storage
         } else {
             if (api.getStoragesApi().getStoragesList(userId).size() == 1) {
                 renderMainMenu(true, userId, chatId, bot, api);
                 stateManager.put(MainMenu{});
             } else {
-                renderStorageSelection(state.storageIds, userId, chatId, bot, api);
-                stateManager.put(StoragesSelection{.storageIds = std::move(state.storageIds)});
+                auto newState = StoragesSelection{.storageIds = std::move(state.storageIds)};
+                renderStorageSelection(newState, userId, chatId, bot, api);
+                stateManager.put(std::move(newState));
             }
         }
         bot.answerCallbackQuery(cq.id);
@@ -47,7 +48,6 @@ void handleSuggestedRecipeListCQ(
     }
 
     if (data[0] == 'r') { // Same naive implementation: if first char is r then it's recipe
-
         auto recipeId = utils::parseSafe<api::RecipeId>(
             data.substr(data.find(' ', 0) + 1, data.size())); // +1 is to move from space and get pure number
         if (recipeId) {

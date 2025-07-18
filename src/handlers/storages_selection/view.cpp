@@ -22,35 +22,29 @@ void handleStoragesSelectionCQ(
     bot.answerCallbackQuery(cq.id);
     auto chatId = cq.message->chat->id;
     auto userId = cq.from->id;
-    auto selectedStorages = state.storageIds;
 
     if (cq.data == "confirm") {
-        renderRecipesSuggestion(selectedStorages, 0, userId, chatId, bot, api);
+        renderRecipesSuggestion(state.storageIds, 0, userId, chatId, bot, api);
         stateManager.put(
-            SuggestedRecipeList{.pageNo = 0, .storageIds = std::move(selectedStorages), .fromStorage = false});
+            SuggestedRecipeList{.pageNo = 0, .storageIds = std::move(state.storageIds), .fromStorage = false});
         return;
     }
+
     if (cq.data == "cancel") {
         renderMainMenu(true, userId, chatId, bot, api);
         stateManager.put(MainMenu{});
         return;
     }
 
-    auto storageId = utils::parseSafe<api::StorageId>(cq.data.substr(4));
-    if (storageId) {
+    if (auto storageId = utils::parseSafe<api::StorageId>(cq.data.substr(sizeof("in__") - 1))) {
         if (cq.data.starts_with("in")) {
-            auto it = std::ranges::find(selectedStorages, *storageId);
-            selectedStorages.erase(it);
-            renderStorageSelection(selectedStorages, userId, chatId, bot, api);
-            stateManager.put(StoragesSelection{.storageIds = selectedStorages});
-            return;
+            if (auto it = std::ranges::find(state.storageIds, *storageId); it != state.storageIds.end())
+                state.storageIds.erase(it);
+        } else if (cq.data.starts_with("out")) {
+            state.storageIds.push_back(*storageId);
         }
-        if (cq.data.starts_with("out")) {
-            selectedStorages.push_back(*storageId);
-            renderStorageSelection(selectedStorages, userId, chatId, bot, api);
-            stateManager.put(StoragesSelection{.storageIds = selectedStorages});
-            return;
-        }
+        renderStorageSelection(state, userId, chatId, bot, api);
+        return;
     }
 }
 } // namespace cookcookhnya::handlers::storages_selection
