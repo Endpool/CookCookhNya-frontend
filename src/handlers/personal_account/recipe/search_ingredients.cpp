@@ -29,7 +29,12 @@ namespace {
 const std::size_t numOfIngredientsOnPage = 5;
 const std::size_t threshhold = 70;
 
-void updateSearch(CustomRecipeIngredientsSearch& state, BotRef bot, tg_types::UserId userId, IngredientsApiRef api) {
+void updateSearch(CustomRecipeIngredientsSearch& state,
+                  bool isQueryChanged,
+                  BotRef bot,
+                  tg_types::UserId userId,
+                  IngredientsApiRef api) {
+    state.pageNo = isQueryChanged ? 0 : state.pageNo;
     auto response = api.searchForRecipe(
         userId, state.recipeId, state.query, threshhold, numOfIngredientsOnPage, state.pageNo * numOfIngredientsOnPage);
     if (response.found != state.totalFound || !std::ranges::equal(response.page,
@@ -62,13 +67,13 @@ void handleCustomRecipeIngredientsSearchCQ(
 
     if (cq.data == "prev") {
         state.pageNo -= 1;
-        updateSearch(state, bot, userId, api);
+        updateSearch(state, false, bot, userId, api);
         return;
     }
 
     if (cq.data == "next") {
         state.pageNo += 1;
-        updateSearch(state, bot, userId, api);
+        updateSearch(state, false, bot, userId, api);
         return;
     }
 
@@ -104,7 +109,7 @@ void handleCustomRecipeIngredientsSearchIQ(CustomRecipeIngredientsSearch& state,
         state.totalFound = 0;
         renderRecipeIngredientsSearch(state, numOfIngredientsOnPage, userId, userId, bot);
     } else {
-        updateSearch(state, bot, userId, api);
+        updateSearch(state, true, bot, userId, api);
     }
     // Cache is not disabled on Windows and Linux desktops. Works on Android and Web
     bot.answerInlineQuery(iq.id, {}, 0);
