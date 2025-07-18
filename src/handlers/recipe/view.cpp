@@ -20,7 +20,6 @@ void handleRecipeViewCQ(RecipeView& state, CallbackQueryRef cq, BotRef bot, SMRe
     std::string data = cq.data;
     auto chatId = cq.message->chat->id;
     auto userId = cq.from->id;
-
     if (data == "start_cooking") {
         // TODO: add state of begginig of cooking
         return;
@@ -33,7 +32,8 @@ void handleRecipeViewCQ(RecipeView& state, CallbackQueryRef cq, BotRef bot, SMRe
             }
         }
         renderShoppingListCreation(selectedIngredients, userId, chatId, bot);
-        stateManager.put(ShoppingListCreation{.storages = state.storages,
+        stateManager.put(ShoppingListCreation{.selectedStorages = state.selectedStorages,
+                                              .addedStorages = state.addedStorages,
                                               .availability = state.availability,
                                               .recipeId = state.recipeId,
                                               .selectedIngredients = selectedIngredients,
@@ -43,16 +43,17 @@ void handleRecipeViewCQ(RecipeView& state, CallbackQueryRef cq, BotRef bot, SMRe
         return;
     }
     if (data == "back_from_recipe_view") {
-        renderRecipesSuggestion(state.storages, state.pageNo, userId, chatId, bot, api);
+        renderRecipesSuggestion(state.selectedStorages, state.pageNo, userId, chatId, bot, api);
         stateManager.put(
-            SuggestedRecipeList{.pageNo = state.pageNo, .storages = state.storages, .fromStorage = state.fromStorage});
+            SuggestedRecipeList{.pageNo = state.pageNo, .selectedStorages = state.selectedStorages, .fromStorage = state.fromStorage});
         bot.answerCallbackQuery(cq.id);
         return;
     }
 
     if (data == "add_storages") {
-        renderStoragesSuggestion(state.availability, state.storages, state.recipeId, userId, chatId, bot, api);
-        stateManager.put(RecipeStorageAddition{.storages = state.storages,
+        renderStoragesSuggestion(state.availability, state.selectedStorages, state.addedStorages, state.recipeId, userId, chatId, bot, api);
+        stateManager.put(RecipeStorageAddition{.selectedStorages = state.selectedStorages,
+                                               .addedStorages = state.addedStorages,
                                                .availability = state.availability,
                                                .recipeId = state.recipeId,
                                                .fromStorage = state.fromStorage,

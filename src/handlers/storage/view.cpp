@@ -3,6 +3,7 @@
 #include "backend/models/storage.hpp"
 #include "handlers/common.hpp"
 #include "render/recipes_suggestions/view.hpp"
+#include "render/storage/delete.hpp"
 #include "render/storage/ingredients/view.hpp"
 #include "render/storage/members/view.hpp"
 #include "render/storages_list/view.hpp"
@@ -18,6 +19,7 @@ using namespace render::storage::ingredients;
 using namespace render::storage::members;
 using namespace render::storages_list;
 using namespace render::recipes_suggestions;
+using namespace render::delete_storage;
 
 void handleStorageViewCQ(StorageView& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
     bot.answerCallbackQuery(cq.id);
@@ -41,10 +43,14 @@ void handleStorageViewCQ(StorageView& state, CallbackQueryRef cq, BotRef bot, SM
     } else if (cq.data == "wanna_eat") {
         auto storageDetails = api.getStoragesApi().get(userId, state.storageId);
         api::models::storage::StorageSummary storage = {
-            .id = state.storageId, .name = storageDetails.name, .ownerId = storageDetails.ownerId};
+            .id = state.storageId, .name = storageDetails.name};
         std::vector<api::models::storage::StorageSummary> storages = {storage};
         renderRecipesSuggestion(storages, 0, userId, chatId, bot, api);
-        stateManager.put(SuggestedRecipeList{.pageNo = 0, .storages = std::vector{storage}, .fromStorage = true});
+        stateManager.put(SuggestedRecipeList{.pageNo = 0, .selectedStorages = std::vector{storage}, .fromStorage = true});
+        return;
+    } else if (cq.data == "delete") {
+        renderStorageDeletion(state.storageId, chatId, bot, cq.from->id, api);
+        stateManager.put(StorageDeletion{state.storageId});
         return;
     }
 }

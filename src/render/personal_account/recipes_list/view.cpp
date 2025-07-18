@@ -125,7 +125,7 @@ void renderCustomRecipesList(size_t pageNo, UserId userId, ChatId chatId, BotRef
 
     const std::size_t numOfRecipesOnPage = 5;
     auto recipesList =
-        recipesApi.getRecipesList(userId, "", 0, numOfRecipesOnPage, pageNo * numOfRecipesOnPage, filterType::Custom);
+        recipesApi.getRecipesList(userId, "", 0, numOfRecipesOnPage, pageNo * numOfRecipesOnPage, FilterType::Custom);
     if (messageId) {
         bot.editMessageText(
             pageInfo, chatId, *messageId, makeKeyboardMarkup(constructMarkup(pageNo, numOfRecipesOnPage, recipesList)));

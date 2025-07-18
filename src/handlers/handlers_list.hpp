@@ -30,10 +30,11 @@
 #include "storage/members/delete.hpp"
 #include "storage/members/view.hpp"
 
+#include "storage/delete.hpp"
 #include "storage/view.hpp"
 
+
 #include "storages_list/create.hpp"
-#include "storages_list/delete.hpp"
 #include "storages_list/view.hpp"
 
 #include "storages_selection/view.hpp"
@@ -84,10 +85,10 @@ using customIngredientPublishCQHandler = Handler<Events::CallbackQuery{}, handle
 using storageListCQHandler = Handler<Events::CallbackQuery{}, handleStorageListCQ>;
 using storageCreationEnterNameMsgHandler = Handler<Events::Message{}, handleStorageCreationEnterNameMsg>;
 using storageCreationEnterNameCQHandler = Handler<Events::CallbackQuery{}, handleStorageCreationEnterNameCQ>;
-using storageDeletionCQHandler = Handler<Events::CallbackQuery{}, handleStorageDeletionCQ>;
 
 // StorageView
 using storageViewCQHandler = Handler<Events::CallbackQuery{}, handleStorageViewCQ>;
+using storageDeletionCQHandler = Handler<Events::CallbackQuery{}, handleStorageDeletionCQ>;
 
 // StorageViewMembers
 using storageMemberViewCQHandler = Handler<Events::CallbackQuery{}, handleStorageMemberViewCQ>;

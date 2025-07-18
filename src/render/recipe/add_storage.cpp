@@ -21,6 +21,7 @@ textGenInfo storageAdditionView(
     const std::vector<std::pair<api::models::recipe::IngredientInRecipe, utils::IngredientAvailability>>&
         inStoragesAvailability,
     const std::vector<api::models::storage::StorageSummary>& selectedStorages,
+    const std::vector<api::models::storage::StorageSummary>& addedStorages,
     api::RecipeId recipeId,
     UserId userId,
     ApiClient api) {
@@ -42,7 +43,7 @@ textGenInfo storageAdditionView(
         } else if (infoPair.second.available == utils::AvailabiltiyType::other_storages) {
             text += "`[?]` " + infoPair.first.name + "\n";
             isIngredientIsOtherStorages = true;
-            text += "__Доступно в: ";
+            text += "Доступно в: ";
             auto storages = infoPair.second.storages;
             for (std::size_t i = 0; i != storages.size(); ++i) {
                 text += storages[i].name;
@@ -64,13 +65,24 @@ void renderStoragesSuggestion(
     const std::vector<std::pair<api::models::recipe::IngredientInRecipe, utils::IngredientAvailability>>&
         inStoragesAvailability,
     const std::vector<api::models::storage::StorageSummary>& selectedStorages,
+    const std::vector<api::models::storage::StorageSummary>& addedStorages,
     api::RecipeId recipeId,
     UserId userId,
     ChatId chatId,
     BotRef bot,
     ApiClient api) {
-    auto textGen = storageAdditionView(inStoragesAvailability, selectedStorages, recipeId, userId, api);
-    auto storages = api.getStoragesApi().getStoragesList(userId);
+    auto textGen = storageAdditionView(inStoragesAvailability, selectedStorages, addedStorages, recipeId, userId, api);
+    std::vector<api::models::storage::StorageSummary> storages;
+    for (const auto& infoPair : inStoragesAvailability){
+        if(infoPair.second.available == utils::AvailabiltiyType::other_storages){
+            for (const auto& storage : infoPair.second.storages){
+                if (std::ranges::find(storages, storage.id, &api::models::storage::StorageSummary::id) == storages.end()){
+                    storages.push_back(storage);
+                }
+            }
+        }
+    }
+    storages.insert(storages.end(), addedStorages.begin(), addedStorages.end());
     const size_t buttonRows = ((storages.size() + 1) / 2) + 1;
     InlineKeyboard keyboard(buttonRows);
 
@@ -78,8 +90,8 @@ void renderStoragesSuggestion(
         if (i % 2 == 0)
             keyboard[i / 2].reserve(2);
         const bool isSelected =
-            std::ranges::find(selectedStorages, storages[i].id, &api::models::storage::StorageSummary::id) !=
-            selectedStorages.end();
+            std::ranges::find(addedStorages, storages[i].id, &api::models::storage::StorageSummary::id) !=
+            addedStorages.end();
 
         std::string emoji = utils::utf8str(isSelected ? u8"[ + ]" : u8"[ᅠ]");
         const char* actionPrefix = isSelected ? "+" : "-";
@@ -87,7 +99,7 @@ void renderStoragesSuggestion(
         const std::string data = actionPrefix + utils::to_string(storages[i].id);
         keyboard[i / 2].push_back(makeCallbackButton(text, data));
     }
-    if (!selectedStorages.empty()) {
+    if (!storages.empty()) {
         keyboard[buttonRows - 1].push_back(makeCallbackButton(u8"↩️ Назад", "back"));
     }
 

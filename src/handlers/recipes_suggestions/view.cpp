@@ -31,15 +31,15 @@ void handleSuggestedRecipeListCQ(
 
     if (data == "back") {
         if (state.fromStorage) {
-            renderStorageView(state.storages[0].id, cq.from->id, chatId, bot, api);
-            stateManager.put(StorageView{state.storages[0].id}); // Go to the only one storage
+            renderStorageView(state.selectedStorages[0].id, cq.from->id, chatId, bot, api);
+            stateManager.put(StorageView{state.selectedStorages[0].id}); // Go to the only one storage
         } else {
             if (api.getStoragesApi().getStoragesList(userId).size() == 1) {
                 renderMainMenu(true, userId, chatId, bot, api);
                 stateManager.put(MainMenu{});
             } else {
-                renderStorageSelection(state.storages, userId, chatId, bot, api);
-                stateManager.put(StoragesSelection{.storages = std::move(state.storages)});
+                renderStorageSelection(state.selectedStorages, userId, chatId, bot, api);
+                stateManager.put(StoragesSelection{.selectedStorages = std::move(state.selectedStorages)});
             }
         }
         bot.answerCallbackQuery(cq.id);
@@ -49,9 +49,10 @@ void handleSuggestedRecipeListCQ(
     if (data[0] == 'r') {
         auto recipeId = utils::parseSafe<api::RecipeId>(data.substr(1, data.size()));
         if (recipeId) {
-            auto inStorage = utils::inStoragesAvailability(state.storages, *recipeId, userId, api);
+            auto inStorage = utils::inStoragesAvailability(state.selectedStorages, *recipeId, userId, api);
             renderRecipeView(inStorage, *recipeId, userId, chatId, bot, api);
-            stateManager.put(RecipeView{.storages = state.storages,
+            stateManager.put(RecipeView{.selectedStorages = state.selectedStorages,
+                                        .addedStorages = {},
                                         .availability = inStorage,
                                         .recipeId = *recipeId,
                                         .fromStorage = state.fromStorage,
@@ -65,8 +66,7 @@ void handleSuggestedRecipeListCQ(
         if (pageNo) {
             state.pageNo = *pageNo;
         }
-        // Message is 100% exists as it was rendered by some another method
-        renderRecipesSuggestion(state.storages, *pageNo, userId, chatId, bot, api);
+        renderRecipesSuggestion(state.selectedStorages, *pageNo, userId, chatId, bot, api);
         return;
     }
 }

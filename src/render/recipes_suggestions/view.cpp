@@ -42,14 +42,14 @@ InlineKeyboard constructNavigationsMarkup(std::size_t offset,
     InlineKeyboard keyboard(pageNo == 0 && ifMaxPage ? fullKeyBoardSize - 1 : fullKeyBoardSize);
     int counter = 0;
     for (std::size_t i = 0; i < recipesToShow; i++) {
-        // Print on button in form "1. {Recipe}"
         keyboard[i + offset].push_back(makeCallbackButton(std::format("{}. {} [{} из {}]",
                                                                       1 + counter + ((pageNo)*numOfRecipesOnPage),
                                                                       recipesList.page[counter].name,
                                                                       recipesList.page[counter].available,
                                                                       recipesList.page[counter].total),
-                                                          std::format("r", recipesList.page[counter].id)));
-        counter++;
+                                                          std::format("r{}", recipesList.page[counter].id)));
+    counter++;
+        
     }
     if (pageNo == 0 && ifMaxPage) {
         // instead of arrows row

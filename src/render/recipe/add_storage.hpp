@@ -14,6 +14,7 @@ textGenInfo storageAdditionView(
     const std::vector<std::pair<api::models::recipe::IngredientInRecipe, utils::IngredientAvailability>>&
         inStoragesAvailability,
     const std::vector<api::models::storage::StorageSummary>& selectedStorages,
+    const std::vector<api::models::storage::StorageSummary>& addedStorages,
     api::RecipeId recipeId,
     UserId userId,
     ApiClient api);
@@ -22,6 +23,7 @@ void renderStoragesSuggestion(
     const std::vector<std::pair<api::models::recipe::IngredientInRecipe, utils::IngredientAvailability>>&
         inStoragesAvailability,
     const std::vector<api::models::storage::StorageSummary>& selectedStorages,
+    const std::vector<api::models::storage::StorageSummary>& addedStorages,
     api::RecipeId recipeId,
     UserId userId,
     ChatId chatId,

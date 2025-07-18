@@ -27,9 +27,9 @@ target_sources(main PRIVATE
     src/render/storage/members/view.cpp
 
     src/render/storage/view.cpp
+    src/render/storage/delete.cpp
 
     src/render/storages_list/create.cpp
-    src/render/storages_list/delete.cpp
     src/render/storages_list/view.cpp
 
     src/render/storages_selection/view.cpp

@@ -6,6 +6,7 @@
 #include "render/recipe/add_storage.hpp"
 #include "render/recipe/view.hpp"
 #include "states.hpp"
+#include "utils/ingredients_availability.hpp"
 #include "utils/parsing.hpp"
 
 #include <string>
@@ -21,30 +22,36 @@ void handleRecipeStorageAdditionCQ(
     auto chatId = cq.message->chat->id;
     auto userId = cq.from->id;
 
+    if (data[0] == '-') {
+        auto newStorageIdStr = data.substr(1, data.size());
+        auto newStorageId = utils::parseSafe<api::StorageId>(newStorageIdStr);
+        if (newStorageId) {
+            auto newStorageDetails = api.getStoragesApi().get(userId, *newStorageId);
+            api::models::storage::StorageSummary newStorage = {
+                .id = *newStorageId, .name = newStorageDetails.name};
+            state.addedStorages.push_back(newStorage);
+            utils::addStorage(state.availability, newStorage);
+            renderStoragesSuggestion(state.availability, state.selectedStorages, state.addedStorages, state.recipeId, userId, chatId, bot, api);
+        }
+    }
     if (data[0] == '+') {
         auto newStorageIdStr = data.substr(1, data.size());
         auto newStorageId = utils::parseSafe<api::StorageId>(newStorageIdStr);
         if (newStorageId) {
             auto newStorageDetails = api.getStoragesApi().get(userId, *newStorageId);
             api::models::storage::StorageSummary newStorage = {
-                .id = *newStorageId, .name = newStorageDetails.name, .ownerId = newStorageDetails.ownerId};
-            state.storages.push_back(newStorage);
-            renderStoragesSuggestion(state.availability, state.storages, state.recipeId, userId, chatId, bot, api);
-        }
-    }
-    if (data[0] == '-') {
-        auto newStorageIdStr = data.substr(1, data.size());
-        auto newStorageId = utils::parseSafe<api::StorageId>(newStorageIdStr);
-        if (newStorageId) {
-            state.storages.erase(
-                std::ranges::find(state.storages, newStorageId, &api::models::storage::StorageSummary::id));
-            renderStoragesSuggestion(state.availability, state.storages, state.recipeId, userId, chatId, bot, api);
+                .id = *newStorageId, .name = newStorageDetails.name};
+            state.addedStorages.erase(
+                std::ranges::find(state.addedStorages, newStorageId, &api::models::storage::StorageSummary::id));
+            utils::deleteStorage(state.availability, newStorage);
+            renderStoragesSuggestion(state.availability, state.selectedStorages, state.addedStorages, state.recipeId, userId, chatId, bot, api);
         }
     }
 
     if (data == "back") {
         renderRecipeView(state.availability, state.recipeId, userId, chatId, bot, api);
-        stateManager.put(RecipeView{.storages = state.storages,
+        stateManager.put(RecipeView{.selectedStorages = state.selectedStorages,
+                                    .addedStorages = state.addedStorages,
                                     .availability = state.availability,
                                     .recipeId = state.recipeId,
                                     .fromStorage = state.fromStorage,

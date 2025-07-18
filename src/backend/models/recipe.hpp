@@ -1,6 +1,7 @@
 #pragma once
 
 #include "backend/id_types.hpp"
+#include "backend/models/storage.hpp"
 #include "backend/models/user.hpp"
 
 #include "tg_types.hpp"
@@ -32,7 +33,7 @@ struct RecipeSummaryWithIngredients {
 struct IngredientInRecipe {
     IngredientId id;
     std::string name;
-    std::vector<StorageId> inStorages;
+    std::vector<storage::StorageSummary> inStorages;
 
     friend IngredientInRecipe tag_invoke(boost::json::value_to_tag<IngredientInRecipe>, const boost::json::value& j);
 };

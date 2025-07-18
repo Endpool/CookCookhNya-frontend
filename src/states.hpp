@@ -39,10 +39,10 @@ struct CustomIngredientConfirmation {
 struct CustomIngredientPublish {};
 
 struct StorageList {};
-struct StorageDeletion {};
 struct StorageCreationEnterName {};
-struct StorageView : detail::StorageIdMixin {};
 
+struct StorageView : detail::StorageIdMixin {};
+struct StorageDeletion : detail::StorageIdMixin{};
 struct StorageMemberView : detail::StorageIdMixin {};
 struct StorageMemberAddition : detail::StorageIdMixin {};
 struct StorageMemberDeletion : detail::StorageIdMixin {};
@@ -60,15 +60,16 @@ struct StorageIngredientsList : detail::StorageIdMixin {
 };
 
 struct StoragesSelection {
-    std::vector<api::models::storage::StorageSummary> storages;
+    std::vector<api::models::storage::StorageSummary> selectedStorages;
 };
 struct SuggestedRecipeList {
     std::size_t pageNo;
-    std::vector<api::models::storage::StorageSummary> storages;
+    std::vector<api::models::storage::StorageSummary> selectedStorages;
     bool fromStorage;
 };
 struct RecipeView {
-    std::vector<api::models::storage::StorageSummary> storages;
+    std::vector<api::models::storage::StorageSummary> selectedStorages;
+    std::vector<api::models::storage::StorageSummary> addedStorages;
     std::vector<std::pair<cookcookhnya::api::models::recipe::IngredientInRecipe, utils::IngredientAvailability>>
         availability;
     api::RecipeId recipeId;
@@ -77,7 +78,8 @@ struct RecipeView {
 };
 
 struct RecipeStorageAddition {
-    std::vector<api::models::storage::StorageSummary> storages;
+    std::vector<api::models::storage::StorageSummary> selectedStorages;
+    std::vector<api::models::storage::StorageSummary> addedStorages;
     std::vector<std::pair<cookcookhnya::api::models::recipe::IngredientInRecipe, utils::IngredientAvailability>>
         availability;
     api::RecipeId recipeId;
@@ -114,7 +116,8 @@ struct CreateCustomRecipe {
 };
 
 struct ShoppingListCreation {
-    std::vector<api::models::storage::StorageSummary> storages;
+    std::vector<api::models::storage::StorageSummary> selectedStorages;
+    std::vector<api::models::storage::StorageSummary> addedStorages;
     std::vector<std::pair<cookcookhnya::api::models::recipe::IngredientInRecipe, utils::IngredientAvailability>>
         availability;
     api::RecipeId recipeId;

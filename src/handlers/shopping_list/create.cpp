@@ -23,7 +23,8 @@ void handleShoppingListCreationCQ(
 
     if (data == "back") {
         renderRecipeView(state.availability, state.recipeId, userId, chatId, bot, api);
-        stateManager.put(RecipeView{.storages = state.storages,
+        stateManager.put(RecipeView{.selectedStorages = state.selectedStorages,
+                                    .addedStorages = state.addedStorages, 
                                     .availability = state.availability,
                                     .recipeId = state.recipeId,
                                     .fromStorage = state.fromStorage,
@@ -40,7 +41,8 @@ void handleShoppingListCreationCQ(
         }
         shoppingApi.put(userId, putIds);
         renderRecipeView(state.availability, state.recipeId, userId, chatId, bot, api);
-        stateManager.put(RecipeView{.storages = state.storages,
+        stateManager.put(RecipeView{.selectedStorages = state.selectedStorages,
+                                    .addedStorages = state.addedStorages,
                                     .availability = state.availability,
                                     .recipeId = state.recipeId,
                                     .fromStorage = state.fromStorage,
