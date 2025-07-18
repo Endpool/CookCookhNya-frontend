@@ -4,14 +4,15 @@
 #include "backend/models/ingredient.hpp"
 #include "handlers/common.hpp"
 #include "message_tracker.hpp"
-#include "render/personal_account/recipes_list/recipe/search_ingredients.hpp"
-#include "render/personal_account/recipes_list/recipe/view.hpp"
+#include "render/personal_account/recipe/search_ingredients.hpp"
+#include "render/personal_account/recipe/view.hpp"
 #include "tg_types.hpp"
 #include "utils/parsing.hpp"
 
 #include <algorithm>
 #include <cstddef>
 #include <functional>
+#include <ranges>
 #include <utility>
 #include <vector>
 
@@ -20,20 +21,22 @@ namespace cookcookhnya::handlers::personal_account::recipes {
 using namespace api::models::ingredient;
 using namespace render::recipe::ingredients;
 using namespace render::personal_account::recipes;
-
-// Global vars
-const size_t numOfIngredientsOnPage = 5;
-const size_t threshhold = 70;
+using namespace std::ranges;
+using namespace std::views;
 
 namespace {
-void updateSearch(CustomRecipeIngredientsSearch& state, BotRef bot, tg_types::UserId userId, IngredientsApiRef api) {
 
-    auto response = api.searchForRecipe(userId,
-                                        state.recipeId,
-                                        state.inlineQuery,
-                                        threshhold,
-                                        numOfIngredientsOnPage,
-                                        state.pageNo * numOfIngredientsOnPage);
+const std::size_t numOfIngredientsOnPage = 5;
+const std::size_t threshhold = 70;
+
+void updateSearch(CustomRecipeIngredientsSearch& state,
+                  bool isQueryChanged,
+                  BotRef bot,
+                  tg_types::UserId userId,
+                  IngredientsApiRef api) {
+    state.pageNo = isQueryChanged ? 0 : state.pageNo;
+    auto response = api.searchForRecipe(
+        userId, state.recipeId, state.query, threshhold, numOfIngredientsOnPage, state.pageNo * numOfIngredientsOnPage);
     if (response.found != state.totalFound || !std::ranges::equal(response.page,
                                                                   state.searchItems,
                                                                   std::ranges::equal_to{},
@@ -45,6 +48,7 @@ void updateSearch(CustomRecipeIngredientsSearch& state, BotRef bot, tg_types::Us
             renderRecipeIngredientsSearch(state, numOfIngredientsOnPage, userId, userId, bot);
     }
 }
+
 } // namespace
 
 void handleCustomRecipeIngredientsSearchCQ(
@@ -55,25 +59,25 @@ void handleCustomRecipeIngredientsSearchCQ(
 
     if (cq.data == "back") {
         renderCustomRecipe(true, userId, chatId, state.recipeId, bot, api);
-        std::vector<api::models::ingredient::Ingredient> ingredient;
-        ingredient.assign(state.recipeIngredients.getAll().begin(), state.recipeIngredients.getAll().end());
-        stateManager.put(RecipeCustomView{.recipeId = state.recipeId, .pageNo = 0, .ingredients = ingredient});
+        auto ingredients = state.recipeIngredients.getValues() | as_rvalue | to<std::vector>();
+        stateManager.put(
+            RecipeCustomView{.recipeId = state.recipeId, .pageNo = 0, .ingredients = std::move(ingredients)});
         return;
     }
+
     if (cq.data == "prev") {
         state.pageNo -= 1;
-        updateSearch(state, bot, userId, api);
+        updateSearch(state, false, bot, userId, api);
         return;
     }
 
     if (cq.data == "next") {
         state.pageNo += 1;
-        updateSearch(state, bot, userId, api);
+        updateSearch(state, false, bot, userId, api);
         return;
     }
 
     if (cq.data != "dont_handle") {
-
         auto mIngredient = utils::parseSafe<api::IngredientId>(cq.data);
         if (!mIngredient)
             return;
@@ -97,16 +101,15 @@ void handleCustomRecipeIngredientsSearchIQ(CustomRecipeIngredientsSearch& state,
                                            InlineQueryRef iq,
                                            BotRef bot,
                                            IngredientsApiRef api) {
-    const size_t numOfIngredientsOnPage = 5;
-    state.inlineQuery = iq.query;
+    state.query = iq.query;
     const auto userId = iq.from->id;
     if (iq.query.empty()) {
-        state.searchItems.clear();
         // When query is empty then search shouldn't happen
+        state.searchItems.clear();
         state.totalFound = 0;
         renderRecipeIngredientsSearch(state, numOfIngredientsOnPage, userId, userId, bot);
     } else {
-        updateSearch(state, bot, userId, api);
+        updateSearch(state, true, bot, userId, api);
     }
     // Cache is not disabled on Windows and Linux desktops. Works on Android and Web
     bot.answerInlineQuery(iq.id, {}, 0);

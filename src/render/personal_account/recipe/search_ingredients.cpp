@@ -130,7 +130,7 @@ void renderRecipeIngredientsSearch(const states::CustomRecipeIngredientsSearch& 
     using namespace std::views;
     using std::ranges::to;
 
-    std::string list = state.recipeIngredients.getAll() |
+    std::string list = state.recipeIngredients.getValues() |
                        transform([](auto& i) { return std::format("• {}\n", i.name); }) | join | to<std::string>();
 
     auto text = utils::utf8str(u8"📝Нажмите на кнопку ✏️ Редактировать и начните вводить названия продуктов:\n\n") +

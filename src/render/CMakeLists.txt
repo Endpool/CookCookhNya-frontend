@@ -6,9 +6,10 @@ target_sources(main PRIVATE
     src/render/personal_account/ingredients_list/view.cpp
 
     src/render/personal_account/recipes_list/create.cpp
-    src/render/personal_account/recipes_list/recipe/search_ingredients.cpp
-    src/render/personal_account/recipes_list/recipe/view.cpp
     src/render/personal_account/recipes_list/view.cpp
+
+    src/render/personal_account/recipe/search_ingredients.cpp
+    src/render/personal_account/recipe/view.cpp
 
     src/render/personal_account/view.cpp
 

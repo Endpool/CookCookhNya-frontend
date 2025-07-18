@@ -10,8 +10,7 @@
 #include "states.hpp"
 
 #include <cstddef>
-#include <iterator>
-#include <vector>
+#include <ranges>
 
 namespace cookcookhnya::handlers::storage {
 
@@ -20,18 +19,16 @@ using namespace render::storage::members;
 using namespace render::storages_list;
 using namespace render::recipes_suggestions;
 using namespace render::delete_storage;
+using namespace std::views;
 
 void handleStorageViewCQ(StorageView& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
     bot.answerCallbackQuery(cq.id);
     auto chatId = cq.message->chat->id;
     auto userId = cq.from->id;
-    const size_t numOfIngredientsOnPage = 5;
+    const std::size_t numOfIngredientsOnPage = 5;
     if (cq.data == "ingredients") {
         auto ingredients = api.getIngredientsApi().getStorageIngredients(userId, state.storageId);
-        stateManager.put(StorageIngredientsList{
-            state.storageId,
-            {std::make_move_iterator(ingredients.begin()), std::make_move_iterator(ingredients.end())},
-            ""});
+        stateManager.put(StorageIngredientsList{state.storageId, ingredients | as_rvalue, ""});
         renderIngredientsListSearch(
             std::get<StorageIngredientsList>(*stateManager.get()), numOfIngredientsOnPage, userId, chatId, bot);
     } else if (cq.data == "members") {

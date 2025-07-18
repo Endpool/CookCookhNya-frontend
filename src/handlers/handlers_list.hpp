@@ -9,9 +9,9 @@
 #include "personal_account/ingredients_list/publish.hpp"
 #include "personal_account/ingredients_list/view.hpp"
 
+#include "personal_account/recipe/search_ingredients.hpp"
+#include "personal_account/recipe/view.hpp"
 #include "personal_account/recipes_list/create.hpp"
-#include "personal_account/recipes_list/recipe/search_ingredients.hpp"
-#include "personal_account/recipes_list/recipe/view.hpp"
 #include "personal_account/recipes_list/view.hpp"
 
 #include "personal_account/view.hpp"
