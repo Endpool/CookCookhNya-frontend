@@ -30,9 +30,9 @@ target_sources(main PRIVATE
     src/handlers/storage/members/view.cpp
 
     src/handlers/storage/view.cpp
+    src/handlers/storage/delete.cpp
 
     src/handlers/storages_list/create.cpp
-    src/handlers/storages_list/delete.cpp
     src/handlers/storages_list/view.cpp
 
     src/handlers/storages_selection/view.cpp

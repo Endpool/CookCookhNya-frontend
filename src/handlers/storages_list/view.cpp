@@ -6,7 +6,6 @@
 #include "render/main_menu/view.hpp"
 #include "render/storage/view.hpp"
 #include "render/storages_list/create.hpp"
-#include "render/storages_list/delete.hpp"
 #include "utils/parsing.hpp"
 
 #include <optional>
@@ -15,7 +14,6 @@ namespace cookcookhnya::handlers::storages_list {
 
 using namespace render::main_menu;
 using namespace render::create_storage;
-using namespace render::delete_storage;
 using namespace render::storage;
 
 void handleStorageListCQ(
@@ -27,11 +25,6 @@ void handleStorageListCQ(
     if (cq.data == "create") {
         renderStorageCreation(chatId, userId, bot);
         stateManager.put(StorageCreationEnterName{});
-        return;
-    }
-    if (cq.data == "delete") {
-        renderStorageDeletion(chatId, bot, cq.from->id, api);
-        stateManager.put(StorageDeletion{});
         return;
     }
     if (cq.data == "back") {

@@ -38,8 +38,7 @@ void handleCustomRecipesListCQ(
     }
 
     if (data[0] == 'r') {
-        auto recipeId = utils::parseSafe<api::RecipeId>(
-            data.substr(data.find(' ', 0) + 1, data.size())); // +1 is to move from space and get pure number
+        auto recipeId = utils::parseSafe<api::RecipeId>(data.substr(1, data.size()));
         if (recipeId) {
             auto ingredients = renderCustomRecipe(true, userId, chatId, recipeId.value(), bot, api);
             stateManager.put(

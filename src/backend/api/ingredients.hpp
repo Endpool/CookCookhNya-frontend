@@ -50,7 +50,7 @@ class IngredientsApi : ApiBase {
                                                                       std::size_t threshold = 50, // NOLINT(*magic*)
                                                                       std::size_t size = 2,
                                                                       std::size_t offset = 2,
-                                                                      filterType filter = filterType::All) const;
+                                                                      FilterType filter = FilterType::All) const;
 
     [[nodiscard]] models::ingredient::Ingredient getPublicIngredient(IngredientId ingredient) const;
 

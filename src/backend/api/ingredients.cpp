@@ -83,7 +83,7 @@ IngredientSearchResponse IngredientsApi::search(UserId user,
                                                 std::size_t threshold,
                                                 std::size_t size,
                                                 std::size_t offset,
-                                                filterType filter) const {
+                                                FilterType filter) const {
     return jsonGetAuthed<IngredientSearchResponse>(user,
                                                    "/ingredients",
                                                    {{"query", std::move(query)},

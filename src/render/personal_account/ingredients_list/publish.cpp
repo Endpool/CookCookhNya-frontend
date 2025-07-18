@@ -16,7 +16,7 @@ namespace cookcookhnya::render::personal_account::ingredients {
 using namespace tg_types;
 
 void renderCustomIngredientPublication(UserId userId, ChatId chatId, BotRef bot, IngredientsApiRef api) {
-    auto ingredientsResp = api.search(userId, "", 0, 1000, 0, filterType::Custom); // NOLINT (*magic*)
+    auto ingredientsResp = api.search(userId, "", 0, 1000, 0, FilterType::Custom); // NOLINT (*magic*)
     // TODO: make pagination for ingredients
     auto ingredients = ingredientsResp.page;
     const std::size_t buttonRows = ((ingredients.size() + 1) / 2) + 1;

@@ -22,7 +22,7 @@ void renderMemberList(bool toBeEdited,
                       StorageApiRef storageApi) {
     auto storage = storageApi.get(userId, storageId);
     const bool isOwner = storage.ownerId == userId;
-    const int buttonRows = isOwner ? 2 : 1;
+    const std::size_t buttonRows = isOwner ? 2 : 1;
 
     InlineKeyboard keyboard(buttonRows);
 

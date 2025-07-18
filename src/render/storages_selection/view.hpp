@@ -1,13 +1,12 @@
 #pragma once
 
-#include "backend/id_types.hpp"
 #include "render/common.hpp"
 
 #include <vector>
 
 namespace cookcookhnya::render::select_storages {
 
-void renderStorageSelection(const std::vector<api::StorageId>& selected_storages,
+void renderStorageSelection(const std::vector<api::models::storage::StorageSummary>& selectedStorages,
                             UserId userId,
                             ChatId chatId,
                             BotRef bot,
