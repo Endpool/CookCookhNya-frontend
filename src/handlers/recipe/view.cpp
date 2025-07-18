@@ -44,14 +44,15 @@ void handleRecipeViewCQ(RecipeView& state, CallbackQueryRef cq, BotRef bot, SMRe
     }
     if (data == "back_from_recipe_view") {
         renderRecipesSuggestion(state.selectedStorages, state.pageNo, userId, chatId, bot, api);
-        stateManager.put(
-            SuggestedRecipeList{.pageNo = state.pageNo, .selectedStorages = state.selectedStorages, .fromStorage = state.fromStorage});
+        stateManager.put(SuggestedRecipeList{
+            .pageNo = state.pageNo, .selectedStorages = state.selectedStorages, .fromStorage = state.fromStorage});
         bot.answerCallbackQuery(cq.id);
         return;
     }
 
     if (data == "add_storages") {
-        renderStoragesSuggestion(state.availability, state.selectedStorages, state.addedStorages, state.recipeId, userId, chatId, bot, api);
+        renderStoragesSuggestion(
+            state.availability, state.selectedStorages, state.addedStorages, state.recipeId, userId, chatId, bot, api);
         stateManager.put(RecipeStorageAddition{.selectedStorages = state.selectedStorages,
                                                .addedStorages = state.addedStorages,
                                                .availability = state.availability,

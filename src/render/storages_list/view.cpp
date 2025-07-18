@@ -18,7 +18,6 @@ void renderStorageList(bool toBeEdited, UserId userId, ChatId chatId, BotRef bot
     const std::size_t buttonRows = storages.empty() ? 2 : ((storages.size() + 2) / 2) + 1;
     InlineKeyboard keyboard(buttonRows);
 
-
     for (std::size_t i = 0; i < storages.size(); i++) {
         if (i % 2 == 0)
             keyboard[i / 2].reserve(2);

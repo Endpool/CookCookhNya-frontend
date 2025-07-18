@@ -37,7 +37,7 @@ recipeView(const std::vector<std::pair<api::models::recipe::IngredientInRecipe, 
             isIngredientNotAvailable = true;
         }
     }
-    if(recipeIngredients.link != ""){
+    if (recipeIngredients.link != "") {
         text += "\n🌐 Источник: " + recipeIngredients.link;
     }
 

@@ -27,11 +27,17 @@ void handleRecipeStorageAdditionCQ(
         auto newStorageId = utils::parseSafe<api::StorageId>(newStorageIdStr);
         if (newStorageId) {
             auto newStorageDetails = api.getStoragesApi().get(userId, *newStorageId);
-            api::models::storage::StorageSummary newStorage = {
-                .id = *newStorageId, .name = newStorageDetails.name};
+            api::models::storage::StorageSummary newStorage = {.id = *newStorageId, .name = newStorageDetails.name};
             state.addedStorages.push_back(newStorage);
             utils::addStorage(state.availability, newStorage);
-            renderStoragesSuggestion(state.availability, state.selectedStorages, state.addedStorages, state.recipeId, userId, chatId, bot, api);
+            renderStoragesSuggestion(state.availability,
+                                     state.selectedStorages,
+                                     state.addedStorages,
+                                     state.recipeId,
+                                     userId,
+                                     chatId,
+                                     bot,
+                                     api);
         }
     }
     if (data[0] == '+') {
@@ -39,12 +45,18 @@ void handleRecipeStorageAdditionCQ(
         auto newStorageId = utils::parseSafe<api::StorageId>(newStorageIdStr);
         if (newStorageId) {
             auto newStorageDetails = api.getStoragesApi().get(userId, *newStorageId);
-            api::models::storage::StorageSummary newStorage = {
-                .id = *newStorageId, .name = newStorageDetails.name};
+            api::models::storage::StorageSummary newStorage = {.id = *newStorageId, .name = newStorageDetails.name};
             state.addedStorages.erase(
                 std::ranges::find(state.addedStorages, newStorageId, &api::models::storage::StorageSummary::id));
             utils::deleteStorage(state.availability, newStorage);
-            renderStoragesSuggestion(state.availability, state.selectedStorages, state.addedStorages, state.recipeId, userId, chatId, bot, api);
+            renderStoragesSuggestion(state.availability,
+                                     state.selectedStorages,
+                                     state.addedStorages,
+                                     state.recipeId,
+                                     userId,
+                                     chatId,
+                                     bot,
+                                     api);
         }
     }
 

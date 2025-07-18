@@ -9,7 +9,8 @@
 
 namespace cookcookhnya::render::delete_storage {
 
-void renderStorageDeletion(api::StorageId storageId, ChatId chatId, BotRef bot, UserId userId, StorageApiRef storageApi) {
+void renderStorageDeletion(
+    api::StorageId storageId, ChatId chatId, BotRef bot, UserId userId, StorageApiRef storageApi) {
     auto storage = storageApi.get(userId, storageId);
     InlineKeyboard keyboard(2);
     keyboard[0].push_back(makeCallbackButton(u8"▶️ Подтвердить", "confirm"));

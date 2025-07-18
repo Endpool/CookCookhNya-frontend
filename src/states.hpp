@@ -44,7 +44,7 @@ struct StorageList {};
 struct StorageCreationEnterName {};
 
 struct StorageView : detail::StorageIdMixin {};
-struct StorageDeletion : detail::StorageIdMixin{};
+struct StorageDeletion : detail::StorageIdMixin {};
 struct StorageMemberView : detail::StorageIdMixin {};
 struct StorageMemberAddition : detail::StorageIdMixin {};
 struct StorageMemberDeletion : detail::StorageIdMixin {};

@@ -39,11 +39,11 @@ void handleStorageViewCQ(StorageView& state, CallbackQueryRef cq, BotRef bot, SM
         stateManager.put(StorageList{});
     } else if (cq.data == "wanna_eat") {
         auto storageDetails = api.getStoragesApi().get(userId, state.storageId);
-        api::models::storage::StorageSummary storage = {
-            .id = state.storageId, .name = storageDetails.name};
+        api::models::storage::StorageSummary storage = {.id = state.storageId, .name = storageDetails.name};
         std::vector<api::models::storage::StorageSummary> storages = {storage};
         renderRecipesSuggestion(storages, 0, userId, chatId, bot, api);
-        stateManager.put(SuggestedRecipeList{.pageNo = 0, .selectedStorages = std::vector{storage}, .fromStorage = true});
+        stateManager.put(
+            SuggestedRecipeList{.pageNo = 0, .selectedStorages = std::vector{storage}, .fromStorage = true});
         return;
     } else if (cq.data == "delete") {
         renderStorageDeletion(state.storageId, chatId, bot, cq.from->id, api);

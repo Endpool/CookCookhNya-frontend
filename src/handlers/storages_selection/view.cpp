@@ -26,8 +26,8 @@ void handleStoragesSelectionCQ(
 
     if (cq.data == "confirm") {
         renderRecipesSuggestion(state.selectedStorages, 0, userId, chatId, bot, api);
-        stateManager.put(
-            SuggestedRecipeList{.pageNo = 0, .selectedStorages = std::move(state.selectedStorages), .fromStorage = false});
+        stateManager.put(SuggestedRecipeList{
+            .pageNo = 0, .selectedStorages = std::move(state.selectedStorages), .fromStorage = false});
         return;
     }
     if (cq.data == "cancel") {
@@ -47,8 +47,7 @@ void handleStoragesSelectionCQ(
         }
         if (cq.data[0] == '-') {
             auto storageDetails = api.getStoragesApi().get(userId, *storageId);
-            state.selectedStorages.push_back(
-                {.id = *storageId, .name = storageDetails.name});
+            state.selectedStorages.push_back({.id = *storageId, .name = storageDetails.name});
             renderStorageSelection(state.selectedStorages, userId, chatId, bot, api);
             stateManager.put(StoragesSelection{.selectedStorages = state.selectedStorages});
             return;

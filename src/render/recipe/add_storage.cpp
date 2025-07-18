@@ -21,7 +21,6 @@ textGenInfo storageAdditionView(
     const std::vector<std::pair<api::models::recipe::IngredientInRecipe, utils::IngredientAvailability>>&
         inStoragesAvailability,
     const std::vector<api::models::storage::StorageSummary>& selectedStorages,
-    const std::vector<api::models::storage::StorageSummary>& addedStorages,
     api::RecipeId recipeId,
     UserId userId,
     ApiClient api) {
@@ -71,12 +70,13 @@ void renderStoragesSuggestion(
     ChatId chatId,
     BotRef bot,
     ApiClient api) {
-    auto textGen = storageAdditionView(inStoragesAvailability, selectedStorages, addedStorages, recipeId, userId, api);
+    auto textGen = storageAdditionView(inStoragesAvailability, selectedStorages, recipeId, userId, api);
     std::vector<api::models::storage::StorageSummary> storages;
-    for (const auto& infoPair : inStoragesAvailability){
-        if(infoPair.second.available == utils::AvailabiltiyType::other_storages){
-            for (const auto& storage : infoPair.second.storages){
-                if (std::ranges::find(storages, storage.id, &api::models::storage::StorageSummary::id) == storages.end()){
+    for (const auto& infoPair : inStoragesAvailability) {
+        if (infoPair.second.available == utils::AvailabiltiyType::other_storages) {
+            for (const auto& storage : infoPair.second.storages) {
+                if (std::ranges::find(storages, storage.id, &api::models::storage::StorageSummary::id) ==
+                    storages.end()) {
                     storages.push_back(storage);
                 }
             }

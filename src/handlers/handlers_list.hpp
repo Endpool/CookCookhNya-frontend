@@ -33,7 +33,6 @@
 #include "storage/delete.hpp"
 #include "storage/view.hpp"
 
-
 #include "storages_list/create.hpp"
 #include "storages_list/view.hpp"
 

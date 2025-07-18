@@ -48,8 +48,7 @@ InlineKeyboard constructNavigationsMarkup(std::size_t offset,
                                                                       recipesList.page[counter].available,
                                                                       recipesList.page[counter].total),
                                                           std::format("r{}", recipesList.page[counter].id)));
-    counter++;
-        
+        counter++;
     }
     if (pageNo == 0 && ifMaxPage) {
         // instead of arrows row

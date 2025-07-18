@@ -65,26 +65,28 @@ inStoragesAvailability(std::vector<models::storage::StorageSummary>& selectedSto
     return result;
 }
 
-void addStorage(std::vector<std::pair<api::models::recipe::IngredientInRecipe, IngredientAvailability>>& availability, const api::models::storage::StorageSummary& storage){
-    for (auto& infoPair : availability){
+void addStorage(std::vector<std::pair<api::models::recipe::IngredientInRecipe, IngredientAvailability>>& availability,
+                const api::models::storage::StorageSummary& storage) {
+    for (auto& infoPair : availability) {
         auto it = std::ranges::find(infoPair.second.storages, storage.id, &models::storage::StorageSummary::id);
-        if (it != infoPair.second.storages.end()){
+        if (it != infoPair.second.storages.end()) {
             infoPair.second.storages.erase(it);
             infoPair.second.available = AvailabiltiyType::available;
         }
     }
 }
 
-void deleteStorage(std::vector<std::pair<api::models::recipe::IngredientInRecipe, IngredientAvailability>>& availability, const api::models::storage::StorageSummary& storage){
-    for (auto& infoPair : availability){
-        for (auto& storage_ : infoPair.first.inStorages){
-            if(storage.id == storage_.id){
+void deleteStorage(
+    std::vector<std::pair<api::models::recipe::IngredientInRecipe, IngredientAvailability>>& availability,
+    const api::models::storage::StorageSummary& storage) {
+    for (auto& infoPair : availability) {
+        for (auto& storage_ : infoPair.first.inStorages) {
+            if (storage.id == storage_.id) {
                 infoPair.second.storages.push_back(storage);
                 infoPair.second.available = AvailabiltiyType::other_storages;
             }
         }
     }
 }
-
 
 } // namespace cookcookhnya::utils

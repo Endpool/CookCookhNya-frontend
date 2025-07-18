@@ -19,11 +19,10 @@ void handleStorageDeletionCQ(
         renderStorageList(true, cq.from->id, cq.message->chat->id, bot, storageApi);
         stateManager.put(StorageList{});
     }
-    if (cq.data == "back"){
+    if (cq.data == "back") {
         renderStorageView(state.storageId, cq.from->id, cq.message->chat->id, bot, storageApi);
         stateManager.put(StorageView{state.storageId});
     }
-    
 };
 
 } // namespace cookcookhnya::handlers::storages_list

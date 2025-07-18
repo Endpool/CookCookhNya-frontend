@@ -23,8 +23,11 @@ inStoragesAvailability(std::vector<api::models::storage::StorageSummary>& select
                        tg_types::UserId userId,
                        const api::ApiClient& api);
 
-void addStorage(std::vector<std::pair<api::models::recipe::IngredientInRecipe, IngredientAvailability>>& availability, const api::models::storage::StorageSummary& storage);
+void addStorage(std::vector<std::pair<api::models::recipe::IngredientInRecipe, IngredientAvailability>>& availability,
+                const api::models::storage::StorageSummary& storage);
 
-void deleteStorage(std::vector<std::pair<api::models::recipe::IngredientInRecipe, IngredientAvailability>>& availability, const api::models::storage::StorageSummary& storage);
+void deleteStorage(
+    std::vector<std::pair<api::models::recipe::IngredientInRecipe, IngredientAvailability>>& availability,
+    const api::models::storage::StorageSummary& storage);
 
 } // namespace cookcookhnya::utils
