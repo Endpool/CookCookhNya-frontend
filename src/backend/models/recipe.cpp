@@ -83,6 +83,8 @@ CustomRecipePublication tag_invoke(json::value_to_tag<CustomRecipePublication> /
                       ? value_to<decltype(CustomRecipePublication::reason)>(j.at("reason"))
                       : "",
         .status = value_to<decltype(CustomRecipePublication::status)>(j.at("status")),
+        .updated = j.as_object().if_contains("updated") ? utils::parseIsoTime(value_to<std::string>(j.at("updated")))
+                                                        : std::chrono::time_point<std::chrono::system_clock>(),
     };
 }
 

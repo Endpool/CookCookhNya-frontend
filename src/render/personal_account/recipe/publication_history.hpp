@@ -9,6 +9,7 @@ void renderPublicationHistory(UserId userId,
                               ChatId chatId,
                               api::RecipeId recipeId,
                               std::string& recipeName,
+                              bool isPeek,
                               BotRef bot,
                               RecipesApiRef recipesApi);
 

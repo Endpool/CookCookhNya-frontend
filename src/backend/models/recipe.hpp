@@ -95,7 +95,8 @@ struct RecipeSearchResponse {
 struct CustomRecipePublication {
     std::chrono::system_clock::time_point created;
     std::optional<std::string> reason;
-    PublicationRequestStatus status;
+    PublicationRequestStatus status{};
+    std::optional<std::chrono::system_clock::time_point> updated;
 
     friend CustomRecipePublication tag_invoke(boost::json::value_to_tag<CustomRecipePublication>,
                                               const boost::json::value& j);
