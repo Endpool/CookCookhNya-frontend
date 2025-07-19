@@ -31,7 +31,7 @@ void handlePersonalAccountMenuCQ(
     }
     if (data == "ingredients") {
         renderCustomIngredientsList(true, 0, userId, chatId, bot, api);
-        stateManager.put(CustomIngredientsList{});
+        stateManager.put(CustomIngredientsList{.pageNo = 0});
         return;
     }
 }

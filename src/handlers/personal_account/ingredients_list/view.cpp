@@ -16,18 +16,18 @@ using namespace render::personal_account::ingredients;
 using namespace render::personal_account;
 
 void handleCustomIngredientsListCQ(
-    CustomIngredientsList& /*unused*/, CallbackQueryRef cq, BotRef& bot, SMRef stateManager, ApiClientRef api) {
+    CustomIngredientsList& state, CallbackQueryRef cq, BotRef& bot, SMRef stateManager, ApiClientRef api) {
     bot.answerCallbackQuery(cq.id);
     auto userId = cq.from->id;
     auto chatId = cq.message->chat->id;
     if (cq.data == "create") {
         renderCustomIngredientCreation(userId, chatId, bot);
-        stateManager.put(CustomIngredientCreationEnterName{});
+        stateManager.put(CustomIngredientCreationEnterName{.pageNo = state.pageNo});
         return;
     }
     if (cq.data == "publish") {
         renderCustomIngredientPublication(userId, chatId, bot, api);
-        stateManager.put(CustomIngredientPublish{});
+        stateManager.put(CustomIngredientPublish{.pageNo = state.pageNo});
         return;
     }
     if (cq.data == "back") {
@@ -38,7 +38,7 @@ void handleCustomIngredientsListCQ(
     auto pageNo = utils::parseSafe<std::size_t>(cq.data);
     if (pageNo) {
         renderCustomIngredientsList(true, *pageNo, userId, chatId, bot, api);
-        stateManager.put(CustomIngredientCreationEnterName{});
+        stateManager.put(CustomIngredientsList{.pageNo = *pageNo});
         return;
     }
 }

@@ -11,7 +11,7 @@ namespace cookcookhnya::handlers::personal_account::ingredients {
 using namespace render::personal_account::ingredients;
 
 void handleCustomIngredientPublishCQ(
-    CustomIngredientPublish& /*unused*/, CallbackQueryRef cq, BotRef& bot, SMRef stateManager, IngredientsApiRef api) {
+    CustomIngredientPublish& state, CallbackQueryRef cq, BotRef& bot, SMRef stateManager, IngredientsApiRef api) {
     bot.answerCallbackQuery(cq.id);
     auto userId = cq.from->id;
     auto chatId = cq.message->chat->id;
@@ -21,6 +21,6 @@ void handleCustomIngredientPublishCQ(
         api.publishCustom(userId, *ingredientId);
     }
     renderCustomIngredientsList(true, 0, userId, chatId, bot, api);
-    stateManager.put(CustomIngredientsList{});
+    stateManager.put(CustomIngredientsList{.pageNo = state.pageNo});
 }
 } // namespace cookcookhnya::handlers::personal_account::ingredients

@@ -12,7 +12,7 @@ namespace cookcookhnya::handlers::personal_account::ingredients {
 
 using namespace render::personal_account::ingredients;
 
-void handleCustomIngredientCreationEnterNameMsg(CustomIngredientCreationEnterName& /*unused*/,
+void handleCustomIngredientCreationEnterNameMsg(CustomIngredientCreationEnterName& state,
                                                 MessageRef m,
                                                 BotRef& bot,
                                                 SMRef stateManager,
@@ -27,10 +27,10 @@ void handleCustomIngredientCreationEnterNameMsg(CustomIngredientCreationEnterNam
         bot.editMessageText(text, chatId, *messageId);
     }
     renderCustomIngredientConfirmation(name, userId, chatId, bot, api);
-    stateManager.put(CustomIngredientConfirmation{name});
+    stateManager.put(CustomIngredientConfirmation{.pageNo = state.pageNo, .name = name});
 }
 
-void handleCustomIngredientCreationEnterNameCQ(CustomIngredientCreationEnterName& /*unused*/,
+void handleCustomIngredientCreationEnterNameCQ(CustomIngredientCreationEnterName& state,
                                                CallbackQueryRef cq,
                                                BotRef& bot,
                                                SMRef stateManager,
@@ -40,7 +40,7 @@ void handleCustomIngredientCreationEnterNameCQ(CustomIngredientCreationEnterName
     auto chatId = cq.message->chat->id;
     if (cq.data == "back") {
         renderCustomIngredientsList(true, 0, userId, chatId, bot, api);
-        stateManager.put(CustomIngredientsList{});
+        stateManager.put(CustomIngredientsList{.pageNo = state.pageNo});
     }
 }
 
@@ -53,11 +53,11 @@ void handleCustomIngredientConfirmationCQ(
     if (cq.data == "confirm") {
         api.createCustom(userId, api::models::ingredient::IngredientCreateBody{name});
         renderCustomIngredientsList(true, 0, userId, chatId, bot, api);
-        stateManager.put(CustomIngredientsList{});
+        stateManager.put(CustomIngredientsList{.pageNo = state.pageNo});
     }
     if (cq.data == "back") {
         renderCustomIngredientsList(true, 0, userId, chatId, bot, api);
-        stateManager.put(CustomIngredientsList{});
+        stateManager.put(CustomIngredientsList{.pageNo = state.pageNo});
     }
 }
 

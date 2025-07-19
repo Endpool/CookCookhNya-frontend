@@ -14,6 +14,7 @@
 #include <initializer_list>
 #include <memory>
 #include <string_view>
+#include <tgbot/types/KeyboardButton.h>
 #include <utility>
 #include <vector>
 
