@@ -48,6 +48,7 @@ using states::ShoppingListView;
 
 using states::CreateCustomRecipe;
 using states::CustomRecipeIngredientsSearch;
+using states::CustomRecipePublicationHistory;
 using states::CustomRecipesList;
 using states::RecipeCustomView;
 

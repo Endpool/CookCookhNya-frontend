@@ -117,7 +117,7 @@ constructMarkup(size_t pageNo, size_t numOfRecipesOnPage, api::models::recipe::R
     if (keyboard.empty()) { // If error happened
         return keyboard;
     }
-    keyboard[0].push_back(makeCallbackButton(u8"Создать", "custom_recipe_create"));
+    keyboard[0].push_back(makeCallbackButton(u8"🆕 Создать", "custom_recipe_create"));
 
     return keyboard;
 }

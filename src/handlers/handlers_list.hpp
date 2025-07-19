@@ -9,6 +9,7 @@
 #include "personal_account/ingredients_list/publish.hpp"
 #include "personal_account/ingredients_list/view.hpp"
 
+#include "personal_account/recipe/publication_history.hpp"
 #include "personal_account/recipe/search_ingredients.hpp"
 #include "personal_account/recipe/view.hpp"
 #include "personal_account/recipes_list/create.hpp"
@@ -58,6 +59,7 @@ using namespace storage::members;
 using namespace storages_list;
 using namespace storages_selection;
 using namespace recipes_suggestions;
+using namespace personal_account::publication_history;
 
 using namespace tg_stater;
 
@@ -125,7 +127,7 @@ using createCustomRecipeCQHandler = Handler<Events::CallbackQuery{}, handleCreat
 using recipeCustomViewCQHandler = Handler<Events::CallbackQuery{}, handleRecipeCustomViewCQ>;
 using customRecipeIngredientsSearchCQHandler = Handler<Events::CallbackQuery{}, handleCustomRecipeIngredientsSearchCQ>;
 using customRecipeIngredientsSearchIQHandler = Handler<Events::InlineQuery{}, handleCustomRecipeIngredientsSearchIQ>;
-
+using customRecipePublicationHistoryHandler = Handler<Events::CallbackQuery{}, handleCustomRecipePublicationHistoryCQ>;
 } // namespace bot_handlers
 
 } // namespace cookcookhnya::handlers

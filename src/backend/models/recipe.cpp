@@ -4,6 +4,7 @@
 #include <boost/json/value.hpp>
 #include <boost/json/value_from.hpp>
 #include <boost/json/value_to.hpp>
+#include <termios.h>
 
 namespace cookcookhnya::api::models::recipe {
 
@@ -82,6 +83,8 @@ CustomRecipeDetails tag_invoke(json::value_to_tag<CustomRecipeDetails> /*tag*/, 
         .ingredients = value_to<decltype(CustomRecipeDetails::ingredients)>(j.at("ingredients")),
         .name = value_to<decltype(CustomRecipeDetails::name)>(j.at("name")),
         .link = value_to<decltype(CustomRecipeDetails::link)>(j.at("sourceLink")),
+        // Check swagger for naming
+        //.moderationStatus = value_to<decltype(CustomRecipeDetails::moderationStatus)>(j.at("status")),
     };
 }
 
@@ -97,5 +100,27 @@ RecipeSearchResponse tag_invoke(json::value_to_tag<RecipeSearchResponse> /*tag*/
         .page = value_to<decltype(RecipeSearchResponse::page)>(j.at("results")),
         .found = value_to<decltype(RecipeSearchResponse::found)>(j.at("found")),
     };
+}
+
+CustomRecipePublication tag_invoke(json::value_to_tag<CustomRecipePublication> /*tag*/, const json::value& j) {
+    return {
+        .created = value_to<decltype(CustomRecipePublication::created)>(j.at("created")),
+        .updated = value_to<decltype(CustomRecipePublication::updated)>(j.at("updated")),
+        .reason = j.as_object().if_contains("reason")
+                      ? value_to<decltype(CustomRecipePublication::reason)>(j.at("reason"))
+                      : "",
+        .status = value_to<decltype(CustomRecipePublication::status)>(j.at("status")),
+    };
+}
+
+PublicationRequestStatus tag_invoke(boost::json::value_to_tag<PublicationRequestStatus> /*tag*/,
+                                    const boost::json::value& j) {
+    if (j.at("status") == "Pending")
+        return PublicationRequestStatus::Pending;
+    if (j.at("status") == "Accepted")
+        return PublicationRequestStatus::Pending;
+    if (j.at("status") == "Rejected")
+        return PublicationRequestStatus::Pending;
+    return PublicationRequestStatus::Pending;
 }
 } // namespace cookcookhnya::api::models::recipe

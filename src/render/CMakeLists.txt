@@ -10,6 +10,7 @@ target_sources(main PRIVATE
 
     src/render/personal_account/recipe/search_ingredients.cpp
     src/render/personal_account/recipe/view.cpp
+    src/render/personal_account/recipe/publication_history.cpp
 
     src/render/personal_account/view.cpp
 

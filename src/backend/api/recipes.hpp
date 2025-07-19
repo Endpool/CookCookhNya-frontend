@@ -35,7 +35,8 @@ class RecipesApi : ApiBase {
 
     [[nodiscard]] RecipeId create(UserId user, // NOLINT(*-nodiscard)
                                   const models::recipe::RecipeCreateBody& body) const;
-
+    [[nodiscard]] std::vector<models::recipe::CustomRecipePublication> getModerationHistory(UserId user,
+                                                                                            RecipeId recipe) const;
     void delete_(UserId user, RecipeId recipe) const;
 
     [[nodiscard]] models::recipe::CustomRecipeDetails get(UserId user, RecipeId recipe) const;

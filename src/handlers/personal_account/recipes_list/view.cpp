@@ -45,6 +45,7 @@ void handleCustomRecipesListCQ(
             stateManager.put(
                 RecipeCustomView{.recipeId = recipeId.value(), .pageNo = state.pageNo, .ingredients = ingredients});
         }
+        bot.answerCallbackQuery(cq.id);
         return;
     }
 

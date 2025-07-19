@@ -7,10 +7,15 @@
 #include <boost/json/conversion.hpp>
 #include <boost/json/value.hpp>
 #include <cstddef>
+#include <cstdint>
+#include <optional>
 #include <string>
 #include <vector>
 
 namespace cookcookhnya::api::models::recipe {
+
+enum class PublicationRequestStatus : std::uint8_t { Pending = 0, Accepted = 1, Rejected = 2, Idle = 3 };
+PublicationRequestStatus tag_invoke(boost::json::value_to_tag<PublicationRequestStatus>, const boost::json::value& j);
 
 struct RecipeSummary {
     RecipeId id;
@@ -64,7 +69,8 @@ struct IngredientInCustomRecipe {
 struct CustomRecipeDetails {
     std::vector<IngredientInCustomRecipe> ingredients;
     std::string name;
-    std::string link;
+    std::string link; // Idk if link field still needed
+    PublicationRequestStatus moderationStatus;
 
     friend CustomRecipeDetails tag_invoke(boost::json::value_to_tag<CustomRecipeDetails>, const boost::json::value& j);
 };
@@ -104,6 +110,16 @@ struct RecipeSearchResponse {
 
     friend RecipeSearchResponse tag_invoke(boost::json::value_to_tag<RecipeSearchResponse>,
                                            const boost::json::value& j);
+};
+
+struct CustomRecipePublication {
+    std::string created;
+    std::string updated;
+    std::optional<std::string> reason;
+    PublicationRequestStatus status;
+
+    friend CustomRecipePublication tag_invoke(boost::json::value_to_tag<CustomRecipePublication>,
+                                              const boost::json::value& j);
 };
 
 } // namespace cookcookhnya::api::models::recipe

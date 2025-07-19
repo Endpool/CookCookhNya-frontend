@@ -138,6 +138,11 @@ struct ShoppingListView { // NOLINT(*member-init) // Strange. Flags only this st
     bool canBuy;
 };
 
+struct CustomRecipePublicationHistory {
+    api::RecipeId recipeId;
+    std::size_t pageNo;
+};
+
 using State = std::variant<MainMenu,
                            PersonalAccountMenu,
                            CustomIngredientsList,
@@ -162,7 +167,8 @@ using State = std::variant<MainMenu,
                            CustomRecipeIngredientsSearch,
                            CustomRecipesList,
                            RecipeStorageAddition,
-                           RecipeIngredientsSearch>;
+                           RecipeIngredientsSearch,
+                           CustomRecipePublicationHistory>;
 
 using StateManager = tg_stater::StateProxy<tg_stater::MemoryStateStorage<State>>;
 

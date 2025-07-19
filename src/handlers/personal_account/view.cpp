@@ -23,6 +23,7 @@ void handlePersonalAccountMenuCQ(
     if (data == "recipes") {
         renderCustomRecipesList(0, userId, chatId, bot, api);
         stateManager.put(CustomRecipesList{.pageNo = 0});
+        return;
     }
     if (data == "back") {
         renderMainMenu(true, userId, chatId, bot, api);

@@ -70,4 +70,9 @@ void RecipesApi::publishCustom(UserId user, RecipeId recipe) const {
     jsonPostAuthed<void>(user, std::format("my/recipes/{}/request-publication", recipe));
 }
 
+// GET /recipe/{id}/moderation-history
+std::vector<CustomRecipePublication> RecipesApi::getModerationHistory(UserId user, RecipeId recipe) const {
+    return jsonGetAuthed<std::vector<CustomRecipePublication>>(user,
+                                                               std::format("/recipe/{}/moderation-history", recipe));
+}
 } // namespace cookcookhnya::api

@@ -1,6 +1,7 @@
 #include "view.hpp"
 
 #include "handlers/common.hpp"
+#include "render/personal_account/recipe/publication_history.hpp"
 #include "render/personal_account/recipe/search_ingredients.hpp"
 #include "render/personal_account/recipes_list/view.hpp"
 #include "states.hpp"
@@ -13,6 +14,8 @@ namespace cookcookhnya::handlers::personal_account::recipes {
 
 using namespace render::personal_account::recipes;
 using namespace render::recipe::ingredients;
+using namespace render::personal_account::publication_history;
+
 using namespace std::views;
 
 const std::size_t numOfIngredientsOnPage = 5;
@@ -33,6 +36,7 @@ void handleRecipeCustomViewCQ(
         stateManager.put(CustomRecipeIngredientsSearch{state.recipeId, state.ingredients | as_rvalue, ""});
         renderRecipeIngredientsSearch(
             std::get<CustomRecipeIngredientsSearch>(*stateManager.get()), numOfIngredientsOnPage, userId, chatId, bot);
+        bot.answerCallbackQuery(cq.id);
         return;
     }
 
@@ -42,11 +46,14 @@ void handleRecipeCustomViewCQ(
         // Made to avoid bug when delete last recipe on page -> will return to the non-existent page
         renderCustomRecipesList(0, userId, chatId, bot, api);
         stateManager.put(CustomRecipesList{.pageNo = 0});
+        bot.answerCallbackQuery(cq.id);
         return;
     }
 
-    if (data == "publish") { // Should also create backend endpoint to track status of publish
-        api.getRecipesApi().publishCustom(userId, state.recipeId);
+    if (data == "publish") {
+        renderPublicationHistory(userId, chatId, state.recipeId, bot, api);
+        stateManager.put(states::CustomRecipePublicationHistory{.recipeId = state.recipeId, .pageNo = state.pageNo});
+        bot.answerCallbackQuery(cq.id);
         return;
     }
 }
