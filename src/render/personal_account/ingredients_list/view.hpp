@@ -4,6 +4,7 @@
 
 namespace cookcookhnya::render::personal_account::ingredients {
 
-void renderCustomIngredientsList(bool toBeEdited, UserId userId, ChatId chatId, BotRef bot, IngredientsApiRef api);
+void renderCustomIngredientsList(
+    bool toBeEdited, std::size_t pageNo, UserId userId, ChatId chatId, BotRef bot, IngredientsApiRef api);
 
 } // namespace cookcookhnya::render::personal_account::ingredients

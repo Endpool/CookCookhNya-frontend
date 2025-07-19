@@ -30,8 +30,8 @@ void handlePersonalAccountMenuCQ(
         return;
     }
     if (data == "ingredients") {
-        renderCustomIngredientsList(true, userId, chatId, bot, api);
-        stateManager.put(CustomIngredientsList{});
+        renderCustomIngredientsList(true, 0, userId, chatId, bot, api);
+        stateManager.put(CustomIngredientsList{.pageNo = 0});
         return;
     }
 }

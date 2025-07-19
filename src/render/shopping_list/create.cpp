@@ -31,7 +31,8 @@ void renderShoppingListCreation(const std::vector<Ingredient>& selectedIngredien
     for (auto chunk : allIngredients | chunk(2)) {
         keyboard.reserveInRow(2);
         for (const Ingredient& ing : chunk) {
-            const bool isSelected = std::ranges::contains(selectedIngredients, ing.id, &api::models::ingredient::Ingredient::id);
+            const bool isSelected =
+                std::ranges::contains(selectedIngredients, ing.id, &api::models::ingredient::Ingredient::id);
             std::string emoji = utils::utf8str(isSelected ? u8"[ + ]" : u8"[ᅠ]");
             const char* actionPrefix = isSelected ? "+" : "-";
             std::string text = std::format("{} {}", emoji, ing.name);

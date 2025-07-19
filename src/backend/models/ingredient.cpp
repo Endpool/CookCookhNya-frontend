@@ -12,6 +12,9 @@ Ingredient tag_invoke(json::value_to_tag<Ingredient> /*tag*/, const json::value&
     return {
         .id = value_to<decltype(Ingredient::id)>(j.at("id")),
         .name = value_to<decltype(Ingredient::name)>(j.at("name")),
+        .status = j.as_object().if_contains("moderation_status")
+                      ? value_to<decltype(Ingredient::status)>(j.at("moderation_status"))
+                      : std::nullopt,
     };
 }
 
