@@ -52,6 +52,11 @@ void renderStorageSelection(
     auto messageId = message::getMessageId(userId);
     if (messageId)
         bot.editMessageText(text, chatId, *messageId, std::move(keyboard).build());
+    else{
+        auto message = bot.sendMessage(chatId, text, std::move(keyboard).build());
+        message::addMessageId(userId, message->messageId);
+    }
+
 }
 
 } // namespace cookcookhnya::render::select_storages

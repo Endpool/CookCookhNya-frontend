@@ -1,7 +1,11 @@
 #pragma once
 
 // Handler callbacks
-#include "initial/start.hpp"
+#include "commands/my_storages.hpp"
+#include "commands/personal_account.hpp"
+#include "commands/shopping_list.hpp"
+#include "commands/start.hpp"
+#include "commands/wanna_eat.hpp"
 
 #include "main_menu/view.hpp"
 
@@ -46,7 +50,7 @@
 
 namespace cookcookhnya::handlers {
 
-using namespace initial;
+using namespace commands;
 using namespace main_menu;
 using namespace personal_account;
 using namespace personal_account::ingredients;
@@ -64,10 +68,18 @@ using namespace tg_stater;
 
 namespace bot_handlers {
 
-// Init
-constexpr char startCmd[] = "start";                                                    // NOLINT(*c-arrays)
-using startCmdHandler = Handler<Events::Command{startCmd}, handleStartCmd, AnyState{}>; // NOLINT(*decay)
+// Commands
+constexpr char startCmd[] = "start";                                                             // NOLINT(*c-arrays)
+constexpr char myStoragesCmd[] = "my_storages";                                                  // NOLINT(*c-arrays)
+constexpr char shoppingListCmd[] = "shopping_list";                                              // NOLINT(*c-arrays)
+constexpr char personalAccountCmd[] = "personal_account";                                        // NOLINT(*c-arrays)
+constexpr char wannaEatCmd[] = "wanna_eat";                                                      // NOLINT(*c-arrays)
 using noStateHandler = Handler<Events::AnyMessage{}, handleNoState, NoState{}>;
+using startCmdHandler = Handler<Events::Command{startCmd}, handleStartCmd, AnyState{}>;         // NOLINT(*decay)
+using myStoragesCmdHandler = Handler<Events::Command{myStoragesCmd}, handleMyStoragesCmd, AnyState{}>;  // NOLINT(*decay)
+using shoppingListCmdHandler = Handler<Events::Command{shoppingListCmd}, handleShoppingListCmd, AnyState{}>;  // NOLINT(*decay)
+using personalAccountCmdHandler = Handler<Events::Command{personalAccountCmd}, handlePersonalAccountCmd, AnyState{}>;  // NOLINT(*decay)
+using wannaEatCmdHandler = Handler<Events::Command{wannaEatCmd}, handleWannaEatCmd, AnyState{}>;  // NOLINT(*decay)
 
 // MainMenu
 using mainMenuCQHandler = Handler<Events::CallbackQuery{}, handleMainMenuCQ>;

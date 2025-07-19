@@ -125,16 +125,22 @@ void renderRecipesSuggestion(std::vector<StorageSummary>& storages,
                              ChatId chatId,
                              BotRef bot,
                              RecipesApiRef recipesApi) {
-    const std::string pageInfo = utils::utf8str(u8"🔪 Рецепты подобранные специально для вас");
+    std::string pageInfo = utils::utf8str(u8"🔪 Рецепты подобранные специально для вас");
     const std::size_t numOfRecipesOnPage = 5;
     const std::size_t numOfRecipes = 500;
 
     auto storagesIds = storages | views::transform(&StorageSummary::id) | to<std::vector>();
     auto recipesList = recipesApi.getSuggestedRecipes(userId, storagesIds, numOfRecipes, pageNo * numOfRecipesOnPage);
-
+    
+    if(recipesList.found == 0){
+        pageInfo = utils::utf8str(u8"😔 К сожалению, нам не удалось найти подходящие рецепты для вас...");
+    }
     if (auto messageId = message::getMessageId(userId)) {
         bot.editMessageText(
             pageInfo, chatId, *messageId, makeKeyboardMarkup(constructMarkup(pageNo, numOfRecipesOnPage, recipesList)));
+    } else {
+        auto message = bot.sendMessage(chatId, pageInfo, makeKeyboardMarkup(constructMarkup(pageNo, numOfRecipesOnPage, recipesList)));
+        message::addMessageId(userId, message->messageId);
     }
 }
 

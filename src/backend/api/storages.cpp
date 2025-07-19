@@ -6,6 +6,7 @@
 #include "utils/parsing.hpp"
 
 #include <format>
+#include <optional>
 #include <vector>
 
 namespace cookcookhnya::api {
@@ -54,8 +55,12 @@ InvitationId StoragesApi::inviteMember(UserId user, StorageId storage) const {
 }
 
 // POST /invitations/{invitationHash}/activate
-void StoragesApi::activate(UserId user, InvitationId invitation) const {
-    postAuthed(user, std::format("/invitations/{}/activate", invitation));
+std::optional<StorageSummary> StoragesApi::activate(UserId user, InvitationId invitation) const {
+    try{
+        return jsonPostAuthed<StorageSummary>(user, std::format("/invitations/{}/activate", invitation));
+    } catch (...){
+        return std::nullopt;
+    }
 }
 
 } // namespace cookcookhnya::api

@@ -28,13 +28,13 @@ void handleShoppingListViewCQ(
     auto storages = api.getStoragesApi().getStoragesList(userId);
 
     if (cq.data == "back") {
-        renderMainMenu(true, userId, cq.message->chat->id, bot, api);
+        renderMainMenu(true, std::nullopt, userId, cq.message->chat->id, bot, api);
         stateManager.put(MainMenu{});
         return;
     }
 
     if (cq.data == "search") {
-        renderMainMenu(true, userId, cq.message->chat->id, bot, api);
+        renderMainMenu(true, std::nullopt, userId, cq.message->chat->id, bot, api);
         stateManager.put(MainMenu{});
         return;
     }
