@@ -28,9 +28,9 @@ recipeView(const std::vector<std::pair<IngredientInRecipe, utils::IngredientAvai
     auto text = std::format("{} Ингредиенты для *{}* \n\n", utils::utf8str(u8"📖"), recipeName);
 
     for (const auto& infoPair : inStoragesAvailability) {
-        if (infoPair.second.available == utils::AvailabiltiyType::available) {
+        if (infoPair.second.available == utils::AvailabiltiyType::AVAILABLE) {
             text += "`[+]` " + infoPair.first.name + "\n";
-        } else if (infoPair.second.available == utils::AvailabiltiyType::other_storages) {
+        } else if (infoPair.second.available == utils::AvailabiltiyType::OTHER_STORAGES) {
             text += "`[?]` " + infoPair.first.name + "\n";
             isIngredientIsOtherStorages = true;
         } else {

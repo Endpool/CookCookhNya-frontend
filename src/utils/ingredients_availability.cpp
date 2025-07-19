@@ -50,13 +50,13 @@ inStoragesAvailability(std::vector<models::storage::StorageSummary>& selectedSto
         }
 
         if (hasInSelected) {
-            availability.available = AvailabiltiyType::available;
+            availability.available = AvailabiltiyType::AVAILABLE;
             availability.storages = std::move(storages);
         } else if (hasInOther) {
-            availability.available = AvailabiltiyType::other_storages;
+            availability.available = AvailabiltiyType::OTHER_STORAGES;
             availability.storages = std::move(storages);
         } else {
-            availability.available = AvailabiltiyType::not_available;
+            availability.available = AvailabiltiyType::NOT_AVAILABLE;
         }
 
         result.emplace_back(ingredient, std::move(availability));
@@ -71,7 +71,7 @@ void addStorage(std::vector<std::pair<api::models::recipe::IngredientInRecipe, I
         auto it = std::ranges::find(infoPair.second.storages, storage.id, &models::storage::StorageSummary::id);
         if (it != infoPair.second.storages.end()) {
             infoPair.second.storages.erase(it);
-            infoPair.second.available = AvailabiltiyType::available;
+            infoPair.second.available = AvailabiltiyType::AVAILABLE;
         }
     }
 }
@@ -83,7 +83,7 @@ void deleteStorage(
         for (auto& storage_ : infoPair.first.inStorages) {
             if (storage.id == storage_.id) {
                 infoPair.second.storages.push_back(storage);
-                infoPair.second.available = AvailabiltiyType::other_storages;
+                infoPair.second.available = AvailabiltiyType::OTHER_STORAGES;
             }
         }
     }

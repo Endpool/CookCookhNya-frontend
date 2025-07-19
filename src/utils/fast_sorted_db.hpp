@@ -1,6 +1,7 @@
 #pragma once
 
-#include <concepts>
+#include "utils/utils.hpp"
+
 #include <functional>
 #include <map>
 #include <ranges>
@@ -26,8 +27,7 @@ class FastSortedDb {
   public:
     FastSortedDb() = default;
 
-    template <std::ranges::range R>
-        requires std::convertible_to<std::ranges::range_value_t<R>, T>
+    template <range_of<T> R>
     FastSortedDb(R&& items) { // NOLINT(*explicit*)
         for (auto&& item : std::ranges::views::all(std::forward<R>(items)))
             put(std::forward<decltype(item)>(item));

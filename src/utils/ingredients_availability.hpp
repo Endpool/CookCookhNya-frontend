@@ -10,10 +10,10 @@
 
 namespace cookcookhnya::utils {
 
-enum struct AvailabiltiyType : std::uint8_t { available, not_available, other_storages };
+enum struct AvailabiltiyType : std::uint8_t { AVAILABLE, NOT_AVAILABLE, OTHER_STORAGES };
 
 struct IngredientAvailability {
-    AvailabiltiyType available = AvailabiltiyType::not_available;
+    AvailabiltiyType available = AvailabiltiyType::NOT_AVAILABLE;
     std::vector<api::models::storage::StorageSummary> storages;
 };
 
