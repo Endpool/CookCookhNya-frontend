@@ -58,10 +58,12 @@ void handleCustomRecipeIngredientsSearchCQ(
     const auto chatId = cq.message->chat->id;
 
     if (cq.data == "back") {
-        renderCustomRecipe(true, userId, chatId, state.recipeId, bot, api);
+        auto ingredientsAndName = renderCustomRecipe(true, userId, chatId, state.recipeId, bot, api);
         auto ingredients = state.recipeIngredients.getValues() | as_rvalue | to<std::vector>();
-        stateManager.put(
-            RecipeCustomView{.recipeId = state.recipeId, .pageNo = 0, .ingredients = std::move(ingredients)});
+        stateManager.put(RecipeCustomView{.recipeId = state.recipeId,
+                                          .pageNo = 0,
+                                          .ingredients = std::move(ingredients),
+                                          .recipeName = std::get<1>(ingredientsAndName)});
         return;
     }
 

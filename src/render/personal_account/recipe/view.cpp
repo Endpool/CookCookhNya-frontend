@@ -10,17 +10,18 @@
 #include <cstddef>
 #include <format>
 #include <string>
+#include <tuple>
 #include <utility>
 #include <vector>
 
 namespace cookcookhnya::render::personal_account::recipes {
 
-IngredientsAndRecipeName renderCustomRecipe(
+std::tuple<std::vector<api::models::ingredient::Ingredient>, std::string> renderCustomRecipe(
     bool toBeEdited, UserId userId, ChatId chatId, api::RecipeId recipeId, BotRef bot, RecipesApiRef recipesApi) {
 
     auto recipeDetails = recipesApi.get(userId, recipeId);
     // REMOVE WHEN BACKEND IS READY
-    recipeDetails.moderationStatus = api::models::recipe::PublicationRequestStatus::Idle;
+    recipeDetails.moderationStatus = api::models::recipe::PublicationRequestStatus::Accepted;
 
     std::vector<api::models::ingredient::Ingredient> ingredients;
 
@@ -37,7 +38,7 @@ IngredientsAndRecipeName renderCustomRecipe(
         });
     }
 
-    toPrint += "\n🌐 [Статус проверки](" + utils::to_string(recipeDetails.moderationStatus.value()) + ")";
+    toPrint += "\n🌐 [Статус проверки] " + utils::to_string(recipeDetails.moderationStatus.value());
 
     keyboard << makeCallbackButton(u8"🚮 Удалить", "delete") << NewRow{};
     keyboard << makeCallbackButton(u8"✏️ Редактировать", "change") << NewRow{};
@@ -52,11 +53,11 @@ IngredientsAndRecipeName renderCustomRecipe(
     if (toBeEdited) {
         auto messageId = message::getMessageId(userId);
         if (messageId)
-            bot.editMessageText(toPrint, chatId, *messageId, std::move(keyboard));
+            bot.editMessageText(toPrint, chatId, *messageId, std::move(keyboard), "Markdown");
     } else {
         auto message = bot.sendMessage(chatId, toPrint, std::move(keyboard));
         message::addMessageId(userId, message->messageId);
     }
-    return {.ingredients = ingredients, .recipeName = recipeDetails.name};
+    return {ingredients, recipeDetails.name};
 }
 } // namespace cookcookhnya::render::personal_account::recipes

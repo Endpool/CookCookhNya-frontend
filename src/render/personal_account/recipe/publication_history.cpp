@@ -5,38 +5,85 @@
 #include "backend/models/recipe.hpp"
 #include "message_tracker.hpp"
 #include "render/common.hpp"
+#include "utils/to_string.hpp"
 #include "utils/utils.hpp"
 
+#include <chrono>
+#include <format>
 #include <ranges>
-#include <sstream>
 #include <vector>
 
 namespace cookcookhnya::render::personal_account::publication_history {
 
 using namespace std::views;
 
+namespace {
+std::string convertTimeToStrFormat(std::chrono::system_clock::time_point time) {
+    const auto* moscow_tz = std::chrono::locate_zone("Europe/Moscow");
+    auto moscow_time = std::chrono::zoned_time(moscow_tz, time);
+    return std::format("{:%d-%m-%Y %H:%M}", moscow_time.get_local_time());
+}
+} // namespace
+
 void renderPublicationHistory(UserId userId,
                               ChatId chatId,
                               api::RecipeId recipeId,
-                              std::string recipeName,
+                              std::string& recipeName,
                               BotRef bot,
                               RecipesApiRef recipesApi) {
     // auto history = recipesApi.getModerationHistory(userId, recipeId);
-    std::vector<api::models::recipe::CustomRecipePublication> history = {{
-        .created = "52 сентября",
-        .reason = "ПИДАРАС",
-        .status = api::models::recipe::PublicationRequestStatus::Rejected,
-    }};
+    std::vector<api::models::recipe::CustomRecipePublication> history = {
+        {
+            .created = std::chrono::system_clock::now(),
+            .status = api::models::recipe::PublicationRequestStatus::Pending,
+        },
+        {
+            .created = std::chrono::system_clock::now(),
+            .reason = "ПИДАРАС",
+            .status = api::models::recipe::PublicationRequestStatus::Rejected,
+        },
+        {
+            .created = std::chrono::system_clock::now(),
+            .reason = "ПИДАРАС",
+            .status = api::models::recipe::PublicationRequestStatus::Rejected,
+        },
+        {
+            .created = std::chrono::system_clock::now(),
+            .reason = "ПИДАРАС",
+            .status = api::models::recipe::PublicationRequestStatus::Rejected,
+        },
+        {
+            .created = std::chrono::system_clock::now(),
+            .reason = "ПИДАРАС",
+            .status = api::models::recipe::PublicationRequestStatus::Rejected,
+        },
+        {
+            .created = std::chrono::system_clock::now(),
+            .reason = "ПИДАРАС",
+            .status = api::models::recipe::PublicationRequestStatus::Rejected,
+        },
+        {
+            .created = std::chrono::system_clock::now(),
+            .reason = "ПИДАРАС",
+            .status = api::models::recipe::PublicationRequestStatus::Rejected,
+        }};
     InlineKeyboardBuilder keyboard{2}; // confirm and back
 
-    std::ostringstream toPrint;
-    toPrint << (utils::utf8str(u8"История запросов на публикацию ") + recipeName + "\n");
-    const std::vector<std::string> prefixes = {
-        utils::utf8str(u8"ℹ️ Текущий статус"), utils::utf8str(u8"по причине"), utils::utf8str(u8"Запрос создан:")};
+    std::string toPrint;
+    toPrint = (utils::utf8str(u8"История запросов на публикацию *") + recipeName + "*\n");
 
-    // What if i forgot what for loop is? Хы-хы (Yes it's probably possible to zip "fields" and "prefixes" and interate
-    // through it but it would require "for" and i don't know what is it)
-    // reverse to print lastest request the last in list
+    toPrint += utils::utf8str(u8"ℹ️ Текущий статус: ") + utils::to_string(history[0].status) +
+               (history[0].reason.has_value() ? std::format(" по причине {}", history[0].reason.value()) : " ") +
+               convertTimeToStrFormat(history[0].created) + "\n\n";
+    // Remove the lastest history instance as it's showed differently
+    history.erase(history.begin());
+
+    const std::vector<std::string> prefixes = {
+        utils::utf8str(u8"Статус"), utils::utf8str(u8"по причине"), utils::utf8str(u8"запрос создан")};
+
+    // What if you forgot what for loop is? Хы-хы (Yes it's probably possible to zip "fields" and "prefixes" and
+    // interate through it but it would require "for" and i don't know what is it) reverse to print lastest request the
+    // last in list
     auto res = history | reverse | transform([&prefixes](const api::models::recipe::CustomRecipePublication& req) {
                    //!!!!IMPORTANT See that tie to match prefixes!!!!
                    auto fields = std::tie(req.status, req.reason, req.created);
@@ -44,14 +91,16 @@ void renderPublicationHistory(UserId userId,
                               switch (idx) {
                               case 0:
                                   // statusStr to convert enum to string
-                                  return prefixes[0] + ": " + utils::to_string(std::get<0>(fields));
+                                  return prefixes[0] + ": " + utils::to_string(std::get<0>(fields)) + " ";
                               case 1:
                                   if (std::get<1>(fields).has_value()) {
-                                      return prefixes[1] + ": " + std::get<1>(fields).value();
+                                      return prefixes[1] + ": " + std::get<1>(fields).value() + " ";
                                   }
-                              case 2:
-                                  return prefixes[2] + ": " + std::get<2>(fields);
-                                  return "";
+                                  return ", ";
+                              // Need to work with chrono
+                              case 2: {
+                                  return prefixes[2] + ": " + convertTimeToStrFormat(std::get<2>(fields)) + "\n\n";
+                              }
                               default:
                                   return "";
                               }
@@ -59,14 +108,14 @@ void renderPublicationHistory(UserId userId,
                }) |
                join; // Join here instead of in the loop
 
-    std::ranges::copy(res, std::ostream_iterator<std::string>(toPrint, "----------------------\n"));
+    std::ranges::for_each(res, [&toPrint](const std::string& s) { toPrint += s; });
 
     // Text is created moving to the markup
     keyboard << makeCallbackButton(u8"▶️Подтвердить", "confirm") << NewRow{};
     keyboard << makeCallbackButton(u8"↩️ Назад", "back");
 
     if (auto messageId = message::getMessageId(userId)) {
-        bot.editMessageText(toPrint.str(), chatId, *messageId, std::move(keyboard));
+        bot.editMessageText(toPrint, chatId, *messageId, std::move(keyboard), "Markdown");
     }
 }
 } // namespace cookcookhnya::render::personal_account::publication_history

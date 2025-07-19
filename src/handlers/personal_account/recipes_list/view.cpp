@@ -43,8 +43,8 @@ void handleCustomRecipesListCQ(
             auto ingredientsAndName = renderCustomRecipe(true, userId, chatId, recipeId.value(), bot, api);
             stateManager.put(RecipeCustomView{.recipeId = recipeId.value(),
                                               .pageNo = state.pageNo,
-                                              .ingredients = ingredientsAndName.ingredients,
-                                              .recipeName = ingredientsAndName.recipeName});
+                                              .ingredients = std::get<0>(ingredientsAndName),
+                                              .recipeName = std::get<1>(ingredientsAndName)});
         }
         bot.answerCallbackQuery(cq.id);
         return;

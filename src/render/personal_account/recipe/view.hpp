@@ -7,12 +7,7 @@
 
 namespace cookcookhnya::render::personal_account::recipes {
 
-struct IngredientsAndRecipeName {
-    std::vector<api::models::ingredient::Ingredient> ingredients;
-    std::string recipeName;
-};
-
-IngredientsAndRecipeName renderCustomRecipe(
+std::tuple<std::vector<api::models::ingredient::Ingredient>, std::string> renderCustomRecipe(
     bool toBeEdited, UserId userId, ChatId chatId, api::RecipeId recipeId, BotRef bot, RecipesApiRef recipesApi);
 
 } // namespace cookcookhnya::render::personal_account::recipes

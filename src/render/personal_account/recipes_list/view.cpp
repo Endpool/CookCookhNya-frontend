@@ -33,7 +33,8 @@ InlineKeyboard constructNavigationsMarkup(std::size_t offset,
 
     const size_t recipesToShow = std::min(numOfRecipesOnPage, recipesList.page.size());
 
-    const bool lastPage = amountOfRecipes - numOfRecipesOnPage * (pageNo + 1) <= 0;
+    const bool lastPage =
+        static_cast<int>(amountOfRecipes) - static_cast<int>(numOfRecipesOnPage) * (static_cast<int>(pageNo) + 1) <= 0;
 
     if (offset + recipesToShow >= fullKeyBoardSize) {
         InlineKeyboard error(0);
@@ -47,7 +48,7 @@ InlineKeyboard constructNavigationsMarkup(std::size_t offset,
         // Print on button in form "1. {Recipe}"
         keyboard[i + offset].push_back(makeCallbackButton(
             std::format("{}. {}", 1 + counter + ((pageNo)*numOfRecipesOnPage), recipesList.page[counter].name),
-            std::format("r", recipesList.page[counter].id))); // RECIPE ID
+            std::format("r{}", recipesList.page[counter].id))); // RECIPE ID
         counter++;
     }
     if (pageNo == 0 && lastPage) {
@@ -102,9 +103,9 @@ constructMarkup(size_t pageNo, size_t numOfRecipesOnPage, api::models::recipe::R
     const size_t recipesToShow = std::min(numOfRecipesOnPage, recipesList.page.size());
 
     InlineKeyboard keyboard =
-        recipesList.found == 0 ? constructOnlyCreate()
-                               : constructNavigationsMarkup(
-                                     offset, numOfRows + recipesToShow, (pageNo + 1), numOfRecipesOnPage, recipesList);
+        recipesList.found == 0
+            ? constructOnlyCreate()
+            : constructNavigationsMarkup(offset, numOfRows + recipesToShow, pageNo, numOfRecipesOnPage, recipesList);
     if (keyboard.empty()) { // If error happened
         return keyboard;
     }

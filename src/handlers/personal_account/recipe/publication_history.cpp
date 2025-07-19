@@ -17,18 +17,22 @@ void handleCustomRecipePublicationHistoryCQ(CustomRecipePublicationHistory& stat
     auto userId = cq.from->id;
 
     if (data == "back") {
-        auto ingredients = renderCustomRecipe(true, userId, chatId, state.recipeId, bot, recipesApi);
-        stateManager.put(
-            RecipeCustomView{.recipeId = state.recipeId, .pageNo = state.pageNo, .ingredients = ingredients});
+        auto ingredientsAndRecipeName = renderCustomRecipe(true, userId, chatId, state.recipeId, bot, recipesApi);
+        stateManager.put(RecipeCustomView{.recipeId = state.recipeId,
+                                          .pageNo = state.pageNo,
+                                          .ingredients = std::get<0>(ingredientsAndRecipeName),
+                                          .recipeName = std::get<1>(ingredientsAndRecipeName)});
         return;
     }
 
     if (data == "confirm") {
         recipesApi.publishCustom(userId, state.recipeId);
         // As published return back
-        auto ingredients = renderCustomRecipe(true, userId, chatId, state.recipeId, bot, recipesApi);
-        stateManager.put(
-            RecipeCustomView{.recipeId = state.recipeId, .pageNo = state.pageNo, .ingredients = ingredients});
+        auto ingredientsAndRecipeName = renderCustomRecipe(true, userId, chatId, state.recipeId, bot, recipesApi);
+        stateManager.put(RecipeCustomView{.recipeId = state.recipeId,
+                                          .pageNo = state.pageNo,
+                                          .ingredients = std::get<0>(ingredientsAndRecipeName),
+                                          .recipeName = std::get<1>(ingredientsAndRecipeName)});
         return;
     }
 }

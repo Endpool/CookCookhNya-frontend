@@ -1,4 +1,5 @@
 #include "backend/models/recipe.hpp"
+#include "utils/serialization.hpp"
 
 #include <boost/json/conversion.hpp>
 #include <boost/json/value.hpp>
@@ -77,7 +78,7 @@ RecipeSearchResponse tag_invoke(json::value_to_tag<RecipeSearchResponse> /*tag*/
 
 CustomRecipePublication tag_invoke(json::value_to_tag<CustomRecipePublication> /*tag*/, const json::value& j) {
     return {
-        .created = value_to<decltype(CustomRecipePublication::created)>(j.at("created")),
+        .created = utils::parseIsoTime(value_to<std::string>(j.at("created"))),
         .reason = j.as_object().if_contains("reason")
                       ? value_to<decltype(CustomRecipePublication::reason)>(j.at("reason"))
                       : "",

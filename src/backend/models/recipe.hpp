@@ -93,7 +93,7 @@ struct RecipeSearchResponse {
 };
 
 struct CustomRecipePublication {
-    std::string created;
+    std::chrono::system_clock::time_point created;
     std::optional<std::string> reason;
     PublicationRequestStatus status;
 
