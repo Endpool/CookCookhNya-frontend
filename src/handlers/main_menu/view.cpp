@@ -38,7 +38,7 @@ void handleMainMenuCQ(MainMenu& /*unused*/, CallbackQueryRef cq, BotRef& bot, SM
         if (storages.size() == 1) {
             std::vector<api::models::storage::StorageSummary> storage = {storages[0]};
             renderRecipesSuggestion(storage, 0, userId, chatId, bot, api);
-            stateManager.put(SuggestedRecipeList{.pageNo = 0, .selectedStorages = storage, .fromStorage = false});
+            stateManager.put(SuggestedRecipesList{.pageNo = 0, .selectedStorages = storage, .fromStorage = false});
             return;
         }
         renderStorageSelection({}, userId, chatId, bot, api);
@@ -52,8 +52,9 @@ void handleMainMenuCQ(MainMenu& /*unused*/, CallbackQueryRef cq, BotRef& bot, SM
         ShoppingListView::ItemsDb itemsDb{
             items | transform([](auto& i) { return ShoppingListView::SelectableItem{std::move(i)}; })};
 
-        stateManager.put(ShoppingListView{.items = std::move(itemsDb), .canBuy = canBuy});
-        renderShoppingList(std::get<ShoppingListView>(*stateManager.get()), userId, chatId, bot);
+        auto newState = ShoppingListView{.items = std::move(itemsDb), .canBuy = canBuy};
+        renderShoppingList(newState, userId, chatId, bot);
+        stateManager.put(std::move(newState));
         return;
     }
 

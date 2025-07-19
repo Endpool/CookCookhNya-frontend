@@ -32,7 +32,8 @@ std::vector<api::models::ingredient::Ingredient> renderCustomRecipe(
         });
     }
 
-    toPrint += recipeDetails.link;
+    if (recipeDetails.link)
+        toPrint += *recipeDetails.link;
     keyboard[0].push_back(makeCallbackButton(u8"🚮 Удалить", "delete"));
     keyboard[1].push_back(makeCallbackButton(u8"✏️ Редактировать", "change"));
     keyboard[2].push_back(makeCallbackButton(u8"📢 Опубликовать", "publish"));

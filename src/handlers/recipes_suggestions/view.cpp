@@ -21,8 +21,8 @@ using namespace render::storage;
 using namespace render::recipe;
 using namespace render::main_menu;
 
-void handleSuggestedRecipeListCQ(
-    SuggestedRecipeList& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
+void handleSuggestedRecipesListCQ(
+    SuggestedRecipesList& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
     bot.answerCallbackQuery(cq.id);
     auto chatId = cq.message->chat->id;
     auto userId = cq.from->id;
@@ -31,33 +31,35 @@ void handleSuggestedRecipeListCQ(
 
     if (data == "back") {
         if (state.fromStorage) {
-            renderStorageView(state.selectedStorages[0].id, cq.from->id, chatId, bot, api);
+            renderStorageView(state.selectedStorages[0].id, userId, chatId, bot, api);
             stateManager.put(StorageView{state.selectedStorages[0].id}); // Go to the only one storage
         } else {
             if (api.getStoragesApi().getStoragesList(userId).size() == 1) {
                 renderMainMenu(true, userId, chatId, bot, api);
                 stateManager.put(MainMenu{});
             } else {
-                renderStorageSelection(state.selectedStorages, userId, chatId, bot, api);
-                stateManager.put(StoragesSelection{.selectedStorages = std::move(state.selectedStorages)});
+                auto newState = StoragesSelection{.selectedStorages = std::move(state.selectedStorages)};
+                renderStorageSelection(newState, userId, chatId, bot, api);
+                stateManager.put(std::move(newState));
             }
         }
         bot.answerCallbackQuery(cq.id);
         return;
     }
 
-    if (data[0] == 'r') {
-        auto recipeId = utils::parseSafe<api::RecipeId>(data.substr(1, data.size()));
-        if (recipeId) {
-            auto inStorage = utils::inStoragesAvailability(state.selectedStorages, *recipeId, userId, api);
-            renderRecipeView(inStorage, *recipeId, userId, chatId, bot, api);
-            stateManager.put(RecipeView{.selectedStorages = state.selectedStorages,
-                                        .addedStorages = {},
-                                        .availability = inStorage,
-                                        .recipeId = *recipeId,
-                                        .fromStorage = state.fromStorage,
-                                        .pageNo = state.pageNo});
-        }
+    if (data.starts_with("recipe_")) {
+        auto recipeId = utils::parseSafe<api::RecipeId>(data.substr(sizeof("recipe_") - 1));
+        if (!recipeId)
+            return;
+        auto inStorage = utils::inStoragesAvailability(state.selectedStorages, *recipeId, userId, api);
+        renderRecipeView(inStorage, *recipeId, userId, chatId, bot, api);
+        stateManager.put(RecipeView{.selectedStorages = state.selectedStorages,
+                                    .addedStorages = {},
+                                    .availability = inStorage,
+                                    .recipeId = *recipeId,
+                                    .fromStorage = state.fromStorage,
+                                    .pageNo = state.pageNo});
+
         return;
     }
 

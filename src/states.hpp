@@ -67,7 +67,7 @@ struct StorageIngredientsList : detail::StorageIdMixin {
 struct StoragesSelection {
     std::vector<api::models::storage::StorageSummary> selectedStorages;
 };
-struct SuggestedRecipeList {
+struct SuggestedRecipesList {
     std::size_t pageNo;
     std::vector<api::models::storage::StorageSummary> selectedStorages;
     bool fromStorage;
@@ -148,6 +148,11 @@ struct ShoppingListView { // NOLINT(*member-init) // Strange. Flags only this st
     ItemsDb items;
     bool canBuy;
 };
+struct ShoppingListStorageSelectionToBuy {
+    ShoppingListView prevState;
+    std::vector<api::IngredientId> selectedIngredients;
+    std::vector<api::models::storage::StorageSummary> storages;
+};
 
 using State = std::variant<MainMenu,
                            PersonalAccountMenu,
@@ -164,10 +169,11 @@ using State = std::variant<MainMenu,
                            StorageMemberDeletion,
                            StorageIngredientsList,
                            StoragesSelection,
-                           SuggestedRecipeList,
+                           SuggestedRecipesList,
                            RecipeView,
                            ShoppingListCreation,
                            ShoppingListView,
+                           ShoppingListStorageSelectionToBuy,
                            CreateCustomRecipe,
                            RecipeCustomView,
                            CustomRecipeIngredientsSearch,

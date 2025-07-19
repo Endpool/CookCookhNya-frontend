@@ -66,4 +66,11 @@ struct IngredientSearchResponse {
                                                const boost::json::value& j);
 };
 
+struct IngredientList {
+    std::vector<Ingredient> page;
+    std::size_t found;
+
+    friend IngredientList tag_invoke(boost::json::value_to_tag<IngredientList>, const boost::json::value& j);
+};
+
 } // namespace cookcookhnya::api::models::ingredient

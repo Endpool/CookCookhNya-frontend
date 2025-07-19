@@ -3,10 +3,13 @@
 #include "backend/id_types.hpp"
 #include "handlers/common.hpp"
 #include "render/main_menu/view.hpp"
+#include "render/shopping_list/storage_selection_to_buy.hpp"
 #include "render/shopping_list/view.hpp"
+#include "states.hpp"
 #include "utils/parsing.hpp"
 
 #include <ranges>
+#include <utility>
 #include <vector>
 
 namespace cookcookhnya::handlers::shopping_list {
@@ -22,6 +25,7 @@ void handleShoppingListViewCQ(
     bot.answerCallbackQuery(cq.id);
     auto userId = cq.from->id;
     auto chatId = cq.message->chat->id;
+    auto storages = api.getStoragesApi().getStoragesList(userId);
 
     if (cq.data == "back") {
         renderMainMenu(true, userId, cq.message->chat->id, bot, api);
@@ -49,8 +53,20 @@ void handleShoppingListViewCQ(
     }
 
     if (cq.data == "buy") {
-        renderMainMenu(true, userId, cq.message->chat->id, bot, api);
-        stateManager.put(MainMenu{});
+        using SelectableItem = ShoppingListView::SelectableItem;
+        auto toBuy = state.items.getValues() | filter(&SelectableItem::selected) |
+                     views::transform(&SelectableItem::ingredientId) | to<std::vector>();
+        if (storages.size() == 1) {
+            api.getShoppingListApi().buy(userId, storages[0].id, toBuy);
+            for (auto& id : toBuy)
+                state.items.remove(id);
+            renderShoppingList(state, userId, chatId, bot);
+        } else {
+            auto newState = ShoppingListStorageSelectionToBuy{
+                .prevState = std::move(state), .selectedIngredients = std::move(toBuy), .storages = storages};
+            renderShoppingListStorageSelectionToBuy(newState, userId, chatId, bot);
+            stateManager.put(std::move(newState));
+        }
         return;
     }
 

@@ -14,6 +14,7 @@
 
 namespace cookcookhnya::handlers::storages_selection {
 
+using api::models::storage::StorageSummary;
 using namespace render::recipes_suggestions;
 using namespace render::select_storages;
 using namespace render::main_menu;
@@ -26,32 +27,27 @@ void handleStoragesSelectionCQ(
 
     if (cq.data == "confirm") {
         renderRecipesSuggestion(state.selectedStorages, 0, userId, chatId, bot, api);
-        stateManager.put(SuggestedRecipeList{
+        stateManager.put(SuggestedRecipesList{
             .pageNo = 0, .selectedStorages = std::move(state.selectedStorages), .fromStorage = false});
         return;
     }
+
     if (cq.data == "cancel") {
         renderMainMenu(true, userId, chatId, bot, api);
         stateManager.put(MainMenu{});
         return;
     }
 
-    auto storageId = utils::parseSafe<api::StorageId>(cq.data.substr(1));
-    if (storageId) {
+    if (auto mSelectedStorageId = utils::parseSafe<api::StorageId>(cq.data.substr(1))) {
         if (cq.data[0] == '+') {
-            auto it = std::ranges::find(state.selectedStorages, *storageId, &api::models::storage::StorageSummary::id);
+            auto it = std::ranges::find(state.selectedStorages, *mSelectedStorageId, &StorageSummary::id);
             state.selectedStorages.erase(it);
-            renderStorageSelection(state.selectedStorages, userId, chatId, bot, api);
-            stateManager.put(StoragesSelection{.selectedStorages = state.selectedStorages});
-            return;
+        } else if (cq.data[0] == '-') {
+            auto storageDetails = api.getStoragesApi().get(userId, *mSelectedStorageId);
+            state.selectedStorages.push_back({.id = *mSelectedStorageId, .name = storageDetails.name});
         }
-        if (cq.data[0] == '-') {
-            auto storageDetails = api.getStoragesApi().get(userId, *storageId);
-            state.selectedStorages.push_back({.id = *storageId, .name = storageDetails.name});
-            renderStorageSelection(state.selectedStorages, userId, chatId, bot, api);
-            stateManager.put(StoragesSelection{.selectedStorages = state.selectedStorages});
-            return;
-        }
+        renderStorageSelection(state, userId, chatId, bot, api);
+        return;
     }
 }
 } // namespace cookcookhnya::handlers::storages_selection

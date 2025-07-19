@@ -8,41 +8,44 @@
 
 #include <cstddef>
 #include <format>
+#include <ranges>
 #include <string>
 #include <utility>
 #include <vector>
 
 namespace cookcookhnya::render::shopping_list {
 
-void renderShoppingListCreation(std::vector<api::models::ingredient::Ingredient> selectedIngredients,
+using namespace api::models::ingredient;
+using namespace std::views;
+
+void renderShoppingListCreation(const std::vector<Ingredient>& selectedIngredients,
                                 UserId userId,
                                 ChatId chatId,
                                 BotRef bot) {
-    std::string text =
-        std::format("{} Выберите продукты, которые хотели бы добавить в список покупок\n\n", utils::utf8str(u8"📝"));
-    const size_t buttonRows = ((selectedIngredients.size() + 1) / 2) + 1;
-    InlineKeyboard keyboard(buttonRows);
+    std::string text = utils::utf8str(u8"📝 Выберите продукты, которые хотели бы добавить в список покупок\n\n");
 
-    for (std::size_t i = 0; i < selectedIngredients.size(); ++i) {
-        if (i % 2 == 0)
-            keyboard[i / 2].reserve(2);
-        const bool isSelected =
-            std::ranges::find(selectedIngredients,
-                              selectedIngredients[i].id,
-                              &api::models::ingredient::Ingredient::id) != selectedIngredients.end();
-        std::string emoji = utils::utf8str(isSelected ? u8"[ + ]" : u8"[ᅠ]");
-        const char* actionPrefix = isSelected ? "+" : "-";
-        const std::string text = std::format("{} {}", emoji, selectedIngredients[i].name);
-        const std::string data = actionPrefix + utils::to_string(selectedIngredients[i].id);
-        keyboard[i / 2].push_back(makeCallbackButton(text, data));
+    const std::size_t buttonRows = ((selectedIngredients.size() + 1) / 2) + 1; // ceil(ingredientsCount / 2), back
+    InlineKeyboardBuilder keyboard{buttonRows};
+
+    for (auto chunk : selectedIngredients | chunk(2)) {
+        keyboard.reserveInRow(2);
+        for (const Ingredient& ing : chunk) {
+            const bool isSelected = true; // idk, what is supposed to be here. I'm just refactoring
+            // std::ranges::contains(selectedIngredients, ing.id, &api::models::ingredient::Ingredient::id);
+            std::string emoji = utils::utf8str(isSelected ? u8"[+]" : u8"[  ᅠ]");
+            const char* actionPrefix = isSelected ? "+" : "-";
+            std::string text = std::format("{} {}", emoji, ing.name);
+            std::string data = actionPrefix + utils::to_string(ing.id);
+            keyboard << makeCallbackButton(text, data);
+        }
+        keyboard << NewRow{};
     }
-    keyboard[buttonRows - 1].push_back(makeCallbackButton(u8"▶️ Подтвердить", "confirm"));
-    if (!selectedIngredients.empty()) {
-        keyboard[buttonRows - 1].push_back(makeCallbackButton(u8"↩️ Назад", "back"));
-    }
-    auto messageId = message::getMessageId(userId);
-    if (messageId) {
-        bot.editMessageText(text, chatId, *messageId, makeKeyboardMarkup(std::move(keyboard)), "MarkdownV2");
-    }
+
+    keyboard << makeCallbackButton(u8"↩️ Назад", "back");
+    if (!selectedIngredients.empty())
+        keyboard << makeCallbackButton(u8"▶️ Подтвердить", "confirm");
+
+    if (auto messageId = message::getMessageId(userId))
+        bot.editMessageText(text, chatId, *messageId, std::move(keyboard), "MarkdownV2");
 }
 } // namespace cookcookhnya::render::shopping_list

@@ -88,6 +88,10 @@ class InlineKeyboardBuilder {
         return *this;
     }
 
+    void reserveInRow(std::size_t capacity) {
+        keyboard.back().reserve(capacity);
+    }
+
     InlineKeyboardBuilder& operator<<(NewRow /*tag*/) {
         keyboard.emplace_back();
         return *this;
@@ -95,6 +99,11 @@ class InlineKeyboardBuilder {
 
     void operator++(int) {
         keyboard.emplace_back();
+    }
+
+    void removeRowIfEmpty() {
+        if (keyboard.back().empty())
+            keyboard.pop_back();
     }
 
     TgBot::InlineKeyboardMarkup::Ptr build() && {

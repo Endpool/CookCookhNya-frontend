@@ -1,6 +1,6 @@
 #include "backend/api/ingredients.hpp"
 
-#include "backend/api/common.hpp"
+#include "backend/api/publicity_filter.hpp"
 #include "backend/id_types.hpp"
 #include "backend/models/ingredient.hpp"
 #include "utils/parsing.hpp"
@@ -23,11 +23,11 @@ Ingredient IngredientsApi::get(UserId user, IngredientId ingredient) const {
 
 // GET /storages/{storageId}/ingredients
 std::vector<Ingredient>
-IngredientsApi::getStorageIngredients(UserId user, StorageId storage, std::size_t size, std::size_t offset) const {
+IngredientsApi::getStorageIngredients(UserId user, StorageId storage, std::size_t count, std::size_t offset) const {
     return jsonGetAuthed<std::vector<Ingredient>>(
         user,
         std::format("/storages/{}/ingredients", storage),
-        {{"size", utils::to_string(size)}, {"offset", utils::to_string(offset)}});
+        {{"size", utils::to_string(count)}, {"offset", utils::to_string(offset)}});
 }
 
 // PUT /storages/{storageId}/ingredients/{ingredientId}
@@ -55,42 +55,38 @@ IngredientSearchForStorageResponse IngredientsApi::searchForStorage(UserId user,
                                                                     StorageId storage,
                                                                     std::string query,
                                                                     std::size_t threshold,
-                                                                    std::size_t size,
+                                                                    std::size_t count,
                                                                     std::size_t offset) const {
     return jsonGetAuthed<IngredientSearchForStorageResponse>(user,
                                                              "/ingredients-for-storage",
                                                              {{"query", std::move(query)},
                                                               {"storage-id", utils::to_string(storage)},
-                                                              {"size", utils::to_string(size)},
+                                                              {"size", utils::to_string(count)},
                                                               {"threshold", utils::to_string(threshold)},
                                                               {"offset", utils::to_string(offset)}});
 }
 
-// GET /public/ingredients
-IngredientSearchResponse
-IngredientsApi::publicSearch(std::string query, std::size_t threshold, std::size_t size, std::size_t offset) const {
-    return jsonGet<IngredientSearchResponse>("/public/ingredients",
-                                             {},
-                                             {{"query", std::move(query)},
-                                              {"threshold", utils::to_string(threshold)},
-                                              {"size", utils::to_string(size)},
-                                              {"offset", utils::to_string(offset)}});
-}
-
 // GET /ingredients
 IngredientSearchResponse IngredientsApi::search(UserId user,
+                                                PublicityFilterType filter,
                                                 std::string query,
                                                 std::size_t threshold,
-                                                std::size_t size,
-                                                std::size_t offset,
-                                                FilterType filter) const {
+                                                std::size_t count,
+                                                std::size_t offset) const {
     return jsonGetAuthed<IngredientSearchResponse>(user,
                                                    "/ingredients",
                                                    {{"query", std::move(query)},
-                                                    {"size", utils::to_string(size)},
+                                                    {"size", utils::to_string(count)},
                                                     {"offset", utils::to_string(offset)},
                                                     {"threshold", utils::to_string(threshold)},
-                                                    {"filter", filterStr(filter)}});
+                                                    {"filter", utils::to_string(filter)}});
+}
+
+// GET /recipes
+IngredientList
+IngredientsApi::getList(UserId user, PublicityFilterType filter, std::size_t count, std::size_t offset) const {
+    auto result = search(user, filter, "", 0, count, offset);
+    return {.page = std::move(result.page), .found = result.found};
 }
 
 // GET /public/ingredients/{ingredientId}
@@ -113,13 +109,13 @@ IngredientSearchForRecipeResponse IngredientsApi::searchForRecipe(UserId user,
                                                                   RecipeId recipe,
                                                                   std::string query,
                                                                   std::size_t threshold,
-                                                                  std::size_t size,
+                                                                  std::size_t count,
                                                                   std::size_t offset) const {
     return jsonGetAuthed<IngredientSearchForRecipeResponse>(user,
                                                             "/ingredients-for-recipe",
                                                             {{"query", std::move(query)},
                                                              {"threshold", utils::to_string(threshold)},
-                                                             {"size", utils::to_string(size)},
+                                                             {"size", utils::to_string(count)},
                                                              {"offset", utils::to_string(offset)},
                                                              {"recipe-id", utils::to_string(recipe)}});
 }

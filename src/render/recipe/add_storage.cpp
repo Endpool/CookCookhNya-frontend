@@ -9,7 +9,6 @@
 #include "utils/utils.hpp"
 #include "view.hpp"
 
-#include <cmath>
 #include <format>
 #include <string>
 #include <utility>
@@ -17,18 +16,19 @@
 
 namespace cookcookhnya::render::recipe {
 
+using namespace api::models::recipe;
+
 textGenInfo storageAdditionView(
-    const std::vector<std::pair<api::models::recipe::IngredientInRecipe, utils::IngredientAvailability>>&
-        inStoragesAvailability,
+    const std::vector<std::pair<IngredientInRecipe, utils::IngredientAvailability>>& inStoragesAvailability,
     const std::vector<api::models::storage::StorageSummary>& selectedStorages,
     api::RecipeId recipeId,
     UserId userId,
     ApiClient api) {
-    auto recipeIngredients = api.getRecipesApi().getIngredientsInRecipe(userId, recipeId);
+    auto recipe = api.getRecipesApi().get(userId, recipeId);
 
     bool isIngredientNotAvailable = false;
     bool isIngredientIsOtherStorages = false;
-    const std::string recipeName = recipeIngredients.name;
+    const std::string recipeName = recipe.name;
     auto text = std::format("{} Выбранные хранилища: ", utils::utf8str(u8"🍱"));
     for (std::size_t i = 0; i != selectedStorages.size(); ++i) {
         text += selectedStorages[i].name;
@@ -53,7 +53,8 @@ textGenInfo storageAdditionView(
             isIngredientNotAvailable = true;
         }
     }
-    text += "\n🌐 Источник: " + recipeIngredients.link;
+    if (recipe.link)
+        text += utils::utf8str(u8"\n🌐 Источник: ") + *recipe.link;
 
     return {.text = text,
             .isIngredientNotAvailable = isIngredientNotAvailable,
@@ -61,8 +62,7 @@ textGenInfo storageAdditionView(
 }
 
 void renderStoragesSuggestion(
-    const std::vector<std::pair<api::models::recipe::IngredientInRecipe, utils::IngredientAvailability>>&
-        inStoragesAvailability,
+    const std::vector<std::pair<IngredientInRecipe, utils::IngredientAvailability>>& inStoragesAvailability,
     const std::vector<api::models::storage::StorageSummary>& selectedStorages,
     const std::vector<api::models::storage::StorageSummary>& addedStorages,
     api::RecipeId recipeId,
