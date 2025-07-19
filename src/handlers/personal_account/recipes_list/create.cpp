@@ -19,8 +19,9 @@ void handleCreateCustomRecipeMsg(
     renderCustomRecipe(false, m.from->id, m.chat->id, state.recipeId, bot, recipeApi);
     stateManager.put(RecipeCustomView{.recipeId = state.recipeId,
                                       .pageNo = 0,
-                                      .ingredients = {}}); // If it went from creation then as user will return
-                                                           // from RecipeView to RecipesList on 1st page
+                                      .ingredients = {},
+                                      .recipeName = m.text}); // If it went from creation then as user will return
+                                                              // from RecipeView to RecipesList on 1st page
 };
 
 void handleCreateCustomRecipeCQ(

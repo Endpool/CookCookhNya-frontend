@@ -40,9 +40,11 @@ void handleCustomRecipesListCQ(
     if (data[0] == 'r') {
         auto recipeId = utils::parseSafe<api::RecipeId>(data.substr(1, data.size()));
         if (recipeId) {
-            auto ingredients = renderCustomRecipe(true, userId, chatId, recipeId.value(), bot, api);
-            stateManager.put(
-                RecipeCustomView{.recipeId = recipeId.value(), .pageNo = state.pageNo, .ingredients = ingredients});
+            auto ingredientsAndName = renderCustomRecipe(true, userId, chatId, recipeId.value(), bot, api);
+            stateManager.put(RecipeCustomView{.recipeId = recipeId.value(),
+                                              .pageNo = state.pageNo,
+                                              .ingredients = ingredientsAndName.ingredients,
+                                              .recipeName = ingredientsAndName.recipeName});
         }
         bot.answerCallbackQuery(cq.id);
         return;

@@ -6,6 +6,6 @@
 namespace cookcookhnya::render::personal_account::publication_history {
 
 void renderPublicationHistory(
-    UserId userId, ChatId chatId, api::RecipeId recipeId, BotRef bot, RecipesApiRef recipesApi);
+    UserId userId, ChatId chatId, api::RecipeId recipeId, std::string recipeName, BotRef bot, RecipesApiRef recipesApi);
 
 } // namespace cookcookhnya::render::personal_account::publication_history

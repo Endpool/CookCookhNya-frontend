@@ -51,7 +51,7 @@ void handleRecipeCustomViewCQ(
     }
 
     if (data == "publish") {
-        renderPublicationHistory(userId, chatId, state.recipeId, bot, api);
+        renderPublicationHistory(userId, chatId, state.recipeId, state.recipeName, bot, api);
         stateManager.put(states::CustomRecipePublicationHistory{.recipeId = state.recipeId, .pageNo = state.pageNo});
         bot.answerCallbackQuery(cq.id);
         return;

@@ -116,6 +116,7 @@ struct RecipeCustomView {
     api::RecipeId recipeId;
     std::size_t pageNo;
     std::vector<api::models::ingredient::Ingredient> ingredients;
+    std::string recipeName;
 };
 
 struct CreateCustomRecipe {

@@ -15,7 +15,7 @@
 
 namespace cookcookhnya::render::personal_account::recipes {
 
-std::vector<api::models::ingredient::Ingredient> renderCustomRecipe(
+IngredientsAndRecipeName renderCustomRecipe(
     bool toBeEdited, UserId userId, ChatId chatId, api::RecipeId recipeId, BotRef bot, RecipesApiRef recipesApi) {
 
     auto recipeDetails = recipesApi.get(userId, recipeId);
@@ -36,12 +36,8 @@ std::vector<api::models::ingredient::Ingredient> renderCustomRecipe(
             .name = it.name,
         });
     }
-    // remove when to string method will be implemented for enum
-    const std::vector<std::string> statusStr = {utils::utf8str(u8"🟡 На рассмотрении"),
-                                                utils::utf8str(u8"🟢 Принят"),
-                                                utils::utf8str(u8"🔴 Отклонен"),
-                                                utils::utf8str(u8"⚪️ Вы еще не отправили запрос")};
-    toPrint += "\n🌐 [Статус проверки](" + statusStr[static_cast<int>(recipeDetails.moderationStatus)] + ")";
+
+    toPrint += "\n🌐 [Статус проверки](" + utils::to_string(recipeDetails.moderationStatus.value()) + ")";
 
     keyboard << makeCallbackButton(u8"🚮 Удалить", "delete") << NewRow{};
     keyboard << makeCallbackButton(u8"✏️ Редактировать", "change") << NewRow{};
@@ -61,6 +57,6 @@ std::vector<api::models::ingredient::Ingredient> renderCustomRecipe(
         auto message = bot.sendMessage(chatId, toPrint, std::move(keyboard));
         message::addMessageId(userId, message->messageId);
     }
-    return ingredients;
+    return {.ingredients = ingredients, .recipeName = recipeDetails.name};
 }
 } // namespace cookcookhnya::render::personal_account::recipes

@@ -52,9 +52,12 @@ RecipeDetails tag_invoke(json::value_to_tag<RecipeDetails> /*tag*/, const json::
         .ingredients = value_to<decltype(RecipeDetails::ingredients)>(j.at("ingredients")),
         .name = value_to<decltype(RecipeDetails::name)>(j.at("name")),
         .link = value_to<decltype(RecipeDetails::link)>(j.at("sourceLink")),
-        .creator = value_to<decltype(RecipeDetails::creator)>(j.at("creator")),
-        // Check swagger for naming
-        //.moderationStatus = value_to<decltype(CustomRecipeDetails::moderationStatus)>(j.at("status")),
+        // Deal with optionals using ternary
+        .creator = j.as_object().if_contains("creator") ? value_to<decltype(RecipeDetails::creator)>(j.at("creator"))
+                                                        : user::UserDetails{.userId = 0, .alias = "", .fullName = ""},
+        .moderationStatus = j.as_object().if_contains("status")
+                                ? value_to<decltype(RecipeDetails::moderationStatus)>(j.at("status"))
+                                : PublicationRequestStatus::Idle,
     };
 }
 
