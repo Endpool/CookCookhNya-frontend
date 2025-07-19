@@ -12,11 +12,8 @@ namespace cookcookhnya::handlers::personal_account::ingredients {
 
 using namespace render::personal_account::ingredients;
 
-void handleCustomIngredientCreationEnterNameMsg(CustomIngredientCreationEnterName& state,
-                                                MessageRef m,
-                                                BotRef& bot,
-                                                SMRef stateManager,
-                                                IngredientsApiRef api) {
+void handleCustomIngredientCreationEnterNameMsg(
+    CustomIngredientCreationEnterName& state, MessageRef m, BotRef& bot, SMRef stateManager, IngredientsApiRef api) {
     auto name = m.text;
     auto userId = m.from->id;
     auto chatId = m.chat->id;

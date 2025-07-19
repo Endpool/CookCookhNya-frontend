@@ -69,17 +69,19 @@ using namespace tg_stater;
 namespace bot_handlers {
 
 // Commands
-constexpr char startCmd[] = "start";                                                             // NOLINT(*c-arrays)
-constexpr char myStoragesCmd[] = "my_storages";                                                  // NOLINT(*c-arrays)
-constexpr char shoppingListCmd[] = "shopping_list";                                              // NOLINT(*c-arrays)
-constexpr char personalAccountCmd[] = "personal_account";                                        // NOLINT(*c-arrays)
-constexpr char wannaEatCmd[] = "wanna_eat";                                                      // NOLINT(*c-arrays)
+constexpr char startCmd[] = "start";                      // NOLINT(*c-arrays)
+constexpr char myStoragesCmd[] = "my_storages";           // NOLINT(*c-arrays)
+constexpr char shoppingListCmd[] = "shopping_list";       // NOLINT(*c-arrays)
+constexpr char personalAccountCmd[] = "personal_account"; // NOLINT(*c-arrays)
+constexpr char wannaEatCmd[] = "wanna_eat";               // NOLINT(*c-arrays)
 using noStateHandler = Handler<Events::AnyMessage{}, handleNoState, NoState{}>;
-using startCmdHandler = Handler<Events::Command{startCmd}, handleStartCmd, AnyState{}>;         // NOLINT(*decay)
-using myStoragesCmdHandler = Handler<Events::Command{myStoragesCmd}, handleMyStoragesCmd, AnyState{}>;  // NOLINT(*decay)
-using shoppingListCmdHandler = Handler<Events::Command{shoppingListCmd}, handleShoppingListCmd, AnyState{}>;  // NOLINT(*decay)
-using personalAccountCmdHandler = Handler<Events::Command{personalAccountCmd}, handlePersonalAccountCmd, AnyState{}>;  // NOLINT(*decay)
-using wannaEatCmdHandler = Handler<Events::Command{wannaEatCmd}, handleWannaEatCmd, AnyState{}>;  // NOLINT(*decay)
+using startCmdHandler = Handler<Events::Command{startCmd}, handleStartCmd, AnyState{}>;                // NOLINT(*decay)
+using myStoragesCmdHandler = Handler<Events::Command{myStoragesCmd}, handleMyStoragesCmd, AnyState{}>; // NOLINT(*decay)
+using shoppingListCmdHandler =
+    Handler<Events::Command{shoppingListCmd}, handleShoppingListCmd, AnyState{}>; // NOLINT(*decay)
+using personalAccountCmdHandler =
+    Handler<Events::Command{personalAccountCmd}, handlePersonalAccountCmd, AnyState{}>;          // NOLINT(*decay)
+using wannaEatCmdHandler = Handler<Events::Command{wannaEatCmd}, handleWannaEatCmd, AnyState{}>; // NOLINT(*decay)
 
 // MainMenu
 using mainMenuCQHandler = Handler<Events::CallbackQuery{}, handleMainMenuCQ>;

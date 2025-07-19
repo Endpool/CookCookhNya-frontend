@@ -131,15 +131,16 @@ void renderRecipesSuggestion(std::vector<StorageSummary>& storages,
 
     auto storagesIds = storages | views::transform(&StorageSummary::id) | to<std::vector>();
     auto recipesList = recipesApi.getSuggestedRecipes(userId, storagesIds, numOfRecipes, pageNo * numOfRecipesOnPage);
-    
-    if(recipesList.found == 0){
+
+    if (recipesList.found == 0) {
         pageInfo = utils::utf8str(u8"😔 К сожалению, нам не удалось найти подходящие рецепты для вас...");
     }
     if (auto messageId = message::getMessageId(userId)) {
         bot.editMessageText(
             pageInfo, chatId, *messageId, makeKeyboardMarkup(constructMarkup(pageNo, numOfRecipesOnPage, recipesList)));
     } else {
-        auto message = bot.sendMessage(chatId, pageInfo, makeKeyboardMarkup(constructMarkup(pageNo, numOfRecipesOnPage, recipesList)));
+        auto message = bot.sendMessage(
+            chatId, pageInfo, makeKeyboardMarkup(constructMarkup(pageNo, numOfRecipesOnPage, recipesList)));
         message::addMessageId(userId, message->messageId);
     }
 }

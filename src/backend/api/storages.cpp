@@ -56,9 +56,9 @@ InvitationId StoragesApi::inviteMember(UserId user, StorageId storage) const {
 
 // POST /invitations/{invitationHash}/activate
 std::optional<StorageSummary> StoragesApi::activate(UserId user, InvitationId invitation) const {
-    try{
+    try {
         return jsonPostAuthed<StorageSummary>(user, std::format("/invitations/{}/activate", invitation));
-    } catch (...){
+    } catch (...) {
         return std::nullopt;
     }
 }

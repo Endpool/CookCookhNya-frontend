@@ -124,7 +124,7 @@ void renderCustomRecipesList(std::size_t pageNo, UserId userId, ChatId chatId, B
     auto recipesList =
         recipesApi.getList(userId, PublicityFilterType::Custom, numOfRecipesOnPage, pageNo * numOfRecipesOnPage);
 
-    if(recipesList.found == 0){
+    if (recipesList.found == 0) {
         pageInfo = utils::utf8str(u8"🔪 Вы находитесь в Мои рецепты. Создавайте и делитесь новыми рецептами.\n\n");
     }
     if (messageId) {
