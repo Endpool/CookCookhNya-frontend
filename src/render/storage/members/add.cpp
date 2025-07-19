@@ -17,7 +17,7 @@ void renderStorageMemberAddition(
     const api::StorageId& storageId, UserId userId, ChatId chatId, BotRef bot, StorageApiRef storageApi) {
     auto storage = storageApi.get(userId, storageId);
 
-    const int buttonRows = 2;
+    const std::size_t buttonRows = 2;
     InlineKeyboard keyboard(buttonRows);
     keyboard[0].push_back(makeCallbackButton(u8"🔗 Создать ссылку", "create_link"));
     keyboard[1].push_back(makeCallbackButton(u8"↩️ Назад", "back"));
@@ -33,7 +33,7 @@ void renderShareLinkMemberAddition(
     const api::StorageId& storageId, UserId userId, ChatId chatId, BotRef bot, StorageApiRef storageApi) {
     auto storage = storageApi.get(userId, storageId);
 
-    const int buttonRows = 2;
+    const std::size_t buttonRows = 2;
     InlineKeyboard keyboard(buttonRows);
 
     auto inviteButton = std::make_shared<TgBot::InlineKeyboardButton>();

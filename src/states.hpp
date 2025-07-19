@@ -3,7 +3,9 @@
 #include "backend/id_types.hpp"
 #include "backend/models/ingredient.hpp"
 #include "backend/models/shopping_list.hpp"
+#include "backend/models/storage.hpp"
 #include "utils/fast_sorted_db.hpp"
+#include "utils/ingredients_availability.hpp"
 
 #include <tg_stater/state_storage/common.hpp>
 #include <tg_stater/state_storage/memory.hpp>
@@ -39,10 +41,10 @@ struct CustomIngredientConfirmation {
 struct CustomIngredientPublish {};
 
 struct StorageList {};
-struct StorageDeletion {};
 struct StorageCreationEnterName {};
-struct StorageView : detail::StorageIdMixin {};
 
+struct StorageView : detail::StorageIdMixin {};
+struct StorageDeletion : detail::StorageIdMixin {};
 struct StorageMemberView : detail::StorageIdMixin {};
 struct StorageMemberAddition : detail::StorageIdMixin {};
 struct StorageMemberDeletion : detail::StorageIdMixin {};
@@ -63,22 +65,28 @@ struct StorageIngredientsList : detail::StorageIdMixin {
 };
 
 struct StoragesSelection {
-    std::vector<api::StorageId> storageIds;
+    std::vector<api::models::storage::StorageSummary> selectedStorages;
 };
-struct SuggestedRecipeList {
+struct SuggestedRecipesList {
     std::size_t pageNo;
-    std::vector<api::StorageId> storageIds;
+    std::vector<api::models::storage::StorageSummary> selectedStorages;
     bool fromStorage;
 };
 struct RecipeView {
-    std::vector<api::StorageId> storageIds;
+    std::vector<api::models::storage::StorageSummary> selectedStorages;
+    std::vector<api::models::storage::StorageSummary> addedStorages;
+    std::vector<std::pair<cookcookhnya::api::models::recipe::IngredientInRecipe, utils::IngredientAvailability>>
+        availability;
     api::RecipeId recipeId;
     bool fromStorage;
     std::size_t pageNo;
 };
 
 struct RecipeStorageAddition {
-    std::vector<api::StorageId> storageIds;
+    std::vector<api::models::storage::StorageSummary> selectedStorages;
+    std::vector<api::models::storage::StorageSummary> addedStorages;
+    std::vector<std::pair<cookcookhnya::api::models::recipe::IngredientInRecipe, utils::IngredientAvailability>>
+        availability;
     api::RecipeId recipeId;
     bool fromStorage;
     std::size_t pageNo;
@@ -116,9 +124,13 @@ struct CreateCustomRecipe {
 };
 
 struct ShoppingListCreation {
-    std::vector<api::StorageId> storageIdsFrom;
-    api::RecipeId recipeIdFrom;
-    std::vector<api::IngredientId> ingredientIdsInList;
+    std::vector<api::models::storage::StorageSummary> selectedStorages;
+    std::vector<api::models::storage::StorageSummary> addedStorages;
+    std::vector<std::pair<cookcookhnya::api::models::recipe::IngredientInRecipe, utils::IngredientAvailability>>
+        availability;
+    api::RecipeId recipeId;
+    std::vector<api::models::ingredient::Ingredient> selectedIngredients;
+    std::vector<api::models::ingredient::Ingredient> allIngredients;
     bool fromStorage;
     std::size_t pageNo;
 };
@@ -136,6 +148,11 @@ struct ShoppingListView { // NOLINT(*member-init) // Strange. Flags only this st
 
     ItemsDb items;
     bool canBuy;
+};
+struct ShoppingListStorageSelectionToBuy {
+    ShoppingListView prevState;
+    std::vector<api::IngredientId> selectedIngredients;
+    std::vector<api::models::storage::StorageSummary> storages;
 };
 
 struct CustomRecipePublicationHistory {
@@ -158,10 +175,11 @@ using State = std::variant<MainMenu,
                            StorageMemberDeletion,
                            StorageIngredientsList,
                            StoragesSelection,
-                           SuggestedRecipeList,
+                           SuggestedRecipesList,
                            RecipeView,
                            ShoppingListCreation,
                            ShoppingListView,
+                           ShoppingListStorageSelectionToBuy,
                            CreateCustomRecipe,
                            RecipeCustomView,
                            CustomRecipeIngredientsSearch,

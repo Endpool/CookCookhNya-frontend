@@ -1,6 +1,6 @@
 #include "view.hpp"
 
-#include "backend/api/common.hpp"
+#include "backend/api/publicity_filter.hpp"
 #include "backend/models/ingredient.hpp"
 #include "message_tracker.hpp"
 #include "render/common.hpp"
@@ -17,7 +17,7 @@ namespace cookcookhnya::render::personal_account::ingredients {
 using namespace tg_types;
 
 void renderCustomIngredientsList(bool toBeEdited, UserId userId, ChatId chatId, BotRef bot, IngredientsApiRef api) {
-    auto ingredientsResp = api.search(userId, "", 0, 100, 0, filterType::Custom); // NOLINT(*magic*)
+    auto ingredientsResp = api.getList(userId, PublicityFilterType::Custom);
     auto ingredients = ingredientsResp.page;
     const std::size_t buttonRows = ingredients.empty() ? 2 : 3;
     InlineKeyboard keyboard(buttonRows);
@@ -41,12 +41,11 @@ void renderCustomIngredientsList(bool toBeEdited, UserId userId, ChatId chatId, 
                             formatedIngredients);
 
     if (toBeEdited) {
-        auto messageId = message::getMessageId(userId);
-        if (messageId) {
-            bot.editMessageText(text, chatId, *messageId, "", "", nullptr, makeKeyboardMarkup(std::move(keyboard)));
-        }
+        if (auto messageId = message::getMessageId(userId))
+            bot.editMessageText(text, chatId, *messageId, makeKeyboardMarkup(std::move(keyboard)));
+
     } else {
-        auto message = bot.sendMessage(chatId, text, nullptr, nullptr, makeKeyboardMarkup(std::move(keyboard)));
+        auto message = bot.sendMessage(chatId, text, makeKeyboardMarkup(std::move(keyboard)));
         message::addMessageId(userId, message->messageId);
     }
 }

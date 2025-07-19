@@ -52,10 +52,19 @@ IngredientSearchForRecipeResponse tag_invoke(json::value_to_tag<IngredientSearch
         .found = value_to<decltype(IngredientSearchForRecipeResponse::found)>(j.at("found")),
     };
 }
+
 IngredientSearchResponse tag_invoke(json::value_to_tag<IngredientSearchResponse> /*tag*/, const json::value& j) {
     return {
         .page = value_to<decltype(IngredientSearchResponse::page)>(j.at("results")),
         .found = value_to<decltype(IngredientSearchResponse::found)>(j.at("found")),
     };
 }
+
+IngredientList tag_invoke(json::value_to_tag<IngredientList> /*tag*/, const json::value& j) {
+    return {
+        .page = value_to<decltype(IngredientList::page)>(j.at("results")),
+        .found = value_to<decltype(IngredientList::found)>(j.at("found")),
+    };
+}
+
 } // namespace cookcookhnya::api::models::ingredient

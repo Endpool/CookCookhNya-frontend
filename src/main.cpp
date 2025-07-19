@@ -65,6 +65,7 @@ int main(int argc, char* argv[]) {
                                                       recipeCustomViewCQHandler,
                                                       customRecipeIngredientsSearchCQHandler,
                                                       customRecipeIngredientsSearchIQHandler,
+                                                      shoppingListStorageSelectionToBuyCQHandler,
                                                       customRecipePublicationHistoryHandler>
             bot{{}, {ApiClient{utils::getenvWithError("API_URL")}}};
 

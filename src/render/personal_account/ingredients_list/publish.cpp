@@ -1,6 +1,6 @@
 #include "publish.hpp"
 
-#include "backend/api/common.hpp"
+#include "backend/api/publicity_filter.hpp"
 #include "message_tracker.hpp"
 #include "render/common.hpp"
 #include "utils/to_string.hpp"
@@ -8,7 +8,6 @@
 
 #include <cstddef>
 #include <format>
-#include <string>
 #include <utility>
 
 namespace cookcookhnya::render::personal_account::ingredients {
@@ -16,7 +15,8 @@ namespace cookcookhnya::render::personal_account::ingredients {
 using namespace tg_types;
 
 void renderCustomIngredientPublication(UserId userId, ChatId chatId, BotRef bot, IngredientsApiRef api) {
-    auto ingredientsResp = api.search(userId, "", 0, 1000, 0, filterType::Custom); // NOLINT (*magic*)
+    auto ingredientsResp = api.search(userId, PublicityFilterType::Custom);
+
     // TODO: make pagination for ingredients
     auto ingredients = ingredientsResp.page;
     const std::size_t buttonRows = ((ingredients.size() + 1) / 2) + 1;

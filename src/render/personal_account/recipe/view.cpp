@@ -37,7 +37,6 @@ std::vector<api::models::ingredient::Ingredient> renderCustomRecipe(
     }
     // remove tommorrow
     const std::vector<std::string> statusStr = {"На рассмотрении", "Принят", "Отклонен", "Ничего"};
-    toPrint += recipeDetails.link;
     toPrint += "\n🌐 [Статус проверки](" + statusStr[static_cast<int>(recipeDetails.moderationStatus)] + ")";
 
     keyboard << makeCallbackButton(u8"🚮 Удалить", "delete") << NewRow{};

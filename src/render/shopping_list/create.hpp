@@ -1,18 +1,16 @@
 #pragma once
 
-#include "backend/api/ingredients.hpp"
-
-#include "backend/id_types.hpp"
+#include "backend/models/ingredient.hpp"
 #include "render/common.hpp"
 
 #include <vector>
 
 namespace cookcookhnya::render::shopping_list {
 
-std::vector<api::IngredientId> renderShoppingListCreation(const std::vector<api::IngredientId>& ingredientIds,
-                                                          UserId userId,
-                                                          ChatId chatId,
-                                                          BotRef bot,
-                                                          api::IngredientsApi ingredientsApi);
+void renderShoppingListCreation(const std::vector<api::models::ingredient::Ingredient>& selectedIngredients,
+                                const std::vector<api::models::ingredient::Ingredient>& allIngredients,
+                                UserId userId,
+                                ChatId chatId,
+                                BotRef bot);
 
 } // namespace cookcookhnya::render::shopping_list

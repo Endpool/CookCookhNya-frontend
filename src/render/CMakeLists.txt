@@ -20,6 +20,7 @@ target_sources(main PRIVATE
     src/render/recipes_suggestions/view.cpp
 
     src/render/shopping_list/create.cpp
+    src/render/shopping_list/storage_selection_to_buy.cpp
     src/render/shopping_list/view.cpp
 
     src/render/storage/ingredients/view.cpp
@@ -29,9 +30,9 @@ target_sources(main PRIVATE
     src/render/storage/members/view.cpp
 
     src/render/storage/view.cpp
+    src/render/storage/delete.cpp
 
     src/render/storages_list/create.cpp
-    src/render/storages_list/delete.cpp
     src/render/storages_list/view.cpp
 
     src/render/storages_selection/view.cpp

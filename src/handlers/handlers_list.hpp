@@ -23,6 +23,7 @@
 #include "recipes_suggestions/view.hpp"
 
 #include "shopping_list/create.hpp"
+#include "shopping_list/storage_selection_to_buy.hpp"
 #include "shopping_list/view.hpp"
 
 #include "storage/ingredients/view.hpp"
@@ -31,10 +32,10 @@
 #include "storage/members/delete.hpp"
 #include "storage/members/view.hpp"
 
+#include "storage/delete.hpp"
 #include "storage/view.hpp"
 
 #include "storages_list/create.hpp"
-#include "storages_list/delete.hpp"
 #include "storages_list/view.hpp"
 
 #include "storages_selection/view.hpp"
@@ -86,10 +87,10 @@ using customIngredientPublishCQHandler = Handler<Events::CallbackQuery{}, handle
 using storageListCQHandler = Handler<Events::CallbackQuery{}, handleStorageListCQ>;
 using storageCreationEnterNameMsgHandler = Handler<Events::Message{}, handleStorageCreationEnterNameMsg>;
 using storageCreationEnterNameCQHandler = Handler<Events::CallbackQuery{}, handleStorageCreationEnterNameCQ>;
-using storageDeletionCQHandler = Handler<Events::CallbackQuery{}, handleStorageDeletionCQ>;
 
 // StorageView
 using storageViewCQHandler = Handler<Events::CallbackQuery{}, handleStorageViewCQ>;
+using storageDeletionCQHandler = Handler<Events::CallbackQuery{}, handleStorageDeletionCQ>;
 
 // StorageViewMembers
 using storageMemberViewCQHandler = Handler<Events::CallbackQuery{}, handleStorageMemberViewCQ>;
@@ -100,8 +101,8 @@ using storageMemberDeletionCQHandler = Handler<Events::CallbackQuery{}, handleSt
 // StoragesSelection
 using storageSelectionCQHandler = Handler<Events::CallbackQuery{}, handleStoragesSelectionCQ>;
 
-// SuggestedRecipeList
-using suggestedRecipeListCQHandler = Handler<Events::CallbackQuery{}, handleSuggestedRecipeListCQ>;
+// SuggestedRecipesList
+using suggestedRecipeListCQHandler = Handler<Events::CallbackQuery{}, handleSuggestedRecipesListCQ>;
 
 // StorageIngredientsList
 using storageIngredientsListCQHandler = Handler<Events::CallbackQuery{}, handleStorageIngredientsListCQ>;
@@ -114,6 +115,8 @@ using shoppingListCreationCQHandler = Handler<Events::CallbackQuery{}, handleSho
 
 // Shopping list
 using shoppingListViewCQHandler = Handler<Events::CallbackQuery{}, handleShoppingListViewCQ>;
+using shoppingListStorageSelectionToBuyCQHandler =
+    Handler<Events::CallbackQuery{}, handleShoppingListStorageSelectionToBuyCQ>;
 
 // Personal account
 using personalAccountMenuCQHandler = Handler<Events::CallbackQuery{}, handlePersonalAccountMenuCQ>;

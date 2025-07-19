@@ -1,11 +1,12 @@
 #pragma once
 
 #include "backend/id_types.hpp"
+#include "backend/models/storage.hpp"
 #include "backend/models/user.hpp"
 
-#include "tg_types.hpp"
 #include <boost/json/conversion.hpp>
 #include <boost/json/value.hpp>
+
 #include <cstddef>
 #include <cstdint>
 #include <optional>
@@ -37,23 +38,17 @@ struct RecipeSummaryWithIngredients {
 struct IngredientInRecipe {
     IngredientId id;
     std::string name;
-    std::vector<StorageId> inStorages;
+    std::vector<storage::StorageSummary> inStorages;
 
     friend IngredientInRecipe tag_invoke(boost::json::value_to_tag<IngredientInRecipe>, const boost::json::value& j);
-};
-
-struct RecipeCreator {
-    tg_types::UserId id;
-    std::string fullName;
-
-    friend RecipeCreator tag_invoke(boost::json::value_to_tag<RecipeCreator>, const boost::json::value& j);
 };
 
 struct RecipeDetails {
     std::vector<IngredientInRecipe> ingredients;
     std::string name;
-    std::string link;
-    user::UserDetails creator;
+    std::optional<std::string> link;
+    std::optional<user::UserDetails> creator;
+    PublicationRequestStatus moderationStatus;
 
     friend RecipeDetails tag_invoke(boost::json::value_to_tag<RecipeDetails>, const boost::json::value& j);
 };
@@ -66,42 +61,27 @@ struct IngredientInCustomRecipe {
                                                const boost::json::value& j);
 };
 
-struct CustomRecipeDetails {
-    std::vector<IngredientInCustomRecipe> ingredients;
-    std::string name;
-    std::string link; // Idk if link field still needed
-    PublicationRequestStatus moderationStatus;
-
-    friend CustomRecipeDetails tag_invoke(boost::json::value_to_tag<CustomRecipeDetails>, const boost::json::value& j);
-};
-
 struct RecipesList {
-    std::vector<RecipeSummaryWithIngredients> page;
+    std::vector<RecipeSummary> page;
     std::size_t found;
 
     friend RecipesList tag_invoke(boost::json::value_to_tag<RecipesList>, const boost::json::value& j);
 };
 
-struct CustomRecipeSummary {
-    RecipeId id;
-    std::string name;
-    std::string link;
-
-    friend CustomRecipeSummary tag_invoke(boost::json::value_to_tag<CustomRecipeSummary>, const boost::json::value& j);
-};
-
-struct CustomRecipesList {
-    std::vector<CustomRecipeSummary> page;
+struct RecipesListWithIngredientsCount {
+    std::vector<RecipeSummaryWithIngredients> page;
     std::size_t found;
 
-    friend CustomRecipesList tag_invoke(boost::json::value_to_tag<CustomRecipesList>, const boost::json::value& j);
+    friend RecipesListWithIngredientsCount tag_invoke(boost::json::value_to_tag<RecipesListWithIngredientsCount>,
+                                                      const boost::json::value& j);
 };
+
 struct RecipeCreateBody {
     std::string name;
     std::vector<IngredientId> ingredients;
     std::string link;
 
-    friend void tag_invoke(boost::json::value_from_tag /*tag*/, boost::json::value& j, const RecipeCreateBody& body);
+    friend void tag_invoke(boost::json::value_from_tag, boost::json::value& j, const RecipeCreateBody& body);
 };
 
 struct RecipeSearchResponse {
@@ -114,7 +94,6 @@ struct RecipeSearchResponse {
 
 struct CustomRecipePublication {
     std::string created;
-    std::string updated;
     std::optional<std::string> reason;
     PublicationRequestStatus status;
 

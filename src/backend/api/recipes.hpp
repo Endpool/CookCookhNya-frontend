@@ -1,9 +1,9 @@
 #pragma once
 
-#include "backend/api/base.hpp"
 #include "backend/id_types.hpp"
 #include "backend/models/recipe.hpp"
-#include "common.hpp"
+#include "base.hpp"
+#include "publicity_filter.hpp"
 
 #include <httplib.h>
 
@@ -19,27 +19,32 @@ class RecipesApi : ApiBase {
     explicit RecipesApi(httplib::Client& api) : ApiBase{api} {}
 
   public:
-    [[nodiscard]] models::recipe::RecipesList getSuggestedRecipesList(UserId user,
-                                                                      const std::vector<StorageId>& storages,
-                                                                      size_t size = 2,
-                                                                      size_t offset = 0) const;
+    [[nodiscard]] models::recipe::RecipesListWithIngredientsCount
+    getSuggestedRecipes(UserId user,
+                        const std::vector<StorageId>& storages,
+                        size_t size = 500, // NOLINT(*magic-number*)
+                        size_t offset = 0) const;
 
-    [[nodiscard]] models::recipe::RecipeSearchResponse getRecipesList(UserId user,
-                                                                      std::string query,
-                                                                      std::size_t threshold,
-                                                                      std::size_t size,
-                                                                      std::size_t offset,
-                                                                      filterType filter) const;
+    [[nodiscard]] models::recipe::RecipeSearchResponse search(UserId user,
+                                                              PublicityFilterType filter = PublicityFilterType::All,
+                                                              std::string query = "",
+                                                              std::size_t threshold = 50, // NOLINT(*magic-number*)
+                                                              std::size_t size = 100,     // NOLINT(*magic-number*)
+                                                              std::size_t offset = 0) const;
 
-    [[nodiscard]] models::recipe::RecipeDetails getIngredientsInRecipe(UserId user, RecipeId recipe) const;
+    [[nodiscard]] models::recipe::RecipesList getList(UserId user,
+                                                      PublicityFilterType filter = PublicityFilterType::All,
+                                                      std::size_t size = 100, // NOLINT(*magic-number*)
+                                                      std::size_t offset = 0) const;
 
-    [[nodiscard]] RecipeId create(UserId user, // NOLINT(*-nodiscard)
-                                  const models::recipe::RecipeCreateBody& body) const;
+    RecipeId create(UserId user, // NOLINT(*-nodiscard)
+                    const models::recipe::RecipeCreateBody& body) const;
     [[nodiscard]] std::vector<models::recipe::CustomRecipePublication> getModerationHistory(UserId user,
                                                                                             RecipeId recipe) const;
-    void delete_(UserId user, RecipeId recipe) const;
 
-    [[nodiscard]] models::recipe::CustomRecipeDetails get(UserId user, RecipeId recipe) const;
+    [[nodiscard]] models::recipe::RecipeDetails get(UserId user, RecipeId recipeId) const;
+
+    void delete_(UserId user, RecipeId recipe) const;
 
     void publishCustom(UserId user, RecipeId recipe) const;
 };
