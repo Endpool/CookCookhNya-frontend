@@ -41,7 +41,7 @@ using states::StorageMemberView;
 using states::StorageIngredientsList;
 
 using states::StoragesSelection;
-using states::SuggestedRecipeList;
+using states::SuggestedRecipesList;
 
 using states::ShoppingListCreation;
 using states::ShoppingListStorageSelectionToBuy;

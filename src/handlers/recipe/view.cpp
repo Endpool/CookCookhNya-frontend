@@ -44,7 +44,7 @@ void handleRecipeViewCQ(RecipeView& state, CallbackQueryRef cq, BotRef bot, SMRe
     }
     if (data == "back_from_recipe_view") {
         renderRecipesSuggestion(state.selectedStorages, state.pageNo, userId, chatId, bot, api);
-        stateManager.put(SuggestedRecipeList{
+        stateManager.put(SuggestedRecipesList{
             .pageNo = state.pageNo, .selectedStorages = state.selectedStorages, .fromStorage = state.fromStorage});
         bot.answerCallbackQuery(cq.id);
         return;

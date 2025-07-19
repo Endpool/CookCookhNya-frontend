@@ -99,8 +99,8 @@ using storageMemberDeletionCQHandler = Handler<Events::CallbackQuery{}, handleSt
 // StoragesSelection
 using storageSelectionCQHandler = Handler<Events::CallbackQuery{}, handleStoragesSelectionCQ>;
 
-// SuggestedRecipeList
-using suggestedRecipeListCQHandler = Handler<Events::CallbackQuery{}, handleSuggestedRecipeListCQ>;
+// SuggestedRecipesList
+using suggestedRecipeListCQHandler = Handler<Events::CallbackQuery{}, handleSuggestedRecipesListCQ>;
 
 // StorageIngredientsList
 using storageIngredientsListCQHandler = Handler<Events::CallbackQuery{}, handleStorageIngredientsListCQ>;

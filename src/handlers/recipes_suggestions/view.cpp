@@ -21,8 +21,8 @@ using namespace render::storage;
 using namespace render::recipe;
 using namespace render::main_menu;
 
-void handleSuggestedRecipeListCQ(
-    SuggestedRecipeList& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
+void handleSuggestedRecipesListCQ(
+    SuggestedRecipesList& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
     bot.answerCallbackQuery(cq.id);
     auto chatId = cq.message->chat->id;
     auto userId = cq.from->id;

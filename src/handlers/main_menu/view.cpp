@@ -38,7 +38,7 @@ void handleMainMenuCQ(MainMenu& /*unused*/, CallbackQueryRef cq, BotRef& bot, SM
         if (storages.size() == 1) {
             std::vector<api::models::storage::StorageSummary> storage = {storages[0]};
             renderRecipesSuggestion(storage, 0, userId, chatId, bot, api);
-            stateManager.put(SuggestedRecipeList{.pageNo = 0, .selectedStorages = storage, .fromStorage = false});
+            stateManager.put(SuggestedRecipesList{.pageNo = 0, .selectedStorages = storage, .fromStorage = false});
             return;
         }
         renderStorageSelection({}, userId, chatId, bot, api);

@@ -67,7 +67,7 @@ struct StorageIngredientsList : detail::StorageIdMixin {
 struct StoragesSelection {
     std::vector<api::models::storage::StorageSummary> selectedStorages;
 };
-struct SuggestedRecipeList {
+struct SuggestedRecipesList {
     std::size_t pageNo;
     std::vector<api::models::storage::StorageSummary> selectedStorages;
     bool fromStorage;
@@ -169,7 +169,7 @@ using State = std::variant<MainMenu,
                            StorageMemberDeletion,
                            StorageIngredientsList,
                            StoragesSelection,
-                           SuggestedRecipeList,
+                           SuggestedRecipesList,
                            RecipeView,
                            ShoppingListCreation,
                            ShoppingListView,
