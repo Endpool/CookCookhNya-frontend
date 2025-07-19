@@ -25,8 +25,9 @@ const size_t numOfIngredientsOnPage = 5;
 const size_t threshhold = 70;
 
 namespace {
-void updateSearch(StorageIngredientsList& state, BotRef bot, tg_types::UserId userId, IngredientsApiRef api) {
-
+void updateSearch(
+    StorageIngredientsList& state, bool isQueryChanged, BotRef bot, tg_types::UserId userId, IngredientsApiRef api) {
+    state.pageNo = isQueryChanged ? 0 : state.pageNo;
     auto response = api.searchForStorage(userId,
                                          state.storageId,
                                          state.inlineQuery,
@@ -59,13 +60,13 @@ void handleStorageIngredientsListCQ(
     }
     if (cq.data == "prev") {
         state.pageNo -= 1;
-        updateSearch(state, bot, userId, api);
+        updateSearch(state, false, bot, userId, api);
         return;
     }
 
     if (cq.data == "next") {
         state.pageNo += 1;
-        updateSearch(state, bot, userId, api);
+        updateSearch(state, false, bot, userId, api);
         return;
     }
 
@@ -94,7 +95,6 @@ void handleStorageIngredientsListIQ(StorageIngredientsList& state,
                                     InlineQueryRef iq,
                                     BotRef bot,
                                     IngredientsApiRef api) {
-    const size_t numOfIngredientsOnPage = 5;
     const auto userId = iq.from->id;
     state.inlineQuery = iq.query;
     if (iq.query.empty()) {
@@ -103,7 +103,7 @@ void handleStorageIngredientsListIQ(StorageIngredientsList& state,
         state.totalFound = 0;
         renderIngredientsListSearch(state, numOfIngredientsOnPage, userId, userId, bot);
     } else {
-        updateSearch(state, bot, userId, api);
+        updateSearch(state, true, bot, userId, api);
     }
     // Cache is not disabled on Windows and Linux desktops. Works on Android and Web
     bot.answerInlineQuery(iq.id, {}, 0);

@@ -133,7 +133,8 @@ void renderRecipeIngredientsSearch(const states::CustomRecipeIngredientsSearch& 
     std::string list = state.recipeIngredients.getValues() |
                        transform([](auto& i) { return std::format("• {}\n", i.name); }) | join | to<std::string>();
 
-    auto text = utils::utf8str(u8"🍗 Ваши ингредиенты:\n\n") + std::move(list);
+    auto text = utils::utf8str(u8"📝Нажмите на кнопку ✏️ Редактировать и начните вводить названия продуктов:\n\n") +
+                std::move(list);
     if (auto messageId = message::getMessageId(userId)) {
         bot.editMessageText(text,
                             chatId,

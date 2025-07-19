@@ -17,14 +17,8 @@ using namespace std::views;
 void renderStorageList(bool toBeEdited, UserId userId, ChatId chatId, BotRef bot, StorageApiRef storageApi) {
     auto storages = storageApi.getStoragesList(userId);
 
-    const std::size_t buttonRows = ((storages.size() + 1) / 2) + 2; // ceiling
+    const std::size_t buttonRows = ((storages.size() + 1) / 2) + 1; // ceil(storagesCount / 2) and back
     InlineKeyboardBuilder keyboard{buttonRows};
-
-    keyboard.reserveInRow(2);
-    keyboard << makeCallbackButton(u8"🆕 Создать", "create");
-    if (!storages.empty())
-        keyboard << makeCallbackButton(u8"🚮 Удалить", "delete");
-    keyboard << NewRow{};
 
     for (auto chunk : storages | chunk(2)) {
         keyboard.reserveInRow(2);
@@ -33,7 +27,7 @@ void renderStorageList(bool toBeEdited, UserId userId, ChatId chatId, BotRef bot
         keyboard << NewRow{};
     }
 
-    keyboard << makeCallbackButton(u8"↩️ Назад", "back");
+    keyboard << makeCallbackButton(u8"🆕 Создать", "create") << makeCallbackButton(u8"↩️ Назад", "back");
 
     auto text = utils::utf8str(u8"🍱 Ваши хранилища");
     if (toBeEdited) {

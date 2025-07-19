@@ -30,31 +30,34 @@ class PatchedBot : TgBot::Api {
 
     TgBot::Message::Ptr sendMessage(tg_types::ChatId chatId, // NOLINT(*nodiscard)
                                     std::string_view text,
-                                    const TgBot::InlineKeyboardMarkup::Ptr& replyMarkup) const;
+                                    const TgBot::InlineKeyboardMarkup::Ptr& replyMarkup,
+                                    std::string_view parseMode = "") const;
 
     // For code compatibility
     TgBot::Message::Ptr sendMessage(tg_types::ChatId chatId, // NOLINT(*nodiscard)
                                     std::string_view text,
                                     std::nullptr_t /*unused*/,
                                     std::nullptr_t /*unused*/,
-                                    const TgBot::InlineKeyboardMarkup::Ptr& replyMarkup) const {
-        return sendMessage(chatId, text, replyMarkup);
+                                    const TgBot::InlineKeyboardMarkup::Ptr& replyMarkup,
+                                    std::string_view parseMode = "") const {
+        return sendMessage(chatId, text, replyMarkup, parseMode);
     }
 
     TgBot::Message::Ptr editMessageText(std::string_view text, // NOLINT(*nodiscard)
                                         tg_types::ChatId chatId,
                                         tg_types::MessageId messageId,
-                                        const TgBot::InlineKeyboardMarkup::Ptr& replyMarkup) const;
+                                        const TgBot::InlineKeyboardMarkup::Ptr& replyMarkup,
+                                        std::string_view parseMode = "") const;
 
     // For code compatibility
     TgBot::Message::Ptr editMessageText(std::string_view text, // NOLINT(*nodiscard)
                                         tg_types::ChatId chatId,
                                         tg_types::MessageId messageId,
                                         const char* /*unused*/,
-                                        const char* /*unused*/,
+                                        const char* parseMode,
                                         std::nullptr_t,
                                         const TgBot::InlineKeyboardMarkup::Ptr& replyMarkup) const {
-        return editMessageText(text, chatId, messageId, replyMarkup);
+        return editMessageText(text, chatId, messageId, replyMarkup, parseMode);
     }
 
     TgBot::Message::Ptr editMessageReplyMarkup(tg_types::ChatId chatId, // NOLINT(*nodiscard*)

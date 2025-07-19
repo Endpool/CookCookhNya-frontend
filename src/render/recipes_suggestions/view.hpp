@@ -1,7 +1,7 @@
 #pragma once
 
-#include "backend/id_types.hpp"
 #include "backend/models/recipe.hpp"
+#include "backend/models/storage.hpp"
 #include "render/common.hpp"
 
 #include <cstddef>
@@ -19,7 +19,7 @@ InlineKeyboard constructNavigationsMarkup(size_t offset,
                                           size_t numOfRecipesOnPage,
                                           api::models::recipe::RecipesList recipesList);
 
-void renderRecipesSuggestion(const std::vector<api::StorageId>& storageIds,
+void renderRecipesSuggestion(std::vector<api::models::storage::StorageSummary>& storages,
                              size_t pageNo,
                              UserId userId,
                              ChatId chatId,

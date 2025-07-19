@@ -7,7 +7,7 @@
 #include "render/recipes_suggestions/view.hpp"
 #include "render/storage/view.hpp"
 #include "render/storages_selection/view.hpp"
-#include "states.hpp"
+#include "utils/ingredients_availability.hpp"
 #include "utils/parsing.hpp"
 
 #include <string>
@@ -31,14 +31,14 @@ void handleSuggestedRecipeListCQ(
 
     if (data == "back") {
         if (state.fromStorage) {
-            renderStorageView(state.storageIds[0], cq.from->id, chatId, bot, api);
-            stateManager.put(StorageView{state.storageIds[0]}); // Go to the only storage
+            renderStorageView(state.selectedStorages[0].id, userId, chatId, bot, api);
+            stateManager.put(StorageView{state.selectedStorages[0].id}); // Go to the only one storage
         } else {
             if (api.getStoragesApi().getStoragesList(userId).size() == 1) {
                 renderMainMenu(true, userId, chatId, bot, api);
                 stateManager.put(MainMenu{});
             } else {
-                auto newState = StoragesSelection{.storageIds = std::move(state.storageIds)};
+                auto newState = StoragesSelection{.selectedStorages = std::move(state.selectedStorages)};
                 renderStorageSelection(newState, userId, chatId, bot, api);
                 stateManager.put(std::move(newState));
             }
@@ -47,27 +47,28 @@ void handleSuggestedRecipeListCQ(
         return;
     }
 
-    if (data[0] == 'r') { // Same naive implementation: if first char is r then it's recipe
-        auto recipeId = utils::parseSafe<api::RecipeId>(
-            data.substr(data.find(' ', 0) + 1, data.size())); // +1 is to move from space and get pure number
-        if (recipeId) {
-            renderRecipeView(state.storageIds, *recipeId, userId, chatId, bot, api);
-            stateManager.put(RecipeView{.storageIds = state.storageIds,
-                                        .recipeId = *recipeId,
-                                        .fromStorage = state.fromStorage,
-                                        .pageNo = state.pageNo});
-        }
+    if (data.starts_with("recipe_")) {
+        auto recipeId = utils::parseSafe<api::RecipeId>(data.substr(sizeof("recipe_") - 1));
+        if (!recipeId)
+            return;
+        auto inStorage = utils::inStoragesAvailability(state.selectedStorages, *recipeId, userId, api);
+        renderRecipeView(inStorage, *recipeId, userId, chatId, bot, api);
+        stateManager.put(RecipeView{.selectedStorages = state.selectedStorages,
+                                    .addedStorages = {},
+                                    .availability = inStorage,
+                                    .recipeId = *recipeId,
+                                    .fromStorage = state.fromStorage,
+                                    .pageNo = state.pageNo});
 
         return;
     }
 
     if (data != "dont_handle") {
-        auto pageNo = utils::parseSafe<int>(data);
+        auto pageNo = utils::parseSafe<std::size_t>(data);
         if (pageNo) {
             state.pageNo = *pageNo;
         }
-        // Message is 100% exists as it was rendered by some another method
-        renderRecipesSuggestion(state.storageIds, *pageNo, userId, chatId, bot, api);
+        renderRecipesSuggestion(state.selectedStorages, *pageNo, userId, chatId, bot, api);
         return;
     }
 }

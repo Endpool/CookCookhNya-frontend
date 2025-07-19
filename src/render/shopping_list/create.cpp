@@ -1,67 +1,51 @@
 #include "create.hpp"
 
-#include "backend/api/ingredients.hpp"
-#include "backend/id_types.hpp"
+#include "backend/models/ingredient.hpp"
 #include "message_tracker.hpp"
 #include "render/common.hpp"
 #include "utils/to_string.hpp"
 #include "utils/utils.hpp"
 
 #include <cstddef>
-#include <cstdint>
 #include <format>
+#include <ranges>
 #include <string>
 #include <utility>
 #include <vector>
 
 namespace cookcookhnya::render::shopping_list {
 
-std::vector<api::IngredientId> renderShoppingListCreation(const std::vector<api::IngredientId>& ingredientIds,
-                                                          UserId userId,
-                                                          ChatId chatId,
-                                                          BotRef bot,
-                                                          api::IngredientsApi ingredientsApi) {
+using namespace api::models::ingredient;
+using namespace std::views;
 
-    std::string text = utils::utf8str(u8"Основываясь на недостающих ингредиентах, составили для вас продукты "
-                                      u8"которые можно добавить в список покупок:\n *В самом низу выберите "
-                                      u8"ингредиенты которые вы хотите исключить из списка покупок\n");
-    std::vector<std::string> ingredientsName;
-    for (const api::IngredientId ingredientId : ingredientIds) {
-        // IMPORTANT!: Probably can be optimized because this data is available at the recipe page
-        // by Maxim Fomin
-        //
-        // (1) I believe that both ways are expensive: or it's run through string of textGen or it's several small
-        // queries to backend. While i understand that working with string is faster then sending such queries i think
-        // that it's better not to overengineering frontend in this aspect.
-        // (2) Besides this also lays on frontend additional work on maintaining ingredientsName vector (in this case
-        // deletion from it).
-        // by Ilia Kliantsevich
-        //
-        // Cry about it. It is frontend who is responsible for maintaining data being rendered and optimise render time.
-        // Even one network query is more expensive than most terrible dynamic allocations.
-        // by Maxim Fomin
-        std::string name = ingredientsApi.get(userId, ingredientId).name;
-        ingredientsName.push_back(name);
-        text += std::format("- {}\n", name);
-    }
-    const std::size_t buttonRows = ((ingredientIds.size() + 1) / 2) + 2; // +1 for back, +1 for approve
+void renderShoppingListCreation(const std::vector<Ingredient>& selectedIngredients,
+                                UserId userId,
+                                ChatId chatId,
+                                BotRef bot) {
+    std::string text = utils::utf8str(u8"📝 Выберите продукты, которые хотели бы добавить в список покупок\n\n");
 
-    InlineKeyboard keyboard(buttonRows);
-    uint64_t i = 0;
-    for (auto ingredientId : ingredientIds) {
-        const std::string& name = ingredientsName[i];
-        if (i % 2 == 0) {
-            keyboard[(i / 2)].reserve(2);
+    const std::size_t buttonRows = ((selectedIngredients.size() + 1) / 2) + 1; // ceil(ingredientsCount / 2), back
+    InlineKeyboardBuilder keyboard{buttonRows};
+
+    for (auto chunk : selectedIngredients | chunk(2)) {
+        keyboard.reserveInRow(2);
+        for (const Ingredient& ing : chunk) {
+            const bool isSelected = true; // idk, what is supposed to be here. I'm just refactoring
+            // std::ranges::contains(selectedIngredients, ing.id, &api::models::ingredient::Ingredient::id);
+            std::string emoji = utils::utf8str(isSelected ? u8"[+]" : u8"[  ᅠ]");
+            const char* actionPrefix = isSelected ? "+" : "-";
+            std::string text = std::format("{} {}", emoji, ing.name);
+            std::string data = actionPrefix + utils::to_string(ing.id);
+            keyboard << makeCallbackButton(text, data);
         }
-        keyboard[i / 2].push_back(
-            makeCallbackButton(name, "i" + utils::to_string(ingredientId))); // i stands for ingredient
-        i++;
+        keyboard << NewRow{};
     }
-    keyboard[((ingredientIds.size() + 1) / 2)].push_back(makeCallbackButton(u8"▶️ Подтвердить", "confirm"));
-    keyboard[(((ingredientIds.size() + 1) / 2) + 1)].push_back(makeCallbackButton(u8"↩️ Назад", "back"));
-    auto messageId = message::getMessageId(userId);
-    if (messageId)
-        bot.editMessageText(text, chatId, *messageId, makeKeyboardMarkup(std::move(keyboard)));
-    return ingredientIds;
+
+    keyboard << makeCallbackButton(u8"↩️ Назад", "back");
+    if (!selectedIngredients.empty())
+        keyboard << makeCallbackButton(u8"▶️ Подтвердить", "confirm");
+
+    if (auto messageId = message::getMessageId(userId))
+        bot.editMessageText(text, chatId, *messageId, std::move(keyboard), "MarkdownV2");
 }
 } // namespace cookcookhnya::render::shopping_list

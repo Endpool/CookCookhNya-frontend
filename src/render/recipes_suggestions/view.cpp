@@ -1,7 +1,7 @@
 #include "view.hpp"
 
-#include "backend/id_types.hpp"
 #include "backend/models/recipe.hpp"
+#include "backend/models/storage.hpp"
 #include "message_tracker.hpp"
 #include "render/common.hpp"
 #include "utils/to_string.hpp"
@@ -19,12 +19,12 @@ namespace cookcookhnya::render::recipes_suggestions {
 
 // offset is variable which defines amout of rows before beggining of paging
 // fullKeyBoardSize is self explanatory
-InlineKeyboard constructNavigationsMarkup(size_t offset,
-                                          size_t fullKeyBoardSize,
-                                          size_t pageNo,
-                                          size_t numOfRecipesOnPage,
+InlineKeyboard constructNavigationsMarkup(std::size_t offset,
+                                          std::size_t fullKeyBoardSize,
+                                          std::size_t pageNo,
+                                          std::size_t numOfRecipesOnPage,
                                           api::models::recipe::RecipesList recipesList) {
-    const size_t amountOfRecipes = recipesList.found;
+    const std::size_t amountOfRecipes = recipesList.found;
     std::size_t maxPageNum = std::ceil(static_cast<double>(amountOfRecipes) / static_cast<double>(numOfRecipesOnPage));
 
     const size_t recipesToShow = std::min(numOfRecipesOnPage, recipesList.page.size());
@@ -42,14 +42,12 @@ InlineKeyboard constructNavigationsMarkup(size_t offset,
     InlineKeyboard keyboard(pageNo == 0 && ifMaxPage ? fullKeyBoardSize - 1 : fullKeyBoardSize);
     int counter = 0;
     for (std::size_t i = 0; i < recipesToShow; i++) {
-        // Print on button in form "1. {Recipe}"
-        keyboard[i + offset].push_back(
-            makeCallbackButton(std::format("{}. {} [{} из {}]",
-                                           1 + counter + ((pageNo)*numOfRecipesOnPage),
-                                           recipesList.page[counter].name,
-                                           recipesList.page[counter].available,
-                                           recipesList.page[counter].total),
-                               std::format("recipe: {}", recipesList.page[counter].id))); // RECIPE ID
+        keyboard[i + offset].push_back(makeCallbackButton(std::format("{}. {} [{} из {}]",
+                                                                      1 + counter + ((pageNo)*numOfRecipesOnPage),
+                                                                      recipesList.page[counter].name,
+                                                                      recipesList.page[counter].available,
+                                                                      recipesList.page[counter].total),
+                                                          std::format("recipe_{}", recipesList.page[counter].id)));
         counter++;
     }
     if (pageNo == 0 && ifMaxPage) {
@@ -119,7 +117,7 @@ constructMarkup(size_t pageNo, size_t numOfRecipesOnPage, api::models::recipe::R
     return keyboard;
 }
 
-void renderRecipesSuggestion(const std::vector<api::StorageId>& storageIds,
+void renderRecipesSuggestion(std::vector<api::models::storage::StorageSummary>& storages,
                              size_t pageNo,
                              UserId userId,
                              ChatId chatId,
@@ -132,8 +130,7 @@ void renderRecipesSuggestion(const std::vector<api::StorageId>& storageIds,
     const size_t numOfRecipesOnPage = 5;
     const size_t numOfRecipes = 500;
 
-    auto recipesList =
-        recipesApi.getSuggestedRecipesList(userId, storageIds, numOfRecipes, pageNo * numOfRecipesOnPage);
+    auto recipesList = recipesApi.getSuggestedRecipesList(userId, storages, numOfRecipes, pageNo * numOfRecipesOnPage);
 
     if (messageId) {
         bot.editMessageText(

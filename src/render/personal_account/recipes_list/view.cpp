@@ -27,15 +27,11 @@ InlineKeyboard constructNavigationsMarkup(size_t offset,
                                           size_t numOfRecipesOnPage,
                                           api::models::recipe::RecipeSearchResponse& recipesList) {
     const size_t amountOfRecipes = recipesList.found;
-    int maxPageNum =
-        static_cast<int>(std::ceil(static_cast<double>(amountOfRecipes) / static_cast<double>(numOfRecipesOnPage)));
+    std::size_t maxPageNum = std::ceil(static_cast<double>(amountOfRecipes) / static_cast<double>(numOfRecipesOnPage));
 
     const size_t recipesToShow = std::min(numOfRecipesOnPage, recipesList.page.size());
 
-    const bool ifMaxPage =
-        static_cast<int>(amountOfRecipes) - static_cast<int>(numOfRecipesOnPage) * (static_cast<int>(pageNo) + 1) <=
-        0; // + 1 because of the 0-indexing, as comparisson is between num of recipes gotten and that
-           // will be actually shown
+    const bool ifMaxPage = amountOfRecipes - numOfRecipesOnPage * (pageNo + 1) <= 0;
 
     if (offset + recipesToShow >= fullKeyBoardSize) {
         InlineKeyboard error(0);
@@ -44,12 +40,12 @@ InlineKeyboard constructNavigationsMarkup(size_t offset,
     const size_t arrowsRow = offset + recipesToShow;
     // Don't reserve for arrows if it's first page is max(im)
     InlineKeyboard keyboard(pageNo == 0 && ifMaxPage ? fullKeyBoardSize - 1 : fullKeyBoardSize);
-    int counter = 0;
+    std::size_t counter = 0;
     for (std::size_t i = 0; i < recipesToShow; i++) {
         // Print on button in form "1. {Recipe}"
         keyboard[i + offset].push_back(makeCallbackButton(
             std::format("{}. {}", 1 + counter + ((pageNo)*numOfRecipesOnPage), recipesList.page[counter].name),
-            std::format("recipe: {}", recipesList.page[counter].id))); // RECIPE ID
+            std::format("r", recipesList.page[counter].id))); // RECIPE ID
         counter++;
     }
     if (pageNo == 0 && ifMaxPage) {
@@ -111,13 +107,13 @@ constructMarkup(size_t pageNo, size_t numOfRecipesOnPage, api::models::recipe::R
     const size_t recipesToShow = std::min(numOfRecipesOnPage, recipesList.page.size());
 
     InlineKeyboard keyboard =
-        recipesList.found == 0
-            ? constructOnlyCreate()
-            : constructNavigationsMarkup(offset, numOfRows + recipesToShow, pageNo, numOfRecipesOnPage, recipesList);
+        recipesList.found == 0 ? constructOnlyCreate()
+                               : constructNavigationsMarkup(
+                                     offset, numOfRows + recipesToShow, (pageNo + 1), numOfRecipesOnPage, recipesList);
     if (keyboard.empty()) { // If error happened
         return keyboard;
     }
-    keyboard[0].push_back(makeCallbackButton(u8"Создать", "custom_recipe_create"));
+    keyboard[0].push_back(makeCallbackButton(u8"🆕 Создать", "custom_recipe_create"));
 
     return keyboard;
 }
@@ -129,7 +125,7 @@ void renderCustomRecipesList(size_t pageNo, UserId userId, ChatId chatId, BotRef
 
     const std::size_t numOfRecipesOnPage = 5;
     auto recipesList =
-        recipesApi.getRecipesList(userId, "", 0, numOfRecipesOnPage, pageNo * numOfRecipesOnPage, filterType::Custom);
+        recipesApi.getRecipesList(userId, "", 0, numOfRecipesOnPage, pageNo * numOfRecipesOnPage, FilterType::Custom);
     if (messageId) {
         bot.editMessageText(
             pageInfo, chatId, *messageId, makeKeyboardMarkup(constructMarkup(pageNo, numOfRecipesOnPage, recipesList)));
