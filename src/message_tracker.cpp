@@ -24,4 +24,8 @@ void addMessageId(UserId userId, MessageId messageId) {
     map.insert_or_assign(userId, messageId);
 }
 
+void deleteMessageId(UserId userId) {
+    map.erase(userId);
+}
+
 } // namespace cookcookhnya::message

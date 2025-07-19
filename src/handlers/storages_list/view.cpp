@@ -28,7 +28,7 @@ void handleStorageListCQ(
         return;
     }
     if (cq.data == "back") {
-        renderMainMenu(true, userId, chatId, bot, api);
+        renderMainMenu(true, std::nullopt, userId, chatId, bot, api);
         stateManager.put(MainMenu{});
         return;
     }

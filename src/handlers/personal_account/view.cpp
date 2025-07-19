@@ -25,7 +25,7 @@ void handlePersonalAccountMenuCQ(
         stateManager.put(CustomRecipesList{.pageNo = 0});
     }
     if (data == "back") {
-        renderMainMenu(true, userId, chatId, bot, api);
+        renderMainMenu(true, std::nullopt, userId, chatId, bot, api);
         stateManager.put(MainMenu{});
         return;
     }

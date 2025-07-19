@@ -33,8 +33,12 @@ int main(int argc, char* argv[]) {
     }
 
     try {
-        Setup<State, Dependencies<ApiClient>>::Stater<startCmdHandler,
-                                                      noStateHandler,
+        Setup<State, Dependencies<ApiClient>>::Stater<noStateHandler,
+                                                      startCmdHandler,
+                                                      myStoragesCmdHandler,
+                                                      shoppingListCmdHandler,
+                                                      wannaEatCmdHandler,
+                                                      personalAccountCmdHandler,
                                                       mainMenuCQHandler,
                                                       customIngredientsListCQHandler,
                                                       customIngredientCreationEnterNameMsgHandler,
