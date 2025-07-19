@@ -161,6 +161,10 @@ struct CustomRecipePublicationHistory {
     std::size_t pageNo;
 };
 
+struct AllPublicationHistory {
+    std::size_t pageNo;
+};
+
 using State = std::variant<MainMenu,
                            PersonalAccountMenu,
                            CustomIngredientsList,
@@ -187,7 +191,8 @@ using State = std::variant<MainMenu,
                            CustomRecipesList,
                            RecipeStorageAddition,
                            RecipeIngredientsSearch,
-                           CustomRecipePublicationHistory>;
+                           CustomRecipePublicationHistory,
+                           AllPublicationHistory>;
 
 using StateManager = tg_stater::StateProxy<tg_stater::MemoryStateStorage<State>>;
 

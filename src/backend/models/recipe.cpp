@@ -58,7 +58,7 @@ RecipeDetails tag_invoke(json::value_to_tag<RecipeDetails> /*tag*/, const json::
                                                         : user::UserDetails{.userId = 0, .alias = "", .fullName = ""},
         .moderationStatus = j.as_object().if_contains("status")
                                 ? value_to<decltype(RecipeDetails::moderationStatus)>(j.at("status"))
-                                : PublicationRequestStatus::Idle,
+                                : PublicationRequestStatus::NO_REQUEST,
     };
 }
 
@@ -76,13 +76,15 @@ RecipeSearchResponse tag_invoke(json::value_to_tag<RecipeSearchResponse> /*tag*/
     };
 }
 
-CustomRecipePublication tag_invoke(json::value_to_tag<CustomRecipePublication> /*tag*/, const json::value& j) {
+PublicationHistoryInstance tag_invoke(json::value_to_tag<PublicationHistoryInstance> /*tag*/, const json::value& j) {
     return {
         .created = utils::parseIsoTime(value_to<std::string>(j.at("created"))),
         .reason = j.as_object().if_contains("reason")
-                      ? value_to<decltype(CustomRecipePublication::reason)>(j.at("reason"))
+                      ? value_to<decltype(PublicationHistoryInstance::reason)>(j.at("reason"))
                       : "",
-        .status = value_to<decltype(CustomRecipePublication::status)>(j.at("status")),
+        .status = j.as_object().if_contains("status")
+                      ? value_to<decltype(PublicationHistoryInstance::status)>(j.at("status"))
+                      : PublicationRequestStatus::NO_REQUEST,
         .updated = j.as_object().if_contains("updated") ? utils::parseIsoTime(value_to<std::string>(j.at("updated")))
                                                         : std::chrono::time_point<std::chrono::system_clock>(),
     };
@@ -91,11 +93,11 @@ CustomRecipePublication tag_invoke(json::value_to_tag<CustomRecipePublication> /
 PublicationRequestStatus tag_invoke(boost::json::value_to_tag<PublicationRequestStatus> /*tag*/,
                                     const boost::json::value& j) {
     if (j.at("status") == "Pending")
-        return PublicationRequestStatus::Pending;
+        return PublicationRequestStatus::PENDING;
     if (j.at("status") == "Accepted")
-        return PublicationRequestStatus::Pending;
+        return PublicationRequestStatus::ACCEPTED;
     if (j.at("status") == "Rejected")
-        return PublicationRequestStatus::Pending;
-    return PublicationRequestStatus::Pending;
+        return PublicationRequestStatus::REJECTED;
+    return PublicationRequestStatus::NO_REQUEST;
 }
 } // namespace cookcookhnya::api::models::recipe

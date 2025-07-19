@@ -72,8 +72,19 @@ void RecipesApi::publishCustom(UserId user, RecipeId recipe) const {
 }
 
 // GET /recipe/{id}/moderation-history
-std::vector<CustomRecipePublication> RecipesApi::getModerationHistory(UserId user, RecipeId recipe) const {
-    return jsonGetAuthed<std::vector<CustomRecipePublication>>(user,
-                                                               std::format("/recipe/{}/moderation-history", recipe));
+std::vector<PublicationHistoryInstance> RecipesApi::getRequestHistory(UserId user, RecipeId recipe) const {
+    return jsonGetAuthed<std::vector<PublicationHistoryInstance>>(user,
+                                                                  std::format("/recipe/{}/moderation-history", recipe));
+}
+
+// GET /publication-requests?size={}&offset={}
+[[nodiscard]] std::vector<models::recipe::PublicationHistoryInstance>
+RecipesApi::getAllRequestHistory(UserId user, std::size_t size, std::size_t offset) const {
+    return jsonGetAuthed<std::vector<PublicationHistoryInstance>>(user,
+                                                                  "/publication-requests",
+                                                                  {
+                                                                      {"size", utils::to_string(size)},
+                                                                      {"offset", utils::to_string(offset)},
+                                                                  });
 }
 } // namespace cookcookhnya::api

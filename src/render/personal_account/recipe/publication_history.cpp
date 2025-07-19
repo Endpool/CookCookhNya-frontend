@@ -12,17 +12,9 @@
 #include <ranges>
 #include <vector>
 
-namespace cookcookhnya::render::personal_account::publication_history {
+namespace cookcookhnya::render::personal_account::recipe::publication_history {
 
 using namespace std::views;
-
-namespace {
-std::string convertTimeToStrFormat(std::chrono::system_clock::time_point time) {
-    const auto* moscow_tz = std::chrono::locate_zone("Europe/Moscow");
-    auto moscow_time = std::chrono::zoned_time(moscow_tz, time);
-    return std::format("{:%d-%m-%Y %H:%M}", moscow_time.get_local_time());
-}
-} // namespace
 
 void renderPublicationHistory(UserId userId,
                               ChatId chatId,
@@ -32,44 +24,44 @@ void renderPublicationHistory(UserId userId,
                               BotRef bot,
                               RecipesApiRef recipesApi) {
     // auto history = recipesApi.getModerationHistory(userId, recipeId);
-    std::vector<api::models::recipe::CustomRecipePublication> history = {
+    std::vector<api::models::recipe::PublicationHistoryInstance> history = {
         {
             .created = std::chrono::system_clock::now(),
-            .status = api::models::recipe::PublicationRequestStatus::Pending,
+            .status = api::models::recipe::PublicationRequestStatus::PENDING,
         },
         {
             .created = std::chrono::system_clock::now(),
             .reason = "ПИДАРАС",
-            .status = api::models::recipe::PublicationRequestStatus::Rejected,
+            .status = api::models::recipe::PublicationRequestStatus::REJECTED,
             .updated = std::chrono::system_clock::now(),
         },
         {
             .created = std::chrono::system_clock::now(),
             .reason = "ПИДАРАС",
-            .status = api::models::recipe::PublicationRequestStatus::Rejected,
+            .status = api::models::recipe::PublicationRequestStatus::REJECTED,
         },
         {
             .created = std::chrono::system_clock::now(),
             .reason = "ПИДАРАС",
-            .status = api::models::recipe::PublicationRequestStatus::Rejected,
+            .status = api::models::recipe::PublicationRequestStatus::REJECTED,
             .updated = std::chrono::system_clock::now(),
         },
         {
             .created = std::chrono::system_clock::now(),
             .reason = "ПИДАРАС",
-            .status = api::models::recipe::PublicationRequestStatus::Rejected,
+            .status = api::models::recipe::PublicationRequestStatus::REJECTED,
             .updated = std::chrono::system_clock::now(),
         },
         {
             .created = std::chrono::system_clock::now(),
             .reason = "ПИДАРАС",
-            .status = api::models::recipe::PublicationRequestStatus::Rejected,
+            .status = api::models::recipe::PublicationRequestStatus::REJECTED,
             .updated = std::chrono::system_clock::now(),
         },
         {
             .created = std::chrono::system_clock::now(),
             .reason = "ПИДАРАС",
-            .status = api::models::recipe::PublicationRequestStatus::Rejected,
+            .status = api::models::recipe::PublicationRequestStatus::REJECTED,
             .updated = std::chrono::system_clock::now(),
         }};
     InlineKeyboardBuilder keyboard{2}; // confirm and back
@@ -79,7 +71,7 @@ void renderPublicationHistory(UserId userId,
 
     toPrint += utils::utf8str(u8"ℹ️ Текущий статус: ") + utils::to_string(history[0].status) +
                (history[0].reason.has_value() ? std::format(" по причине {}", history[0].reason.value()) : " ") +
-               convertTimeToStrFormat(history[0].created) + "\n\n";
+               utils::to_string(history[0].created) + "\n\n";
     // Remove the lastest history instance as it's showed differently
     history.erase(history.begin());
 
@@ -92,7 +84,7 @@ void renderPublicationHistory(UserId userId,
     // interate through it but it would require "for" and i don't know what is it) reverse to print lastest request the
     // last in list
     auto res =
-        history | reverse | transform([&prefixes](const api::models::recipe::CustomRecipePublication& req) {
+        history | reverse | transform([&prefixes](const api::models::recipe::PublicationHistoryInstance& req) {
             //!!!!IMPORTANT See that tie to match prefixes!!!!
             auto fields = std::tie(req.status, req.reason, req.created, req.updated);
             return iota(0U, prefixes.size()) | transform([fields, &prefixes](size_t idx) -> std::string {
@@ -107,10 +99,10 @@ void renderPublicationHistory(UserId userId,
                            return ", ";
                        // Need to work with chrono
                        case 2:
-                           return prefixes[2] + ": " + convertTimeToStrFormat(std::get<2>(fields)) + ", ";
+                           return prefixes[2] + ": " + utils::to_string(std::get<2>(fields)) + ", ";
                        case 3:
                            if (std::get<3>(fields).has_value()) {
-                               return prefixes[3] + ": " + convertTimeToStrFormat(std::get<3>(fields).value()) + "\n\n";
+                               return prefixes[3] + ": " + utils::to_string(std::get<3>(fields).value()) + "\n\n";
                            }
                            return "\n\n";
                        default:
@@ -133,7 +125,7 @@ void renderPublicationHistory(UserId userId,
         bot.editMessageText(toPrint, chatId, *messageId, std::move(keyboard), "Markdown");
     }
 }
-} // namespace cookcookhnya::render::personal_account::publication_history
+} // namespace cookcookhnya::render::personal_account::recipe::publication_history
 
 // Uncomment in case of EMERGENCY (or if you know what for is)
 // use instead of history | reverse | ...

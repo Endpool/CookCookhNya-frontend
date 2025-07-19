@@ -2,7 +2,7 @@
 
 #include "render/personal_account/recipe/view.hpp"
 
-namespace cookcookhnya::handlers::personal_account::publication_history {
+namespace cookcookhnya::handlers::personal_account::recipe::publication_history {
 
 using namespace render::personal_account;
 using namespace render::personal_account::recipes;
@@ -37,4 +37,4 @@ void handleCustomRecipePublicationHistoryCQ(CustomRecipePublicationHistory& stat
     }
 }
 
-} // namespace cookcookhnya::handlers::personal_account::publication_history
+} // namespace cookcookhnya::handlers::personal_account::recipe::publication_history

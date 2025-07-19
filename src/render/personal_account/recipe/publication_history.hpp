@@ -3,7 +3,7 @@
 #include "backend/id_types.hpp"
 #include "render/common.hpp"
 
-namespace cookcookhnya::render::personal_account::publication_history {
+namespace cookcookhnya::render::personal_account::recipe::publication_history {
 
 void renderPublicationHistory(UserId userId,
                               ChatId chatId,
@@ -13,4 +13,4 @@ void renderPublicationHistory(UserId userId,
                               BotRef bot,
                               RecipesApiRef recipesApi);
 
-} // namespace cookcookhnya::render::personal_account::publication_history
+} // namespace cookcookhnya::render::personal_account::recipe::publication_history

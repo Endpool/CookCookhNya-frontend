@@ -21,7 +21,7 @@ std::tuple<std::vector<api::models::ingredient::Ingredient>, std::string> render
 
     auto recipeDetails = recipesApi.get(userId, recipeId);
     // REMOVE WHEN BACKEND IS READY
-    recipeDetails.moderationStatus = api::models::recipe::PublicationRequestStatus::Idle;
+    recipeDetails.moderationStatus = api::models::recipe::PublicationRequestStatus::NO_REQUEST;
 
     std::vector<api::models::ingredient::Ingredient> ingredients;
 
@@ -43,8 +43,8 @@ std::tuple<std::vector<api::models::ingredient::Ingredient>, std::string> render
     keyboard << makeCallbackButton(u8"🚮 Удалить", "delete") << NewRow{};
     keyboard << makeCallbackButton(u8"✏️ Редактировать", "change") << NewRow{};
     // Show publish button only iff the status is not emty AND not rejected
-    if (recipeDetails.moderationStatus == api::models::recipe::PublicationRequestStatus::Idle ||
-        recipeDetails.moderationStatus == api::models::recipe::PublicationRequestStatus::Rejected) {
+    if (recipeDetails.moderationStatus == api::models::recipe::PublicationRequestStatus::NO_REQUEST ||
+        recipeDetails.moderationStatus == api::models::recipe::PublicationRequestStatus::REJECTED) {
         keyboard << makeCallbackButton(u8"📢 Опубликовать", "publish") << NewRow{};
     } else {
         keyboard << makeCallbackButton(u8"📢 История публикаций", "peekpublish") << NewRow{};

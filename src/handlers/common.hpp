@@ -27,6 +27,8 @@ using states::CustomIngredientsList;
 
 using states::StorageList;
 
+using states::AllPublicationHistory;
+
 using states::RecipeStorageAddition;
 using states::RecipeView;
 

@@ -19,4 +19,6 @@ std::string to_string(const Uuid& u);
 
 std::string to_string(cookcookhnya::api::models::recipe::PublicationRequestStatus status);
 
+std::string to_string(std::chrono::system_clock::time_point time);
+
 } // namespace cookcookhnya::utils

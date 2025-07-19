@@ -15,7 +15,7 @@ namespace cookcookhnya::handlers::personal_account::recipes {
 
 using namespace render::personal_account::recipes;
 using namespace render::recipe::ingredients;
-using namespace render::personal_account::publication_history;
+using namespace render::personal_account::recipe::publication_history;
 
 using namespace std::views;
 
