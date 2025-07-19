@@ -13,13 +13,14 @@
 
 namespace cookcookhnya::render::recipe {
 
+using namespace api::models::recipe;
+
 textGenInfo
-recipeView(const std::vector<std::pair<api::models::recipe::IngredientInRecipe, utils::IngredientAvailability>>&
-               inStoragesAvailability,
+recipeView(const std::vector<std::pair<IngredientInRecipe, utils::IngredientAvailability>>& inStoragesAvailability,
            api::RecipeId recipeId,
            UserId userId,
            ApiClient api) {
-    auto recipeIngredients = api.getRecipesApi().getIngredientsInRecipe(userId, recipeId);
+    auto recipeIngredients = api.getRecipesApi().get(userId, recipeId);
 
     bool isIngredientNotAvailable = false;
     bool isIngredientIsOtherStorages = false;
@@ -37,17 +38,15 @@ recipeView(const std::vector<std::pair<api::models::recipe::IngredientInRecipe, 
             isIngredientNotAvailable = true;
         }
     }
-    if (recipeIngredients.link != "") {
-        text += "\n🌐 Источник: " + recipeIngredients.link;
-    }
+    if (recipeIngredients.link)
+        text += utils::utf8str(u8"\n🌐 Источник: ") + *recipeIngredients.link;
 
     return {.text = text,
             .isIngredientNotAvailable = isIngredientNotAvailable,
             .isIngredientIsOtherStorages = isIngredientIsOtherStorages};
 }
 
-void renderRecipeView(std::vector<std::pair<api::models::recipe::IngredientInRecipe, utils::IngredientAvailability>>&
-                          inStoragesAvailability,
+void renderRecipeView(std::vector<std::pair<IngredientInRecipe, utils::IngredientAvailability>>& inStoragesAvailability,
                       api::RecipeId recipeId,
                       UserId userId,
                       ChatId chatId,

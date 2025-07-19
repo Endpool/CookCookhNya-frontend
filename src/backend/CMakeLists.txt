@@ -1,6 +1,8 @@
 target_sources(main PRIVATE
     src/backend/api/base.cpp
 
+    src/backend/api/publicity_filter.cpp
+
     src/backend/api/storages.cpp
     src/backend/api/ingredients.cpp
     src/backend/api/users.cpp

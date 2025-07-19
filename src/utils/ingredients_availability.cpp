@@ -17,7 +17,7 @@ inStoragesAvailability(std::vector<models::storage::StorageSummary>& selectedSto
                        UserId userId,
                        const api::ApiClient& api) {
     auto allStorages = api.getStoragesApi().getStoragesList(userId);
-    auto recipe = api.getRecipesApi().getIngredientsInRecipe(userId, recipeId);
+    auto recipe = api.getRecipesApi().get(userId, recipeId);
 
     auto selectedStoragesSet = selectedStorages | std::views::transform(&api::models::storage::StorageSummary::id) |
                                std::ranges::to<std::unordered_set>();
