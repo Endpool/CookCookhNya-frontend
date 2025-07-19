@@ -5,12 +5,12 @@ namespace cookcookhnya::api::models::status {
 PublicationRequestStatus tag_invoke(boost::json::value_to_tag<PublicationRequestStatus> /*tag*/,
                                     const boost::json::value& j) {
     if (j.at("status") == "Pending")
-        return PublicationRequestStatus::Pending;
+        return PublicationRequestStatus::PENDING;
     if (j.at("status") == "Accepted")
-        return PublicationRequestStatus::Accepted;
+        return PublicationRequestStatus::ACCEPTED;
     if (j.at("status") == "Rejected")
-        return PublicationRequestStatus::Rejected;
-    return PublicationRequestStatus::Idle;
+        return PublicationRequestStatus::REJECTED;
+    return PublicationRequestStatus::NO_REQUEST;
 }
 
 } // namespace cookcookhnya::api::models::status
