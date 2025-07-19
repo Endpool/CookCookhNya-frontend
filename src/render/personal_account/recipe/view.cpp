@@ -21,6 +21,7 @@ std::vector<api::models::ingredient::Ingredient> renderCustomRecipe(
     auto recipeDetails = recipesApi.get(userId, recipeId);
     // REMOVE WHEN BACKEND IS READY
     recipeDetails.moderationStatus = api::models::recipe::PublicationRequestStatus::Idle;
+
     std::vector<api::models::ingredient::Ingredient> ingredients;
 
     const std::size_t rows = 4; // 1 for publish, 1 for delete, 1 for back, 1 for change
@@ -35,8 +36,11 @@ std::vector<api::models::ingredient::Ingredient> renderCustomRecipe(
             .name = it.name,
         });
     }
-    // remove tommorrow
-    const std::vector<std::string> statusStr = {"На рассмотрении", "Принят", "Отклонен", "Ничего"};
+    // remove when to string method will be implemented for enum
+    const std::vector<std::string> statusStr = {utils::utf8str(u8"🟡 На рассмотрении"),
+                                                utils::utf8str(u8"🟢 Принят"),
+                                                utils::utf8str(u8"🔴 Отклонен"),
+                                                utils::utf8str(u8"⚪️ Вы еще не отправили запрос")};
     toPrint += "\n🌐 [Статус проверки](" + statusStr[static_cast<int>(recipeDetails.moderationStatus)] + ")";
 
     keyboard << makeCallbackButton(u8"🚮 Удалить", "delete") << NewRow{};

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "backend/models/recipe.hpp"
 #include "uuid.hpp"
 
 #include <string>
@@ -15,5 +16,7 @@ std::string to_string(const T& t) {
 }
 
 std::string to_string(const Uuid& u);
+
+std::string to_string(cookcookhnya::api::models::recipe::PublicationRequestStatus status);
 
 } // namespace cookcookhnya::utils
