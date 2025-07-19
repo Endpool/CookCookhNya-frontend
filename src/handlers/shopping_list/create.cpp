@@ -57,7 +57,7 @@ void handleShoppingListCreationCQ(
             auto ingredient = api.getIngredientsApi().get(userId, *newIngredientId);
             state.selectedIngredients.push_back(ingredient);
         }
-        renderShoppingListCreation(state.selectedIngredients, userId, chatId, bot);
+        renderShoppingListCreation(state.selectedIngredients, state.allIngredients, userId, chatId, bot);
     }
     if (data[0] == '-') {
         auto newIngredientIdStr = data.substr(1, data.size());
@@ -66,7 +66,7 @@ void handleShoppingListCreationCQ(
             state.selectedIngredients.erase(std::ranges::find(
                 state.selectedIngredients, *newIngredientId, &api::models::ingredient::Ingredient::id));
         }
-        renderShoppingListCreation(state.selectedIngredients, userId, chatId, bot);
+        renderShoppingListCreation(state.selectedIngredients, state.allIngredients, userId, chatId, bot);
     }
 }
 } // namespace cookcookhnya::handlers::shopping_list

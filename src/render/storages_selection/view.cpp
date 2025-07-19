@@ -34,7 +34,7 @@ void renderStorageSelection(
         keyboard.reserveInRow(2);
         for (auto& storage : chunk) {
             const bool isSelected = std::ranges::contains(selectedStorages, storage.id, &StorageSummary::id);
-            std::string emoji = utils::utf8str(isSelected ? u8"[+]" : u8"[  ᅠ]");
+            std::string emoji = utils::utf8str(isSelected ? u8"[ + ]" : u8"[ᅠ]");
             const char* actionPrefix = isSelected ? "+" : "-";
             std::string text = std::format("{} {}", emoji, storage.name);
             std::string data = actionPrefix + utils::to_string(storage.id);

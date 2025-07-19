@@ -130,6 +130,7 @@ struct ShoppingListCreation {
         availability;
     api::RecipeId recipeId;
     std::vector<api::models::ingredient::Ingredient> selectedIngredients;
+    std::vector<api::models::ingredient::Ingredient> allIngredients;
     bool fromStorage;
     std::size_t pageNo;
 };

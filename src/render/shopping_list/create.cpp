@@ -19,6 +19,7 @@ using namespace api::models::ingredient;
 using namespace std::views;
 
 void renderShoppingListCreation(const std::vector<Ingredient>& selectedIngredients,
+                                const std::vector<Ingredient>& allIngredients,
                                 UserId userId,
                                 ChatId chatId,
                                 BotRef bot) {
@@ -27,12 +28,11 @@ void renderShoppingListCreation(const std::vector<Ingredient>& selectedIngredien
     const std::size_t buttonRows = ((selectedIngredients.size() + 1) / 2) + 1; // ceil(ingredientsCount / 2), back
     InlineKeyboardBuilder keyboard{buttonRows};
 
-    for (auto chunk : selectedIngredients | chunk(2)) {
+    for (auto chunk : allIngredients | chunk(2)) {
         keyboard.reserveInRow(2);
         for (const Ingredient& ing : chunk) {
-            const bool isSelected = true; // idk, what is supposed to be here. I'm just refactoring
-            // std::ranges::contains(selectedIngredients, ing.id, &api::models::ingredient::Ingredient::id);
-            std::string emoji = utils::utf8str(isSelected ? u8"[+]" : u8"[  ᅠ]");
+            const bool isSelected = std::ranges::contains(selectedIngredients, ing.id, &api::models::ingredient::Ingredient::id);
+            std::string emoji = utils::utf8str(isSelected ? u8"[ + ]" : u8"[ᅠ]");
             const char* actionPrefix = isSelected ? "+" : "-";
             std::string text = std::format("{} {}", emoji, ing.name);
             std::string data = actionPrefix + utils::to_string(ing.id);
