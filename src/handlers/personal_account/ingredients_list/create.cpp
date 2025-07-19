@@ -39,7 +39,7 @@ void handleCustomIngredientCreationEnterNameCQ(CustomIngredientCreationEnterName
     auto userId = cq.from->id;
     auto chatId = cq.message->chat->id;
     if (cq.data == "back") {
-        renderCustomIngredientsList(true, userId, chatId, bot, api);
+        renderCustomIngredientsList(true, 0, userId, chatId, bot, api);
         stateManager.put(CustomIngredientsList{});
     }
 }
@@ -52,11 +52,11 @@ void handleCustomIngredientConfirmationCQ(
     auto name = state.name;
     if (cq.data == "confirm") {
         api.createCustom(userId, api::models::ingredient::IngredientCreateBody{name});
-        renderCustomIngredientsList(true, userId, chatId, bot, api);
+        renderCustomIngredientsList(true, 0, userId, chatId, bot, api);
         stateManager.put(CustomIngredientsList{});
     }
     if (cq.data == "back") {
-        renderCustomIngredientsList(true, userId, chatId, bot, api);
+        renderCustomIngredientsList(true, 0, userId, chatId, bot, api);
         stateManager.put(CustomIngredientsList{});
     }
 }

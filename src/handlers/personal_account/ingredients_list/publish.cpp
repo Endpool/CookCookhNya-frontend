@@ -20,7 +20,7 @@ void handleCustomIngredientPublishCQ(
     if (ingredientId) {
         api.publishCustom(userId, *ingredientId);
     }
-    renderCustomIngredientsList(true, userId, chatId, bot, api);
+    renderCustomIngredientsList(true, 0, userId, chatId, bot, api);
     stateManager.put(CustomIngredientsList{});
 }
 } // namespace cookcookhnya::handlers::personal_account::ingredients

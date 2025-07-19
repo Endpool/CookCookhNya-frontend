@@ -3,9 +3,12 @@
 #include "handlers/common.hpp"
 #include "render/personal_account/ingredients_list/create.hpp"
 #include "render/personal_account/ingredients_list/publish.hpp"
+#include "render/personal_account/ingredients_list/view.hpp"
 #include "render/personal_account/view.hpp"
 
 #include "states.hpp"
+#include "utils/parsing.hpp"
+#include <cstddef>
 
 namespace cookcookhnya::handlers::personal_account::ingredients {
 
@@ -30,6 +33,12 @@ void handleCustomIngredientsListCQ(
     if (cq.data == "back") {
         renderPersonalAccountMenu(userId, chatId, bot);
         stateManager.put(PersonalAccountMenu{});
+        return;
+    }
+    auto pageNo = utils::parseSafe<std::size_t>(cq.data);
+    if (pageNo) {
+        renderCustomIngredientsList(true, *pageNo, userId, chatId, bot, api);
+        stateManager.put(CustomIngredientCreationEnterName{});
         return;
     }
 }
