@@ -16,8 +16,7 @@ namespace cookcookhnya::api::models::ingredient {
 struct Ingredient {
     IngredientId id;
     std::string name;
-    std::optional<status::PublicationRequestStatus> status = status::PublicationRequestStatus::Idle;
-    // TODO: change to nullopt when back is ready
+    std::optional<status::PublicationRequestStatus> status = std::nullopt;
 
     friend Ingredient tag_invoke(boost::json::value_to_tag<Ingredient>, const boost::json::value& j);
 };
