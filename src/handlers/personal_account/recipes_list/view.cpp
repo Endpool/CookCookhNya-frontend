@@ -49,11 +49,11 @@ void handleCustomRecipesListCQ(
     }
 
     if (data != "dont_handle") {
-        auto pageNo = utils::parseSafe<int>(data);
-        if (pageNo) {
-            state.pageNo = *pageNo;
-        }
-        renderCustomRecipesList(*pageNo, userId, chatId, bot, api);
+        if (data == "page_left")
+            state.pageNo--;
+        else if (data == "page_right")
+            state.pageNo++;
+        renderCustomRecipesList(state.pageNo, userId, chatId, bot, api);
         return;
     }
 }

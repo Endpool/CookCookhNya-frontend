@@ -64,10 +64,10 @@ void handleSuggestedRecipesListCQ(
     }
 
     if (data != "dont_handle") {
-        auto pageNo = utils::parseSafe<std::size_t>(data);
-        if (pageNo)
-            state.pageNo = *pageNo;
-
+        if (data == "page_left")
+            state.pageNo--;
+        else if (data == "page_right")
+            state.pageNo++;
         renderRecipesSuggestion(state.selectedStorages, state.pageNo, userId, chatId, bot, api);
         return;
     }

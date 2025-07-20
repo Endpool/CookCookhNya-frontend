@@ -7,9 +7,11 @@
 #include "utils/ingredients_availability.hpp"
 #include "utils/utils.hpp"
 
+#include <cstddef>
 #include <format>
 #include <string>
 #include <utility>
+#include <vector>
 
 namespace cookcookhnya::render::recipe {
 
@@ -24,7 +26,7 @@ recipeView(const std::vector<std::pair<IngredientInRecipe, utils::IngredientAvai
 
     bool isIngredientNotAvailable = false;
     bool isIngredientIsOtherStorages = false;
-    const std::string recipeName = recipeIngredients.name;
+    std::string& recipeName = recipeIngredients.name;
     auto text = std::format("{} Ингредиенты для *{}* \n\n", utils::utf8str(u8"📖"), recipeName);
 
     for (const auto& infoPair : inStoragesAvailability) {
@@ -53,7 +55,7 @@ void renderRecipeView(std::vector<std::pair<IngredientInRecipe, utils::Ingredien
                       BotRef bot,
                       ApiClient api) {
     auto textGen = recipeView(inStoragesAvailability, recipeId, userId, api);
-    const size_t buttonRows = textGen.isIngredientNotAvailable ? 3 : 2;
+    const std::size_t buttonRows = textGen.isIngredientNotAvailable ? 3 : 2;
     InlineKeyboard keyboard(buttonRows);
 
     keyboard[0].push_back(makeCallbackButton(u8"🧑‍🍳 Готовить", "start_cooking"));

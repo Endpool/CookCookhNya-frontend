@@ -2,6 +2,7 @@
 
 #include "backend/id_types.hpp"
 #include "backend/models/ingredient.hpp"
+#include "backend/models/recipe.hpp"
 #include "backend/models/shopping_list.hpp"
 #include "backend/models/storage.hpp"
 #include "utils/fast_sorted_db.hpp"

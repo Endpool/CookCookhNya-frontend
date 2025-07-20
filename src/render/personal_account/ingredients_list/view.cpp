@@ -7,6 +7,7 @@
 #include "utils/to_string.hpp"
 #include "utils/utils.hpp"
 
+#include <cmath>
 #include <cstddef>
 #include <format>
 #include <string>

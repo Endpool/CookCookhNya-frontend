@@ -1,11 +1,13 @@
 #pragma once
 
 #include "backend/id_types.hpp"
+#include "backend/models/recipe.hpp"
 #include "backend/models/storage.hpp"
 #include "render/common.hpp"
 #include "render/recipe/view.hpp"
 #include "utils/ingredients_availability.hpp"
 
+#include <utility>
 #include <vector>
 
 namespace cookcookhnya::render::recipe {

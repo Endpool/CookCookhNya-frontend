@@ -56,6 +56,7 @@ auto constructPagination(
             NOTHING = 0b00U,
             LEFT = 0b01U,
             RIGHT = 0b10U,
+            BOTH = 0b11U,
         };
 
         const char8_t* const emptyText = u8"ㅤ"; // not empty! invisible symbol

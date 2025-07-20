@@ -6,9 +6,12 @@
 #include "message_tracker.hpp"
 #include "render/common.hpp"
 #include "utils/ingredients_availability.hpp"
+#include "utils/to_string.hpp"
 #include "utils/utils.hpp"
 #include "view.hpp"
 
+#include <algorithm>
+#include <cstddef>
 #include <format>
 #include <string>
 #include <utility>
