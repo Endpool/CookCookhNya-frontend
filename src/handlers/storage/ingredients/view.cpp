@@ -84,8 +84,7 @@ void handleStorageIngredientsListCQ(
     if (cq.data[0] == 'i') {
         auto ingredientName = cq.data.substr(1);
         renderCustomIngredientConfirmation(true, ingredientName, userId, chatId, bot, api);
-        stateManager.put(
-            CustomIngredientConfirmation{ingredientName, std::nullopt, std::nullopt, std::nullopt, state.storageId});
+        stateManager.put(CustomIngredientConfirmation{ingredientName, std::nullopt, std::nullopt, state.storageId});
     }
 
     if (cq.data != "dont_handle") {

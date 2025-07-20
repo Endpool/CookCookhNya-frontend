@@ -33,7 +33,6 @@ void handleCustomIngredientCreationEnterNameMsg(CustomIngredientCreationEnterNam
     }
     renderCustomIngredientConfirmation(false, name, userId, chatId, bot, api);
     stateManager.put(CustomIngredientConfirmation{name});
-
 }
 
 void handleCustomIngredientCreationEnterNameCQ(CustomIngredientCreationEnterName& state,
@@ -58,7 +57,7 @@ void handleCustomIngredientConfirmationCQ(
     auto name = state.name;
     if (cq.data == "confirm") {
         api.getIngredientsApi().createCustom(userId, api::models::ingredient::IngredientCreateBody{name});
-        renderCustomIngredientsList(true, userId, chatId, bot, api);
+        renderCustomIngredientsList(true, state.pageNo, userId, chatId, bot, api);
         stateManager.put(CustomIngredientsList{});
     }
     if (cq.data == "back") {
@@ -80,10 +79,9 @@ void handleCustomIngredientConfirmationCQ(
             return;
         }
 
-        renderCustomIngredientsList(true, userId, chatId, bot, api);
+        renderCustomIngredientsList(true, state.pageNo, userId, chatId, bot, api);
         stateManager.put(CustomIngredientsList{});
         return;
-
     }
 }
 

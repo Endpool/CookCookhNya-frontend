@@ -29,9 +29,9 @@ std::pair<std::string, std::vector<TgBot::InlineKeyboardButton::Ptr>> constructN
     std::string text;
 
     text = utils::utf8str(u8"📋 Вы находитесь в Мои ингредиенты\\. \nВами созданные ингредиенты:\n\n");
-    for (const auto& ing : ingredientsList.page) {
+    for (auto& ing : ingredientsList.page) {
         if (ing.status) {
-            text += std::format("• {}, Статус: {}\n", utils::to_string(*ing.status), ing.name);
+            text += std::format("• {}, Статус: {}\n", utils::to_string(ing.status.value()), ing.name);
         }
     }
 

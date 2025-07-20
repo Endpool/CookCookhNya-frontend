@@ -1,6 +1,6 @@
 #pragma once
 
-#include "backend/models/recipe.hpp"
+#include "publication_request_status.hpp"
 
 #include <boost/json/conversion.hpp>
 #include <boost/json/value.hpp>
@@ -14,7 +14,7 @@ struct PublicationHistoryInstance {
     std::string name;
     std::chrono::system_clock::time_point created;
     std::optional<std::string> reason;
-    api::models::recipe::PublicationRequestStatus status{};
+    api::models::status::PublicationRequestStatus status{};
     std::optional<std::chrono::system_clock::time_point> updated;
 
     friend PublicationHistoryInstance tag_invoke(boost::json::value_to_tag<PublicationHistoryInstance>,

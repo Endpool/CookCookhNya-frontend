@@ -1,5 +1,5 @@
 #include "request_history.hpp"
-#include "backend/models/recipe.hpp"
+#include "publication_request_status.hpp"
 #include "utils/serialization.hpp"
 #include <boost/json/conversion.hpp>
 #include <boost/json/value.hpp>
@@ -16,8 +16,8 @@ PublicationHistoryInstance tag_invoke(json::value_to_tag<PublicationHistoryInsta
         .reason = j.as_object().if_contains("reason")
                       ? value_to<decltype(PublicationHistoryInstance::reason)>(j.at("reason"))
                       : "",
-        .status = j.as_object().if_contains("status") ? value_to<recipe::PublicationRequestStatus>(j.at("status"))
-                                                      : recipe::PublicationRequestStatus::NO_REQUEST,
+        .status = j.as_object().if_contains("status") ? value_to<status::PublicationRequestStatus>(j.at("status"))
+                                                      : status::PublicationRequestStatus::NO_REQUEST,
         .updated = j.as_object().if_contains("updated") ? utils::parseIsoTime(value_to<std::string>(j.at("updated")))
                                                         : std::chrono::time_point<std::chrono::system_clock>(),
     };

@@ -70,7 +70,7 @@ void handleCustomRecipeIngredientsSearchCQ(
         auto ingredientsAndName = renderCustomRecipe(true, userId, chatId, state.recipeId, bot, api);
         auto ingredients = state.recipeIngredients.getValues() | as_rvalue | to<std::vector>();
         stateManager.put(RecipeCustomView{.recipeId = state.recipeId,
-                                          .pageNo = state.pageNo,
+                                          .pageNo = 0,
                                           .ingredients = std::move(ingredients),
                                           .recipeName = std::get<1>(ingredientsAndName)});
         return;
@@ -92,8 +92,7 @@ void handleCustomRecipeIngredientsSearchCQ(
         auto ingredientName = cq.data.substr(1);
         renderCustomIngredientConfirmation(true, ingredientName, userId, chatId, bot, api);
         auto ingredients = state.recipeIngredients.getValues() | as_rvalue | to<std::vector>();
-        stateManager.put(
-            CustomIngredientConfirmation{ingredientName, state.recipeId, state.pageNo, ingredients, std::nullopt});
+        stateManager.put(CustomIngredientConfirmation{ingredientName, state.recipeId, ingredients, std::nullopt});
     }
 
     if (cq.data != "dont_handle") {

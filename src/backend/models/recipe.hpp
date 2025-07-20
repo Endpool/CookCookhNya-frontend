@@ -3,20 +3,18 @@
 #include "backend/id_types.hpp"
 #include "backend/models/storage.hpp"
 #include "backend/models/user.hpp"
+#include "publication_request_status.hpp"
 
 #include <boost/json/conversion.hpp>
 #include <boost/json/value.hpp>
 
 #include <cstddef>
-#include <cstdint>
 #include <optional>
 #include <string>
 #include <vector>
 
 namespace cookcookhnya::api::models::recipe {
-
-enum class PublicationRequestStatus : std::uint8_t { PENDING, ACCEPTED, REJECTED, NO_REQUEST };
-PublicationRequestStatus tag_invoke(boost::json::value_to_tag<PublicationRequestStatus>, const boost::json::value& j);
+using namespace status;
 
 struct RecipeSummary {
     RecipeId id;
