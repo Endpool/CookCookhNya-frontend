@@ -30,9 +30,10 @@ void handleCustomRecipesListCQ(
         bot.answerCallbackQuery(cq.id);
         return;
     }
+
     if (data == "custom_recipe_create") {
         renderRecipeCreation(chatId, userId, bot);
-        stateManager.put(CreateCustomRecipe{.recipeId = {}, .pageNo = state.pageNo});
+        stateManager.put(CreateCustomRecipe{.pageNo = state.pageNo});
         bot.answerCallbackQuery(cq.id);
         return;
     }

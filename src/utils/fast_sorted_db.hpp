@@ -80,11 +80,11 @@ class FastSortedDb {
     }
 
     [[nodiscard]] auto getValues() {
-        return items | std::views::transform([](auto& p) -> T& { return p.second; });
+        return items | std::views::values;
     }
 
     [[nodiscard]] auto getValues() const {
-        return items | std::views::transform([](const auto& p) -> const T& { return p.second; });
+        return items | std::views::values;
     }
 };
 

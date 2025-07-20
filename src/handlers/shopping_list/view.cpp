@@ -2,7 +2,9 @@
 
 #include "backend/id_types.hpp"
 #include "handlers/common.hpp"
+#include "handlers/shopping_list/search.hpp"
 #include "render/main_menu/view.hpp"
+#include "render/shopping_list/search.hpp"
 #include "render/shopping_list/storage_selection_to_buy.hpp"
 #include "render/shopping_list/view.hpp"
 #include "states.hpp"
@@ -34,8 +36,9 @@ void handleShoppingListViewCQ(
     }
 
     if (cq.data == "search") {
-        renderMainMenu(true, userId, cq.message->chat->id, bot, api);
-        stateManager.put(MainMenu{});
+        ShoppingListIngredientSearch newState{.prevState = std::move(state), .query = "", .pagination = {}, .page = {}};
+        renderShoppingListIngredientSearch(newState, searchPageSize, userId, chatId, bot);
+        stateManager.put(std::move(newState));
         return;
     }
 

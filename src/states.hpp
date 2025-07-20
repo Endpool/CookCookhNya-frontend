@@ -26,6 +26,11 @@ struct StorageIdMixin {
     StorageIdMixin(api::StorageId storageId) : storageId{storageId} {} // NOLINT(*-explicit-*)
 };
 
+struct Pagination {
+    std::size_t pageNo;
+    std::size_t totalItems;
+};
+
 } // namespace detail
 
 struct MainMenu {};
@@ -114,7 +119,6 @@ struct RecipeCustomView {
 };
 
 struct CreateCustomRecipe {
-    api::RecipeId recipeId;
     std::size_t pageNo;
 };
 
@@ -139,6 +143,9 @@ struct ShoppingListStorageSelectionToBuy {
 };
 struct ShoppingListIngredientSearch {
     ShoppingListView prevState;
+    std::string query;
+    detail::Pagination pagination;
+    std::vector<api::models::ingredient::Ingredient> page;
 };
 
 using State = std::variant<MainMenu,
@@ -166,7 +173,8 @@ using State = std::variant<MainMenu,
                            CustomRecipeIngredientsSearch,
                            CustomRecipesList,
                            RecipeStorageAddition,
-                           RecipeIngredientsSearch>;
+                           RecipeIngredientsSearch,
+                           ShoppingListIngredientSearch>;
 
 using StateManager = tg_stater::StateProxy<tg_stater::MemoryStateStorage<State>>;
 

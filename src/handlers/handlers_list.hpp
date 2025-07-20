@@ -22,6 +22,7 @@
 #include "recipes_suggestions/view.hpp"
 
 #include "shopping_list/create.hpp"
+#include "shopping_list/search.hpp"
 #include "shopping_list/storage_selection_to_buy.hpp"
 #include "shopping_list/view.hpp"
 
@@ -115,6 +116,8 @@ using shoppingListCreationCQHandler = Handler<Events::CallbackQuery{}, handleSho
 using shoppingListViewCQHandler = Handler<Events::CallbackQuery{}, handleShoppingListViewCQ>;
 using shoppingListStorageSelectionToBuyCQHandler =
     Handler<Events::CallbackQuery{}, handleShoppingListStorageSelectionToBuyCQ>;
+using shoppingListIngredientSearchCQHandler = Handler<Events::CallbackQuery{}, handleShoppingListIngredientSearchCQ>;
+using shoppingListIngredientSearchIQHandler = Handler<Events::InlineQuery{}, handleShoppingListIngredientSearchIQ>;
 
 // Personal account
 using personalAccountMenuCQHandler = Handler<Events::CallbackQuery{}, handlePersonalAccountMenuCQ>;
