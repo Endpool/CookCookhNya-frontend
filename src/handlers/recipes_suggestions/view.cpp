@@ -10,6 +10,7 @@
 #include "utils/ingredients_availability.hpp"
 #include "utils/parsing.hpp"
 
+#include <optional>
 #include <string>
 #include <utility>
 
@@ -35,7 +36,7 @@ void handleSuggestedRecipesListCQ(
             stateManager.put(StorageView{state.selectedStorages[0].id}); // Go to the only one storage
         } else {
             if (api.getStoragesApi().getStoragesList(userId).size() == 1) {
-                renderMainMenu(true, userId, chatId, bot, api);
+                renderMainMenu(true, std::nullopt, userId, chatId, bot, api);
                 stateManager.put(MainMenu{});
             } else {
                 auto newState = StoragesSelection{.selectedStorages = std::move(state.selectedStorages)};

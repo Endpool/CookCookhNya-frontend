@@ -43,7 +43,7 @@ void handleShoppingListCreationCQ(
         return;
     }
 
-    if (data[0] == '+') {
+    if (data[0] == '+') {=
         auto newIngredientIdStr = data.substr(1, data.size());
         auto newIngredientId = utils::parseSafe<api::IngredientId>(newIngredientIdStr);
         if (newIngredientId) {

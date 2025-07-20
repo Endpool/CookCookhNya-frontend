@@ -1,5 +1,6 @@
 #pragma once
 
+#include "backend/models/publication_request_status.hpp"
 #include "uuid.hpp"
 
 #include <string>
@@ -15,5 +16,7 @@ std::string to_string(const T& t) {
 }
 
 std::string to_string(const Uuid& u);
+
+std::string to_string(api::models::status::PublicationRequestStatus status);
 
 } // namespace cookcookhnya::utils

@@ -24,6 +24,9 @@ void renderPersonalAccountMenu(UserId userId, ChatId chatId, BotRef bot) {
     auto messageId = message::getMessageId(userId);
     if (messageId) {
         bot.editMessageText(text, chatId, *messageId, makeKeyboardMarkup(std::move(keyboard)));
+    } else {
+        auto message = bot.sendMessage(chatId, text, makeKeyboardMarkup(std::move(keyboard)));
+        message::addMessageId(userId, message->messageId);
     }
 }
 

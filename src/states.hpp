@@ -37,12 +37,19 @@ struct MainMenu {};
 
 struct PersonalAccountMenu {};
 
-struct CustomIngredientsList {};
-struct CustomIngredientCreationEnterName {};
+struct CustomIngredientsList {
+    std::size_t pageNo;
+};
+struct CustomIngredientCreationEnterName {
+    std::size_t pageNo;
+};
 struct CustomIngredientConfirmation {
+    std::size_t pageNo;
     std::string name;
 };
-struct CustomIngredientPublish {};
+struct CustomIngredientPublish {
+    std::size_t pageNo;
+};
 
 struct StorageList {};
 struct StorageCreationEnterName {};

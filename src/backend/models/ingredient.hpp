@@ -1,11 +1,13 @@
 #pragma once
 
 #include "backend/id_types.hpp"
+#include "backend/models/publication_request_status.hpp"
 
 #include <boost/json/conversion.hpp>
 #include <boost/json/value.hpp>
 
 #include <cstddef>
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -14,6 +16,7 @@ namespace cookcookhnya::api::models::ingredient {
 struct Ingredient {
     IngredientId id;
     std::string name;
+    std::optional<status::PublicationRequestStatus> status = std::nullopt;
 
     friend Ingredient tag_invoke(boost::json::value_to_tag<Ingredient>, const boost::json::value& j);
 };
