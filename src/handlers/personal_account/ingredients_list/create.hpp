@@ -16,10 +16,7 @@ void handleCustomIngredientCreationEnterNameCQ(CustomIngredientCreationEnterName
                                                SMRef stateManager,
                                                IngredientsApiRef api);
 
-void handleCustomIngredientConfirmationCQ(CustomIngredientConfirmation& /*unused*/,
-                                          CallbackQueryRef cq,
-                                          BotRef& bot,
-                                          SMRef stateManager,
-                                          IngredientsApiRef api);
+void handleCustomIngredientConfirmationCQ(
+    CustomIngredientConfirmation& /*unused*/, CallbackQueryRef cq, BotRef& bot, SMRef stateManager, ApiClientRef api);
 
 } // namespace cookcookhnya::handlers::personal_account::ingredients

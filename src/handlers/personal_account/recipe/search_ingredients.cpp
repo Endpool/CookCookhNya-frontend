@@ -4,6 +4,7 @@
 #include "backend/models/ingredient.hpp"
 #include "handlers/common.hpp"
 #include "message_tracker.hpp"
+#include "render/personal_account/ingredients_list/create.hpp"
 #include "render/personal_account/recipe/search_ingredients.hpp"
 #include "render/personal_account/recipe/view.hpp"
 #include "tg_types.hpp"
@@ -12,6 +13,7 @@
 #include <algorithm>
 #include <cstddef>
 #include <functional>
+#include <optional>
 #include <ranges>
 #include <utility>
 #include <vector>
@@ -23,7 +25,8 @@ using namespace render::recipe::ingredients;
 using namespace render::personal_account::recipes;
 using namespace std::ranges;
 using namespace std::views;
-
+using namespace render::personal_account::ingredients;
+using namespace render::suggest_custom_ingredient;
 namespace {
 
 const std::size_t numOfIngredientsOnPage = 5;
@@ -44,9 +47,14 @@ void updateSearch(CustomRecipeIngredientsSearch& state,
                                                                   &IngredientSearchForRecipeItem::id)) {
         state.searchItems = std::move(response.page);
         state.totalFound = response.found;
-        if (auto mMessageId = message::getMessageId(userId))
-            renderRecipeIngredientsSearch(state, numOfIngredientsOnPage, userId, userId, bot);
+        if (auto mMessageId = message::getMessageId(userId)) {
+            if (state.totalFound != 0) {
+                renderRecipeIngredientsSearch(state, numOfIngredientsOnPage, userId, userId, bot);
+                return;
+            }
+        }
     }
+    renderSuggestIngredientCustomisation(state, userId, userId, bot);
 }
 
 } // namespace
@@ -61,7 +69,7 @@ void handleCustomRecipeIngredientsSearchCQ(
         auto ingredientsAndName = renderCustomRecipe(true, userId, chatId, state.recipeId, bot, api);
         auto ingredients = state.recipeIngredients.getValues() | as_rvalue | to<std::vector>();
         stateManager.put(RecipeCustomView{.recipeId = state.recipeId,
-                                          .pageNo = 0,
+                                          .pageNo = state.pageNo,
                                           .ingredients = std::move(ingredients),
                                           .recipeName = std::get<1>(ingredientsAndName)});
         return;
@@ -77,6 +85,14 @@ void handleCustomRecipeIngredientsSearchCQ(
         state.pageNo += 1;
         updateSearch(state, false, bot, userId, api);
         return;
+    }
+
+    if (cq.data[0] == 'i') {
+        auto ingredientName = cq.data.substr(1);
+        renderCustomIngredientConfirmation(true, ingredientName, userId, chatId, bot, api);
+        auto ingredients = state.recipeIngredients.getValues() | as_rvalue | to<std::vector>();
+        stateManager.put(
+            CustomIngredientConfirmation{ingredientName, state.recipeId, state.pageNo, ingredients, std::nullopt});
     }
 
     if (cq.data != "dont_handle") {

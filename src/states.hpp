@@ -7,6 +7,7 @@
 #include "utils/fast_sorted_db.hpp"
 #include "utils/ingredients_availability.hpp"
 
+#include <optional>
 #include <tg_stater/state_storage/common.hpp>
 #include <tg_stater/state_storage/memory.hpp>
 
@@ -37,6 +38,22 @@ struct CustomIngredientsList {};
 struct CustomIngredientCreationEnterName {};
 struct CustomIngredientConfirmation {
     std::string name;
+
+    // All optionals are for "back" from this menu, so this state won't erase all info
+    std::optional<api::RecipeId> recipeFrom;
+    std::optional<size_t> pageNo;
+    std::optional<std::vector<api::models::ingredient::Ingredient>> ingredients;
+
+    std::optional<api::StorageId> storageFrom;
+
+    explicit CustomIngredientConfirmation(
+        std::string name,
+        std::optional<api::RecipeId> recipeId = std::nullopt,
+        std::optional<size_t> pageNo = std::nullopt,
+        std::optional<std::vector<api::models::ingredient::Ingredient>> ingredients = std::nullopt,
+        std::optional<api::StorageId> storageId = std::nullopt)
+        : name(std::move(name)), recipeFrom(recipeId), pageNo(pageNo), ingredients(std::move(ingredients)),
+          storageFrom(storageId) {};
 };
 struct CustomIngredientPublish {};
 

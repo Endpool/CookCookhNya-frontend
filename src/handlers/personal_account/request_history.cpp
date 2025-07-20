@@ -7,7 +7,7 @@ namespace cookcookhnya::handlers::personal_account::publication_history {
 using namespace render::personal_account;
 
 void handleAllPublicationHistoryCQ(
-    AllPublicationHistory& state, CallbackQueryRef cq, BotRef& bot, SMRef stateManager, ApiClientRef api) {
+    AllPublicationHistory& /**/, CallbackQueryRef cq, BotRef& bot, SMRef stateManager, ApiClientRef /**/) {
     const std::string data = cq.data;
     bot.answerCallbackQuery(cq.id);
     auto chatId = cq.message->chat->id;

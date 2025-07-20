@@ -78,25 +78,24 @@ RecipeSearchResponse tag_invoke(json::value_to_tag<RecipeSearchResponse> /*tag*/
 
 PublicationHistoryRecipe tag_invoke(json::value_to_tag<PublicationHistoryRecipe> /*tag*/, const json::value& j) {
     return {
-        .created = utils::parseIsoTime(value_to<std::string>(j.at("created"))),
+        .created = utils::parseIsoTime(value_to<std::string>(j.at("createdAt"))),
         .reason = j.as_object().if_contains("reason")
                       ? value_to<decltype(PublicationHistoryRecipe::reason)>(j.at("reason"))
                       : "",
-        .status = j.as_object().if_contains("status")
-                      ? value_to<decltype(PublicationHistoryRecipe::status)>(j.at("status"))
-                      : PublicationRequestStatus::NO_REQUEST,
-        .updated = j.as_object().if_contains("updated") ? utils::parseIsoTime(value_to<std::string>(j.at("updated")))
+        .status = j.as_object().if_contains("status") ? value_to<PublicationRequestStatus>(j.at("status"))
+                                                      : PublicationRequestStatus::NO_REQUEST,
+        .updated = j.as_object().if_contains("updated") ? utils::parseIsoTime(value_to<std::string>(j.at("updatedAt")))
                                                         : std::chrono::time_point<std::chrono::system_clock>(),
     };
 }
 
 PublicationRequestStatus tag_invoke(boost::json::value_to_tag<PublicationRequestStatus> /*tag*/,
                                     const boost::json::value& j) {
-    if (j.at("status") == "Pending")
+    if (j == "pending")
         return PublicationRequestStatus::PENDING;
-    if (j.at("status") == "Accepted")
+    if (j == "accepted")
         return PublicationRequestStatus::ACCEPTED;
-    if (j.at("status") == "Rejected")
+    if (j == "rejected")
         return PublicationRequestStatus::REJECTED;
     return PublicationRequestStatus::NO_REQUEST;
 }

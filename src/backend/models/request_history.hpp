@@ -1,16 +1,12 @@
 #pragma once
 
 #include "backend/models/recipe.hpp"
-#include "request_history.hpp"
 
 #include <boost/json/conversion.hpp>
 #include <boost/json/value.hpp>
 
-#include <cstddef>
-#include <cstdint>
 #include <optional>
 #include <string>
-#include <vector>
 
 namespace cookcookhnya::api::models::request_history {
 

@@ -6,7 +6,6 @@
 
 #include <cstddef>
 #include <format>
-#include <vector>
 
 namespace cookcookhnya::render::personal_account::publication_history {
 void renderRequestHistory(UserId userId,
@@ -72,7 +71,7 @@ void renderRequestHistory(UserId userId,
             toPrint += std::format("по причине: {} ", req.reason.value());
         toPrint += std::format("запрос создан: {} ", utils::to_string(req.created));
         if (req.updated.has_value()) {
-            toPrint += std::format("последенее обновление {}", utils::to_string(req.updated.value()));
+            toPrint += std::format("последенее обновление: {}", utils::to_string(req.updated.value()));
         }
         toPrint += "\n\n";
     }

@@ -23,10 +23,13 @@ std::string to_string(const cookcookhnya::api::models::recipe::PublicationReques
     return statusStr[static_cast<int>(status)];
 }
 
-std::string to_string(std::chrono::system_clock::time_point time) {
-    const auto* moscow_tz = std::chrono::locate_zone("Europe/Moscow");
-    auto moscow_time = std::chrono::zoned_time(moscow_tz, time);
-    return std::format("{:%d-%m-%Y %H:%M}", moscow_time.get_local_time());
+std::string to_string(std::chrono::system_clock::time_point tp) {
+    std::time_t time = std::chrono::system_clock::to_time_t(tp);
+    std::tm tm = *std::gmtime(&time);
+    std::ostringstream oss;
+    oss << std::put_time(&tm, "%Y-%m-%dT%H:%M");
+
+    return oss.str();
 }
 
 } // namespace cookcookhnya::utils

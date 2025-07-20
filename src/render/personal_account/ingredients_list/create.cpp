@@ -24,9 +24,10 @@ void renderCustomIngredientCreation(UserId userId, ChatId chatId, BotRef bot) {
 }
 
 void renderCustomIngredientConfirmation(
-    std::string ingredientName, UserId userId, ChatId chatId, BotRef bot, IngredientsApiRef api) {
+    bool toBeEdited, std::string ingredientName, UserId userId, ChatId chatId, BotRef bot, IngredientsApiRef api) {
     InlineKeyboard keyboard(2);
     keyboard[0].push_back(makeCallbackButton(u8"▶️ Подтвердить", "confirm"));
+
     keyboard[1].push_back(makeCallbackButton(u8"↩️ Назад", "back"));
 
     // NOLINTNEXTLINE(*magic-numbers*)
@@ -46,8 +47,14 @@ void renderCustomIngredientConfirmation(
     } else {
         text = utils::utf8str(u8"Вы уверены, что хотите добавить новый ингредиент?");
     }
-    auto message = bot.sendMessage(chatId, text, makeKeyboardMarkup(std::move(keyboard)));
-    message::addMessageId(userId, message->messageId);
+    if (toBeEdited) {
+        if (auto messageId = message::getMessageId(userId))
+            bot.editMessageText(text, chatId, *messageId, makeKeyboardMarkup(std::move(keyboard)));
+
+    } else {
+        auto message = bot.sendMessage(chatId, text, makeKeyboardMarkup(std::move(keyboard)));
+        message::addMessageId(userId, message->messageId);
+    }
 }
 
 } // namespace cookcookhnya::render::personal_account::ingredients

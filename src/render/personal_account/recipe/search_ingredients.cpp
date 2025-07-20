@@ -145,5 +145,28 @@ void renderRecipeIngredientsSearch(const states::CustomRecipeIngredientsSearch& 
                             makeKeyboardMarkup(constructMarkup(numOfIngredientsOnPage, state)));
     }
 }
-
 } // namespace cookcookhnya::render::recipe::ingredients
+
+namespace cookcookhnya::render::suggest_custom_ingredient {
+
+void renderSuggestIngredientCustomisation(const states::CustomRecipeIngredientsSearch& state,
+                                          UserId userId,
+                                          ChatId chatId,
+                                          BotRef bot) {
+    InlineKeyboard keyboard(3);
+    std::string text = utils::utf8str(u8"📝 Продолжите редактирование запроса или объявите личный ингредиент");
+
+    auto searchButton = std::make_shared<TgBot::InlineKeyboardButton>();
+    searchButton->text = utils::utf8str(u8"✏️ Редактировать");
+    searchButton->switchInlineQueryCurrentChat = "";
+    keyboard[0].push_back(std::move(searchButton));
+    // Mark as ingredient
+    keyboard[1].push_back(
+        makeCallbackButton(std::format("Создать личный ингредиент: {}", state.query), "i" + state.query));
+    keyboard[2].push_back(makeCallbackButton(u8"↩️ Назад", "back"));
+
+    if (auto messageId = message::getMessageId(userId)) {
+        bot.editMessageText(text, chatId, *messageId, "", "", nullptr, makeKeyboardMarkup(std::move(keyboard)));
+    }
+}
+} // namespace cookcookhnya::render::suggest_custom_ingredient

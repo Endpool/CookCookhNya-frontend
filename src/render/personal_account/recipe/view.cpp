@@ -20,8 +20,6 @@ std::tuple<std::vector<api::models::ingredient::Ingredient>, std::string> render
     bool toBeEdited, UserId userId, ChatId chatId, api::RecipeId recipeId, BotRef bot, RecipesApiRef recipesApi) {
 
     auto recipeDetails = recipesApi.get(userId, recipeId);
-    // REMOVE WHEN BACKEND IS READY
-    recipeDetails.moderationStatus = api::models::recipe::PublicationRequestStatus::NO_REQUEST;
 
     std::vector<api::models::ingredient::Ingredient> ingredients;
 

@@ -5,6 +5,9 @@
 #include "handlers/common.hpp"
 #include "message_tracker.hpp"
 #include "render/storage/ingredients/view.hpp"
+
+#include "render/personal_account/ingredients_list/create.hpp"
+
 #include "render/storage/view.hpp"
 #include "tg_types.hpp"
 #include "utils/parsing.hpp"
@@ -12,6 +15,7 @@
 #include <algorithm>
 #include <cstddef>
 #include <functional>
+#include <optional>
 #include <utility>
 
 namespace cookcookhnya::handlers::storage::ingredients {
@@ -19,7 +23,8 @@ namespace cookcookhnya::handlers::storage::ingredients {
 using namespace render::storage;
 using namespace render::storage::ingredients;
 using namespace api::models::ingredient;
-
+using namespace render::suggest_custom_ingredient;
+using namespace render::personal_account::ingredients;
 // Global vars
 const size_t numOfIngredientsOnPage = 5;
 const size_t threshhold = 70;
@@ -41,9 +46,14 @@ void updateSearch(
                                                                   &IngredientSearchForStorageItem::id)) {
         state.searchItems = std::move(response.page);
         state.totalFound = response.found;
-        if (auto mMessageId = message::getMessageId(userId))
-            renderIngredientsListSearch(state, numOfIngredientsOnPage, userId, userId, bot);
+        if (auto mMessageId = message::getMessageId(userId)) {
+            if (state.totalFound != 0) {
+                renderIngredientsListSearch(state, numOfIngredientsOnPage, userId, userId, bot);
+                return;
+            }
+        }
     }
+    renderSuggestIngredientCustomisation(state, userId, userId, bot);
 }
 } // namespace
 
@@ -68,6 +78,13 @@ void handleStorageIngredientsListCQ(
         state.pageNo += 1;
         updateSearch(state, false, bot, userId, api);
         return;
+    }
+
+    if (cq.data[0] == 'i') {
+        auto ingredientName = cq.data.substr(1);
+        renderCustomIngredientConfirmation(true, ingredientName, userId, chatId, bot, api);
+        stateManager.put(
+            CustomIngredientConfirmation{ingredientName, std::nullopt, std::nullopt, std::nullopt, state.storageId});
     }
 
     if (cq.data != "dont_handle") {

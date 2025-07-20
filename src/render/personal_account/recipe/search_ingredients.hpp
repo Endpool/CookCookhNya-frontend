@@ -10,5 +10,12 @@ void renderRecipeIngredientsSearch(const states::CustomRecipeIngredientsSearch& 
                                    UserId userId,
                                    ChatId chatId,
                                    BotRef bot);
-
 } // namespace cookcookhnya::render::recipe::ingredients
+
+namespace cookcookhnya::render::suggest_custom_ingredient {
+
+void renderSuggestIngredientCustomisation(const states::CustomRecipeIngredientsSearch& state,
+                                          UserId userId,
+                                          ChatId chatId,
+                                          BotRef bot);
+} // namespace cookcookhnya::render::suggest_custom_ingredient
