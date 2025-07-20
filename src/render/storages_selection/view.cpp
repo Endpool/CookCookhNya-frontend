@@ -36,8 +36,8 @@ void renderStorageSelection(
             const bool isSelected = std::ranges::contains(selectedStorages, storage.id, &StorageSummary::id);
             std::string emoji = utils::utf8str(isSelected ? u8"[ + ]" : u8"[ᅠ]");
             const char* actionPrefix = isSelected ? "+" : "-";
-            std::string text = std::format("{} {}", emoji, storage.name);
-            std::string data = actionPrefix + utils::to_string(storage.id);
+            const std::string text = std::format("{} {}", emoji, storage.name);
+            const std::string data = actionPrefix + utils::to_string(storage.id);
             keyboard << makeCallbackButton(text, data);
         }
         keyboard << NewRow{};

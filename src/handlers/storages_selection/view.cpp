@@ -9,6 +9,7 @@
 #include "utils/parsing.hpp"
 
 #include <algorithm>
+#include <optional>
 #include <utility>
 #include <vector>
 
@@ -28,7 +29,7 @@ void handleStoragesSelectionCQ(
     if (cq.data == "confirm") {
         renderRecipesSuggestion(state.selectedStorages, 0, userId, chatId, bot, api);
         stateManager.put(SuggestedRecipesList{
-            .pageNo = 0, .selectedStorages = std::move(state.selectedStorages), .fromStorage = false});
+            .selectedStorages = std::move(state.selectedStorages), .pageNo = 0, .fromStorage = false});
         return;
     }
 

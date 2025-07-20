@@ -6,9 +6,12 @@
 #include "message_tracker.hpp"
 #include "render/common.hpp"
 #include "utils/ingredients_availability.hpp"
+#include "utils/to_string.hpp"
 #include "utils/utils.hpp"
 #include "view.hpp"
 
+#include <algorithm>
+#include <cstddef>
 #include <format>
 #include <string>
 #include <utility>
@@ -37,9 +40,9 @@ textGenInfo storageAdditionView(
     text += std::format("{} Ингредиенты для *{}* \n\n", utils::utf8str(u8"📖"), recipeName);
 
     for (const auto& infoPair : inStoragesAvailability) {
-        if (infoPair.second.available == utils::AvailabiltiyType::available) {
+        if (infoPair.second.available == utils::AvailabiltiyType::AVAILABLE) {
             text += "`[+]` " + infoPair.first.name + "\n";
-        } else if (infoPair.second.available == utils::AvailabiltiyType::other_storages) {
+        } else if (infoPair.second.available == utils::AvailabiltiyType::OTHER_STORAGES) {
             text += "`[?]` " + infoPair.first.name + "\n";
             isIngredientIsOtherStorages = true;
             text += "Доступно в: ";
@@ -73,7 +76,7 @@ void renderStoragesSuggestion(
     auto textGen = storageAdditionView(inStoragesAvailability, selectedStorages, recipeId, userId, api);
     std::vector<api::models::storage::StorageSummary> storages;
     for (const auto& infoPair : inStoragesAvailability) {
-        if (infoPair.second.available == utils::AvailabiltiyType::other_storages) {
+        if (infoPair.second.available == utils::AvailabiltiyType::OTHER_STORAGES) {
             for (const auto& storage : infoPair.second.storages) {
                 if (std::ranges::find(storages, storage.id, &api::models::storage::StorageSummary::id) ==
                     storages.end()) {

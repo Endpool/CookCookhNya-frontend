@@ -7,6 +7,7 @@
 #include "render/storages_selection/view.hpp"
 #include "states.hpp"
 #include "utils/utils.hpp"
+
 #include <optional>
 
 namespace cookcookhnya::handlers::commands {
@@ -25,8 +26,8 @@ void handleWannaEatCmd(MessageRef m, BotRef bot, SMRef stateManager, ApiClientRe
         message::deleteMessageId(m.from->id);
         renderRecipesSuggestion({storages}, 0, m.from->id, m.chat->id, bot, api);
         stateManager.put(SuggestedRecipesList{
-            .pageNo = 0,
             .selectedStorages = storages,
+            .pageNo = 0,
             .fromStorage = false,
         });
     } else {

@@ -54,22 +54,21 @@ void handleSuggestedRecipesListCQ(
             return;
         auto inStorage = utils::inStoragesAvailability(state.selectedStorages, *recipeId, userId, api);
         renderRecipeView(inStorage, *recipeId, userId, chatId, bot, api);
-        stateManager.put(RecipeView{.selectedStorages = state.selectedStorages,
-                                    .addedStorages = {},
-                                    .availability = inStorage,
-                                    .recipeId = *recipeId,
-                                    .fromStorage = state.fromStorage,
-                                    .pageNo = state.pageNo});
-
+        stateManager.put(RecipeView{
+            .prevState = std::move(state),
+            .addedStorages = {},
+            .availability = inStorage,
+            .recipeId = *recipeId,
+        });
         return;
     }
 
     if (data != "dont_handle") {
-        auto pageNo = utils::parseSafe<std::size_t>(data);
-        if (pageNo) {
-            state.pageNo = *pageNo;
-        }
-        renderRecipesSuggestion(state.selectedStorages, *pageNo, userId, chatId, bot, api);
+        if (data == "page_left")
+            state.pageNo--;
+        else if (data == "page_right")
+            state.pageNo++;
+        renderRecipesSuggestion(state.selectedStorages, state.pageNo, userId, chatId, bot, api);
         return;
     }
 }

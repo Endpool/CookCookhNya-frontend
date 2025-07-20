@@ -3,6 +3,7 @@
 #include "backend/api/api.hpp"
 #include "backend/api/ingredients.hpp"
 #include "backend/api/recipes.hpp"
+#include "backend/api/shopping_lists.hpp"
 #include "backend/api/storages.hpp"
 #include "backend/api/users.hpp"
 #include "states.hpp"
@@ -44,6 +45,7 @@ using states::StoragesSelection;
 using states::SuggestedRecipesList;
 
 using states::ShoppingListCreation;
+using states::ShoppingListIngredientSearch;
 using states::ShoppingListStorageSelectionToBuy;
 using states::ShoppingListView;
 

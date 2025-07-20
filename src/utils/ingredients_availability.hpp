@@ -4,16 +4,18 @@
 #include "backend/id_types.hpp"
 #include "backend/models/recipe.hpp"
 #include "backend/models/storage.hpp"
+#include "tg_types.hpp"
 
 #include <cstdint>
+#include <utility>
 #include <vector>
 
 namespace cookcookhnya::utils {
 
-enum struct AvailabiltiyType : std::uint8_t { available, not_available, other_storages };
+enum struct AvailabiltiyType : std::uint8_t { AVAILABLE, NOT_AVAILABLE, OTHER_STORAGES };
 
 struct IngredientAvailability {
-    AvailabiltiyType available = AvailabiltiyType::not_available;
+    AvailabiltiyType available = AvailabiltiyType::NOT_AVAILABLE;
     std::vector<api::models::storage::StorageSummary> storages;
 };
 
