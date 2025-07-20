@@ -5,6 +5,7 @@
 #include <boost/json/value.hpp>
 #include <boost/json/value_from.hpp>
 #include <boost/json/value_to.hpp>
+#include <optional>
 #include <termios.h>
 
 namespace cookcookhnya::api::models::recipe {
@@ -55,7 +56,7 @@ RecipeDetails tag_invoke(json::value_to_tag<RecipeDetails> /*tag*/, const json::
         .link = value_to<decltype(RecipeDetails::link)>(j.at("sourceLink")),
         // Deal with optionals using ternary
         .creator = j.as_object().if_contains("creator") ? value_to<decltype(RecipeDetails::creator)>(j.at("creator"))
-                                                        : user::UserDetails{.userId = 0, .alias = "", .fullName = ""},
+                                                        : std::nullopt,
         .moderationStatus = j.as_object().if_contains("moderationStatus")
                                 ? value_to<status::PublicationRequestStatus>(j.at("moderationStatus"))
                                 : status::PublicationRequestStatus::NO_REQUEST,
