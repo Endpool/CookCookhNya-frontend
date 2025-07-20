@@ -74,6 +74,7 @@ struct StorageIngredientsList : detail::StorageIdMixin {
 struct StorageIngredientsDeletion : detail::StorageIdMixin {
     std::vector<api::models::ingredient::Ingredient> selectedIngredients;
     std::vector<api::models::ingredient::Ingredient> storageIngredients;
+    bool addedToShopList;
     std::size_t pageNo;
 };
 

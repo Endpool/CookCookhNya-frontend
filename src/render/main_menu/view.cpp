@@ -20,11 +20,11 @@ void renderMainMenu(bool toBeEdited, UserId userId, ChatId chatId, BotRef bot, S
     if (!storages.empty()) {
         keyboard[0].push_back(makeCallbackButton(u8"🍱 Хранилища", "storage_list"));
         keyboard[1].push_back(makeCallbackButton(u8"😋 Хочу кушать!", "wanna_eat"));
-        keyboard[2].push_back(makeCallbackButton(u8"🗒 Список покупок", "shopping_list"));
+        keyboard[2].push_back(makeCallbackButton(u8"🧾 Список покупок", "shopping_list"));
         keyboard[3].push_back(makeCallbackButton(u8"👤 Личный кабинет", "personal_account"));
     } else {
         keyboard[0].push_back(makeCallbackButton(u8"🍱 Хранилища", "storage_list"));
-        keyboard[1].push_back(makeCallbackButton(u8"🗒 Список покупок", "shopping_list"));
+        keyboard[1].push_back(makeCallbackButton(u8"🧾 Список покупок", "shopping_list"));
         keyboard[2].push_back(makeCallbackButton(u8"👤 Личный кабинет", "personal_account"));
     }
 

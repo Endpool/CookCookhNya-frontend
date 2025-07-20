@@ -28,7 +28,7 @@ using namespace tg_types;
 
 namespace {
 
-InlineKeyboard constructNavigationsMarkup(size_t offset,
+InlineKeyboard constructNavigationsMarkup(size_t offset, // NOLINT(*complexity*)
                                           size_t fullKeyBoardSize,
                                           size_t numOfRecipesOnPage,
                                           const states::StorageIngredientsList& state) {
@@ -53,7 +53,7 @@ InlineKeyboard constructNavigationsMarkup(size_t offset,
     InlineKeyboard keyboard(state.pageNo == 0 && ifMaxPage ? fullKeyBoardSize - 1 : fullKeyBoardSize);
 
     auto searchButton = std::make_shared<TgBot::InlineKeyboardButton>();
-    searchButton->text = utils::utf8str(u8"✏️ Редактировать");
+    searchButton->text = utils::utf8str(u8"🛒 Добавить");
     searchButton->switchInlineQueryCurrentChat = "";
     keyboard[0].push_back(std::move(searchButton));
     for (auto [row, ing] : zip(drop(keyboard, 1), state.searchItems))
@@ -61,7 +61,13 @@ InlineKeyboard constructNavigationsMarkup(size_t offset,
 
     if (state.pageNo == 0 && ifMaxPage) {
         // instead of arrows row
-        keyboard[arrowsRow].push_back(makeCallbackButton(u8"↩️ Назад", "back"));
+        if (!state.storageIngredients.getValues().empty()) {
+            keyboard[arrowsRow].push_back(makeCallbackButton(u8"🗑 Удалить", "delete"));
+            keyboard[arrowsRow + 1].push_back(makeCallbackButton(u8"↩️ Назад", "back"));
+        } else {
+            keyboard[arrowsRow].push_back(makeCallbackButton(u8"↩️ Назад", "back"));
+        }
+
         return keyboard;
     }
     keyboard[arrowsRow].reserve(3);
@@ -99,15 +105,19 @@ InlineKeyboard constructNavigationsMarkup(size_t offset,
     keyboard[arrowsRow].insert(
         keyboard[arrowsRow].begin() + 1,
         makeCallbackButton(std::format("{} из {}", state.pageNo + 1, maxPageNum), "dont_handle"));
-    keyboard[arrowsRow + 1].push_back(makeCallbackButton(u8"🗑 Удалить из хранилища", "delete"));
-    keyboard[arrowsRow + 2].push_back(makeCallbackButton(u8"↩️ Назад", "back"));
+    if (state.storageIngredients.getValues().empty()) {
+        keyboard[arrowsRow + 1].push_back(makeCallbackButton(u8"↩️ Назад", "back"));
+    } else {
+        keyboard[arrowsRow + 1].push_back(makeCallbackButton(u8"🗑 Удалить", "delete"));
+        keyboard[arrowsRow + 2].push_back(makeCallbackButton(u8"↩️ Назад", "back"));
+    }
     return keyboard;
 }
 
 InlineKeyboard constructMarkup(size_t numOfRecipesOnPage, const states::StorageIngredientsList& state) {
     // 1 for back button return, 1 for arrows (ALWAYS ACCOUNT ARROWS), 1
     // for editing, 1 for delete - other buttons are ingredients
-    const size_t numOfRows = 4;
+    const size_t numOfRows = state.storageIngredients.getValues().empty() ? 3 : 4;
     const size_t offset = 1; // Number of rows before list
 
     const size_t recipesToShow = std::min(numOfRecipesOnPage, state.searchItems.size());
@@ -131,7 +141,13 @@ void renderIngredientsListSearch(const states::StorageIngredientsList& state,
     const std::size_t numOfIngredientsOnPage = 5;
     std::string list = state.storageIngredients.getValues() |
                        transform([](auto& i) { return std::format("• {}\n", i.name); }) | join | to<std::string>();
-    auto text = utils::utf8str(u8"🍗 Ваши ингредиенты:\n\n") + std::move(list);
+
+    auto text =
+        state.storageIngredients.getValues().empty()
+            ? utils::utf8str(u8"🍗 Кажется, в вашем хранилище пока нет никаких продуктов. Чтобы добавить новый, "
+                             u8"нажмите на кнопку 🛒 Добавить и начните вводить название продукта...\n\n")
+            : utils::utf8str(u8"🍗 Ваши продукты:\n\n");
+    text += list;
     if (auto messageId = message::getMessageId(userId)) {
         bot.editMessageText(text,
                             chatId,

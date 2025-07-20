@@ -56,26 +56,31 @@ constructIngredientsButton(std::vector<api::models::ingredient::Ingredient>& sel
 }
 
 std::pair<std::string, InlineKeyboardBuilder>
-constructMessage(std::vector<api::models::ingredient::Ingredient>& selectedIngredients,
+constructMessage(std::vector<api::models::ingredient::Ingredient>& selectedIngredients, // NOLINT(*complexity*)
                  std::vector<api::models::ingredient::Ingredient>& storageIngredients,
                  std::size_t pageNo,
                  std::size_t numOfIngredientsOnPage,
-                 std::vector<api::models::ingredient::Ingredient>& ingredientsList) {
-    std::size_t ingSize = ingredientsList.size();
+                 bool withoutPutToShoppingListButton) {
+    std::size_t ingSize = storageIngredients.size();
     const std::size_t maxPageNum =
         std::ceil(static_cast<double>(ingSize) / static_cast<double>(numOfIngredientsOnPage));
     std::size_t buttonRows = std::min(ingSize, numOfIngredientsOnPage);
     if (selectedIngredients.empty()) {
-        if (ingSize <= numOfIngredientsOnPage) {
+        if (ingSize <= numOfIngredientsOnPage)
             buttonRows += 1; // + back
-        } else {
+        else
             buttonRows += 2; // + back + navig
-        }
     } else {
-        if (ingredientsList.size() <= numOfIngredientsOnPage) {
-            buttonRows += 2; // + back & delete + delete with shop
+        if (ingSize <= numOfIngredientsOnPage) {
+            if (withoutPutToShoppingListButton)
+                buttonRows += 2; // + back + delete
+            else
+                buttonRows += 3; // + back + delete + shop
         } else {
-            buttonRows += 3; // + back & delete + navig + delete with shop
+            if (withoutPutToShoppingListButton)
+                buttonRows += 3; // + back + navig + delete
+            else
+                buttonRows += 4;
         }
     }
 
@@ -90,9 +95,9 @@ constructMessage(std::vector<api::models::ingredient::Ingredient>& selectedIngre
 
     auto backButton = makeCallbackButton(u8"↩️ Назад", "back");
     auto deleteButton = makeCallbackButton(u8"🗑 Удалить", "delete");
-    auto deleteWithShopButton = makeCallbackButton(u8"🛒 Удалить (и добавить в 🗒 Список покупок)", "delete_w_shop");
+    auto shopButton = makeCallbackButton(u8"🧾 Добавить в Список покупок", "put_to_shop");
     if (selectedIngredients.empty()) {
-        if (ingredientsList.size() <= numOfIngredientsOnPage && pageNo == 0) {
+        if (ingSize <= numOfIngredientsOnPage && pageNo == 0) {
             keyboard << std::move(backButton);
         } else {
             for (auto& b : constructNavigationButtons(pageNo, maxPageNum)) {
@@ -102,20 +107,26 @@ constructMessage(std::vector<api::models::ingredient::Ingredient>& selectedIngre
             keyboard << std::move(backButton);
         }
     } else {
-        if (ingredientsList.size() <= numOfIngredientsOnPage && pageNo == 0) {
-            keyboard << std::move(deleteWithShopButton);
+        if (ingSize <= numOfIngredientsOnPage && pageNo == 0) {
+            if (!withoutPutToShoppingListButton) {
+                keyboard << std::move(shopButton);
+                keyboard << NewRow{};
+            }
+            keyboard << std::move(deleteButton);
             keyboard << NewRow{};
             keyboard << std::move(backButton);
-            keyboard << std::move(deleteButton);
         } else {
             for (auto& b : constructNavigationButtons(pageNo, maxPageNum)) {
                 keyboard << std::move(b);
             }
             keyboard << NewRow{};
-            keyboard << std::move(deleteWithShopButton);
+            if (!withoutPutToShoppingListButton) {
+                keyboard << std::move(shopButton);
+                keyboard << NewRow{};
+            }
+            keyboard << std::move(deleteButton);
             keyboard << NewRow{};
             keyboard << std::move(backButton);
-            keyboard << std::move(deleteButton);
         }
     }
     return std::make_pair(text, keyboard);
@@ -134,7 +145,7 @@ void renderStorageIngredientsDeletion(states::StorageIngredientsDeletion& state,
                                 state.storageIngredients,
                                 state.pageNo,
                                 numOfIngredientsOnPage,
-                                state.storageIngredients);
+                                state.addedToShopList);
     auto text = res.first;
     auto keyboard = res.second;
     if (auto messageId = message::getMessageId(userId))

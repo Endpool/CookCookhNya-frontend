@@ -36,7 +36,7 @@ void renderShoppingList(const states::ShoppingListView& state, UserId userId, Ch
 
     if (auto messageId = message::getMessageId(userId)) {
         auto text =
-            utils::utf8str(u8"🔖 Ваш список покупок. Выбирайте, чтобы добавить в хранилище или вычеркнуть из списка.");
+            utils::utf8str(u8"🧾 Ваш список покупок. Выбирайте, чтобы добавить в хранилище или вычеркнуть из списка.");
         bot.editMessageText(text, chatId, *messageId, std::move(keyboard));
     }
 }

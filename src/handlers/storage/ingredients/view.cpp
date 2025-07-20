@@ -4,8 +4,10 @@
 #include "backend/models/ingredient.hpp"
 #include "handlers/common.hpp"
 #include "message_tracker.hpp"
+#include "render/storage/ingredients/delete.hpp"
 #include "render/storage/ingredients/view.hpp"
 #include "render/storage/view.hpp"
+#include "states.hpp"
 #include "tg_types.hpp"
 #include "utils/parsing.hpp"
 
@@ -13,6 +15,7 @@
 #include <cstddef>
 #include <functional>
 #include <utility>
+#include <vector>
 
 namespace cookcookhnya::handlers::storage::ingredients {
 
@@ -58,6 +61,18 @@ void handleStorageIngredientsListCQ(
         stateManager.put(StorageView{state.storageId});
         return;
     }
+
+    if (cq.data == "delete") {
+        std::vector<api::models::ingredient::Ingredient> ingredients;
+        for (auto& ing : state.storageIngredients.getValues()) {
+            ingredients.push_back(ing);
+        }
+        auto newState = StorageIngredientsDeletion{state.storageId, {}, ingredients, false, 0};
+        renderStorageIngredientsDeletion(newState, userId, chatId, bot);
+        stateManager.put(newState);
+        return;
+    }
+
     if (cq.data == "prev") {
         state.pageNo -= 1;
         updateSearch(state, false, bot, userId, api);

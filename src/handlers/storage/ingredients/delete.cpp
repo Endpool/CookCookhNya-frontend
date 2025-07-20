@@ -27,27 +27,22 @@ void handleStorageIngredientsDeletionCQ(
             state.storageIngredients.erase(
                 std::ranges::find(state.storageIngredients, ing.id, &api::models::ingredient::Ingredient::id));
         }
-        renderStorageIngredientsDeletion(state, userId, chatId, bot);
-        stateManager.put(StorageIngredientsDeletion{
-            state.storageId, state.selectedIngredients, state.storageIngredients, state.pageNo});
+        auto ingredients = api.getIngredientsApi().getStorageIngredients(userId, state.storageId);
+        auto newState = StorageIngredientsList{state.storageId, ingredients | as_rvalue, ""};
+        renderIngredientsListSearch(newState, userId, chatId, bot);
+        stateManager.put(newState);
         return;
     }
-    if (cq.data == "delete_w_shop") {
+    if (cq.data == "put_to_shop") {
         api.getShoppingListApi().put(
             userId,
             state.selectedIngredients | std::views::transform([](const api::models::ingredient::Ingredient& obj) {
                 return obj.id;
             }) | std::ranges::to<std::vector>());
-        for (const auto& ing : state.selectedIngredients) {
-            api.getIngredientsApi().deleteFromStorage(userId, state.storageId, ing.id);
-            state.selectedIngredients.erase(
-                std::ranges::find(state.selectedIngredients, ing.id, &api::models::ingredient::Ingredient::id));
-            state.storageIngredients.erase(
-                std::ranges::find(state.storageIngredients, ing.id, &api::models::ingredient::Ingredient::id));
-        }
+        state.addedToShopList = true;
         renderStorageIngredientsDeletion(state, userId, chatId, bot);
         stateManager.put(StorageIngredientsDeletion{
-            state.storageId, state.selectedIngredients, state.storageIngredients, state.pageNo});
+            state.storageId, state.selectedIngredients, state.storageIngredients, state.addedToShopList, state.pageNo});
         return;
     }
     if (cq.data == "back") {
@@ -61,14 +56,14 @@ void handleStorageIngredientsDeletionCQ(
         state.pageNo -= 1;
         renderStorageIngredientsDeletion(state, userId, chatId, bot);
         stateManager.put(StorageIngredientsDeletion{
-            state.storageId, state.selectedIngredients, state.storageIngredients, state.pageNo});
+            state.storageId, state.selectedIngredients, state.storageIngredients, state.addedToShopList, state.pageNo});
         return;
     }
     if (cq.data == "next") {
         state.pageNo += 1;
         renderStorageIngredientsDeletion(state, userId, chatId, bot);
         stateManager.put(StorageIngredientsDeletion{
-            state.storageId, state.selectedIngredients, state.storageIngredients, state.pageNo});
+            state.storageId, state.selectedIngredients, state.storageIngredients, state.addedToShopList, state.pageNo});
         return;
     }
     if (cq.data != "dont_handle") {

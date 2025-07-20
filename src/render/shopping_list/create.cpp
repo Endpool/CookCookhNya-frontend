@@ -23,7 +23,7 @@ void renderShoppingListCreation(const std::vector<Ingredient>& selectedIngredien
                                 UserId userId,
                                 ChatId chatId,
                                 BotRef bot) {
-    std::string text = utils::utf8str(u8"📝 Выберите продукты, которые хотели бы добавить в список покупок\n\n");
+    std::string text = utils::utf8str(u8"🧾 Выберите продукты, которые хотели бы добавить в список покупок\n\n");
 
     const std::size_t buttonRows = ((selectedIngredients.size() + 1) / 2) + 1; // ceil(ingredientsCount / 2), back
     InlineKeyboardBuilder keyboard{buttonRows};
