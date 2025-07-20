@@ -38,10 +38,10 @@ void renderShareLinkMemberAddition(
 
     auto inviteButton = std::make_shared<TgBot::InlineKeyboardButton>();
     inviteButton->text = utils::utf8str(u8"📤 Поделиться");
-    api::InvitationId hash = storageApi.inviteMember(userId, storageId);
+    const api::InvitationId hash = storageApi.inviteMember(userId, storageId);
     const std::string telegramBotAlias = bot.getUnderlying().getMe()->username;
-    std::string inviteText = "Нажми на ссылку, чтобы стать участником хранилища 🍱**" + storage.name +
-                             "** в CookCookhNya!\nhttps://t.me/" + telegramBotAlias + "?start=" + hash;
+    const std::string inviteText = "Нажми на ссылку, чтобы стать участником хранилища 🍱**" + storage.name +
+                                   "** в CookCookhNya!\nhttps://t.me/" + telegramBotAlias + "?start=" + hash;
     inviteButton->url = "https://t.me/share/url?url=" + inviteText;
 
     keyboard[0].push_back(std::move(inviteButton));
