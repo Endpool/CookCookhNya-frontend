@@ -54,7 +54,8 @@ void updateSearch(CustomRecipeIngredientsSearch& state,
             }
         }
     }
-    renderSuggestIngredientCustomisation(state, userId, userId, bot);
+    if (state.totalFound == 0)
+        renderSuggestIngredientCustomisation(state, userId, userId, bot);
 }
 
 } // namespace

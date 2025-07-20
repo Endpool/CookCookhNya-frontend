@@ -56,8 +56,8 @@ RecipeDetails tag_invoke(json::value_to_tag<RecipeDetails> /*tag*/, const json::
         // Deal with optionals using ternary
         .creator = j.as_object().if_contains("creator") ? value_to<decltype(RecipeDetails::creator)>(j.at("creator"))
                                                         : user::UserDetails{.userId = 0, .alias = "", .fullName = ""},
-        .moderationStatus = j.as_object().if_contains("status")
-                                ? value_to<decltype(RecipeDetails::moderationStatus)>(j.at("status"))
+        .moderationStatus = j.as_object().if_contains("moderationStatus")
+                                ? value_to<PublicationRequestStatus>(j.at("moderationStatus"))
                                 : PublicationRequestStatus::NO_REQUEST,
     };
 }
@@ -84,8 +84,9 @@ PublicationHistoryRecipe tag_invoke(json::value_to_tag<PublicationHistoryRecipe>
                       : "",
         .status = j.as_object().if_contains("status") ? value_to<PublicationRequestStatus>(j.at("status"))
                                                       : PublicationRequestStatus::NO_REQUEST,
-        .updated = j.as_object().if_contains("updated") ? utils::parseIsoTime(value_to<std::string>(j.at("updatedAt")))
-                                                        : std::chrono::time_point<std::chrono::system_clock>(),
+        .updated = j.as_object().if_contains("updatedAt")
+                       ? utils::parseIsoTime(value_to<std::string>(j.at("updatedAt")))
+                       : std::chrono::time_point<std::chrono::system_clock>(),
     };
 }
 

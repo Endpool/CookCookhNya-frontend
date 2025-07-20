@@ -41,8 +41,8 @@ std::tuple<std::vector<api::models::ingredient::Ingredient>, std::string> render
     keyboard << makeCallbackButton(u8"🚮 Удалить", "delete") << NewRow{};
     keyboard << makeCallbackButton(u8"✏️ Редактировать", "change") << NewRow{};
     // Show publish button only iff the status is not emty AND not rejected
-    if (recipeDetails.moderationStatus == api::models::recipe::PublicationRequestStatus::NO_REQUEST ||
-        recipeDetails.moderationStatus == api::models::recipe::PublicationRequestStatus::REJECTED) {
+    if (recipeDetails.moderationStatus.value() == api::models::recipe::PublicationRequestStatus::NO_REQUEST ||
+        recipeDetails.moderationStatus.value() == api::models::recipe::PublicationRequestStatus::REJECTED) {
         keyboard << makeCallbackButton(u8"📢 Опубликовать", "publish") << NewRow{};
     } else {
         keyboard << makeCallbackButton(u8"📢 История публикаций", "peekpublish") << NewRow{};
@@ -55,7 +55,7 @@ std::tuple<std::vector<api::models::ingredient::Ingredient>, std::string> render
         if (messageId)
             bot.editMessageText(toPrint, chatId, *messageId, std::move(keyboard), "Markdown");
     } else {
-        auto message = bot.sendMessage(chatId, toPrint, std::move(keyboard));
+        auto message = bot.sendMessage(chatId, toPrint, std::move(keyboard), "Markdown");
         message::addMessageId(userId, message->messageId);
     }
     return {ingredients, recipeDetails.name};

@@ -9,9 +9,11 @@
 
 #include <chrono>
 #include <format>
+#include <ranges>
 #include <vector>
 
 namespace cookcookhnya::render::personal_account::recipe::publication_history {
+using namespace std::views;
 
 void renderPublicationHistory(UserId userId,
                               ChatId chatId,
@@ -27,13 +29,15 @@ void renderPublicationHistory(UserId userId,
     std::string toPrint;
     toPrint = (utils::utf8str(u8"История запросов на публикацию *") + recipeName + "*\n");
     if (!history.empty()) {
-        toPrint += utils::utf8str(u8"ℹ️ Текущий статус: ") + utils::to_string(history[0].status) +
-                   (history[0].reason.has_value() ? std::format(" по причине {}", history[0].reason.value()) : " ") +
-                   utils::to_string(history[0].created) + "\n\n";
+        toPrint += utils::utf8str(u8"ℹ️ Текущий статус: ") + utils::to_string(history[history.size() - 1].status) +
+                   (history[history.size() - 1].reason.has_value()
+                        ? std::format(" по причине {} ", history[history.size() - 1].reason.value())
+                        : " ") +
+                   utils::to_string(history[history.size() - 1].created) + "\n\n";
         // Remove the lastest history instance as it's showed differently
-        history.erase(history.begin());
+        history.erase(history.end());
 
-        for (auto& req : history) {
+        for (auto& req : history | reverse) {
             toPrint += std::format("Статус: {} ", utils::to_string(req.status));
             if (req.reason.has_value())
                 toPrint += std::format("по причине: {} ", req.reason.value());

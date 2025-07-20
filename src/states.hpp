@@ -176,6 +176,7 @@ struct ShoppingListStorageSelectionToBuy {
 struct CustomRecipePublicationHistory {
     api::RecipeId recipeId;
     std::size_t pageNo;
+    std::string recipeName;
 };
 
 struct AllPublicationHistory {
