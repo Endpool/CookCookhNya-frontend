@@ -1,8 +1,23 @@
 #include "request_history.hpp"
 
-namespace cookcookhnya::handlers::history {
+#include "render/personal_account/view.hpp"
+
+namespace cookcookhnya::handlers::personal_account::publication_history {
+
+using namespace render::personal_account;
 
 void handleAllPublicationHistoryCQ(
-    AllPublicationHistory& /*unused*/, CallbackQueryRef cq, BotRef& bot, SMRef stateManager, ApiClientRef api);
+    AllPublicationHistory& state, CallbackQueryRef cq, BotRef& bot, SMRef stateManager, ApiClientRef api) {
+    const std::string data = cq.data;
+    bot.answerCallbackQuery(cq.id);
+    auto chatId = cq.message->chat->id;
+    auto userId = cq.from->id;
 
-} // namespace cookcookhnya::handlers::history
+    if (data == "back") {
+        renderPersonalAccountMenu(userId, chatId, bot);
+        stateManager.put(PersonalAccountMenu{});
+        return;
+    }
+}
+
+} // namespace cookcookhnya::handlers::personal_account::publication_history

@@ -76,14 +76,14 @@ RecipeSearchResponse tag_invoke(json::value_to_tag<RecipeSearchResponse> /*tag*/
     };
 }
 
-PublicationHistoryInstance tag_invoke(json::value_to_tag<PublicationHistoryInstance> /*tag*/, const json::value& j) {
+PublicationHistoryRecipe tag_invoke(json::value_to_tag<PublicationHistoryRecipe> /*tag*/, const json::value& j) {
     return {
         .created = utils::parseIsoTime(value_to<std::string>(j.at("created"))),
         .reason = j.as_object().if_contains("reason")
-                      ? value_to<decltype(PublicationHistoryInstance::reason)>(j.at("reason"))
+                      ? value_to<decltype(PublicationHistoryRecipe::reason)>(j.at("reason"))
                       : "",
         .status = j.as_object().if_contains("status")
-                      ? value_to<decltype(PublicationHistoryInstance::status)>(j.at("status"))
+                      ? value_to<decltype(PublicationHistoryRecipe::status)>(j.at("status"))
                       : PublicationRequestStatus::NO_REQUEST,
         .updated = j.as_object().if_contains("updated") ? utils::parseIsoTime(value_to<std::string>(j.at("updated")))
                                                         : std::chrono::time_point<std::chrono::system_clock>(),

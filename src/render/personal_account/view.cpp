@@ -11,7 +11,7 @@ namespace cookcookhnya::render::personal_account {
 using namespace tg_types;
 
 void renderPersonalAccountMenu(UserId userId, ChatId chatId, BotRef bot) {
-    const std::size_t buttonRows = 5;
+    const std::size_t buttonRows = 4;
     InlineKeyboard keyboard(buttonRows);
 
     keyboard[0].push_back(makeCallbackButton(u8"📋 Мои ингредиенты", "ingredients"));

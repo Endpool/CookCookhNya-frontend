@@ -3,6 +3,7 @@
 #include "backend/api/api.hpp"
 #include "backend/api/ingredients.hpp"
 #include "backend/api/recipes.hpp"
+#include "backend/api/request_history.hpp"
 #include "backend/api/shopping_lists.hpp"
 #include "backend/api/storages.hpp"
 #include "backend/api/users.hpp"
@@ -33,6 +34,7 @@ using IngredientsApiRef = const api::IngredientsApi&;
 using UserApiRef = const api::UsersApi&;
 using RecipesApiRef = const api::RecipesApi&;
 using ShoppingListApiRef = const api::ShoppingListApi&;
+using RequestHistoryApiRef = const api::RequestHistoryApi&;
 
 using UserId = tg_types::UserId;
 using ChatId = tg_types::ChatId;

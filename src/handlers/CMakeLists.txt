@@ -15,6 +15,7 @@ target_sources(main PRIVATE
     src/handlers/personal_account/recipe/publication_history.cpp
 
     src/handlers/personal_account/view.cpp
+    src/handlers/personal_account/request_history.cpp
 
     src/handlers/recipe/add_storage.cpp
     src/handlers/recipe/view.cpp

@@ -2,9 +2,9 @@
 
 #include "handlers/common.hpp"
 
-namespace cookcookhnya::handlers::history {
+namespace cookcookhnya::handlers::personal_account::publication_history {
 
 void handleAllPublicationHistoryCQ(
-    AllPublicationHistory& /*unused*/, CallbackQueryRef cq, BotRef& bot, SMRef stateManager, ApiClientRef api);
+    AllPublicationHistory& state, CallbackQueryRef cq, BotRef& bot, SMRef stateManager, ApiClientRef api);
 
-} // namespace cookcookhnya::handlers::history
+} // namespace cookcookhnya::handlers::personal_account::publication_history

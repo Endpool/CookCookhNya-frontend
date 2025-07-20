@@ -15,6 +15,7 @@
 #include "personal_account/recipes_list/create.hpp"
 #include "personal_account/recipes_list/view.hpp"
 
+#include "personal_account/request_history.hpp"
 #include "personal_account/view.hpp"
 
 #include "recipe/add_storage.hpp"
@@ -52,7 +53,7 @@ using namespace main_menu;
 using namespace personal_account;
 using namespace personal_account::ingredients;
 using namespace personal_account::recipes;
-using namespace recipe;
+using namespace handlers::recipe;
 using namespace shopping_list;
 using namespace storage;
 using namespace storage::ingredients;
@@ -61,6 +62,7 @@ using namespace storages_list;
 using namespace storages_selection;
 using namespace recipes_suggestions;
 using namespace personal_account::publication_history;
+using namespace personal_account::recipe::publication_history;
 
 using namespace tg_stater;
 
@@ -120,6 +122,7 @@ using shoppingListStorageSelectionToBuyCQHandler =
 
 // Personal account
 using personalAccountMenuCQHandler = Handler<Events::CallbackQuery{}, handlePersonalAccountMenuCQ>;
+using allPublicationHistoryHandler = Handler<Events::CallbackQuery{}, handleAllPublicationHistoryCQ>;
 
 // Custom Recipes List
 using customRecipesListCQHandler = Handler<Events::CallbackQuery{}, handleCustomRecipesListCQ>;

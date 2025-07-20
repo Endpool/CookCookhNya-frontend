@@ -92,14 +92,14 @@ struct RecipeSearchResponse {
                                            const boost::json::value& j);
 };
 
-struct PublicationHistoryInstance {
+struct PublicationHistoryRecipe {
     std::chrono::system_clock::time_point created;
     std::optional<std::string> reason;
     PublicationRequestStatus status{};
     std::optional<std::chrono::system_clock::time_point> updated;
 
-    friend PublicationHistoryInstance tag_invoke(boost::json::value_to_tag<PublicationHistoryInstance>,
-                                                 const boost::json::value& j);
+    friend PublicationHistoryRecipe tag_invoke(boost::json::value_to_tag<PublicationHistoryRecipe>,
+                                               const boost::json::value& j);
 };
 
 } // namespace cookcookhnya::api::models::recipe

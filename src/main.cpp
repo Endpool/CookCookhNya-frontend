@@ -66,7 +66,8 @@ int main(int argc, char* argv[]) {
                                                       customRecipeIngredientsSearchCQHandler,
                                                       customRecipeIngredientsSearchIQHandler,
                                                       shoppingListStorageSelectionToBuyCQHandler,
-                                                      customRecipePublicationHistoryHandler>
+                                                      customRecipePublicationHistoryHandler,
+                                                      allPublicationHistoryHandler>
             bot{{}, {ApiClient{utils::getenvWithError("API_URL")}}};
 
         TgBot::Bot tgBot{utils::getenvWithError("BOT_TOKEN")};

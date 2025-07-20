@@ -23,47 +23,8 @@ void renderPublicationHistory(UserId userId,
                               bool isPeek,
                               BotRef bot,
                               RecipesApiRef recipesApi) {
-    // auto history = recipesApi.getModerationHistory(userId, recipeId);
-    std::vector<api::models::recipe::PublicationHistoryInstance> history = {
-        {
-            .created = std::chrono::system_clock::now(),
-            .status = api::models::recipe::PublicationRequestStatus::PENDING,
-        },
-        {
-            .created = std::chrono::system_clock::now(),
-            .reason = "ПИДАРАС",
-            .status = api::models::recipe::PublicationRequestStatus::REJECTED,
-            .updated = std::chrono::system_clock::now(),
-        },
-        {
-            .created = std::chrono::system_clock::now(),
-            .reason = "ПИДАРАС",
-            .status = api::models::recipe::PublicationRequestStatus::REJECTED,
-        },
-        {
-            .created = std::chrono::system_clock::now(),
-            .reason = "ПИДАРАС",
-            .status = api::models::recipe::PublicationRequestStatus::REJECTED,
-            .updated = std::chrono::system_clock::now(),
-        },
-        {
-            .created = std::chrono::system_clock::now(),
-            .reason = "ПИДАРАС",
-            .status = api::models::recipe::PublicationRequestStatus::REJECTED,
-            .updated = std::chrono::system_clock::now(),
-        },
-        {
-            .created = std::chrono::system_clock::now(),
-            .reason = "ПИДАРАС",
-            .status = api::models::recipe::PublicationRequestStatus::REJECTED,
-            .updated = std::chrono::system_clock::now(),
-        },
-        {
-            .created = std::chrono::system_clock::now(),
-            .reason = "ПИДАРАС",
-            .status = api::models::recipe::PublicationRequestStatus::REJECTED,
-            .updated = std::chrono::system_clock::now(),
-        }};
+    auto history = recipesApi.getRecipeRequestHistory(userId, recipeId);
+
     InlineKeyboardBuilder keyboard{2}; // confirm and back
 
     std::string toPrint;
@@ -84,7 +45,7 @@ void renderPublicationHistory(UserId userId,
     // interate through it but it would require "for" and i don't know what is it) reverse to print lastest request the
     // last in list
     auto res =
-        history | reverse | transform([&prefixes](const api::models::recipe::PublicationHistoryInstance& req) {
+        history | reverse | transform([&prefixes](const api::models::recipe::PublicationHistoryRecipe& req) {
             //!!!!IMPORTANT See that tie to match prefixes!!!!
             auto fields = std::tie(req.status, req.reason, req.created, req.updated);
             return iota(0U, prefixes.size()) | transform([fields, &prefixes](size_t idx) -> std::string {

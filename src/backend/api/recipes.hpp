@@ -39,17 +39,14 @@ class RecipesApi : ApiBase {
 
     RecipeId create(UserId user, // NOLINT(*-nodiscard)
                     const models::recipe::RecipeCreateBody& body) const;
-    [[nodiscard]] std::vector<models::recipe::PublicationHistoryInstance> getRequestHistory(UserId user,
-                                                                                            RecipeId recipe) const;
+    [[nodiscard]] std::vector<models::recipe::PublicationHistoryRecipe> getRecipeRequestHistory(UserId user,
+                                                                                                RecipeId recipe) const;
 
     [[nodiscard]] models::recipe::RecipeDetails get(UserId user, RecipeId recipeId) const;
 
     void delete_(UserId user, RecipeId recipe) const;
 
     void publishCustom(UserId user, RecipeId recipe) const;
-
-    [[nodiscard]] std::vector<models::recipe::PublicationHistoryInstance>
-    getAllRequestHistory(UserId user, std::size_t size = 10, std::size_t offset = 0) const; // NOLINT(*magic-number*)
 };
 
 } // namespace cookcookhnya::api
