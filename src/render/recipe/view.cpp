@@ -4,7 +4,7 @@
 #include "backend/models/recipe.hpp"
 #include "message_tracker.hpp"
 #include "render/common.hpp"
-#include "utils/ingredients_availability.hpp"
+#include "states.hpp"
 #include "utils/utils.hpp"
 
 #include <cstddef>
@@ -16,12 +16,13 @@
 namespace cookcookhnya::render::recipe {
 
 using namespace api::models::recipe;
+using IngredientAvailability = states::RecipeView::IngredientAvailability;
+using AvailabilityType = states::RecipeView::AvailabilityType;
 
-textGenInfo
-recipeView(const std::vector<std::pair<IngredientInRecipe, utils::IngredientAvailability>>& inStoragesAvailability,
-           api::RecipeId recipeId,
-           UserId userId,
-           ApiClient api) {
+textGenInfo recipeView(const std::vector<IngredientAvailability>& inStoragesAvailability,
+                       api::RecipeId recipeId,
+                       UserId userId,
+                       ApiClient api) {
     auto recipeIngredients = api.getRecipesApi().get(userId, recipeId);
 
     bool isIngredientNotAvailable = false;
@@ -29,14 +30,14 @@ recipeView(const std::vector<std::pair<IngredientInRecipe, utils::IngredientAvai
     std::string& recipeName = recipeIngredients.name;
     auto text = std::format("{} Ингредиенты для *{}* \n\n", utils::utf8str(u8"📖"), recipeName);
 
-    for (const auto& infoPair : inStoragesAvailability) {
-        if (infoPair.second.available == utils::AvailabiltiyType::AVAILABLE) {
-            text += "`[+]` " + infoPair.first.name + "\n";
-        } else if (infoPair.second.available == utils::AvailabiltiyType::OTHER_STORAGES) {
-            text += "`[?]` " + infoPair.first.name + "\n";
+    for (const auto& availability : inStoragesAvailability) {
+        if (availability.available == AvailabilityType::AVAILABLE) {
+            text += "`[+]` " + availability.ingredient.name + "\n";
+        } else if (availability.available == AvailabilityType::OTHER_STORAGES) {
+            text += "`[?]` " + availability.ingredient.name + "\n";
             isIngredientIsOtherStorages = true;
         } else {
-            text += "`[ ]` " + infoPair.first.name + "\n";
+            text += "`[ ]` " + availability.ingredient.name + "\n";
             isIngredientNotAvailable = true;
         }
     }
@@ -48,7 +49,7 @@ recipeView(const std::vector<std::pair<IngredientInRecipe, utils::IngredientAvai
             .isIngredientIsOtherStorages = isIngredientIsOtherStorages};
 }
 
-void renderRecipeView(std::vector<std::pair<IngredientInRecipe, utils::IngredientAvailability>>& inStoragesAvailability,
+void renderRecipeView(std::vector<IngredientAvailability>& inStoragesAvailability,
                       api::RecipeId recipeId,
                       UserId userId,
                       ChatId chatId,
@@ -72,7 +73,7 @@ void renderRecipeView(std::vector<std::pair<IngredientInRecipe, utils::Ingredien
     auto messageId = message::getMessageId(userId);
     if (messageId) {
         // Only on difference between function above
-        bot.editMessageText(textGen.text, chatId, *messageId, makeKeyboardMarkup(std::move(keyboard)), "MarkdownV2");
+        bot.editMessageText(textGen.text, chatId, *messageId, makeKeyboardMarkup(std::move(keyboard)), "Markdown");
     }
 }
 

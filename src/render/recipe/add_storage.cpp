@@ -5,8 +5,7 @@
 #include "backend/models/storage.hpp"
 #include "message_tracker.hpp"
 #include "render/common.hpp"
-#include "utils/ingredients_availability.hpp"
-#include "utils/to_string.hpp"
+#include "states.hpp"
 #include "utils/utils.hpp"
 #include "view.hpp"
 
@@ -20,13 +19,15 @@
 namespace cookcookhnya::render::recipe {
 
 using namespace api::models::recipe;
+using namespace api::models::storage;
+using IngredientAvailability = states::RecipeView::IngredientAvailability;
+using AvailabilityType = states::RecipeView::AvailabilityType;
 
-textGenInfo storageAdditionView(
-    const std::vector<std::pair<IngredientInRecipe, utils::IngredientAvailability>>& inStoragesAvailability,
-    const std::vector<api::models::storage::StorageSummary>& selectedStorages,
-    api::RecipeId recipeId,
-    UserId userId,
-    ApiClient api) {
+textGenInfo storageAdditionView(const std::vector<IngredientAvailability>& inStoragesAvailability,
+                                const std::vector<StorageSummary>& selectedStorages,
+                                api::RecipeId recipeId,
+                                UserId userId,
+                                ApiClient api) {
     auto recipe = api.getRecipesApi().get(userId, recipeId);
 
     bool isIngredientNotAvailable = false;
@@ -40,19 +41,19 @@ textGenInfo storageAdditionView(
     text += std::format("{} Ингредиенты для *{}* \n\n", utils::utf8str(u8"📖"), recipeName);
 
     for (const auto& infoPair : inStoragesAvailability) {
-        if (infoPair.second.available == utils::AvailabiltiyType::AVAILABLE) {
-            text += "`[+]` " + infoPair.first.name + "\n";
-        } else if (infoPair.second.available == utils::AvailabiltiyType::OTHER_STORAGES) {
-            text += "`[?]` " + infoPair.first.name + "\n";
+        if (infoPair.available == AvailabilityType::AVAILABLE) {
+            text += "`[+]` " + infoPair.ingredient.name + "\n";
+        } else if (infoPair.available == AvailabilityType::OTHER_STORAGES) {
+            text += "`[?]` " + infoPair.ingredient.name + "\n";
             isIngredientIsOtherStorages = true;
             text += "Доступно в: ";
-            auto storages = infoPair.second.storages;
+            auto storages = infoPair.storages;
             for (std::size_t i = 0; i != storages.size(); ++i) {
                 text += storages[i].name;
                 text += i != storages.size() - 1 ? ", " : "\n";
             }
         } else {
-            text += "`[ ]` " + infoPair.first.name + "\n";
+            text += "`[ ]` " + infoPair.ingredient.name + "\n";
             isIngredientNotAvailable = true;
         }
     }
@@ -64,22 +65,20 @@ textGenInfo storageAdditionView(
             .isIngredientIsOtherStorages = isIngredientIsOtherStorages};
 }
 
-void renderStoragesSuggestion(
-    const std::vector<std::pair<IngredientInRecipe, utils::IngredientAvailability>>& inStoragesAvailability,
-    const std::vector<api::models::storage::StorageSummary>& selectedStorages,
-    const std::vector<api::models::storage::StorageSummary>& addedStorages,
-    api::RecipeId recipeId,
-    UserId userId,
-    ChatId chatId,
-    BotRef bot,
-    ApiClient api) {
+void renderStoragesSuggestion(const std::vector<IngredientAvailability>& inStoragesAvailability,
+                              const std::vector<StorageSummary>& selectedStorages,
+                              const std::vector<StorageSummary>& addedStorages,
+                              api::RecipeId recipeId,
+                              UserId userId,
+                              ChatId chatId,
+                              BotRef bot,
+                              ApiClient api) {
     auto textGen = storageAdditionView(inStoragesAvailability, selectedStorages, recipeId, userId, api);
-    std::vector<api::models::storage::StorageSummary> storages;
+    std::vector<StorageSummary> storages;
     for (const auto& infoPair : inStoragesAvailability) {
-        if (infoPair.second.available == utils::AvailabiltiyType::OTHER_STORAGES) {
-            for (const auto& storage : infoPair.second.storages) {
-                if (std::ranges::find(storages, storage.id, &api::models::storage::StorageSummary::id) ==
-                    storages.end()) {
+        if (infoPair.available == AvailabilityType::OTHER_STORAGES) {
+            for (const auto& storage : infoPair.storages) {
+                if (std::ranges::find(storages, storage.id, &StorageSummary::id) == storages.end()) {
                     storages.push_back(storage);
                 }
             }
@@ -93,8 +92,7 @@ void renderStoragesSuggestion(
         if (i % 2 == 0)
             keyboard[i / 2].reserve(2);
         const bool isSelected =
-            std::ranges::find(addedStorages, storages[i].id, &api::models::storage::StorageSummary::id) !=
-            addedStorages.end();
+            std::ranges::find(addedStorages, storages[i].id, &StorageSummary::id) != addedStorages.end();
 
         std::string emoji = utils::utf8str(isSelected ? u8"[ + ]" : u8"[ᅠ]");
         const char* actionPrefix = isSelected ? "+" : "-";
@@ -108,7 +106,7 @@ void renderStoragesSuggestion(
 
     auto messageId = message::getMessageId(userId);
     if (messageId) {
-        bot.editMessageText(textGen.text, chatId, *messageId, makeKeyboardMarkup(std::move(keyboard)), "MarkdownV2");
+        bot.editMessageText(textGen.text, chatId, *messageId, makeKeyboardMarkup(std::move(keyboard)), "Markdown");
     }
 }
 } // namespace cookcookhnya::render::recipe

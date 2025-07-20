@@ -6,7 +6,7 @@
 #include "render/recipe/add_storage.hpp"
 #include "render/recipes_suggestions/view.hpp"
 #include "render/shopping_list/create.hpp"
-#include "utils/ingredients_availability.hpp"
+#include "states.hpp"
 
 #include <string>
 #include <utility>
@@ -18,6 +18,8 @@ using namespace render::recipes_suggestions;
 using namespace render::shopping_list;
 using namespace render::recipe;
 using namespace api::models::ingredient;
+using IngredientAvailability = states::RecipeView::IngredientAvailability;
+using AvailabilityType = states::RecipeView::AvailabilityType;
 
 void handleRecipeViewCQ(RecipeView& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
     const std::string data = cq.data;
@@ -32,11 +34,11 @@ void handleRecipeViewCQ(RecipeView& state, CallbackQueryRef cq, BotRef bot, SMRe
     if (data == "shopping_list") {
         std::vector<Ingredient> selectedIngredients;
         std::vector<Ingredient> allIngredients;
-        for (const auto& infoPair : state.availability) {
-            if (infoPair.second.available == utils::AvailabiltiyType::NOT_AVAILABLE) {
-                selectedIngredients.push_back({.id = infoPair.first.id, .name = infoPair.first.name});
+        for (const auto& av : state.availability) {
+            if (av.available == AvailabilityType::NOT_AVAILABLE) {
+                selectedIngredients.push_back({.id = av.ingredient.id, .name = av.ingredient.name});
             }
-            allIngredients.push_back({.id = infoPair.first.id, .name = infoPair.first.name});
+            allIngredients.push_back({.id = av.ingredient.id, .name = av.ingredient.name});
         }
         renderShoppingListCreation(selectedIngredients, allIngredients, userId, chatId, bot);
         stateManager.put(ShoppingListCreation{

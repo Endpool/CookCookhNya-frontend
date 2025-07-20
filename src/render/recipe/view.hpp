@@ -1,12 +1,10 @@
 #pragma once
 
 #include "backend/id_types.hpp"
-#include "backend/models/recipe.hpp"
 #include "render/common.hpp"
-#include "utils/ingredients_availability.hpp"
+#include "states.hpp"
 
 #include <string>
-#include <utility>
 #include <vector>
 
 namespace cookcookhnya::render::recipe {
@@ -17,19 +15,16 @@ struct textGenInfo {
     bool isIngredientIsOtherStorages;
 };
 
-void renderRecipeView(std::vector<std::pair<api::models::recipe::IngredientInRecipe, utils::IngredientAvailability>>&
-                          inStoragesAvailability,
+void renderRecipeView(std::vector<states::RecipeView::IngredientAvailability>& inStoragesAvailability,
                       api::RecipeId recipeId,
                       UserId userId,
                       ChatId chatId,
                       BotRef bot,
                       ApiClient api);
 
-textGenInfo
-recipeView(const std::vector<std::pair<api::models::recipe::IngredientInRecipe, utils::IngredientAvailability>>&
-               inStoragesAvailability,
-           api::RecipeId recipeId,
-           UserId userId,
-           ApiClient api);
+textGenInfo recipeView(const std::vector<states::RecipeView::IngredientAvailability>& inStoragesAvailability,
+                       api::RecipeId recipeId,
+                       UserId userId,
+                       ApiClient api);
 
 } // namespace cookcookhnya::render::recipe
