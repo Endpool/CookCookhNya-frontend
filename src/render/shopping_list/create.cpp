@@ -34,7 +34,8 @@ void renderShoppingListCreation(const std::vector<Ingredient>& selectedIngredien
             const bool isSelected =
                 std::ranges::contains(selectedIngredients, ing.id, &api::models::ingredient::Ingredient::id);
             std::string emoji = utils::utf8str(isSelected ? u8"[ + ]" : u8"[ᅠ]");
-            const char* actionPrefix = isSelected ? "+" : "-";
+            // button data is onclick action for bot: "+" is "add", "-" is "remove"
+            const char* actionPrefix = isSelected ? "-" : "+";
             std::string text = std::format("{} {}", emoji, ing.name);
             std::string data = actionPrefix + utils::to_string(ing.id);
             keyboard << makeCallbackButton(text, data);
