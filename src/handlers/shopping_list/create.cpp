@@ -50,7 +50,7 @@ void handleShoppingListCreationCQ(
         bot.answerCallbackQuery(cq.id);
         return;
     }
-    if (data[0] == '+') {
+    if (data[0] == '-') {
         auto newIngredientIdStr = data.substr(1, data.size());
         auto newIngredientId = utils::parseSafe<api::IngredientId>(newIngredientIdStr);
         if (newIngredientId) {
@@ -59,7 +59,7 @@ void handleShoppingListCreationCQ(
         }
         renderShoppingListCreation(state.selectedIngredients, state.allIngredients, userId, chatId, bot);
     }
-    if (data[0] == '-') {
+    if (data[0] == '+') {
         auto newIngredientIdStr = data.substr(1, data.size());
         auto newIngredientId = utils::parseSafe<api::IngredientId>(newIngredientIdStr);
         if (newIngredientId) {

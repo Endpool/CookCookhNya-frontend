@@ -66,16 +66,12 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-clang-tidy-${{ github.ref }}-
             ${{ runner.os }}-clang-tidy-refs/heads/main
-
-      - name: Initialize empty clang-tidy cache
-        if: steps.cache-restore.outputs.cache-hit != 'true'
+      
+      - name: Copy original cache file if exists
         run: |
-          echo "{}" > .clang-tidy-cache.json
-
-      - name: Copy original cache file
-        if: steps.cache-restore.outputs.cache-hit == 'true'
-        run: |
-          cp .clang-tidy-cache.json .clang-tidy-cache.json.orig
+          if [ -f .clang-tidy-cache.json ]; then
+            cp .clang-tidy-cache.json .clang-tidy-cache.json.orig
+          fi
 
       - name: Create clang-tidy cache script
         run: |

@@ -11,15 +11,13 @@
 #include <string_view>
 #include <utility>
 
-namespace cookcookhnya::handlers::initial {
+namespace cookcookhnya::handlers::commands {
 
 using namespace render::main_menu;
 using namespace std::literals;
 
 void handleStartCmd(MessageRef m, BotRef bot, SMRef stateManager, ApiClientRef api) {
     auto userId = m.from->id;
-    renderMainMenu(false, m.from->id, m.chat->id, bot, api);
-    stateManager.put(MainMenu{});
     std::string fullName = m.from->firstName;
     if (!m.from->lastName.empty()) {
         fullName += ' ';
@@ -37,8 +35,13 @@ void handleStartCmd(MessageRef m, BotRef bot, SMRef stateManager, ApiClientRef a
     const int hashPos = "/start "sv.size();
     if (startText.size() > hashPos - 1) {
         auto hash = std::string(m.text).substr(hashPos);
-        api.getStoragesApi().activate(userId, hash);
+        auto storage = api.getStoragesApi().activate(userId, hash);
+        renderMainMenu(false, storage->name, m.from->id, m.chat->id, bot, api);
+        stateManager.put(MainMenu{});
+        return;
     }
+    renderMainMenu(false, std::nullopt, m.from->id, m.chat->id, bot, api);
+    stateManager.put(MainMenu{});
 };
 
 void handleNoState(MessageRef m, BotRef bot) {
@@ -47,4 +50,4 @@ void handleNoState(MessageRef m, BotRef bot) {
     bot.sendMessage(m.chat->id, "Use /start please");
 };
 
-} // namespace cookcookhnya::handlers::initial
+} // namespace cookcookhnya::handlers::commands

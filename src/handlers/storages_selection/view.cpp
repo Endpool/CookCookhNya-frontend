@@ -33,7 +33,7 @@ void handleStoragesSelectionCQ(
     }
 
     if (cq.data == "cancel") {
-        renderMainMenu(true, userId, chatId, bot, api);
+        renderMainMenu(true, std::nullopt, userId, chatId, bot, api);
         stateManager.put(MainMenu{});
         return;
     }
