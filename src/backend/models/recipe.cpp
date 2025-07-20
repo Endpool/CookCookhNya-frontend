@@ -63,13 +63,6 @@ RecipeDetails tag_invoke(json::value_to_tag<RecipeDetails> /*tag*/, const json::
     };
 }
 
-IngredientInCustomRecipe tag_invoke(json::value_to_tag<IngredientInCustomRecipe> /*tag*/, const json::value& j) {
-    return {
-        .id = value_to<decltype(IngredientInCustomRecipe::id)>(j.at("id")),
-        .name = value_to<decltype(IngredientInCustomRecipe::name)>(j.at("name")),
-    };
-}
-
 RecipeSearchResponse tag_invoke(json::value_to_tag<RecipeSearchResponse> /*tag*/, const json::value& j) {
     return {
         .page = value_to<decltype(RecipeSearchResponse::page)>(j.at("results")),
