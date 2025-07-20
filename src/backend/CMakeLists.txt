@@ -16,4 +16,6 @@ target_sources(main PRIVATE
     src/backend/models/recipe.cpp
     src/backend/models/shopping_list.cpp
     src/backend/models/request_history.cpp
+    src/backend/models/publication_request_status.cpp
+
 )

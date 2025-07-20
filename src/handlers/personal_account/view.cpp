@@ -29,13 +29,13 @@ void handlePersonalAccountMenuCQ(
         return;
     }
     if (data == "back") {
-        renderMainMenu(true, userId, chatId, bot, api);
+        renderMainMenu(true, std::nullopt, userId, chatId, bot, api);
         stateManager.put(MainMenu{});
         return;
     }
     if (data == "ingredients") {
-        renderCustomIngredientsList(true, userId, chatId, bot, api);
-        stateManager.put(CustomIngredientsList{});
+        renderCustomIngredientsList(true, 0, userId, chatId, bot, api);
+        stateManager.put(CustomIngredientsList{.pageNo = 0});
         return;
     }
     if (data == "history") {

@@ -7,6 +7,7 @@
 
 #include <httplib.h>
 
+#include <optional>
 #include <vector>
 
 namespace cookcookhnya::api {
@@ -26,7 +27,7 @@ class StoragesApi : ApiBase {
     void addMember(UserId user, StorageId storage, UserId member) const;
     void deleteMember(UserId user, StorageId storage, UserId member) const;
     [[nodiscard]] InvitationId inviteMember(UserId user, StorageId storage) const;
-    void activate(UserId user, InvitationId invitation) const;
+    [[nodiscard]] std::optional<models::storage::StorageSummary> activate(UserId user, InvitationId invitation) const;
 };
 
 } // namespace cookcookhnya::api

@@ -1,9 +1,12 @@
 #include "to_string.hpp"
 
 #include "backend/models/recipe.hpp"
+#include "backend/models/publication_request_status.hpp"
+
 #include "utils/utils.hpp"
 #include "uuid.hpp"
 
+#include <array>
 #include <boost/lexical_cast.hpp>
 
 #include <chrono>
@@ -30,6 +33,7 @@ std::string to_string(std::chrono::system_clock::time_point tp) {
     oss << std::put_time(&tm, "%Y-%m-%d %H:%M");
 
     return oss.str();
+
 }
 
 } // namespace cookcookhnya::utils

@@ -1,5 +1,9 @@
 target_sources(main PRIVATE
-    src/handlers/initial/start.cpp
+    src/handlers/commands/start.cpp
+    src/handlers/commands/wanna_eat.cpp
+    src/handlers/commands/shopping_list.cpp
+    src/handlers/commands/personal_account.cpp
+    src/handlers/commands/my_storages.cpp
 
     src/handlers/main_menu/view.cpp
 

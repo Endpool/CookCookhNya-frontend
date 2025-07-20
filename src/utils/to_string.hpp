@@ -1,6 +1,8 @@
 #pragma once
 
 #include "backend/models/recipe.hpp"
+#include "backend/models/publication_request_status.hpp"
+
 #include "uuid.hpp"
 
 #include <string>
@@ -20,5 +22,6 @@ std::string to_string(const Uuid& u);
 std::string to_string(cookcookhnya::api::models::recipe::PublicationRequestStatus status);
 
 std::string to_string(std::chrono::system_clock::time_point tp);
+
 
 } // namespace cookcookhnya::utils

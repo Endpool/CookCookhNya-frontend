@@ -34,9 +34,14 @@ struct MainMenu {};
 
 struct PersonalAccountMenu {};
 
-struct CustomIngredientsList {};
-struct CustomIngredientCreationEnterName {};
+struct CustomIngredientsList {
+    std::size_t pageNo;
+};
+struct CustomIngredientCreationEnterName {
+    std::size_t pageNo;
+};
 struct CustomIngredientConfirmation {
+    std::size_t pageNo;
     std::string name;
 
     // All optionals are for "back" from this menu, so this state won't erase all info
@@ -55,7 +60,9 @@ struct CustomIngredientConfirmation {
         : name(std::move(name)), recipeFrom(recipeId), pageNo(pageNo), ingredients(std::move(ingredients)),
           storageFrom(storageId) {};
 };
-struct CustomIngredientPublish {};
+struct CustomIngredientPublish {
+    std::size_t pageNo;
+};
 
 struct StorageList {};
 struct StorageCreationEnterName {};
