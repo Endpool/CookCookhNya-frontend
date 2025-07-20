@@ -112,7 +112,7 @@ void handleCustomRecipeIngredientsSearchIQ(CustomRecipeIngredientsSearch& state,
         updateSearch(state, true, bot, userId, api);
     }
     // Cache is not disabled on Windows and Linux desktops. Works on Android and Web
-    bot.answerInlineQuery(iq.id, {}, 0);
+    // bot.answerInlineQuery(iq.id, {}, 0);
 }
 
 } // namespace cookcookhnya::handlers::personal_account::recipes
