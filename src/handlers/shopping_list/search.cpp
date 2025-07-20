@@ -8,6 +8,7 @@
 #include "render/shopping_list/view.hpp"
 #include "utils/parsing.hpp"
 
+#include <cstddef>
 #include <string_view>
 #include <utility>
 

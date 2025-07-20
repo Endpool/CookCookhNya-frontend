@@ -4,6 +4,7 @@
 #include "utils/utils.hpp"
 
 #include <cstddef>
+#include <format>
 #include <memory>
 #include <ranges>
 #include <type_traits>

@@ -4,6 +4,8 @@
 #include <boost/json/value.hpp>
 #include <boost/json/value_to.hpp>
 
+#include <optional>
+
 namespace cookcookhnya::api::models::ingredient {
 
 namespace json = boost::json;

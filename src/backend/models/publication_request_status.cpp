@@ -1,5 +1,8 @@
 #include "backend/models/publication_request_status.hpp"
 
+#include <boost/json/conversion.hpp>
+#include <boost/json/value.hpp>
+
 namespace cookcookhnya::api::models::status {
 
 PublicationRequestStatus tag_invoke(boost::json::value_to_tag<PublicationRequestStatus> /*tag*/,

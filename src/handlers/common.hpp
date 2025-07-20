@@ -3,6 +3,7 @@
 #include "backend/api/api.hpp"
 #include "backend/api/ingredients.hpp"
 #include "backend/api/recipes.hpp"
+#include "backend/api/shopping_lists.hpp"
 #include "backend/api/storages.hpp"
 #include "backend/api/users.hpp"
 #include "states.hpp"

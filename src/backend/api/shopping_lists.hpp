@@ -6,6 +6,7 @@
 
 #include <httplib.h>
 
+#include <cstddef>
 #include <vector>
 
 namespace cookcookhnya::api {

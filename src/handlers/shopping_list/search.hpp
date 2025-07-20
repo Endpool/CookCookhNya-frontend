@@ -2,6 +2,8 @@
 
 #include "handlers/common.hpp"
 
+#include <cstddef>
+
 namespace cookcookhnya::handlers::shopping_list {
 
 const std::size_t searchPageSize = 10;

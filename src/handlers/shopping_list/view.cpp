@@ -10,6 +10,7 @@
 #include "states.hpp"
 #include "utils/parsing.hpp"
 
+#include <optional>
 #include <ranges>
 #include <utility>
 #include <vector>
@@ -18,7 +19,6 @@ namespace cookcookhnya::handlers::shopping_list {
 
 using namespace render::main_menu;
 using namespace render::shopping_list;
-
 using namespace std::views;
 using namespace std::ranges;
 

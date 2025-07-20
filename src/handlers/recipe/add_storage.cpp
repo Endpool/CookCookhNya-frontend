@@ -9,6 +9,7 @@
 #include "utils/ingredients_availability.hpp"
 #include "utils/parsing.hpp"
 
+#include <algorithm>
 #include <string>
 #include <string_view>
 #include <utility>
@@ -16,6 +17,7 @@
 namespace cookcookhnya::handlers::recipe {
 
 using namespace render::recipe;
+using namespace api::models::storage;
 
 void handleRecipeStorageAdditionCQ(
     RecipeStorageAddition& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
@@ -34,7 +36,7 @@ void handleRecipeStorageAdditionCQ(
         auto newStorageId = utils::parseSafe<api::StorageId>(std::string_view{data}.substr(1));
         if (newStorageId) {
             auto newStorageDetails = api.getStoragesApi().get(userId, *newStorageId);
-            api::models::storage::StorageSummary newStorage = {.id = *newStorageId, .name = newStorageDetails.name};
+            const StorageSummary newStorage = {.id = *newStorageId, .name = newStorageDetails.name};
             state.prevState.addedStorages.push_back(newStorage);
             utils::addStorage(state.prevState.availability, newStorage);
             renderStoragesSuggestion(state.prevState.availability,
@@ -52,7 +54,7 @@ void handleRecipeStorageAdditionCQ(
         auto newStorageId = utils::parseSafe<api::StorageId>(std::string_view{data}.substr(1));
         if (newStorageId) {
             auto newStorageDetails = api.getStoragesApi().get(userId, *newStorageId);
-            api::models::storage::StorageSummary newStorage = {.id = *newStorageId, .name = newStorageDetails.name};
+            const StorageSummary newStorage = {.id = *newStorageId, .name = newStorageDetails.name};
             state.prevState.addedStorages.erase(std::ranges::find(
                 state.prevState.addedStorages, newStorageId, &api::models::storage::StorageSummary::id));
             utils::deleteStorage(state.prevState.availability, newStorage);

@@ -9,6 +9,7 @@
 #include "utils/parsing.hpp"
 
 #include <algorithm>
+#include <optional>
 #include <utility>
 #include <vector>
 

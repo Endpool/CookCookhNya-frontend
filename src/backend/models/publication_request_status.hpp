@@ -1,6 +1,7 @@
 #pragma once
 
 #include <boost/json/conversion.hpp>
+#include <boost/json/value.hpp>
 
 #include <cstdint>
 

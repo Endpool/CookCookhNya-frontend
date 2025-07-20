@@ -5,6 +5,7 @@
 #include "render/personal_account/ingredients_list/view.hpp"
 #include "render/personal_account/recipes_list/view.hpp"
 
+#include <optional>
 #include <string>
 
 namespace cookcookhnya::handlers::personal_account {

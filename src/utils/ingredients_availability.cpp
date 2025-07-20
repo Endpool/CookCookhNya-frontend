@@ -1,37 +1,44 @@
 #include "ingredients_availability.hpp"
 
+#include "backend/api/api.hpp"
 #include "backend/id_types.hpp"
+#include "backend/models/recipe.hpp"
 #include "backend/models/storage.hpp"
+#include "tg_types.hpp"
 
+#include <algorithm>
 #include <ranges>
 #include <unordered_map>
+#include <unordered_set>
+#include <utility>
+#include <vector>
 
 namespace cookcookhnya::utils {
 
 using namespace api;
+using namespace api::models::recipe;
+using namespace api::models::storage;
 using namespace tg_types;
+using namespace std::views;
+using namespace std::ranges;
 
-std::vector<std::pair<models::recipe::IngredientInRecipe, IngredientAvailability>>
-inStoragesAvailability(std::vector<models::storage::StorageSummary>& selectedStorages,
-                       RecipeId recipeId,
-                       UserId userId,
-                       const api::ApiClient& api) {
+std::vector<std::pair<IngredientInRecipe, IngredientAvailability>> inStoragesAvailability(
+    std::vector<StorageSummary>& selectedStorages, RecipeId recipeId, UserId userId, const api::ApiClient& api) {
     auto allStorages = api.getStoragesApi().getStoragesList(userId);
     auto recipe = api.getRecipesApi().get(userId, recipeId);
 
-    auto selectedStoragesSet = selectedStorages | std::views::transform(&api::models::storage::StorageSummary::id) |
-                               std::ranges::to<std::unordered_set>();
+    auto selectedStoragesSet = selectedStorages | views::transform(&StorageSummary::id) | to<std::unordered_set>();
 
-    std::unordered_map<StorageId, models::storage::StorageSummary> allStoragesMap;
+    std::unordered_map<StorageId, StorageSummary> allStoragesMap;
     for (const auto& storage : allStorages) {
         allStoragesMap.emplace(storage.id, storage);
     }
 
-    std::vector<std::pair<models::recipe::IngredientInRecipe, IngredientAvailability>> result;
+    std::vector<std::pair<IngredientInRecipe, IngredientAvailability>> result;
 
     for (const auto& ingredient : recipe.ingredients) {
         IngredientAvailability availability;
-        std::vector<models::storage::StorageSummary> storages;
+        std::vector<StorageSummary> storages;
 
         bool hasInSelected = false;
         bool hasInOther = false;
@@ -65,10 +72,10 @@ inStoragesAvailability(std::vector<models::storage::StorageSummary>& selectedSto
     return result;
 }
 
-void addStorage(std::vector<std::pair<api::models::recipe::IngredientInRecipe, IngredientAvailability>>& availability,
-                const api::models::storage::StorageSummary& storage) {
+void addStorage(std::vector<std::pair<IngredientInRecipe, IngredientAvailability>>& availability,
+                const StorageSummary& storage) {
     for (auto& infoPair : availability) {
-        auto it = std::ranges::find(infoPair.second.storages, storage.id, &models::storage::StorageSummary::id);
+        auto it = std::ranges::find(infoPair.second.storages, storage.id, &StorageSummary::id);
         if (it != infoPair.second.storages.end()) {
             infoPair.second.storages.erase(it);
             infoPair.second.available = AvailabiltiyType::AVAILABLE;
@@ -76,9 +83,8 @@ void addStorage(std::vector<std::pair<api::models::recipe::IngredientInRecipe, I
     }
 }
 
-void deleteStorage(
-    std::vector<std::pair<api::models::recipe::IngredientInRecipe, IngredientAvailability>>& availability,
-    const api::models::storage::StorageSummary& storage) {
+void deleteStorage(std::vector<std::pair<IngredientInRecipe, IngredientAvailability>>& availability,
+                   const StorageSummary& storage) {
     for (auto& infoPair : availability) {
         for (auto& storage_ : infoPair.first.inStorages) {
             if (storage.id == storage_.id) {

@@ -13,6 +13,7 @@
 #include <format>
 #include <memory>
 #include <string>
+#include <utility>
 
 namespace TgBot {
 class InlineKeyboardMarkup;
@@ -43,7 +44,7 @@ void renderCustomRecipesList(std::size_t pageNo, UserId userId, ChatId chatId, B
     auto recipesList =
         recipesApi.getList(userId, PublicityFilterType::Custom, numOfRecipesOnPage, pageNo * numOfRecipesOnPage);
 
-    std::string pageInfo = utils::utf8str(
+    const std::string pageInfo = utils::utf8str(
         recipesList.found > 0 ? u8"🔪 Рецепты созданные вами:"
                               : u8"🔪 Вы находитесь в Мои рецепты. Создавайте и делитесь новыми рецептами.\n\n");
 
