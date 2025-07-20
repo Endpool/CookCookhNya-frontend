@@ -54,7 +54,7 @@ void renderRecipesSuggestion(std::vector<StorageSummary>& storages,
     auto storagesIds = storages | views::transform(&StorageSummary::id) | to<std::vector>();
     auto recipesList = recipesApi.getSuggestedRecipes(userId, storagesIds, numOfRecipes, pageNo * numOfRecipesOnPage);
 
-    std::string text =
+    const std::string text =
         utils::utf8str(recipesList.found > 0 ? u8"🔪 Рецепты подобранные специально для вас"
                                              : u8"😔 К сожалению, нам не удалось найти подходящие рецепты для вас...");
     auto keyboardMarkup = constructKeyboard(pageNo, numOfRecipesOnPage, recipesList);

@@ -3,6 +3,7 @@
 #include "render/common.hpp"
 
 #include <optional>
+#include <string>
 
 namespace cookcookhnya::render::main_menu {
 

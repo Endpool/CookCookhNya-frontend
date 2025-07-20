@@ -5,8 +5,11 @@
 #include "render/common.hpp"
 #include "render/pagination.hpp"
 #include "states.hpp"
+#include "utils/to_string.hpp"
+#include "utils/utils.hpp"
 
 #include <cstddef>
+#include <memory>
 #include <string>
 #include <utility>
 
@@ -23,7 +26,7 @@ using namespace std::ranges;
 
 void renderShoppingListIngredientSearch(
     const states::ShoppingListIngredientSearch& state, std::size_t pageSize, UserId userId, ChatId chatId, BotRef bot) {
-    std::string text = utils::utf8str(u8"🍗 Используйте кнопку ниже, чтобы найти ингредиенты для добавления");
+    const std::string text = utils::utf8str(u8"🍗 Используйте кнопку ниже, чтобы найти ингредиенты для добавления");
 
     InlineKeyboardBuilder keyboard{state.page.size() + 2}; // search, items (n), back
 
