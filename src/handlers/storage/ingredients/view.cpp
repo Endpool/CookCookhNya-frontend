@@ -42,7 +42,7 @@ void updateSearch(
         state.searchItems = std::move(response.page);
         state.totalFound = response.found;
         if (auto mMessageId = message::getMessageId(userId))
-            renderIngredientsListSearch(state, numOfIngredientsOnPage, userId, userId, bot);
+            renderIngredientsListSearch(state, userId, userId, bot);
     }
 }
 } // namespace
@@ -87,7 +87,7 @@ void handleStorageIngredientsListCQ(
             state.storageIngredients.put({.id = it->id, .name = it->name});
         }
         it->isInStorage = !it->isInStorage;
-        renderIngredientsListSearch(state, numOfIngredientsOnPage, userId, chatId, bot);
+        renderIngredientsListSearch(state, userId, chatId, bot);
     }
 }
 
@@ -101,7 +101,7 @@ void handleStorageIngredientsListIQ(StorageIngredientsList& state,
         state.searchItems.clear();
         // When query is empty then search shouldn't happen
         state.totalFound = 0;
-        renderIngredientsListSearch(state, numOfIngredientsOnPage, userId, userId, bot);
+        renderIngredientsListSearch(state, userId, userId, bot);
     } else {
         updateSearch(state, true, bot, userId, api);
     }

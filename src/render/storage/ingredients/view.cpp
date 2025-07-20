@@ -99,14 +99,15 @@ InlineKeyboard constructNavigationsMarkup(size_t offset,
     keyboard[arrowsRow].insert(
         keyboard[arrowsRow].begin() + 1,
         makeCallbackButton(std::format("{} из {}", state.pageNo + 1, maxPageNum), "dont_handle"));
-    keyboard[arrowsRow + 1].push_back(makeCallbackButton(u8"↩️ Назад", "back"));
+    keyboard[arrowsRow + 1].push_back(makeCallbackButton(u8"🗑 Удалить из хранилища", "delete"));
+    keyboard[arrowsRow + 2].push_back(makeCallbackButton(u8"↩️ Назад", "back"));
     return keyboard;
 }
 
 InlineKeyboard constructMarkup(size_t numOfRecipesOnPage, const states::StorageIngredientsList& state) {
     // 1 for back button return, 1 for arrows (ALWAYS ACCOUNT ARROWS), 1
-    // for editing - other buttons are ingredients
-    const size_t numOfRows = 3;
+    // for editing, 1 for delete - other buttons are ingredients
+    const size_t numOfRows = 4;
     const size_t offset = 1; // Number of rows before list
 
     const size_t recipesToShow = std::min(numOfRecipesOnPage, state.searchItems.size());
@@ -122,13 +123,12 @@ InlineKeyboard constructMarkup(size_t numOfRecipesOnPage, const states::StorageI
 } // namespace
 
 void renderIngredientsListSearch(const states::StorageIngredientsList& state,
-                                 size_t numOfIngredientsOnPage,
                                  UserId userId,
                                  ChatId chatId,
                                  BotRef bot) {
     using namespace std::views;
     using std::ranges::to;
-
+    const std::size_t numOfIngredientsOnPage = 5;
     std::string list = state.storageIngredients.getValues() |
                        transform([](auto& i) { return std::format("• {}\n", i.name); }) | join | to<std::string>();
     auto text = utils::utf8str(u8"🍗 Ваши ингредиенты:\n\n") + std::move(list);

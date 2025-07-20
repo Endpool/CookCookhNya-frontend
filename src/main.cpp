@@ -53,6 +53,7 @@ int main(int argc, char* argv[]) {
                                                       storageSelectionCQHandler,
                                                       storageIngredientsListCQHandler,
                                                       storageIngredientsListIQHandler,
+                                                      storageIngredientsDeletionCQHandler,
                                                       suggestedRecipeListCQHandler,
                                                       recipeViewCQHandler,
                                                       recipeStorageAdditionCQHandler,

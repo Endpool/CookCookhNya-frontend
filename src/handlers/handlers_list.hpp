@@ -25,6 +25,7 @@
 #include "shopping_list/storage_selection_to_buy.hpp"
 #include "shopping_list/view.hpp"
 
+#include "storage/ingredients/delete.hpp"
 #include "storage/ingredients/view.hpp"
 
 #include "storage/members/add.hpp"
@@ -105,6 +106,9 @@ using suggestedRecipeListCQHandler = Handler<Events::CallbackQuery{}, handleSugg
 // StorageIngredientsList
 using storageIngredientsListCQHandler = Handler<Events::CallbackQuery{}, handleStorageIngredientsListCQ>;
 using storageIngredientsListIQHandler = Handler<Events::InlineQuery{}, handleStorageIngredientsListIQ>;
+
+// StorageIngredientsDeletion
+using storageIngredientsDeletionCQHandler = Handler<Events::CallbackQuery{}, handleStorageIngredientsDeletionCQ>;
 
 // RecipeView
 using recipeViewCQHandler = Handler<Events::CallbackQuery{}, handleRecipeViewCQ>;
