@@ -1,5 +1,6 @@
 #include "view.hpp"
 
+#include "backend/api/api.hpp"
 #include "backend/id_types.hpp"
 #include "backend/models/storage.hpp"
 #include "handlers/common.hpp"
@@ -9,6 +10,7 @@
 #include "utils/parsing.hpp"
 
 #include <algorithm>
+#include <optional>
 #include <utility>
 #include <vector>
 
@@ -20,7 +22,7 @@ using namespace render::select_storages;
 using namespace render::main_menu;
 
 void handleStoragesSelectionCQ(
-    StoragesSelection& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
+    StoragesSelection& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, api::ApiClientRef api) {
     bot.answerCallbackQuery(cq.id);
     auto chatId = cq.message->chat->id;
     auto userId = cq.from->id;
@@ -28,7 +30,7 @@ void handleStoragesSelectionCQ(
     if (cq.data == "confirm") {
         renderRecipesSuggestion(state.selectedStorages, 0, userId, chatId, bot, api);
         stateManager.put(SuggestedRecipesList{
-            .pageNo = 0, .selectedStorages = std::move(state.selectedStorages), .fromStorage = false});
+            .selectedStorages = std::move(state.selectedStorages), .pageNo = 0, .fromStorage = false});
         return;
     }
 

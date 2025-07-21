@@ -1,5 +1,6 @@
 #include "delete.hpp"
 
+#include "backend/api/storages.hpp"
 #include "backend/id_types.hpp"
 #include "handlers/common.hpp"
 #include "render/storage/view.hpp"
@@ -12,7 +13,7 @@ using namespace render::storages_list;
 using namespace render::storage;
 
 void handleStorageDeletionCQ(
-    StorageDeletion& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, StorageApiRef storageApi) {
+    StorageDeletion& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, api::StorageApiRef storageApi) {
     bot.answerCallbackQuery(cq.id);
     if (cq.data == "confirm") {
         storageApi.delete_(cq.from->id, state.storageId);

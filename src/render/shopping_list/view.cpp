@@ -14,7 +14,7 @@ namespace cookcookhnya::render::shopping_list {
 
 void renderShoppingList(const states::ShoppingListView& state, UserId userId, ChatId chatId, BotRef bot) {
     auto items = state.items.getValues();
-    bool anySelected = std::ranges::any_of(items, &states::ShoppingListView::SelectableItem::selected);
+    const bool anySelected = std::ranges::any_of(items, &states::ShoppingListView::SelectableItem::selected);
 
     InlineKeyboardBuilder keyboard{3 + items.size()}; // add, remove and/or buy, list (n), back
 

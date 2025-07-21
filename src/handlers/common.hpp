@@ -1,10 +1,5 @@
 #pragma once
 
-#include "backend/api/api.hpp"
-#include "backend/api/ingredients.hpp"
-#include "backend/api/recipes.hpp"
-#include "backend/api/storages.hpp"
-#include "backend/api/users.hpp"
 #include "states.hpp"
 
 #include <tg_stater/handler/type.hpp>
@@ -45,6 +40,7 @@ using states::StoragesSelection;
 using states::SuggestedRecipesList;
 
 using states::ShoppingListCreation;
+using states::ShoppingListIngredientSearch;
 using states::ShoppingListStorageSelectionToBuy;
 using states::ShoppingListView;
 
@@ -54,20 +50,10 @@ using states::CustomRecipesList;
 using states::RecipeCustomView;
 
 // Type aliases
-using ApiClientRef = const api::ApiClient&;
-using UserApiRef = const api::UsersApi&;
-using StorageApiRef = const api::StoragesApi&;
-using IngredientsApiRef = const api::IngredientsApi&;
-using RecipesApiRef = const api::RecipesApi&;
-using ShoppingListApiRef = const api::ShoppingListApi&;
-
 using BotRef = const TgBot::Api&;
 using SMRef = const states::StateManager&;
 using MessageRef = const TgBot::Message&;
 using CallbackQueryRef = const TgBot::CallbackQuery&;
 using InlineQueryRef = const TgBot::InlineQuery&;
-
-using NoState = tg_stater::HandlerTypes::NoState;
-using AnyState = tg_stater::HandlerTypes::AnyState;
 
 } // namespace cookcookhnya::handlers

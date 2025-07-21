@@ -2,131 +2,49 @@
 
 #include "backend/models/ingredient.hpp"
 #include "message_tracker.hpp"
-#include "patched_bot.hpp"
 #include "render/common.hpp"
+#include "render/pagination.hpp"
 #include "states.hpp"
-#include "utils/to_string.hpp"
 #include "utils/utils.hpp"
 
-#include <tgbot/types/InlineKeyboardButton.h>
-
-#include <algorithm>
-#include <cmath>
 #include <cstddef>
-#include <cstdint>
 #include <format>
 #include <memory>
 #include <ranges>
 #include <string>
 #include <utility>
-#include <vector>
+
+namespace TgBot {
+class InlineKeyboardMarkup;
+} // namespace TgBot
 
 namespace cookcookhnya::render::storage::ingredients {
 
 using namespace api::models::ingredient;
 using namespace tg_types;
+using namespace std::views;
+using std::ranges::to;
 
 namespace {
 
-InlineKeyboard constructNavigationsMarkup(size_t offset, // NOLINT(*complexity*)
-                                          size_t fullKeyBoardSize,
-                                          size_t numOfRecipesOnPage,
-                                          const states::StorageIngredientsList& state) {
-    using namespace std::views;
-    const size_t amountOfRecipes = state.totalFound;
-    int maxPageNum =
-        static_cast<int>(std::ceil(static_cast<double>(amountOfRecipes) / static_cast<double>(numOfRecipesOnPage)));
-
-    const size_t recipesToShow = std::min(numOfRecipesOnPage, state.searchItems.size());
-    // + 1 because of the 0-indexing, as comparisson is between num of recipes gotten and that
-    // will be actually shown
-    const bool ifMaxPage = static_cast<int>(amountOfRecipes) -
-                               static_cast<int>(numOfRecipesOnPage) * (static_cast<int>(state.pageNo) + 1) <=
-                           0;
-
-    if (offset + recipesToShow >= fullKeyBoardSize) {
-        InlineKeyboard error(0);
-        return error;
-    }
-    const size_t arrowsRow = offset + recipesToShow;
-    // Don't reserve for arrows if it's first page is max(im)
-    InlineKeyboard keyboard(state.pageNo == 0 && ifMaxPage ? fullKeyBoardSize - 1 : fullKeyBoardSize);
+std::shared_ptr<TgBot::InlineKeyboardMarkup>
+constructKeyboard(std::size_t pageNo, std::size_t pageSize, const states::StorageIngredientsList& state) {
+    InlineKeyboardBuilder keyboard;
 
     auto searchButton = std::make_shared<TgBot::InlineKeyboardButton>();
     searchButton->text = utils::utf8str(u8"🛒 Добавить");
     searchButton->switchInlineQueryCurrentChat = "";
-    keyboard[0].push_back(std::move(searchButton));
-    for (auto [row, ing] : zip(drop(keyboard, 1), state.searchItems))
-        row.push_back(makeCallbackButton((ing.isInStorage ? "[ + ] " : "[ㅤ] ") + ing.name, utils::to_string(ing.id)));
+    keyboard << std::move(searchButton) << NewRow{};
 
-    if (state.pageNo == 0 && ifMaxPage) {
-        // instead of arrows row
-        if (!state.storageIngredients.getValues().empty()) {
-            keyboard[arrowsRow].push_back(makeCallbackButton(u8"🗑 Удалить", "delete"));
-            keyboard[arrowsRow + 1].push_back(makeCallbackButton(u8"↩️ Назад", "back"));
-        } else {
-            keyboard[arrowsRow].push_back(makeCallbackButton(u8"↩️ Назад", "back"));
-        }
-
-        return keyboard;
-    }
-    keyboard[arrowsRow].reserve(3);
-
-    // Helps to reduce code. Power of C++ YEAH BABE!
-    uint8_t b = 0;
-
-    // Simply enamurate every case
-    if (state.pageNo == 0) {
-        if (!ifMaxPage) {
-            b |= uint8_t{0b01};
-        }
-    } else if (ifMaxPage) {
-        b |= uint8_t{0b10};
-    } else {
-        b |= uint8_t{0b11};
-    }
-
-    // Check from left to right due to buttons being displayed like that
-    for (int i = 1; i >= 0; i--) {
-        // Compare two bits under b mask. If 1 was on b mask then we need to place arrow somewhere
-        if ((b & static_cast<uint8_t>((uint8_t{0b1} << static_cast<uint8_t>(i)))) ==
-            (uint8_t{0b1} << static_cast<uint8_t>(i))) {
-            // if we need to place arrow then check the i, which represents bit which we are checking right now
-            if (i == 1) {
-                keyboard[arrowsRow].push_back(makeCallbackButton(u8"◀️", "prev")); // left
-            } else {
-                keyboard[arrowsRow].push_back(makeCallbackButton(u8"▶️", "next")); // right
-            }
-        } else {
-            keyboard[arrowsRow].push_back(makeCallbackButton(u8"ㅤ", "dont_handle"));
-        }
-    }
-    // Put state.pageNo as button
-    keyboard[arrowsRow].insert(
-        keyboard[arrowsRow].begin() + 1,
-        makeCallbackButton(std::format("{} из {}", state.pageNo + 1, maxPageNum), "dont_handle"));
-    if (state.storageIngredients.getValues().empty()) {
-        keyboard[arrowsRow + 1].push_back(makeCallbackButton(u8"↩️ Назад", "back"));
-    } else {
-        keyboard[arrowsRow + 1].push_back(makeCallbackButton(u8"🗑 Удалить", "delete"));
-        keyboard[arrowsRow + 2].push_back(makeCallbackButton(u8"↩️ Назад", "back"));
-    }
-    return keyboard;
-}
-
-InlineKeyboard constructMarkup(size_t numOfRecipesOnPage, const states::StorageIngredientsList& state) {
-    // 1 for back button return, 1 for arrows (ALWAYS ACCOUNT ARROWS), 1
-    // for editing, 1 for delete - other buttons are ingredients
-    const size_t numOfRows = state.storageIngredients.getValues().empty() ? 3 : 4;
-    const size_t offset = 1; // Number of rows before list
-
-    const size_t recipesToShow = std::min(numOfRecipesOnPage, state.searchItems.size());
-
-    InlineKeyboard keyboard = constructNavigationsMarkup(offset, numOfRows + recipesToShow, numOfRecipesOnPage, state);
-    if (keyboard.empty()) { // If error happened
-        return keyboard;
-    }
-
+    auto makeIngredientButton = [](const IngredientSearchForStorageItem& ing) {
+        return makeCallbackButton((ing.isInStorage ? "[ + ] " : "[ㅤ] ") + ing.name, utils::to_string(ing.id));
+    };
+    keyboard << constructPagination(pageNo, pageSize, state.totalFound, state.searchItems, makeIngredientButton);
+    
+    if (!state.storageIngredients.getValues().empty())
+        keyboard << makeCallbackButton(u8"🗑 Удалить", "delete") << NewRow{};
+    keyboard << makeCallbackButton(u8"↩️ Назад", "back");
+    
     return keyboard;
 }
 
@@ -136,8 +54,6 @@ void renderIngredientsListSearch(const states::StorageIngredientsList& state,
                                  UserId userId,
                                  ChatId chatId,
                                  BotRef bot) {
-    using namespace std::views;
-    using std::ranges::to;
     const std::size_t numOfIngredientsOnPage = 5;
     std::string list = state.storageIngredients.getValues() |
                        transform([](auto& i) { return std::format("• {}\n", i.name); }) | join | to<std::string>();
@@ -149,13 +65,7 @@ void renderIngredientsListSearch(const states::StorageIngredientsList& state,
             : utils::utf8str(u8"🍗 Ваши продукты:\n\n");
     text += list;
     if (auto messageId = message::getMessageId(userId)) {
-        bot.editMessageText(text,
-                            chatId,
-                            *messageId,
-                            "",
-                            "",
-                            nullptr,
-                            makeKeyboardMarkup(constructMarkup(numOfIngredientsOnPage, state)));
+        bot.editMessageText(text, chatId, *messageId, constructKeyboard(state.pageNo, numOfIngredientsOnPage, state));
     }
 }
 

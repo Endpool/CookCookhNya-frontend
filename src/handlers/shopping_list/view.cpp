@@ -1,13 +1,17 @@
 #include "view.hpp"
 
+#include "backend/api/api.hpp"
 #include "backend/id_types.hpp"
 #include "handlers/common.hpp"
+#include "handlers/shopping_list/search.hpp"
 #include "render/main_menu/view.hpp"
+#include "render/shopping_list/search.hpp"
 #include "render/shopping_list/storage_selection_to_buy.hpp"
 #include "render/shopping_list/view.hpp"
 #include "states.hpp"
 #include "utils/parsing.hpp"
 
+#include <optional>
 #include <ranges>
 #include <utility>
 #include <vector>
@@ -16,12 +20,11 @@ namespace cookcookhnya::handlers::shopping_list {
 
 using namespace render::main_menu;
 using namespace render::shopping_list;
-
 using namespace std::views;
 using namespace std::ranges;
 
 void handleShoppingListViewCQ(
-    ShoppingListView& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
+    ShoppingListView& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, api::ApiClientRef api) {
     bot.answerCallbackQuery(cq.id);
     auto userId = cq.from->id;
     auto chatId = cq.message->chat->id;
@@ -34,8 +37,9 @@ void handleShoppingListViewCQ(
     }
 
     if (cq.data == "search") {
-        renderMainMenu(true, std::nullopt, userId, cq.message->chat->id, bot, api);
-        stateManager.put(MainMenu{});
+        ShoppingListIngredientSearch newState{.prevState = std::move(state), .query = "", .pagination = {}, .page = {}};
+        renderShoppingListIngredientSearch(newState, searchPageSize, userId, chatId, bot);
+        stateManager.put(std::move(newState));
         return;
     }
 

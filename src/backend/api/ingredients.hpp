@@ -22,7 +22,10 @@ class IngredientsApi : ApiBase {
     [[nodiscard]] models::ingredient::Ingredient get(UserId user, IngredientId ingredient) const;
 
     [[nodiscard]] std::vector<models::ingredient::Ingredient>
-    getStorageIngredients(UserId user, StorageId storage, std::size_t count = 2, std::size_t offset = 0) const;
+    getStorageIngredients(UserId user,
+                          StorageId storage,
+                          std::size_t count = 200, // NOLINT(*magic-number*)
+                          std::size_t offset = 0) const;
 
     void putToStorage(UserId user, StorageId storage, IngredientId ingredient) const;
 
@@ -71,5 +74,7 @@ class IngredientsApi : ApiBase {
 
     void publishCustom(UserId user, IngredientId ingredient) const;
 };
+
+using IngredientsApiRef = const api::IngredientsApi&;
 
 } // namespace cookcookhnya::api

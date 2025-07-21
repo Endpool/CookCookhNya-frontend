@@ -17,4 +17,6 @@ class UsersApi : ApiBase {
                     const models::user::UpdateUserInfoBody& body) const;
 };
 
+using UserApiRef = const api::UsersApi&;
+
 } // namespace cookcookhnya::api

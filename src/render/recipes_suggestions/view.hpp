@@ -1,5 +1,6 @@
 #pragma once
 
+#include "backend/api/api.hpp"
 #include "backend/models/storage.hpp"
 #include "render/common.hpp"
 
@@ -15,6 +16,6 @@ void renderRecipesSuggestion(std::vector<api::models::storage::StorageSummary>& 
                              UserId userId,
                              ChatId chatId,
                              BotRef bot,
-                             RecipesApiRef recipesApi);
+                             api::RecipesApiRef recipesApi);
 
 } // namespace cookcookhnya::render::recipes_suggestions

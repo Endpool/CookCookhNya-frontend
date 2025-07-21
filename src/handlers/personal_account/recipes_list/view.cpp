@@ -1,5 +1,6 @@
 #include "view.hpp"
 
+#include "backend/api/api.hpp"
 #include "backend/id_types.hpp"
 #include "handlers/common.hpp"
 #include "render/personal_account/recipe/view.hpp"
@@ -14,7 +15,7 @@
 namespace cookcookhnya::handlers::personal_account::recipes {
 
 void handleCustomRecipesListCQ(
-    CustomRecipesList& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
+    CustomRecipesList& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, api::ApiClientRef api) {
     using namespace render::personal_account;
     using namespace render::personal_account::recipes;
 
@@ -30,9 +31,10 @@ void handleCustomRecipesListCQ(
         bot.answerCallbackQuery(cq.id);
         return;
     }
+
     if (data == "custom_recipe_create") {
         renderRecipeCreation(chatId, userId, bot);
-        stateManager.put(CreateCustomRecipe{.recipeId = {}, .pageNo = state.pageNo});
+        stateManager.put(CreateCustomRecipe{.pageNo = state.pageNo});
         bot.answerCallbackQuery(cq.id);
         return;
     }
@@ -48,11 +50,11 @@ void handleCustomRecipesListCQ(
     }
 
     if (data != "dont_handle") {
-        auto pageNo = utils::parseSafe<int>(data);
-        if (pageNo) {
-            state.pageNo = *pageNo;
-        }
-        renderCustomRecipesList(*pageNo, userId, chatId, bot, api);
+        if (data == "page_left")
+            state.pageNo--;
+        else if (data == "page_right")
+            state.pageNo++;
+        renderCustomRecipesList(state.pageNo, userId, chatId, bot, api);
         return;
     }
 }

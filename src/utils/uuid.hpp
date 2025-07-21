@@ -22,6 +22,12 @@ using Uuid = boost::uuids::uuid;
 
 } // namespace cookcookhnya
 
+namespace cookcookhnya::utils {
+
+std::string to_string(const Uuid& u);
+
+} // namespace cookcookhnya::utils
+
 template <>
 struct std::formatter<cookcookhnya::Uuid> : formatter<string> {
     template <class ParseContext>

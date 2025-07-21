@@ -26,6 +26,7 @@
 #include "recipes_suggestions/view.hpp"
 
 #include "shopping_list/create.hpp"
+#include "shopping_list/search.hpp"
 #include "shopping_list/storage_selection_to_buy.hpp"
 #include "shopping_list/view.hpp"
 
@@ -44,12 +45,10 @@
 
 #include "storages_selection/view.hpp"
 
-#include "handlers/common.hpp"
-
 #include <tg_stater/handler/event.hpp>
 #include <tg_stater/handler/handler.hpp>
 
-namespace cookcookhnya::handlers {
+namespace cookcookhnya::handlers::bot_handlers {
 
 using namespace commands;
 using namespace main_menu;
@@ -67,7 +66,8 @@ using namespace recipes_suggestions;
 
 using namespace tg_stater;
 
-namespace bot_handlers {
+using NoState = tg_stater::HandlerTypes::NoState;
+using AnyState = tg_stater::HandlerTypes::AnyState;
 
 // Commands
 constexpr char startCmd[] = "start";                      // NOLINT(*c-arrays)
@@ -133,6 +133,8 @@ using shoppingListCreationCQHandler = Handler<Events::CallbackQuery{}, handleSho
 using shoppingListViewCQHandler = Handler<Events::CallbackQuery{}, handleShoppingListViewCQ>;
 using shoppingListStorageSelectionToBuyCQHandler =
     Handler<Events::CallbackQuery{}, handleShoppingListStorageSelectionToBuyCQ>;
+using shoppingListIngredientSearchCQHandler = Handler<Events::CallbackQuery{}, handleShoppingListIngredientSearchCQ>;
+using shoppingListIngredientSearchIQHandler = Handler<Events::InlineQuery{}, handleShoppingListIngredientSearchIQ>;
 
 // Personal account
 using personalAccountMenuCQHandler = Handler<Events::CallbackQuery{}, handlePersonalAccountMenuCQ>;
@@ -147,6 +149,4 @@ using recipeCustomViewCQHandler = Handler<Events::CallbackQuery{}, handleRecipeC
 using customRecipeIngredientsSearchCQHandler = Handler<Events::CallbackQuery{}, handleCustomRecipeIngredientsSearchCQ>;
 using customRecipeIngredientsSearchIQHandler = Handler<Events::InlineQuery{}, handleCustomRecipeIngredientsSearchIQ>;
 
-} // namespace bot_handlers
-
-} // namespace cookcookhnya::handlers
+} // namespace cookcookhnya::handlers::bot_handlers

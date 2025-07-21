@@ -19,6 +19,7 @@ target_sources(main PRIVATE
     src/render/recipes_suggestions/view.cpp
 
     src/render/shopping_list/create.cpp
+    src/render/shopping_list/search.cpp
     src/render/shopping_list/storage_selection_to_buy.cpp
     src/render/shopping_list/view.cpp
 
