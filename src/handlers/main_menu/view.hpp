@@ -5,7 +5,6 @@
 
 namespace cookcookhnya::handlers::main_menu {
 
-void handleMainMenuCQ(
-    MainMenu& /*unused*/, CallbackQueryRef cq, BotRef& bot, SMRef stateManager, api::ApiClientRef api);
+void handleMainMenuCQ(MainMenu&, CallbackQueryRef cq, BotRef& bot, SMRef stateManager, api::ApiClientRef api);
 
 } // namespace cookcookhnya::handlers::main_menu
