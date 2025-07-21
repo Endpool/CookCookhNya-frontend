@@ -5,11 +5,13 @@
 #include "backend/models/ingredient.hpp"
 #include "handlers/common.hpp"
 #include "message_tracker.hpp"
+#include "render/storage/ingredients/delete.hpp"
 #include "render/storage/ingredients/view.hpp"
 
 #include "render/personal_account/ingredients_list/create.hpp"
 
 #include "render/storage/view.hpp"
+#include "states.hpp"
 #include "tg_types.hpp"
 #include "utils/parsing.hpp"
 
@@ -17,7 +19,10 @@
 #include <cstddef>
 #include <functional>
 #include <optional>
+#include <string>
+#include <string_view>
 #include <utility>
+#include <vector>
 
 namespace cookcookhnya::handlers::storage::ingredients {
 
@@ -26,6 +31,7 @@ using namespace render::storage::ingredients;
 using namespace render::suggest_custom_ingredient;
 using namespace render::personal_account::ingredients;
 using namespace api::models::ingredient;
+using namespace std::literals;
 
 namespace {
 
@@ -51,12 +57,8 @@ void updateSearch(StorageIngredientsList& state,
                                                                   &IngredientSearchForStorageItem::id)) {
         state.searchItems = std::move(response.page);
         state.totalFound = response.found;
-        if (auto mMessageId = message::getMessageId(userId)) {
-            if (state.totalFound != 0) {
-                renderIngredientsListSearch(state, numOfIngredientsOnPage, userId, userId, bot);
-                return;
-            }
-        }
+        if (auto mMessageId = message::getMessageId(userId))
+            renderIngredientsListSearch(state, userId, userId, bot);
     }
     if (state.totalFound == 0)
         renderSuggestIngredientCustomisation(state, userId, userId, bot);
@@ -74,6 +76,18 @@ void handleStorageIngredientsListCQ(
         stateManager.put(StorageView{state.storageId});
         return;
     }
+
+    if (cq.data == "delete") {
+        std::vector<api::models::ingredient::Ingredient> ingredients;
+        for (auto& ing : state.storageIngredients.getValues()) {
+            ingredients.push_back(ing);
+        }
+        auto newState = StorageIngredientsDeletion{state.storageId, {}, ingredients, false, 0};
+        renderStorageIngredientsDeletion(newState, userId, chatId, bot);
+        stateManager.put(newState);
+        return;
+    }
+
     if (cq.data == "page_left") {
         state.pageNo -= 1;
         updateSearch(state, false, bot, userId, api);
@@ -86,8 +100,8 @@ void handleStorageIngredientsListCQ(
         return;
     }
 
-    if (cq.data[0] == 'i') {
-        auto ingredientName = cq.data.substr(1);
+    if (cq.data.starts_with("ingredient_")) {
+        std::string ingredientName{std::string_view{cq.data}.substr("ingredient_"sv.size())};
         renderCustomIngredientConfirmation(true, ingredientName, userId, chatId, bot, api);
         stateManager.put(CustomIngredientConfirmation{ingredientName, std::nullopt, std::nullopt, state.storageId});
     }
@@ -108,7 +122,7 @@ void handleStorageIngredientsListCQ(
             state.storageIngredients.put({.id = it->id, .name = it->name});
         }
         it->isInStorage = !it->isInStorage;
-        renderIngredientsListSearch(state, numOfIngredientsOnPage, userId, chatId, bot);
+        renderIngredientsListSearch(state, userId, chatId, bot);
     }
 }
 
@@ -122,7 +136,7 @@ void handleStorageIngredientsListIQ(StorageIngredientsList& state,
         state.searchItems.clear();
         // When query is empty then search shouldn't happen
         state.totalFound = 0;
-        renderIngredientsListSearch(state, numOfIngredientsOnPage, userId, userId, bot);
+        renderIngredientsListSearch(state, userId, userId, bot);
     } else {
         updateSearch(state, true, bot, userId, api);
     }

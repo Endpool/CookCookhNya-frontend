@@ -46,7 +46,7 @@ void handleCustomRecipesListCQ(
         auto recipeId = utils::parseSafe<api::RecipeId>(std::string_view{data}.substr("recipe_"sv.size()));
         if (recipeId) {
             auto ingredientsAndName = renderCustomRecipe(true, userId, chatId, recipeId.value(), bot, api);
-            stateManager.put(RecipeCustomView{.recipeId = recipeId.value(),
+            stateManager.put(CustomRecipeView{.recipeId = recipeId.value(),
                                               .pageNo = state.pageNo,
                                               .ingredients = ingredientsAndName.first,
                                               .recipeName = ingredientsAndName.second});

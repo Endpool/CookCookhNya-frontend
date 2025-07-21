@@ -16,7 +16,7 @@ void handleCustomRecipePublicationHistoryCQ(
 
     if (data == "back") {
         auto ingredientsAndRecipeName = renderCustomRecipe(true, userId, chatId, state.recipeId, bot, api);
-        stateManager.put(RecipeCustomView{.recipeId = state.recipeId,
+        stateManager.put(CustomRecipeView{.recipeId = state.recipeId,
                                           .pageNo = state.pageNo,
                                           .ingredients = ingredientsAndRecipeName.first,
                                           .recipeName = ingredientsAndRecipeName.second});

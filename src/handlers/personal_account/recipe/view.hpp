@@ -6,6 +6,6 @@
 namespace cookcookhnya::handlers::personal_account::recipe {
 
 void handleRecipeCustomViewCQ(
-    RecipeCustomView& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, api::ApiClientRef api);
+    CustomRecipeView& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, api::ApiClientRef api);
 
 } // namespace cookcookhnya::handlers::personal_account::recipe

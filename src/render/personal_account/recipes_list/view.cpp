@@ -52,4 +52,5 @@ void renderCustomRecipesList(
         bot.editMessageText(pageInfo, chatId, *messageId, constructKeyboard(pageNo, numOfRecipesOnPage, recipesList));
     }
 }
+
 } // namespace cookcookhnya::render::personal_account::recipes_list

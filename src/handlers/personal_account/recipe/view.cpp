@@ -21,7 +21,7 @@ using namespace std::views;
 const std::size_t numOfIngredientsOnPage = 5;
 
 void handleRecipeCustomViewCQ(
-    RecipeCustomView& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, api::ApiClientRef api) {
+    CustomRecipeView& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, api::ApiClientRef api) {
     const std::string data = cq.data;
     auto chatId = cq.message->chat->id;
     auto userId = cq.from->id;

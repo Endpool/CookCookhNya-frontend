@@ -22,10 +22,10 @@ const std::size_t numOfHistoryInstances = 10;
 
 void handlePersonalAccountMenuCQ(
     PersonalAccountMenu& /**/, CallbackQueryRef cq, BotRef bot, SMRef stateManager, api::ApiClientRef api) {
+    const std::string data = cq.data;
     bot.answerCallbackQuery(cq.id);
     auto chatId = cq.message->chat->id;
     auto userId = cq.from->id;
-    const std::string data = cq.data;
 
     if (data == "recipes") {
         renderCustomRecipesList(0, userId, chatId, bot, api);

@@ -78,7 +78,7 @@ void handleCustomIngredientConfirmationCQ(
         if (state.storageFrom.has_value()) {
             auto ingredients = api.getIngredientsApi().getStorageIngredients(userId, state.storageFrom.value());
             auto newState = StorageIngredientsList{state.storageFrom.value(), ingredients | as_rvalue, ""};
-            renderIngredientsListSearch(newState, numOfIngredientsOnPage, userId, chatId, bot);
+            renderIngredientsListSearch(newState, userId, chatId, bot);
             stateManager.put(std::move(newState));
             return;
         }

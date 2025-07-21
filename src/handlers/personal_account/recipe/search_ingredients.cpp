@@ -17,6 +17,8 @@
 #include <functional>
 #include <optional>
 #include <ranges>
+#include <string>
+#include <string_view>
 #include <utility>
 #include <vector>
 
@@ -25,8 +27,9 @@ namespace cookcookhnya::handlers::personal_account::recipe {
 using namespace api::models::ingredient;
 using namespace render::personal_account::ingredients;
 using namespace render::personal_account::recipe;
-using namespace std::ranges;
+using namespace std::literals;
 using namespace std::views;
+using std::ranges::to;
 
 namespace {
 
@@ -70,7 +73,7 @@ void handleCustomRecipeIngredientsSearchCQ(
     if (cq.data == "back") {
         auto ingredientsAndName = renderCustomRecipe(true, userId, chatId, state.recipeId, bot, api);
         auto ingredients = state.recipeIngredients.getValues() | as_rvalue | to<std::vector>();
-        stateManager.put(RecipeCustomView{.recipeId = state.recipeId,
+        stateManager.put(CustomRecipeView{.recipeId = state.recipeId,
                                           .pageNo = 0,
                                           .ingredients = std::move(ingredients),
                                           .recipeName = ingredientsAndName.second});
@@ -89,8 +92,8 @@ void handleCustomRecipeIngredientsSearchCQ(
         return;
     }
 
-    if (cq.data[0] == 'i') {
-        auto ingredientName = cq.data.substr(1);
+    if (cq.data.starts_with("ingredient_")) {
+        std::string ingredientName{std::string_view{cq.data}.substr("ingredient_"sv.size())};
         renderCustomIngredientConfirmation(true, ingredientName, userId, chatId, bot, api);
         auto ingredients = state.recipeIngredients.getValues() | as_rvalue | to<std::vector>();
         stateManager.put(CustomIngredientConfirmation{ingredientName, state.recipeId, ingredients, std::nullopt});

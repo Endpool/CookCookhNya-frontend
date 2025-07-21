@@ -27,7 +27,7 @@ void renderStorageList(bool toBeEdited, UserId userId, ChatId chatId, BotRef bot
         keyboard << NewRow{};
     }
 
-    keyboard << makeCallbackButton(u8"🆕 Создать", "create") << makeCallbackButton(u8"↩️ Назад", "back");
+    keyboard << makeCallbackButton(u8"↩️ Назад", "back") << makeCallbackButton(u8"🆕 Создать", "create");
 
     auto text = utils::utf8str(u8"🍱 Ваши хранилища");
     if (toBeEdited) {

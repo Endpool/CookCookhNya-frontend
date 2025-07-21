@@ -77,7 +77,7 @@ void renderSuggestIngredientCustomisation(const states::CustomRecipeIngredientsS
     keyboard[0].push_back(std::move(searchButton));
     // Mark as ingredient
     keyboard[1].push_back(
-        makeCallbackButton(std::format("Создать личный ингредиент: {}", state.query), "i" + state.query));
+        makeCallbackButton(std::format("Создать личный ингредиент: {}", state.query), "ingredient_" + state.query));
     keyboard[2].push_back(makeCallbackButton(u8"↩️ Назад", "back"));
 
     if (auto messageId = message::getMessageId(userId))
