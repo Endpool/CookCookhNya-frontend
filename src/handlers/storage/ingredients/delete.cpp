@@ -6,6 +6,7 @@
 #include "render/storage/ingredients/view.hpp"
 #include "states.hpp"
 #include "utils/parsing.hpp"
+
 #include <algorithm>
 
 namespace cookcookhnya::handlers::storage::ingredients {
@@ -14,7 +15,7 @@ using namespace render::storage::ingredients;
 using namespace std::views;
 
 void handleStorageIngredientsDeletionCQ(
-    StorageIngredientsDeletion& state, CallbackQueryRef cq, BotRef& bot, SMRef stateManager, ApiClientRef api) {
+    StorageIngredientsDeletion& state, CallbackQueryRef cq, BotRef& bot, SMRef stateManager, api::ApiClientRef api) {
     bot.answerCallbackQuery(cq.id);
     auto userId = cq.from->id;
     auto chatId = cq.message->chat->id;
