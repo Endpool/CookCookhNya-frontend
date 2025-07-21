@@ -46,10 +46,10 @@ constructIngredientsButton(std::vector<api::models::ingredient::Ingredient>& sel
     for (std::size_t i = offset; i != size + offset; ++i) {
         const bool isSelected = std::ranges::contains(
             selectedIngredients, storageIngredients[i].id, &api::models::ingredient::Ingredient::id);
-        std::string emoji = utils::utf8str(isSelected ? u8"[ + ]" : u8"[ᅠ]");
+        const std::string emoji = utils::utf8str(isSelected ? u8"[ + ]" : u8"[ᅠ]");
         const char* actionPrefix = isSelected ? "+" : "-";
-        std::string text = std::format("{} {}", emoji, storageIngredients[i].name);
-        std::string data = actionPrefix + utils::to_string(storageIngredients[i].id);
+        const std::string text = std::format("{} {}", emoji, storageIngredients[i].name);
+        const std::string data = actionPrefix + utils::to_string(storageIngredients[i].id);
         buttons.push_back(makeCallbackButton(text, data));
     }
     return buttons;
@@ -61,7 +61,7 @@ constructMessage(std::vector<api::models::ingredient::Ingredient>& selectedIngre
                  std::size_t pageNo,
                  std::size_t numOfIngredientsOnPage,
                  bool withoutPutToShoppingListButton) {
-    std::size_t ingSize = storageIngredients.size();
+    const std::size_t ingSize = storageIngredients.size();
     const std::size_t maxPageNum =
         std::ceil(static_cast<double>(ingSize) / static_cast<double>(numOfIngredientsOnPage));
     std::size_t buttonRows = std::min(ingSize, numOfIngredientsOnPage);
@@ -84,13 +84,12 @@ constructMessage(std::vector<api::models::ingredient::Ingredient>& selectedIngre
         }
     }
 
-    std::string text = utils::utf8str(u8"🍅 Выберите ингредиенты для удаления\\.\n\n");
+    const std::string text = utils::utf8str(u8"🍅 Выберите ингредиенты для удаления\\.\n\n");
     InlineKeyboardBuilder keyboard{buttonRows};
 
     for (auto& b : constructIngredientsButton(
              selectedIngredients, storageIngredients, numOfIngredientsOnPage, pageNo * numOfIngredientsOnPage)) {
-        keyboard << std::move(b);
-        keyboard << NewRow{};
+        keyboard << std::move(b) << NewRow{};
     }
 
     auto backButton = makeCallbackButton(u8"↩️ Назад", "back");

@@ -40,11 +40,11 @@ constructKeyboard(std::size_t pageNo, std::size_t pageSize, const states::Storag
         return makeCallbackButton((ing.isInStorage ? "[ + ] " : "[ㅤ] ") + ing.name, utils::to_string(ing.id));
     };
     keyboard << constructPagination(pageNo, pageSize, state.totalFound, state.searchItems, makeIngredientButton);
-    
+
     if (!state.storageIngredients.getValues().empty())
         keyboard << makeCallbackButton(u8"🗑 Удалить", "delete") << NewRow{};
     keyboard << makeCallbackButton(u8"↩️ Назад", "back");
-    
+
     return keyboard;
 }
 
@@ -55,8 +55,9 @@ void renderIngredientsListSearch(const states::StorageIngredientsList& state,
                                  ChatId chatId,
                                  BotRef bot) {
     const std::size_t numOfIngredientsOnPage = 5;
-    std::string list = state.storageIngredients.getValues() |
-                       transform([](auto& i) { return std::format("• {}\n", i.name); }) | join | to<std::string>();
+    const std::string list = state.storageIngredients.getValues() |
+                             transform([](auto& i) { return std::format("• {}\n", i.name); }) | join |
+                             to<std::string>();
 
     auto text =
         state.storageIngredients.getValues().empty()
