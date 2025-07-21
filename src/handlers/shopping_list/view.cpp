@@ -1,5 +1,6 @@
 #include "view.hpp"
 
+#include "backend/api/api.hpp"
 #include "backend/id_types.hpp"
 #include "handlers/common.hpp"
 #include "handlers/shopping_list/search.hpp"
@@ -23,7 +24,7 @@ using namespace std::views;
 using namespace std::ranges;
 
 void handleShoppingListViewCQ(
-    ShoppingListView& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
+    ShoppingListView& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, api::ApiClientRef api) {
     bot.answerCallbackQuery(cq.id);
     auto userId = cq.from->id;
     auto chatId = cq.message->chat->id;

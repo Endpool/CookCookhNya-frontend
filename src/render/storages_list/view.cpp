@@ -1,8 +1,8 @@
 #include "view.hpp"
 
+#include "backend/api/storages.hpp"
 #include "message_tracker.hpp"
 #include "render/common.hpp"
-#include "utils/to_string.hpp"
 #include "utils/utils.hpp"
 
 #include <cstddef>
@@ -14,7 +14,7 @@ namespace cookcookhnya::render::storages_list {
 using namespace tg_types;
 using namespace std::views;
 
-void renderStorageList(bool toBeEdited, UserId userId, ChatId chatId, BotRef bot, StorageApiRef storageApi) {
+void renderStorageList(bool toBeEdited, UserId userId, ChatId chatId, BotRef bot, api::StorageApiRef storageApi) {
     auto storages = storageApi.getStoragesList(userId);
 
     const std::size_t buttonRows = ((storages.size() + 1) / 2) + 1; // ceil(storagesCount / 2) and back

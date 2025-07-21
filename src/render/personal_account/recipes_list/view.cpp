@@ -1,19 +1,18 @@
 #include "view.hpp"
 
 #include "backend/api/publicity_filter.hpp"
+#include "backend/api/recipes.hpp"
 #include "backend/models/recipe.hpp"
 #include "message_tracker.hpp"
 #include "render/common.hpp"
 #include "render/pagination.hpp"
 #include "render/personal_account/recipes_list/view.hpp"
-#include "utils/to_string.hpp"
 #include "utils/utils.hpp"
 
 #include <cstddef>
 #include <format>
 #include <memory>
 #include <string>
-#include <utility>
 
 namespace TgBot {
 class InlineKeyboardMarkup;
@@ -34,12 +33,13 @@ constructKeyboard(std::size_t pageNo, std::size_t pageSize, RecipesList& recipes
     };
     keyboard << constructPagination(pageNo, pageSize, recipesList.found, recipesList.page, makeRecipeButton)
              << makeCallbackButton(u8"↩️ Назад", "back");
-    return std::move(keyboard);
+    return keyboard;
 }
 
 } // namespace
 
-void renderCustomRecipesList(std::size_t pageNo, UserId userId, ChatId chatId, BotRef bot, RecipesApiRef recipesApi) {
+void renderCustomRecipesList(
+    std::size_t pageNo, UserId userId, ChatId chatId, BotRef bot, api::RecipesApiRef recipesApi) {
     const std::size_t numOfRecipesOnPage = 5;
     auto recipesList =
         recipesApi.getList(userId, PublicityFilterType::Custom, numOfRecipesOnPage, pageNo * numOfRecipesOnPage);

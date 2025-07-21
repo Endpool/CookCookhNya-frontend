@@ -1,5 +1,6 @@
 #pragma once
 
+#include "backend/api/api.hpp"
 #include "backend/id_types.hpp"
 #include "backend/models/storage.hpp"
 #include "render/common.hpp"
@@ -14,7 +15,7 @@ textGenInfo storageAdditionView(const std::vector<states::RecipeView::Ingredient
                                 const std::vector<api::models::storage::StorageSummary>& selectedStorages,
                                 api::RecipeId recipeId,
                                 UserId userId,
-                                ApiClient api);
+                                api::ApiClientRef api);
 
 void renderStoragesSuggestion(const std::vector<states::RecipeView::IngredientAvailability>& inStoragesAvailability,
                               const std::vector<api::models::storage::StorageSummary>& selectedStorages,
@@ -23,6 +24,6 @@ void renderStoragesSuggestion(const std::vector<states::RecipeView::IngredientAv
                               UserId userId,
                               ChatId chatId,
                               BotRef bot,
-                              ApiClient api);
+                              api::ApiClientRef api);
 
 } // namespace cookcookhnya::render::recipe

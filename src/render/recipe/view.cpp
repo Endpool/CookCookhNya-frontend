@@ -1,5 +1,6 @@
 #include "view.hpp"
 
+#include "backend/api/api.hpp"
 #include "backend/id_types.hpp"
 #include "backend/models/recipe.hpp"
 #include "message_tracker.hpp"
@@ -22,7 +23,7 @@ using AvailabilityType = states::RecipeView::AvailabilityType;
 textGenInfo recipeView(const std::vector<IngredientAvailability>& inStoragesAvailability,
                        api::RecipeId recipeId,
                        UserId userId,
-                       ApiClient api) {
+                       api::ApiClientRef api) {
     auto recipeIngredients = api.getRecipesApi().get(userId, recipeId);
 
     bool isIngredientNotAvailable = false;
@@ -54,7 +55,7 @@ void renderRecipeView(std::vector<IngredientAvailability>& inStoragesAvailabilit
                       UserId userId,
                       ChatId chatId,
                       BotRef bot,
-                      ApiClient api) {
+                      api::ApiClientRef api) {
     auto textGen = recipeView(inStoragesAvailability, recipeId, userId, api);
     const std::size_t buttonRows = textGen.isIngredientNotAvailable ? 3 : 2;
     InlineKeyboard keyboard(buttonRows);

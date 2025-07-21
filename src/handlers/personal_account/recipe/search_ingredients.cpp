@@ -1,5 +1,7 @@
 #include "search_ingredients.hpp"
 
+#include "backend/api/api.hpp"
+#include "backend/api/ingredients.hpp"
 #include "backend/id_types.hpp"
 #include "backend/models/ingredient.hpp"
 #include "handlers/common.hpp"
@@ -33,7 +35,7 @@ void updateSearch(CustomRecipeIngredientsSearch& state,
                   bool isQueryChanged,
                   BotRef bot,
                   tg_types::UserId userId,
-                  IngredientsApiRef api) {
+                  api::IngredientsApiRef api) {
     state.pageNo = isQueryChanged ? 0 : state.pageNo;
     auto response = api.searchForRecipe(
         userId, state.recipeId, state.query, threshhold, numOfIngredientsOnPage, state.pageNo * numOfIngredientsOnPage);
@@ -52,7 +54,7 @@ void updateSearch(CustomRecipeIngredientsSearch& state,
 } // namespace
 
 void handleCustomRecipeIngredientsSearchCQ(
-    CustomRecipeIngredientsSearch& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
+    CustomRecipeIngredientsSearch& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, api::ApiClientRef api) {
     bot.answerCallbackQuery(cq.id);
     const auto userId = cq.from->id;
     const auto chatId = cq.message->chat->id;
@@ -100,7 +102,7 @@ void handleCustomRecipeIngredientsSearchCQ(
 void handleCustomRecipeIngredientsSearchIQ(CustomRecipeIngredientsSearch& state,
                                            InlineQueryRef iq,
                                            BotRef bot,
-                                           IngredientsApiRef api) {
+                                           api::IngredientsApiRef api) {
     state.query = iq.query;
     const auto userId = iq.from->id;
     if (iq.query.empty()) {

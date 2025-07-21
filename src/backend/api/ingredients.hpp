@@ -72,4 +72,6 @@ class IngredientsApi : ApiBase {
     void publishCustom(UserId user, IngredientId ingredient) const;
 };
 
+using IngredientsApiRef = const api::IngredientsApi&;
+
 } // namespace cookcookhnya::api

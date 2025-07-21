@@ -44,12 +44,10 @@
 
 #include "storages_selection/view.hpp"
 
-#include "handlers/common.hpp"
-
 #include <tg_stater/handler/event.hpp>
 #include <tg_stater/handler/handler.hpp>
 
-namespace cookcookhnya::handlers {
+namespace cookcookhnya::handlers::bot_handlers {
 
 using namespace commands;
 using namespace main_menu;
@@ -67,7 +65,8 @@ using namespace recipes_suggestions;
 
 using namespace tg_stater;
 
-namespace bot_handlers {
+using NoState = tg_stater::HandlerTypes::NoState;
+using AnyState = tg_stater::HandlerTypes::AnyState;
 
 // Commands
 constexpr char startCmd[] = "start";                      // NOLINT(*c-arrays)
@@ -146,6 +145,4 @@ using recipeCustomViewCQHandler = Handler<Events::CallbackQuery{}, handleRecipeC
 using customRecipeIngredientsSearchCQHandler = Handler<Events::CallbackQuery{}, handleCustomRecipeIngredientsSearchCQ>;
 using customRecipeIngredientsSearchIQHandler = Handler<Events::InlineQuery{}, handleCustomRecipeIngredientsSearchIQ>;
 
-} // namespace bot_handlers
-
-} // namespace cookcookhnya::handlers
+} // namespace cookcookhnya::handlers::bot_handlers

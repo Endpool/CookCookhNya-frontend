@@ -1,5 +1,6 @@
 #include "view.hpp"
 
+#include "backend/api/api.hpp"
 #include "backend/api/storages.hpp"
 #include "backend/models/storage.hpp"
 #include "handlers/common.hpp"
@@ -22,7 +23,8 @@ using namespace render::shopping_list;
 using namespace render::personal_account;
 using namespace std::views;
 
-void handleMainMenuCQ(MainMenu& /*unused*/, CallbackQueryRef cq, BotRef& bot, SMRef stateManager, ApiClientRef api) {
+void handleMainMenuCQ(
+    MainMenu& /*unused*/, CallbackQueryRef cq, BotRef& bot, SMRef stateManager, api::ApiClientRef api) {
     bot.answerCallbackQuery(cq.id);
     auto userId = cq.from->id;
     auto chatId = cq.message->chat->id;

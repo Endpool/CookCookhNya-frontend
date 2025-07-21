@@ -1,5 +1,6 @@
 #include "add_storage.hpp"
 
+#include "backend/api/api.hpp"
 #include "backend/id_types.hpp"
 #include "backend/models/storage.hpp"
 #include "handlers/common.hpp"
@@ -20,7 +21,7 @@ using namespace render::recipe;
 using namespace api::models::storage;
 
 void handleRecipeStorageAdditionCQ(
-    RecipeStorageAddition& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
+    RecipeStorageAddition& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, api::ApiClientRef api) {
     bot.answerCallbackQuery(cq.id);
     const std::string& data = cq.data;
     auto chatId = cq.message->chat->id;

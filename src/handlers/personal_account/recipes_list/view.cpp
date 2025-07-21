@@ -1,5 +1,6 @@
 #include "view.hpp"
 
+#include "backend/api/api.hpp"
 #include "backend/id_types.hpp"
 #include "handlers/common.hpp"
 #include "render/personal_account/recipe/view.hpp"
@@ -14,7 +15,7 @@
 namespace cookcookhnya::handlers::personal_account::recipes {
 
 void handleCustomRecipesListCQ(
-    CustomRecipesList& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
+    CustomRecipesList& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, api::ApiClientRef api) {
     using namespace render::personal_account;
     using namespace render::personal_account::recipes;
 

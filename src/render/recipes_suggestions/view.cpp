@@ -1,5 +1,6 @@
 #include "view.hpp"
 
+#include "backend/api/api.hpp"
 #include "backend/models/recipe.hpp"
 #include "backend/models/storage.hpp"
 #include "message_tracker.hpp"
@@ -12,7 +13,6 @@
 #include <memory>
 #include <ranges>
 #include <string>
-#include <utility>
 #include <vector>
 
 namespace TgBot {
@@ -37,7 +37,7 @@ constructKeyboard(std::size_t pageNo, std::size_t pageSize, RecipesListWithIngre
     };
     keyboard << constructPagination(pageNo, pageSize, recipesList.found, recipesList.page, makeRecipeButton)
              << makeCallbackButton(u8"↩️ Назад", "back");
-    return std::move(keyboard);
+    return keyboard;
 }
 
 } // namespace
@@ -47,7 +47,7 @@ void renderRecipesSuggestion(std::vector<StorageSummary>& storages,
                              UserId userId,
                              ChatId chatId,
                              BotRef bot,
-                             RecipesApiRef recipesApi) {
+                             api::RecipesApiRef recipesApi) {
     const std::size_t numOfRecipesOnPage = 5;
     const std::size_t numOfRecipes = 500;
 

@@ -1,5 +1,6 @@
 #include "view.hpp"
 
+#include "backend/api/storages.hpp"
 #include "message_tracker.hpp"
 #include "render/common.hpp"
 #include "utils/utils.hpp"
@@ -17,7 +18,7 @@ void renderMainMenu(bool toBeEdited,
                     UserId userId,
                     ChatId chatId,
                     BotRef bot,
-                    StorageApiRef storageApi) {
+                    api::StorageApiRef storageApi) {
     auto storages = storageApi.getStoragesList(userId);
 
     auto text = utils::utf8str(

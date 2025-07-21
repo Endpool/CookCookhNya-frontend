@@ -1,5 +1,6 @@
 #include "delete.hpp"
 
+#include "backend/api/storages.hpp"
 #include "handlers/common.hpp"
 #include "render/storage/members/view.hpp"
 #include "tg_types.hpp"
@@ -10,7 +11,7 @@ namespace cookcookhnya::handlers::storage::members {
 using namespace render::storage::members;
 
 void handleStorageMemberDeletionCQ(
-    StorageMemberDeletion& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, StorageApiRef storageApi) {
+    StorageMemberDeletion& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, api::StorageApiRef storageApi) {
     bot.answerCallbackQuery(cq.id);
 
     auto chatId = cq.message->chat->id;

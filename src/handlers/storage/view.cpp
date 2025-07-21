@@ -1,5 +1,6 @@
 #include "view.hpp"
 
+#include "backend/api/api.hpp"
 #include "backend/models/storage.hpp"
 #include "handlers/common.hpp"
 #include "render/recipes_suggestions/view.hpp"
@@ -26,7 +27,8 @@ using namespace std::views;
 
 const std::size_t numOfIngredientsOnPage = 5;
 
-void handleStorageViewCQ(StorageView& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
+void handleStorageViewCQ(
+    StorageView& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, api::ApiClientRef api) {
     bot.answerCallbackQuery(cq.id);
     auto chatId = cq.message->chat->id;
     auto userId = cq.from->id;

@@ -1,5 +1,6 @@
 #include "view.hpp"
 
+#include "backend/api/api.hpp"
 #include "handlers/common.hpp"
 #include "render/personal_account/recipe/search_ingredients.hpp"
 #include "render/personal_account/recipes_list/view.hpp"
@@ -19,7 +20,7 @@ using namespace std::views;
 const std::size_t numOfIngredientsOnPage = 5;
 
 void handleRecipeCustomViewCQ(
-    RecipeCustomView& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
+    RecipeCustomView& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, api::ApiClientRef api) {
     const std::string data = cq.data;
     auto chatId = cq.message->chat->id;
     auto userId = cq.from->id;

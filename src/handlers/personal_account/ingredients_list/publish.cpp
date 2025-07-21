@@ -1,5 +1,6 @@
 #include "publish.hpp"
 
+#include "backend/api/ingredients.hpp"
 #include "backend/id_types.hpp"
 #include "handlers/common.hpp"
 #include "render/personal_account/ingredients_list/view.hpp"
@@ -11,7 +12,7 @@ namespace cookcookhnya::handlers::personal_account::ingredients {
 using namespace render::personal_account::ingredients;
 
 void handleCustomIngredientPublishCQ(
-    CustomIngredientPublish& state, CallbackQueryRef cq, BotRef& bot, SMRef stateManager, IngredientsApiRef api) {
+    CustomIngredientPublish& state, CallbackQueryRef cq, BotRef& bot, SMRef stateManager, api::IngredientsApiRef api) {
     bot.answerCallbackQuery(cq.id);
     auto userId = cq.from->id;
     auto chatId = cq.message->chat->id;

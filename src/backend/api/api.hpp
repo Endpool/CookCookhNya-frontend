@@ -82,4 +82,6 @@ class ApiClient {
     }
 };
 
+using ApiClientRef = const api::ApiClient&;
+
 } // namespace cookcookhnya::api

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "backend/api/api.hpp"
 #include "backend/id_types.hpp"
 #include "render/common.hpp"
 #include "states.hpp"
@@ -20,11 +21,11 @@ void renderRecipeView(std::vector<states::RecipeView::IngredientAvailability>& i
                       UserId userId,
                       ChatId chatId,
                       BotRef bot,
-                      ApiClient api);
+                      api::ApiClientRef api);
 
 textGenInfo recipeView(const std::vector<states::RecipeView::IngredientAvailability>& inStoragesAvailability,
                        api::RecipeId recipeId,
                        UserId userId,
-                       ApiClient api);
+                       api::ApiClientRef api);
 
 } // namespace cookcookhnya::render::recipe

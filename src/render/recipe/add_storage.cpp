@@ -1,5 +1,6 @@
 #include "add_storage.hpp"
 
+#include "backend/api/api.hpp"
 #include "backend/id_types.hpp"
 #include "backend/models/recipe.hpp"
 #include "backend/models/storage.hpp"
@@ -27,7 +28,7 @@ textGenInfo storageAdditionView(const std::vector<IngredientAvailability>& inSto
                                 const std::vector<StorageSummary>& selectedStorages,
                                 api::RecipeId recipeId,
                                 UserId userId,
-                                ApiClient api) {
+                                api::ApiClientRef api) {
     auto recipe = api.getRecipesApi().get(userId, recipeId);
 
     bool isIngredientNotAvailable = false;
@@ -72,7 +73,7 @@ void renderStoragesSuggestion(const std::vector<IngredientAvailability>& inStora
                               UserId userId,
                               ChatId chatId,
                               BotRef bot,
-                              ApiClient api) {
+                              api::ApiClientRef api) {
     auto textGen = storageAdditionView(inStoragesAvailability, selectedStorages, recipeId, userId, api);
     std::vector<StorageSummary> storages;
     for (const auto& infoPair : inStoragesAvailability) {

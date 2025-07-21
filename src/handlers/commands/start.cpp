@@ -1,5 +1,6 @@
 #include "start.hpp"
 
+#include "backend/api/api.hpp"
 #include "backend/id_types.hpp"
 #include "backend/models/user.hpp"
 #include "handlers/common.hpp"
@@ -18,7 +19,7 @@ using namespace render::main_menu;
 using namespace api::models::user;
 using namespace std::literals;
 
-void handleStartCmd(MessageRef m, BotRef bot, SMRef stateManager, ApiClientRef api) {
+void handleStartCmd(MessageRef m, BotRef bot, SMRef stateManager, api::ApiClientRef api) {
     auto userId = m.from->id;
     auto chatId = m.chat->id;
 
