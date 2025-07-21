@@ -72,8 +72,8 @@ void RecipesApi::publishCustom(UserId user, RecipeId recipe) const {
 }
 
 // GET /recipe/{id}/moderation-history
-std::vector<PublicationHistoryRecipe> RecipesApi::getRecipeRequestHistory(UserId user, RecipeId recipe) const {
-    return jsonGetAuthed<std::vector<PublicationHistoryRecipe>>(user,
+std::vector<RecipePublicationRequest> RecipesApi::getRecipeRequestHistory(UserId user, RecipeId recipe) const {
+    return jsonGetAuthed<std::vector<RecipePublicationRequest>>(user,
                                                                 std::format("/recipes/{}/moderation-history", recipe));
 }
 

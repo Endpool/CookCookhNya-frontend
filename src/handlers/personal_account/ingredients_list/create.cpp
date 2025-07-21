@@ -1,27 +1,29 @@
 #include "create.hpp"
 
+#include "backend/api/ingredients.hpp"
 #include "backend/models/ingredient.hpp"
 #include "handlers/common.hpp"
 #include "message_tracker.hpp"
-#include "ranges"
 #include "render/personal_account/ingredients_list/create.hpp"
 #include "render/personal_account/ingredients_list/view.hpp"
 #include "render/personal_account/recipe/search_ingredients.hpp"
 #include "render/storage/ingredients/view.hpp"
-#include "states.hpp"
 #include "utils/utils.hpp"
 
+#include <ranges>
+
 namespace cookcookhnya::handlers::personal_account::ingredients {
-using namespace render::recipe::ingredients;
+
+using namespace render::storage::ingredients;
+using namespace render::personal_account::recipe;
 using namespace render::personal_account::ingredients;
 using namespace std::views;
-using namespace render::storage::ingredients;
+
 void handleCustomIngredientCreationEnterNameMsg(CustomIngredientCreationEnterName& /*unused*/,
                                                 MessageRef m,
                                                 BotRef& bot,
                                                 SMRef stateManager,
-                                                IngredientsApiRef api) {
-
+                                                api::IngredientsApiRef api) {
     auto name = m.text;
     auto userId = m.from->id;
     auto chatId = m.chat->id;
@@ -39,7 +41,7 @@ void handleCustomIngredientCreationEnterNameCQ(CustomIngredientCreationEnterName
                                                CallbackQueryRef cq,
                                                BotRef& bot,
                                                SMRef stateManager,
-                                               IngredientsApiRef api) {
+                                               api::IngredientsApiRef api) {
     bot.answerCallbackQuery(cq.id);
     auto userId = cq.from->id;
     auto chatId = cq.message->chat->id;
@@ -50,18 +52,20 @@ void handleCustomIngredientCreationEnterNameCQ(CustomIngredientCreationEnterName
 }
 
 void handleCustomIngredientConfirmationCQ(
-    CustomIngredientConfirmation& state, CallbackQueryRef cq, BotRef& bot, SMRef stateManager, ApiClientRef api) {
+    CustomIngredientConfirmation& state, CallbackQueryRef cq, BotRef& bot, SMRef stateManager, api::ApiClientRef api) {
     bot.answerCallbackQuery(cq.id);
     auto userId = cq.from->id;
     auto chatId = cq.message->chat->id;
     auto name = state.name;
+
     if (cq.data == "confirm") {
         api.getIngredientsApi().createCustom(userId, api::models::ingredient::IngredientCreateBody{name});
         renderCustomIngredientsList(true, state.pageNo, userId, chatId, bot, api);
         stateManager.put(CustomIngredientsList{});
     }
+
     if (cq.data == "back") {
-        size_t numOfIngredientsOnPage = 5;
+        const std::size_t numOfIngredientsOnPage = 5;
 
         if (state.recipeFrom.has_value()) {
             auto newState =

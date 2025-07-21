@@ -1,5 +1,6 @@
 #include "view.hpp"
 
+#include "backend/api/api.hpp"
 #include "handlers/common.hpp"
 #include "render/personal_account/ingredients_list/create.hpp"
 #include "render/personal_account/ingredients_list/publish.hpp"
@@ -16,7 +17,7 @@ using namespace render::personal_account::ingredients;
 using namespace render::personal_account;
 
 void handleCustomIngredientsListCQ(
-    CustomIngredientsList& state, CallbackQueryRef cq, BotRef& bot, SMRef stateManager, ApiClientRef api) {
+    CustomIngredientsList& state, CallbackQueryRef cq, BotRef& bot, SMRef stateManager, api::ApiClientRef api) {
     bot.answerCallbackQuery(cq.id);
     auto userId = cq.from->id;
     auto chatId = cq.message->chat->id;

@@ -6,6 +6,7 @@
 #include "utils/to_string.hpp"
 #include "utils/utils.hpp"
 
+#include <algorithm>
 #include <cstddef>
 #include <format>
 #include <ranges>
@@ -23,7 +24,7 @@ void renderShoppingListCreation(const std::vector<Ingredient>& selectedIngredien
                                 UserId userId,
                                 ChatId chatId,
                                 BotRef bot) {
-    std::string text = utils::utf8str(u8"📝 Выберите продукты, которые хотели бы добавить в список покупок\n\n");
+    const std::string text = utils::utf8str(u8"📝 Выберите продукты, которые хотели бы добавить в список покупок\n\n");
 
     const std::size_t buttonRows = ((selectedIngredients.size() + 1) / 2) + 1; // ceil(ingredientsCount / 2), back
     InlineKeyboardBuilder keyboard{buttonRows};
@@ -31,12 +32,12 @@ void renderShoppingListCreation(const std::vector<Ingredient>& selectedIngredien
     for (auto chunk : allIngredients | chunk(2)) {
         keyboard.reserveInRow(2);
         for (const Ingredient& ing : chunk) {
-            const bool isSelected =
-                std::ranges::contains(selectedIngredients, ing.id, &api::models::ingredient::Ingredient::id);
-            std::string emoji = utils::utf8str(isSelected ? u8"[ + ]" : u8"[ᅠ]");
-            const char* actionPrefix = isSelected ? "+" : "-";
-            std::string text = std::format("{} {}", emoji, ing.name);
-            std::string data = actionPrefix + utils::to_string(ing.id);
+            const bool isSelected = std::ranges::contains(selectedIngredients, ing.id, &Ingredient::id);
+            std::string emoji = utils::utf8str(isSelected ? u8"[ + ]" : u8"[ᅠ]"); // second is not empty but invisible!
+            // button data is onclick action for bot: "+" is "add", "-" is "remove"
+            const char* actionPrefix = isSelected ? "-" : "+";
+            const std::string text = std::format("{} {}", emoji, ing.name);
+            const std::string data = actionPrefix + utils::to_string(ing.id);
             keyboard << makeCallbackButton(text, data);
         }
         keyboard << NewRow{};

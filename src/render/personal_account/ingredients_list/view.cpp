@@ -1,5 +1,6 @@
 #include "view.hpp"
 
+#include "backend/api/ingredients.hpp"
 #include "backend/api/publicity_filter.hpp"
 #include "backend/models/ingredient.hpp"
 #include "message_tracker.hpp"
@@ -7,6 +8,9 @@
 #include "utils/to_string.hpp"
 #include "utils/utils.hpp"
 
+#include <tgbot/types/InlineKeyboardButton.h>
+
+#include <cmath>
 #include <cstddef>
 #include <format>
 #include <string>
@@ -16,12 +20,13 @@
 
 namespace cookcookhnya::render::personal_account::ingredients {
 
+using namespace api::models::ingredient;
 using namespace tg_types;
 
 namespace {
 
-std::pair<std::string, std::vector<TgBot::InlineKeyboardButton::Ptr>> constructNavigationMessage(
-    std::size_t pageNo, std::size_t numOfRecipesOnPage, api::models::ingredient::IngredientList& ingredientsList) {
+std::pair<std::string, std::vector<TgBot::InlineKeyboardButton::Ptr>>
+constructNavigationMessage(std::size_t pageNo, std::size_t numOfRecipesOnPage, IngredientList& ingredientsList) {
     const size_t amountOfRecipes = ingredientsList.found;
     const std::size_t maxPageNum =
         std::ceil(static_cast<double>(amountOfRecipes) / static_cast<double>(numOfRecipesOnPage));
@@ -52,9 +57,8 @@ std::pair<std::string, std::vector<TgBot::InlineKeyboardButton::Ptr>> constructN
     return std::make_pair(text, buttons);
 }
 
-std::pair<std::string, InlineKeyboard> constructMessage(size_t pageNo,
-                                                        size_t numOfIngredientsOnPage,
-                                                        api::models::ingredient::IngredientList& ingredientsList) {
+std::pair<std::string, InlineKeyboard>
+constructMessage(size_t pageNo, size_t numOfIngredientsOnPage, IngredientList& ingredientsList) {
     std::size_t numOfRows = 0;
     if (ingredientsList.found == 0)
         numOfRows = 2;
@@ -96,7 +100,7 @@ std::pair<std::string, InlineKeyboard> constructMessage(size_t pageNo,
 } // namespace
 
 void renderCustomIngredientsList(
-    bool toBeEdited, std::size_t pageNo, UserId userId, ChatId chatId, BotRef bot, IngredientsApiRef api) {
+    bool toBeEdited, std::size_t pageNo, UserId userId, ChatId chatId, BotRef bot, api::IngredientsApiRef api) {
     const std::size_t numOfIngredientsOnPage = 10;
 
     auto ingredientsList =

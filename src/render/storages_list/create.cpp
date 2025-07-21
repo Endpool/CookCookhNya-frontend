@@ -6,7 +6,7 @@
 
 #include <utility>
 
-namespace cookcookhnya::render::create_storage {
+namespace cookcookhnya::render::storages_list {
 
 void renderStorageCreation(ChatId chatId, UserId userId, BotRef bot) { // BackendProvider bkn
     InlineKeyboard keyboard(1);
@@ -18,4 +18,4 @@ void renderStorageCreation(ChatId chatId, UserId userId, BotRef bot) { // Backen
     }
 };
 
-} // namespace cookcookhnya::render::create_storage
+} // namespace cookcookhnya::render::storages_list

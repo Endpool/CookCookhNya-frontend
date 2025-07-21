@@ -1,5 +1,6 @@
 #include "delete.hpp"
 
+#include "backend/api/storages.hpp"
 #include "backend/id_types.hpp"
 #include "message_tracker.hpp"
 #include "render/common.hpp"
@@ -14,7 +15,7 @@
 namespace cookcookhnya::render::storage::members {
 
 void renderStorageMemberDeletion(
-    const api::StorageId& storageId, UserId userId, ChatId chatId, BotRef bot, StorageApiRef storageApi) {
+    const api::StorageId& storageId, UserId userId, ChatId chatId, BotRef bot, api::StorageApiRef storageApi) {
     auto storage = storageApi.get(userId, storageId);
 
     auto members = storageApi.getStorageMembers(userId, storageId);

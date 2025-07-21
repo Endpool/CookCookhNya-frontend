@@ -39,7 +39,7 @@ class RecipesApi : ApiBase {
 
     RecipeId create(UserId user, // NOLINT(*-nodiscard)
                     const models::recipe::RecipeCreateBody& body) const;
-    [[nodiscard]] std::vector<models::recipe::PublicationHistoryRecipe> getRecipeRequestHistory(UserId user,
+    [[nodiscard]] std::vector<models::recipe::RecipePublicationRequest> getRecipeRequestHistory(UserId user,
                                                                                                 RecipeId recipe) const;
 
     [[nodiscard]] models::recipe::RecipeDetails get(UserId user, RecipeId recipeId) const;
@@ -48,5 +48,7 @@ class RecipesApi : ApiBase {
 
     void publishCustom(UserId user, RecipeId recipe) const;
 };
+
+using RecipesApiRef = const api::RecipesApi&;
 
 } // namespace cookcookhnya::api

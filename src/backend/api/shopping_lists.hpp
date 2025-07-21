@@ -6,6 +6,7 @@
 
 #include <httplib.h>
 
+#include <cstddef>
 #include <vector>
 
 namespace cookcookhnya::api {
@@ -25,5 +26,7 @@ class ShoppingListApi : ApiBase {
 
     void buy(UserId user, StorageId storage, const std::vector<IngredientId>& ingredients) const;
 };
+
+using ShoppingListApiRef = const api::ShoppingListApi&;
 
 } // namespace cookcookhnya::api

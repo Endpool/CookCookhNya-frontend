@@ -1,5 +1,6 @@
 #include "view.hpp"
 
+#include "backend/api/storages.hpp"
 #include "handlers/common.hpp"
 #include "render/storage/members/add.hpp"
 #include "render/storage/members/delete.hpp"
@@ -11,7 +12,7 @@ using namespace render::storage::members;
 using namespace render::storage;
 
 void handleStorageMemberViewCQ(
-    StorageMemberView& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, StorageApiRef storageApi) {
+    StorageMemberView& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, api::StorageApiRef storageApi) {
     bot.answerCallbackQuery(cq.id);
     auto chatId = cq.message->chat->id;
     auto userId = cq.from->id;

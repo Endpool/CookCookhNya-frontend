@@ -1,9 +1,9 @@
 #pragma once
 
 #include "backend/id_types.hpp"
-#include "backend/models/storage.hpp"
-#include "backend/models/user.hpp"
 #include "publication_request_status.hpp"
+#include "storage.hpp"
+#include "user.hpp"
 
 #include <boost/json/conversion.hpp>
 #include <boost/json/value.hpp>
@@ -14,7 +14,6 @@
 #include <vector>
 
 namespace cookcookhnya::api::models::recipe {
-using namespace status;
 
 struct RecipeSummary {
     RecipeId id;
@@ -46,7 +45,7 @@ struct RecipeDetails {
     std::string name;
     std::optional<std::string> link;
     std::optional<user::UserDetails> creator;
-    std::optional<PublicationRequestStatus> moderationStatus;
+    std::optional<moderation::PublicationRequestStatus> moderationStatus;
 
     friend RecipeDetails tag_invoke(boost::json::value_to_tag<RecipeDetails>, const boost::json::value& j);
 };
@@ -82,13 +81,13 @@ struct RecipeSearchResponse {
                                            const boost::json::value& j);
 };
 
-struct PublicationHistoryRecipe {
+struct RecipePublicationRequest {
+    moderation::PublicationRequestStatus status = moderation::PublicationRequestStatus::NO_REQUEST;
     std::chrono::system_clock::time_point created;
-    std::optional<std::string> reason;
-    PublicationRequestStatus status{};
     std::optional<std::chrono::system_clock::time_point> updated;
+    std::optional<std::string> reason;
 
-    friend PublicationHistoryRecipe tag_invoke(boost::json::value_to_tag<PublicationHistoryRecipe>,
+    friend RecipePublicationRequest tag_invoke(boost::json::value_to_tag<RecipePublicationRequest>,
                                                const boost::json::value& j);
 };
 

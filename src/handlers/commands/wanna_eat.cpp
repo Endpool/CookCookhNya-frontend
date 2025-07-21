@@ -1,5 +1,6 @@
 #include "wanna_eat.hpp"
 
+#include "backend/api/api.hpp"
 #include "handlers/common.hpp"
 #include "message_tracker.hpp"
 #include "render/main_menu/view.hpp"
@@ -7,6 +8,7 @@
 #include "render/storages_selection/view.hpp"
 #include "states.hpp"
 #include "utils/utils.hpp"
+
 #include <optional>
 
 namespace cookcookhnya::handlers::commands {
@@ -15,7 +17,7 @@ using namespace render::select_storages;
 using namespace render::main_menu;
 using namespace render::recipes_suggestions;
 
-void handleWannaEatCmd(MessageRef m, BotRef bot, SMRef stateManager, ApiClientRef api) {
+void handleWannaEatCmd(MessageRef m, BotRef bot, SMRef stateManager, api::ApiClientRef api) {
     auto storages = api.getStoragesApi().getStoragesList(m.from->id);
     if (storages.empty()) {
         bot.sendMessage(m.chat->id, utils::utf8str(u8"😔 К сожалению, у вас пока что нет хранилищ."));
@@ -25,8 +27,8 @@ void handleWannaEatCmd(MessageRef m, BotRef bot, SMRef stateManager, ApiClientRe
         message::deleteMessageId(m.from->id);
         renderRecipesSuggestion({storages}, 0, m.from->id, m.chat->id, bot, api);
         stateManager.put(SuggestedRecipesList{
-            .pageNo = 0,
             .selectedStorages = storages,
+            .pageNo = 0,
             .fromStorage = false,
         });
     } else {

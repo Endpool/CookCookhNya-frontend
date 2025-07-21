@@ -16,10 +16,10 @@ target_sources(main PRIVATE
 
     src/handlers/personal_account/recipe/search_ingredients.cpp
     src/handlers/personal_account/recipe/view.cpp
-    src/handlers/personal_account/recipe/publication_history.cpp
+    src/handlers/personal_account/recipe/moderation_history.cpp
 
     src/handlers/personal_account/view.cpp
-    src/handlers/personal_account/request_history.cpp
+    src/handlers/personal_account/publication_history.cpp
 
     src/handlers/recipe/add_storage.cpp
     src/handlers/recipe/view.cpp
@@ -27,6 +27,7 @@ target_sources(main PRIVATE
     src/handlers/recipes_suggestions/view.cpp
 
     src/handlers/shopping_list/create.cpp
+    src/handlers/shopping_list/search.cpp
     src/handlers/shopping_list/storage_selection_to_buy.cpp
     src/handlers/shopping_list/view.cpp
 

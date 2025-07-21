@@ -1,5 +1,6 @@
 #include "create.hpp"
 
+#include "backend/api/ingredients.hpp"
 #include "backend/api/publicity_filter.hpp"
 #include "backend/models/ingredient.hpp"
 #include "message_tracker.hpp"
@@ -24,7 +25,7 @@ void renderCustomIngredientCreation(UserId userId, ChatId chatId, BotRef bot) {
 }
 
 void renderCustomIngredientConfirmation(
-    bool toBeEdited, std::string ingredientName, UserId userId, ChatId chatId, BotRef bot, IngredientsApiRef api) {
+    bool toBeEdited, std::string ingredientName, UserId userId, ChatId chatId, BotRef bot, api::IngredientsApiRef api) {
     InlineKeyboard keyboard(2);
     keyboard[0].push_back(makeCallbackButton(u8"▶️ Подтвердить", "confirm"));
 

@@ -1,5 +1,6 @@
 #include "create.hpp"
 
+#include "backend/api/storages.hpp"
 #include "backend/models/storage.hpp"
 #include "handlers/common.hpp"
 #include "message_tracker.hpp"
@@ -13,7 +14,7 @@ namespace cookcookhnya::handlers::storages_list {
 using namespace render::storages_list;
 
 void handleStorageCreationEnterNameMsg(
-    StorageCreationEnterName& /*unused*/, MessageRef m, BotRef bot, SMRef stateManager, StorageApiRef storageApi) {
+    StorageCreationEnterName& /*unused*/, MessageRef m, BotRef bot, SMRef stateManager, api::StorageApiRef storageApi) {
     storageApi.create(m.from->id, api::models::storage::StorageCreateBody{m.text}); // Create storage body with new name
     auto text = utils::utf8str(u8"🏷 Введите новое имя хранилища");
     auto messageId = message::getMessageId(m.from->id);
@@ -28,7 +29,7 @@ void handleStorageCreationEnterNameCQ(StorageCreationEnterName& /*unused*/,
                                       CallbackQueryRef cq,
                                       BotRef bot,
                                       SMRef stateManager,
-                                      StorageApiRef storageApi) {
+                                      api::StorageApiRef storageApi) {
     bot.answerCallbackQuery(cq.id);
     if (cq.data == "back") {
         renderStorageList(true, cq.from->id, cq.message->chat->id, bot, storageApi);

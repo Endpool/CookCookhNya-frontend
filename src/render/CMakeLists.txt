@@ -10,10 +10,10 @@ target_sources(main PRIVATE
 
     src/render/personal_account/recipe/search_ingredients.cpp
     src/render/personal_account/recipe/view.cpp
-    src/render/personal_account/recipe/publication_history.cpp
+    src/render/personal_account/recipe/moderation_history.cpp
 
     src/render/personal_account/view.cpp
-    src/render/personal_account/request_history.cpp
+    src/render/personal_account/publication_history.cpp
 
     src/render/recipe/add_storage.cpp
     src/render/recipe/view.cpp
@@ -21,6 +21,7 @@ target_sources(main PRIVATE
     src/render/recipes_suggestions/view.cpp
 
     src/render/shopping_list/create.cpp
+    src/render/shopping_list/search.cpp
     src/render/shopping_list/storage_selection_to_buy.cpp
     src/render/shopping_list/view.cpp
 

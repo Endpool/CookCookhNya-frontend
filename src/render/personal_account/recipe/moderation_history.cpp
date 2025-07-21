@@ -1,4 +1,4 @@
-#include "publication_history.hpp"
+#include "moderation_history.hpp"
 
 #include "backend/id_types.hpp"
 #include "backend/models/recipe.hpp"
@@ -12,7 +12,8 @@
 #include <ranges>
 #include <vector>
 
-namespace cookcookhnya::render::personal_account::recipe::publication_history {
+namespace cookcookhnya::render::personal_account::recipe {
+
 using namespace std::views;
 
 void renderPublicationHistory(UserId userId,
@@ -21,7 +22,7 @@ void renderPublicationHistory(UserId userId,
                               std::string& recipeName,
                               bool isPeek,
                               BotRef bot,
-                              RecipesApiRef recipesApi) {
+                              api::RecipesApiRef recipesApi) {
     auto history = recipesApi.getRecipeRequestHistory(userId, recipeId);
 
     InlineKeyboardBuilder keyboard{2}; // confirm and back
@@ -60,7 +61,7 @@ void renderPublicationHistory(UserId userId,
         bot.editMessageText(toPrint, chatId, *messageId, std::move(keyboard), "Markdown");
     }
 }
-} // namespace cookcookhnya::render::personal_account::recipe::publication_history
+} // namespace cookcookhnya::render::personal_account::recipe
 
 // Uncomment in case of EMERGENCY (or if you know what for is)
 // use instead of history | reverse | ...

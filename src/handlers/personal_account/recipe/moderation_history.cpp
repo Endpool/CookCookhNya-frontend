@@ -1,15 +1,15 @@
-#include "publication_history.hpp"
+#include "moderation_history.hpp"
 
 #include "handlers/common.hpp"
-#include "render/personal_account/recipe/publication_history.hpp"
+#include "render/personal_account/recipe/moderation_history.hpp"
 #include "render/personal_account/recipe/view.hpp"
-namespace cookcookhnya::handlers::personal_account::recipe::publication_history {
 
-using namespace render::personal_account;
-using namespace render::personal_account::recipes;
-using namespace render::personal_account::recipe::publication_history;
+namespace cookcookhnya::handlers::personal_account::recipe {
+
+using namespace render::personal_account::recipe;
+
 void handleCustomRecipePublicationHistoryCQ(
-    CustomRecipePublicationHistory& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
+    CustomRecipePublicationHistory& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, api::ApiClientRef api) {
     const std::string data = cq.data;
     auto chatId = cq.message->chat->id;
     auto userId = cq.from->id;
@@ -18,8 +18,8 @@ void handleCustomRecipePublicationHistoryCQ(
         auto ingredientsAndRecipeName = renderCustomRecipe(true, userId, chatId, state.recipeId, bot, api);
         stateManager.put(RecipeCustomView{.recipeId = state.recipeId,
                                           .pageNo = state.pageNo,
-                                          .ingredients = std::get<0>(ingredientsAndRecipeName),
-                                          .recipeName = std::get<1>(ingredientsAndRecipeName)});
+                                          .ingredients = ingredientsAndRecipeName.first,
+                                          .recipeName = ingredientsAndRecipeName.second});
         return;
     }
 
@@ -35,4 +35,4 @@ void handleCustomRecipePublicationHistoryCQ(
     }
 }
 
-} // namespace cookcookhnya::handlers::personal_account::recipe::publication_history
+} // namespace cookcookhnya::handlers::personal_account::recipe

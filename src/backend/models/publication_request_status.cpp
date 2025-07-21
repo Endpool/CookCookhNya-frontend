@@ -1,6 +1,15 @@
-#include "backend/models/publication_request_status.hpp"
+#include "publication_request_status.hpp"
 
-namespace cookcookhnya::api::models::status {
+#include "utils/utils.hpp"
+
+#include <boost/json/conversion.hpp>
+#include <boost/json/value.hpp>
+
+#include <array>
+#include <cstddef>
+#include <string>
+
+namespace cookcookhnya::api::models::moderation {
 
 PublicationRequestStatus tag_invoke(boost::json::value_to_tag<PublicationRequestStatus> /*tag*/,
                                     const boost::json::value& j) {
@@ -13,4 +22,14 @@ PublicationRequestStatus tag_invoke(boost::json::value_to_tag<PublicationRequest
     return PublicationRequestStatus::NO_REQUEST;
 }
 
-} // namespace cookcookhnya::api::models::status
+} // namespace cookcookhnya::api::models::moderation
+
+namespace cookcookhnya::utils {
+
+std::string to_string(api::models::moderation::PublicationRequestStatus status) {
+    static constexpr std::array statusStr = {
+        u8"🟡 На рассмотрении", u8"🟢 Принят", u8"🔴 Отклонен", u8"⚪️ Вы еще не отправили запрос"};
+    return utf8str(statusStr[static_cast<std::size_t>(status)]);
+}
+
+} // namespace cookcookhnya::utils

@@ -1,8 +1,9 @@
 #include "view.hpp"
 
+#include "backend/api/recipes.hpp"
 #include "backend/id_types.hpp"
 #include "backend/models/ingredient.hpp"
-#include "backend/models/recipe.hpp"
+#include "backend/models/publication_request_status.hpp"
 #include "message_tracker.hpp"
 #include "render/common.hpp"
 #include "utils/utils.hpp"
@@ -10,15 +11,16 @@
 #include <cstddef>
 #include <format>
 #include <string>
-#include <tuple>
 #include <utility>
 #include <vector>
 
-namespace cookcookhnya::render::personal_account::recipes {
+namespace cookcookhnya::render::personal_account::recipe {
 
-std::tuple<std::vector<api::models::ingredient::Ingredient>, std::string> renderCustomRecipe(
-    bool toBeEdited, UserId userId, ChatId chatId, api::RecipeId recipeId, BotRef bot, RecipesApiRef recipesApi) {
+using namespace api::models::ingredient;
+using namespace api::models::moderation;
 
+std::pair<std::vector<Ingredient>, std::string> renderCustomRecipe(
+    bool toBeEdited, UserId userId, ChatId chatId, api::RecipeId recipeId, BotRef bot, api::RecipesApiRef recipesApi) {
     auto recipeDetails = recipesApi.get(userId, recipeId);
 
     std::vector<api::models::ingredient::Ingredient> ingredients;
@@ -41,8 +43,8 @@ std::tuple<std::vector<api::models::ingredient::Ingredient>, std::string> render
     keyboard << makeCallbackButton(u8"🚮 Удалить", "delete") << NewRow{};
     keyboard << makeCallbackButton(u8"✏️ Редактировать", "change") << NewRow{};
     // Show publish button only iff the status is not emty AND not rejected
-    if (recipeDetails.moderationStatus.value() == api::models::recipe::PublicationRequestStatus::NO_REQUEST ||
-        recipeDetails.moderationStatus.value() == api::models::recipe::PublicationRequestStatus::REJECTED) {
+    if (recipeDetails.moderationStatus.value() == PublicationRequestStatus::NO_REQUEST ||
+        recipeDetails.moderationStatus.value() == PublicationRequestStatus::REJECTED) {
         keyboard << makeCallbackButton(u8"📢 Опубликовать", "publish") << NewRow{};
     } else {
         keyboard << makeCallbackButton(u8"📢 История публикаций", "peekpublish") << NewRow{};
@@ -58,6 +60,7 @@ std::tuple<std::vector<api::models::ingredient::Ingredient>, std::string> render
         auto message = bot.sendMessage(chatId, toPrint, std::move(keyboard), "Markdown");
         message::addMessageId(userId, message->messageId);
     }
-    return {ingredients, recipeDetails.name};
+    return {std::move(ingredients), std::move(recipeDetails.name)};
 }
-} // namespace cookcookhnya::render::personal_account::recipes
+
+} // namespace cookcookhnya::render::personal_account::recipe
