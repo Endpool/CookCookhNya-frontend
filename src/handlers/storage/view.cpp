@@ -24,7 +24,8 @@ using namespace render::delete_storage;
 using namespace api::models::storage;
 using namespace std::views;
 
-void handleStorageViewCQ(StorageView& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, api::ApiClientRef api) {
+void handleStorageViewCQ(
+    StorageView& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, api::ApiClientRef api) {
     bot.answerCallbackQuery(cq.id);
     auto chatId = cq.message->chat->id;
     auto userId = cq.from->id;

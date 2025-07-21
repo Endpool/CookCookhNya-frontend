@@ -76,7 +76,7 @@ void handleStorageIngredientsListCQ(
         stateManager.put(newState);
         return;
     }
-  
+
     if (cq.data == "page_left") {
         state.pageNo -= 1;
         updateSearch(state, false, bot, userId, api);
