@@ -31,11 +31,13 @@ void renderPublicationHistory(UserId userId,
     std::string toPrint;
     toPrint = (utils::utf8str(u8"История запросов на публикацию *") + recipeName + "*\n");
     if (!history.empty()) {
-        size_t lastUpdate = history.size() - 1;
-        toPrint += utils::utf8str(u8"ℹ️ Текущий статус: ") + utils::to_string(history[lastUpdate].status) +
-                   std::format(" по причине {} ",
-                               history[lastUpdate].reason.has_value() ? history[lastUpdate].reason.value() : " ") +
-                   utils::to_string(history[lastUpdate].created) + "\n\n";
+        const size_t lastUpdate = history.size() - 1;
+        // Construct current status string
+        toPrint += utils::utf8str(u8"ℹ️ Текущий статус: ") + utils::to_string(history[lastUpdate].status);
+        if (history[lastUpdate].reason.has_value())
+            toPrint += std::format(" по причине {}", history[lastUpdate].reason.value());
+        toPrint += " " + utils::to_string(history[lastUpdate].created) + "\n\n";
+
         // Remove the lastest history instance as it's showed differently
         history.erase(history.end());
 
@@ -63,48 +65,3 @@ void renderPublicationHistory(UserId userId,
     }
 }
 } // namespace cookcookhnya::render::personal_account::recipe
-
-// Uncomment in case of EMERGENCY (or if you know what for is)
-// use instead of history | reverse | ...
-/*
-const std::vector<std::string> prefixes = {utils::utf8str(u8"Статус"),
-                                                utils::utf8str(u8"по причине"),
-                                                utils::utf8str(u8"запрос создан"),
-                                                utils::utf8str(u8"последенее обновление")};
-
-        // What if you forgot what for loop is? Хы-хы (Yes it's probably possible to zip "fields" and "prefixes" and
-        // interate through it but it would require "for" and i don't know what is it) reverse to print lastest request
-    the
-        // last in list
-        auto res =
-            history | reverse | transform([&prefixes](const api::models::recipe::PublicationHistoryRecipe& req) {
-                //!!!!IMPORTANT See that tie to match prefixes!!!!
-                auto fields = std::tie(req.status, req.reason, req.created, req.updated);
-                return iota(0U, prefixes.size()) | transform([fields, &prefixes](size_t idx) -> std::string {
-                        switch (idx) {
-                        case 0:
-                            // statusStr to convert enum to string
-                            return prefixes[0] + ": " + utils::to_string(std::get<0>(fields)) + " ";
-                        case 1:
-                            if (std::get<1>(fields).has_value()) {
-                                return prefixes[1] + ": " + std::get<1>(fields).value() + " ";
-                            }
-                            return ", ";
-                        // Need to work with chrono
-                        case 2:
-                            return prefixes[2] + ": " + utils::to_string(std::get<2>(fields)) + ", ";
-                        case 3:
-                            if (std::get<3>(fields).has_value()) {
-                                return prefixes[3] + ": " + utils::to_string(std::get<3>(fields).value()) + "\n\n";
-                            }
-                            return "\n\n";
-                        default:
-                            return "";
-                        }
-                    });
-            }) |
-            join; // Join here instead of in the loop
-
-        std::ranges::for_each(res, [&toPrint](const std::string& s) { toPrint += s; });
-    }
-*/
