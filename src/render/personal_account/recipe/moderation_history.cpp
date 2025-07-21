@@ -31,12 +31,14 @@ void renderPublicationHistory(UserId userId,
     std::string toPrint;
     toPrint = (utils::utf8str(u8"История запросов на публикацию *") + recipeName + "*\n");
     if (!history.empty()) {
-        const size_t lastUpdate = history.size() - 1;
+        const size_t lastUpdatedInstance = history.size() - 1;
         // Construct current status string
-        toPrint += utils::utf8str(u8"ℹ️ Текущий статус: ") + utils::to_string(history[lastUpdate].status);
-        if (history[lastUpdate].reason.has_value())
-            toPrint += std::format(" по причине {}", history[lastUpdate].reason.value());
-        toPrint += " " + utils::to_string(history[lastUpdate].created) + "\n\n";
+        toPrint += utils::utf8str(u8"ℹ️ Текущий статус: ") + utils::to_string(history[lastUpdatedInstance].status);
+        if (history[lastUpdatedInstance].reason) {
+            auto reason = history[lastUpdatedInstance].reason.value();
+            toPrint += std::format(" по причине {}", reason);
+        }
+        toPrint += " " + utils::to_string(history[lastUpdatedInstance].created) + "\n\n";
 
         // Remove the lastest history instance as it's showed differently
         history.erase(history.end());
