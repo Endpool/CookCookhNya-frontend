@@ -47,7 +47,7 @@ std::pair<std::vector<Ingredient>, std::string> renderCustomRecipe(
         recipeDetails.moderationStatus == PublicationRequestStatus::REJECTED) {
         keyboard << makeCallbackButton(u8"📢 Опубликовать", "publish") << NewRow{};
     } else {
-        keyboard << makeCallbackButton(u8"📢 История публикаций", "peekpublish") << NewRow{};
+        keyboard << makeCallbackButton(u8"📢 История публикаций", "publish") << NewRow{};
     }
 
     keyboard << makeCallbackButton(u8"↩️ Назад", "back");

@@ -1,6 +1,5 @@
 #include "moderation_history.hpp"
 
-#include "backend/id_types.hpp"
 #include "backend/models/recipe.hpp"
 #include "message_tracker.hpp"
 #include "render/common.hpp"
@@ -19,18 +18,18 @@ using namespace std::views;
 
 void renderPublicationHistory(UserId userId,
                               ChatId chatId,
-                              api::RecipeId recipeId,
                               std::string& recipeName,
-                              bool isPeek,
-                              BotRef bot,
-                              api::RecipesApiRef recipesApi) {
-    auto history = recipesApi.getRecipeRequestHistory(userId, recipeId);
+                              std::vector<api::models::recipe::RecipePublicationRequest> history,
+                              BotRef bot) {
 
-    InlineKeyboardBuilder keyboard{2}; // confirm and back
+    bool isConfirm = true;
+    InlineKeyboardBuilder keyboard{3}; // confirm, back and rules
 
     std::string toPrint;
-    toPrint = (utils::utf8str(u8"История запросов на публикацию *") + recipeName + "*\n");
+    toPrint = (utils::utf8str(u8"История запросов на публикацию *") + recipeName + "*\n\n");
     if (!history.empty()) {
+        // Show confirm only if in those states
+        isConfirm = history[history.size() - 1].status == api::models::moderation::PublicationRequestStatus::REJECTED;
         const size_t lastUpdatedInstance = history.size() - 1;
         // Construct current status string
         toPrint += utils::utf8str(u8"ℹ️ Текущий статус: ") + utils::to_string(history[lastUpdatedInstance].status);
@@ -54,12 +53,32 @@ void renderPublicationHistory(UserId userId,
         }
     }
 
-    // Text is created moving to the markup
-    // If not peeking then show accept button
-    if (!isPeek) {
+    if (isConfirm) {
         keyboard << makeCallbackButton(u8"▶️Подтвердить", "confirm") << NewRow{};
     }
+    keyboard << makeCallbackButton(u8"❗️Правила", "rules") << NewRow{};
     keyboard << makeCallbackButton(u8"↩️ Назад", "back");
+
+    if (auto messageId = message::getMessageId(userId)) {
+        bot.editMessageText(toPrint, chatId, *messageId, std::move(keyboard), "Markdown");
+    }
+}
+
+void renderPublicationRules(UserId userId, ChatId chatId, BotRef bot) {
+    // Rules
+    std::string toPrint =
+        utils::utf8str(u8"❗️ *Правила публикации рецептов:*") +
+        "\n1. *Статус рецепта*\nНельзя отправить запрос на публикацию, если рецепт:\n    - уже принят "
+        "(опубликован);\n    - находится на рассмотрении модерации.  \n2. *Ингредиенты*  \n   Запрещено публиковать "
+        "рецепт, если в нём есть:\n    - ингредиенты, не прошедшие модерацию (_ожидают проверки_);\n    - "
+        "ингредиенты, отклонённые администрацией.\n3. *Название рецепта*\n    - Не должно содержать "
+        "нецензурную лексику, оскорбления или спам;\n    - Должно точно отражать содержание рецепта (например: "
+        "\"Спагетти карбонара\", а не \"Вкуснятина\").  \n4. *Дополнительно*\n    - Запрещено размещать контактные "
+        "данные или рекламу." +
+        utils::utf8str(u8"\n⚠️ Нарушение правил приведёт к отклонению рецепта ");
+
+    InlineKeyboardBuilder keyboard{1}; // back
+    keyboard << makeCallbackButton(u8"↩️ Назад", "backFromRules");
 
     if (auto messageId = message::getMessageId(userId)) {
         bot.editMessageText(toPrint, chatId, *messageId, std::move(keyboard), "Markdown");

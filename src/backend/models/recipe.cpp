@@ -73,8 +73,8 @@ RecipeSearchResponse tag_invoke(json::value_to_tag<RecipeSearchResponse> /*tag*/
 
 RecipePublicationRequest tag_invoke(json::value_to_tag<RecipePublicationRequest> /*tag*/, const json::value& j) {
     return {
-        .status = j.as_object().if_contains("status") ? value_to<PublicationRequestStatus>(j.at("status"))
-                                                      : PublicationRequestStatus::NO_REQUEST,
+        .status = j.as_object().if_contains("status") ? value_to<moderation::PublicationRequestStatus>(j.at("status"))
+                                                      : moderation::PublicationRequestStatus::NO_REQUEST,
         .created = utils::parseIsoTime(value_to<std::string>(j.at("createdAt"))),
         .updated = j.as_object().if_contains("updatedAt")
                        ? std::optional{utils::parseIsoTime(value_to<std::string>(j.at("updatedAt")))}
