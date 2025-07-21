@@ -34,7 +34,7 @@ void renderMainMenu(bool toBeEdited,
     keyboard << makeCallbackButton(u8"🍱 Хранилища", "storage_list") << NewRow{};
     if (!storages.empty())
         keyboard << makeCallbackButton(u8"😋 Хочу кушать!", "wanna_eat") << NewRow{};
-    keyboard << makeCallbackButton(u8"🗒 Список покупок", "shopping_list") << NewRow{}
+    keyboard << makeCallbackButton(u8"🧾 Список покупок", "shopping_list") << NewRow{}
              << makeCallbackButton(u8"👤 Личный кабинет", "personal_account");
 
     if (toBeEdited) {

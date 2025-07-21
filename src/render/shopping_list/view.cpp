@@ -35,7 +35,7 @@ void renderShoppingList(const states::ShoppingListView& state, UserId userId, Ch
     keyboard << makeCallbackButton(u8"↩️ Назад", "back");
 
     auto text =
-        utils::utf8str(u8"🔖 Ваш список покупок. Выбирайте, чтобы добавить в хранилище или вычеркнуть из списка.");
+        utils::utf8str(u8"🧾 Ваш список покупок. Выбирайте, чтобы добавить в хранилище или вычеркнуть из списка.");
     if (auto messageId = message::getMessageId(userId)) {
         bot.editMessageText(text, chatId, *messageId, std::move(keyboard));
     } else {

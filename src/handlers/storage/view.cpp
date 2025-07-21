@@ -10,7 +10,6 @@
 #include "render/storages_list/view.hpp"
 #include "states.hpp"
 
-#include <cstddef>
 #include <ranges>
 #include <utility>
 #include <vector>
@@ -25,8 +24,6 @@ using namespace render::delete_storage;
 using namespace api::models::storage;
 using namespace std::views;
 
-const std::size_t numOfIngredientsOnPage = 5;
-
 void handleStorageViewCQ(
     StorageView& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, api::ApiClientRef api) {
     bot.answerCallbackQuery(cq.id);
@@ -36,7 +33,7 @@ void handleStorageViewCQ(
     if (cq.data == "ingredients") {
         auto ingredients = api.getIngredientsApi().getStorageIngredients(userId, state.storageId);
         auto newState = StorageIngredientsList{state.storageId, ingredients | as_rvalue, ""};
-        renderIngredientsListSearch(newState, numOfIngredientsOnPage, userId, chatId, bot);
+        renderIngredientsListSearch(newState, userId, chatId, bot);
         stateManager.put(std::move(newState));
         return;
     }

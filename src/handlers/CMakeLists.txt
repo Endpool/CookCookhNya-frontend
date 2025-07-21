@@ -30,6 +30,7 @@ target_sources(main PRIVATE
     src/handlers/shopping_list/view.cpp
 
     src/handlers/storage/ingredients/view.cpp
+    src/handlers/storage/ingredients/delete.cpp
 
     src/handlers/storage/members/add.cpp
     src/handlers/storage/members/delete.cpp

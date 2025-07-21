@@ -32,29 +32,39 @@ constructKeyboard(std::size_t pageNo, std::size_t pageSize, const states::Storag
     InlineKeyboardBuilder keyboard;
 
     auto searchButton = std::make_shared<TgBot::InlineKeyboardButton>();
-    searchButton->text = utils::utf8str(u8"✏️ Редактировать");
+    searchButton->text = utils::utf8str(u8"🛒 Добавить");
     searchButton->switchInlineQueryCurrentChat = "";
     keyboard << std::move(searchButton) << NewRow{};
 
     auto makeIngredientButton = [](const IngredientSearchForStorageItem& ing) {
         return makeCallbackButton((ing.isInStorage ? "[ + ] " : "[ㅤ] ") + ing.name, utils::to_string(ing.id));
     };
-    keyboard << constructPagination(pageNo, pageSize, state.totalFound, state.searchItems, makeIngredientButton)
-             << makeCallbackButton(u8"↩️ Назад", "back");
+    keyboard << constructPagination(pageNo, pageSize, state.totalFound, state.searchItems, makeIngredientButton);
+
+    if (!state.storageIngredients.getValues().empty())
+        keyboard << makeCallbackButton(u8"🗑 Удалить", "delete") << NewRow{};
+    keyboard << makeCallbackButton(u8"↩️ Назад", "back");
+
     return keyboard;
 }
 
 } // namespace
 
 void renderIngredientsListSearch(const states::StorageIngredientsList& state,
-                                 std::size_t numOfIngredientsOnPage,
                                  UserId userId,
                                  ChatId chatId,
                                  BotRef bot) {
+    const std::size_t numOfIngredientsOnPage = 5;
+    const std::string list = state.storageIngredients.getValues() |
+                             transform([](auto& i) { return std::format("• {}\n", i.name); }) | join |
+                             to<std::string>();
 
-    std::string list = state.storageIngredients.getValues() |
-                       transform([](auto& i) { return std::format("• {}\n", i.name); }) | join | to<std::string>();
-    auto text = utils::utf8str(u8"🍗 Ваши ингредиенты:\n\n") + std::move(list);
+    auto text =
+        state.storageIngredients.getValues().empty()
+            ? utils::utf8str(u8"🍗 Кажется, в вашем хранилище пока нет никаких продуктов. Чтобы добавить новый, "
+                             u8"нажмите на кнопку 🛒 Добавить и начните вводить название продукта...\n\n")
+            : utils::utf8str(u8"🍗 Ваши продукты:\n\n");
+    text += list;
     if (auto messageId = message::getMessageId(userId)) {
         bot.editMessageText(text, chatId, *messageId, constructKeyboard(state.pageNo, numOfIngredientsOnPage, state));
     }

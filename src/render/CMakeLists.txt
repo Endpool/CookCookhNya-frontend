@@ -24,6 +24,7 @@ target_sources(main PRIVATE
     src/render/shopping_list/view.cpp
 
     src/render/storage/ingredients/view.cpp
+    src/render/storage/ingredients/delete.cpp
 
     src/render/storage/members/add.cpp
     src/render/storage/members/delete.cpp

@@ -73,7 +73,7 @@ constructMessage(size_t pageNo, size_t numOfIngredientsOnPage, IngredientList& i
             utils::utf8str(u8"📋 Вы находитесь в Мои ингредиенты\\. Создавайте и делитесь новыми ингредиентами\\.\n\n");
         keyboard[0].push_back(makeCallbackButton(u8"🆕 Создать", "create"));
         keyboard[1].push_back(makeCallbackButton(u8"↩️ Назад", "back"));
-    } else if (ingredientsList.found <= numOfIngredientsOnPage) {
+    } else if (ingredientsList.found <= numOfIngredientsOnPage && pageNo == 0) {
         text = utils::utf8str(u8"📋 Вы находитесь в Мои ингредиенты\\. \nВами созданные ингредиенты:\n\n");
         for (const auto& ing : ingredientsList.page) {
             if (ing.status) {

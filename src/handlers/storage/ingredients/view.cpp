@@ -5,8 +5,10 @@
 #include "backend/models/ingredient.hpp"
 #include "handlers/common.hpp"
 #include "message_tracker.hpp"
+#include "render/storage/ingredients/delete.hpp"
 #include "render/storage/ingredients/view.hpp"
 #include "render/storage/view.hpp"
+#include "states.hpp"
 #include "tg_types.hpp"
 #include "utils/parsing.hpp"
 
@@ -14,6 +16,7 @@
 #include <cstddef>
 #include <functional>
 #include <utility>
+#include <vector>
 
 namespace cookcookhnya::handlers::storage::ingredients {
 
@@ -46,7 +49,7 @@ void updateSearch(StorageIngredientsList& state,
         state.searchItems = std::move(response.page);
         state.totalFound = response.found;
         if (auto mMessageId = message::getMessageId(userId))
-            renderIngredientsListSearch(state, numOfIngredientsOnPage, userId, userId, bot);
+            renderIngredientsListSearch(state, userId, userId, bot);
     }
 }
 } // namespace
@@ -62,6 +65,18 @@ void handleStorageIngredientsListCQ(
         stateManager.put(StorageView{state.storageId});
         return;
     }
+
+    if (cq.data == "delete") {
+        std::vector<api::models::ingredient::Ingredient> ingredients;
+        for (auto& ing : state.storageIngredients.getValues()) {
+            ingredients.push_back(ing);
+        }
+        auto newState = StorageIngredientsDeletion{state.storageId, {}, ingredients, false, 0};
+        renderStorageIngredientsDeletion(newState, userId, chatId, bot);
+        stateManager.put(newState);
+        return;
+    }
+
     if (cq.data == "page_left") {
         state.pageNo -= 1;
         updateSearch(state, false, bot, userId, api);
@@ -90,7 +105,7 @@ void handleStorageIngredientsListCQ(
             state.storageIngredients.put({.id = it->id, .name = it->name});
         }
         it->isInStorage = !it->isInStorage;
-        renderIngredientsListSearch(state, numOfIngredientsOnPage, userId, chatId, bot);
+        renderIngredientsListSearch(state, userId, chatId, bot);
     }
 }
 
@@ -104,7 +119,7 @@ void handleStorageIngredientsListIQ(StorageIngredientsList& state,
         state.searchItems.clear();
         // When query is empty then search shouldn't happen
         state.totalFound = 0;
-        renderIngredientsListSearch(state, numOfIngredientsOnPage, userId, userId, bot);
+        renderIngredientsListSearch(state, userId, userId, bot);
     } else {
         updateSearch(state, true, bot, userId, api);
     }

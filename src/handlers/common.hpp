@@ -33,6 +33,7 @@ using states::StorageMemberAddition;
 using states::StorageMemberDeletion;
 using states::StorageMemberView;
 
+using states::StorageIngredientsDeletion;
 using states::StorageIngredientsList;
 
 using states::StoragesSelection;

@@ -74,6 +74,13 @@ struct StorageIngredientsList : detail::StorageIdMixin {
         : StorageIdMixin{storageId}, storageIngredients{std::forward<R>(ingredients)}, inlineQuery(std::move(iq)) {}
 };
 
+struct StorageIngredientsDeletion : detail::StorageIdMixin {
+    std::vector<api::models::ingredient::Ingredient> selectedIngredients;
+    std::vector<api::models::ingredient::Ingredient> storageIngredients;
+    bool addedToShopList;
+    std::size_t pageNo;
+};
+
 struct StoragesSelection {
     std::vector<api::models::storage::StorageSummary> selectedStorages;
 };
@@ -176,6 +183,7 @@ using State = std::variant<MainMenu,
                            StorageMemberAddition,
                            StorageMemberDeletion,
                            StorageIngredientsList,
+                           StorageIngredientsDeletion,
                            StoragesSelection,
                            SuggestedRecipesList,
                            RecipeView,
