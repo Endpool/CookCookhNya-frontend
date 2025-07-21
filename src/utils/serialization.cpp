@@ -5,10 +5,13 @@
 namespace cookcookhnya::utils {
 
 std::chrono::system_clock::time_point parseIsoTime(std::string s) {
-    std::istringstream ss{std::move(s)};
     std::chrono::system_clock::time_point tp;
-    ss >> std::chrono::parse("%FT%T%z", tp);
-    return ss.fail() ? throw std::runtime_error("Could not parse datetime") : tp;
+    std::istringstream ss(std::move(s));
+    ss >> std::chrono::parse("%FT%TZ", tp); // Parse as UTC
+    if (ss.fail()) {
+        throw std::runtime_error("Could not parse datetime");
+    }
+    return tp; // Still UTC, but debugger may show local time
 }
 
 } // namespace cookcookhnya::utils

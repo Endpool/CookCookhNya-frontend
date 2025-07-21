@@ -35,8 +35,9 @@ void renderPublicationHistory(UserId userId,
         // Construct current status string
         toPrint += utils::utf8str(u8"ℹ️ Текущий статус: ") + utils::to_string(history[lastUpdatedInstance].status);
         if (history[lastUpdatedInstance].reason) {
-            auto reason = history[lastUpdatedInstance].reason.value();
-            toPrint += std::format(" по причине {}", reason);
+            toPrint +=
+                std::format(" по причине {}",
+                            history[lastUpdatedInstance].reason.value()); // NOLINT(bugprone-unchecked-optional-access)
         }
         toPrint += " " + utils::to_string(history[lastUpdatedInstance].created) + "\n\n";
 
