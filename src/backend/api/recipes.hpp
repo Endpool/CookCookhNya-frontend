@@ -46,4 +46,6 @@ class RecipesApi : ApiBase {
     void publishCustom(UserId user, RecipeId recipe) const;
 };
 
+using RecipesApiRef = const api::RecipesApi&;
+
 } // namespace cookcookhnya::api

@@ -1,5 +1,6 @@
 #include "create.hpp"
 
+#include "backend/api/api.hpp"
 #include "backend/id_types.hpp"
 #include "backend/models/ingredient.hpp"
 #include "handlers/common.hpp"
@@ -18,7 +19,7 @@ using namespace render::shopping_list;
 using namespace render::recipe;
 
 void handleShoppingListCreationCQ(
-    ShoppingListCreation& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
+    ShoppingListCreation& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, api::ApiClientRef api) {
     const std::string& data = cq.data;
     auto chatId = cq.message->chat->id;
     auto userId = cq.from->id;

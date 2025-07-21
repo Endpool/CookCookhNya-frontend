@@ -6,7 +6,6 @@
 #include "backend/models/shopping_list.hpp"
 #include "backend/models/storage.hpp"
 #include "utils/fast_sorted_db.hpp"
-#include "utils/ingredients_availability.hpp"
 #include "utils/utils.hpp"
 
 #include <tg_stater/state_storage/common.hpp>
@@ -84,10 +83,17 @@ struct SuggestedRecipesList {
     bool fromStorage;
 };
 struct RecipeView {
+    enum struct AvailabilityType : std::uint8_t { NOT_AVAILABLE, AVAILABLE, OTHER_STORAGES };
+
+    struct IngredientAvailability {
+        cookcookhnya::api::models::recipe::IngredientInRecipe ingredient;
+        AvailabilityType available = AvailabilityType::NOT_AVAILABLE;
+        std::vector<api::models::storage::StorageSummary> storages;
+    };
+
     SuggestedRecipesList prevState;
     std::vector<api::models::storage::StorageSummary> addedStorages;
-    std::vector<std::pair<cookcookhnya::api::models::recipe::IngredientInRecipe, utils::IngredientAvailability>>
-        availability;
+    std::vector<IngredientAvailability> availability;
     api::RecipeId recipeId;
 };
 

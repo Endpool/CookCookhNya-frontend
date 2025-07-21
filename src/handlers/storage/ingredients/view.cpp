@@ -1,5 +1,6 @@
 #include "view.hpp"
 
+#include "backend/api/api.hpp"
 #include "backend/id_types.hpp"
 #include "backend/models/ingredient.hpp"
 #include "handlers/common.hpp"
@@ -20,13 +21,16 @@ using namespace render::storage;
 using namespace render::storage::ingredients;
 using namespace api::models::ingredient;
 
-// Global vars
+namespace {
+
 const size_t numOfIngredientsOnPage = 5;
 const size_t threshhold = 70;
 
-namespace {
-void updateSearch(
-    StorageIngredientsList& state, bool isQueryChanged, BotRef bot, tg_types::UserId userId, IngredientsApiRef api) {
+void updateSearch(StorageIngredientsList& state,
+                  bool isQueryChanged,
+                  BotRef bot,
+                  tg_types::UserId userId,
+                  api::IngredientsApiRef api) {
     state.pageNo = isQueryChanged ? 0 : state.pageNo;
     auto response = api.searchForStorage(userId,
                                          state.storageId,
@@ -48,7 +52,7 @@ void updateSearch(
 } // namespace
 
 void handleStorageIngredientsListCQ(
-    StorageIngredientsList& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
+    StorageIngredientsList& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, api::ApiClientRef api) {
     bot.answerCallbackQuery(cq.id);
     const auto userId = cq.from->id;
     const auto chatId = cq.message->chat->id;
@@ -58,20 +62,19 @@ void handleStorageIngredientsListCQ(
         stateManager.put(StorageView{state.storageId});
         return;
     }
-    if (cq.data == "prev") {
+    if (cq.data == "page_left") {
         state.pageNo -= 1;
         updateSearch(state, false, bot, userId, api);
         return;
     }
 
-    if (cq.data == "next") {
+    if (cq.data == "page_right") {
         state.pageNo += 1;
         updateSearch(state, false, bot, userId, api);
         return;
     }
 
     if (cq.data != "dont_handle") {
-
         auto mIngredient = utils::parseSafe<api::IngredientId>(cq.data);
         if (!mIngredient)
             return;
@@ -94,7 +97,7 @@ void handleStorageIngredientsListCQ(
 void handleStorageIngredientsListIQ(StorageIngredientsList& state,
                                     InlineQueryRef iq,
                                     BotRef bot,
-                                    IngredientsApiRef api) {
+                                    api::IngredientsApiRef api) {
     const auto userId = iq.from->id;
     state.inlineQuery = iq.query;
     if (iq.query.empty()) {

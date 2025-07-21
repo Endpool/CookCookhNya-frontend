@@ -1,9 +1,9 @@
 #include "publish.hpp"
 
+#include "backend/api/ingredients.hpp"
 #include "backend/api/publicity_filter.hpp"
 #include "message_tracker.hpp"
 #include "render/common.hpp"
-#include "utils/to_string.hpp"
 #include "utils/utils.hpp"
 
 #include <cstddef>
@@ -14,7 +14,7 @@ namespace cookcookhnya::render::personal_account::ingredients {
 
 using namespace tg_types;
 
-void renderCustomIngredientPublication(UserId userId, ChatId chatId, BotRef bot, IngredientsApiRef api) {
+void renderCustomIngredientPublication(UserId userId, ChatId chatId, BotRef bot, api::IngredientsApiRef api) {
     auto ingredientsResp = api.search(userId, PublicityFilterType::Custom);
 
     // TODO: make pagination for ingredients

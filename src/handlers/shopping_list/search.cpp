@@ -1,5 +1,6 @@
 #include "search.hpp"
 
+#include "backend/api/api.hpp"
 #include "backend/api/publicity_filter.hpp"
 #include "backend/id_types.hpp"
 #include "backend/models/shopping_list.hpp"
@@ -21,7 +22,7 @@ using namespace api::models::shopping_list;
 const std::size_t searchThreshold = 70;
 
 void handleShoppingListIngredientSearchCQ(
-    ShoppingListIngredientSearch& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
+    ShoppingListIngredientSearch& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, api::ApiClientRef api) {
     bot.answerCallbackQuery(cq.id);
     auto userId = cq.from->id;
     auto chatId = cq.message->chat->id;
@@ -67,7 +68,7 @@ void handleShoppingListIngredientSearchCQ(
 void handleShoppingListIngredientSearchIQ(ShoppingListIngredientSearch& state,
                                           InlineQueryRef iq,
                                           BotRef bot,
-                                          IngredientsApiRef api) {
+                                          api::IngredientsApiRef api) {
     auto userId = iq.from->id;
     if (iq.query.empty()) {
         state.query = "";

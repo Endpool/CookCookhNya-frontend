@@ -1,5 +1,6 @@
 #pragma once
 
+#include "backend/api/storages.hpp"
 #include "render/common.hpp"
 
 #include <optional>
@@ -12,6 +13,6 @@ void renderMainMenu(bool toBeEdited,
                     UserId userId,
                     ChatId chatId,
                     BotRef bot,
-                    StorageApiRef storageApi);
+                    api::StorageApiRef storageApi);
 
 } // namespace cookcookhnya::render::main_menu

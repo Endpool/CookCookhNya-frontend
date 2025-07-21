@@ -1,5 +1,6 @@
 #include "add.hpp"
 
+#include "backend/api/storages.hpp"
 #include "backend/id_types.hpp"
 #include "message_tracker.hpp"
 #include "render/common.hpp"
@@ -15,7 +16,7 @@
 namespace cookcookhnya::render::storage::members {
 
 void renderStorageMemberAddition(
-    const api::StorageId& storageId, UserId userId, ChatId chatId, BotRef bot, StorageApiRef storageApi) {
+    const api::StorageId& storageId, UserId userId, ChatId chatId, BotRef bot, api::StorageApiRef storageApi) {
     auto storage = storageApi.get(userId, storageId);
 
     const std::size_t buttonRows = 2;
@@ -30,7 +31,7 @@ void renderStorageMemberAddition(
 };
 
 void renderShareLinkMemberAddition(
-    const api::StorageId& storageId, UserId userId, ChatId chatId, BotRef bot, StorageApiRef storageApi) {
+    const api::StorageId& storageId, UserId userId, ChatId chatId, BotRef bot, api::StorageApiRef storageApi) {
     auto storage = storageApi.get(userId, storageId);
 
     const std::size_t buttonRows = 2;

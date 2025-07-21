@@ -1,6 +1,8 @@
 #pragma once
+
 #include "render/common.hpp"
 #include "states.hpp"
+
 #include <cstddef>
 
 namespace cookcookhnya::render::storage::ingredients {

@@ -1,5 +1,6 @@
 #include "add.hpp"
 
+#include "backend/api/storages.hpp"
 #include "handlers/common.hpp"
 #include "message_tracker.hpp"
 #include "render/storage/members/add.hpp"
@@ -17,7 +18,7 @@ namespace cookcookhnya::handlers::storage::members {
 using namespace render::storage::members;
 
 void handleStorageMemberAdditionMsg(
-    StorageMemberAddition& state, MessageRef m, BotRef bot, SMRef stateManager, StorageApiRef storageApi) {
+    StorageMemberAddition& state, MessageRef m, BotRef bot, SMRef stateManager, api::StorageApiRef storageApi) {
     auto chatId = m.chat->id;
     auto userId = m.from->id;
 
@@ -50,7 +51,7 @@ void handleStorageMemberAdditionMsg(
 };
 
 void handleStorageMemberAdditionCQ(
-    StorageMemberAddition& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, StorageApiRef storageApi) {
+    StorageMemberAddition& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, api::StorageApiRef storageApi) {
     bot.answerCallbackQuery(cq.id);
     auto chatId = cq.message->chat->id;
     auto userId = cq.from->id;

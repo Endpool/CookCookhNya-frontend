@@ -1,5 +1,6 @@
 #include "view.hpp"
 
+#include "backend/api/storages.hpp"
 #include "backend/id_types.hpp"
 #include "message_tracker.hpp"
 #include "render/common.hpp"
@@ -20,7 +21,7 @@ void renderMemberList(bool toBeEdited,
                       UserId userId,
                       ChatId chatId,
                       BotRef bot,
-                      StorageApiRef storageApi) {
+                      api::StorageApiRef storageApi) {
     auto storage = storageApi.get(userId, storageId);
     const bool isOwner = storage.ownerId == userId;
     const std::size_t buttonRows = isOwner ? 2 : 1;

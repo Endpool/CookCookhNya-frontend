@@ -28,9 +28,9 @@ using namespace tg_types;
 
 namespace {
 
-InlineKeyboard constructNavigationsMarkup(size_t offset,
-                                          size_t fullKeyBoardSize,
-                                          size_t numOfRecipesOnPage,
+InlineKeyboard constructNavigationsMarkup(std::size_t offset,
+                                          std::size_t fullKeyBoardSize,
+                                          std::size_t numOfRecipesOnPage,
                                           const states::CustomRecipeIngredientsSearch& state) {
     using namespace std::views;
     const size_t amountOfRecipes = state.totalFound;
@@ -107,10 +107,10 @@ InlineKeyboard constructNavigationsMarkup(size_t offset,
 InlineKeyboard constructMarkup(size_t numOfRecipesOnPage, const states::CustomRecipeIngredientsSearch& state) {
     // 1 for back button return, 1 for arrows (ALWAYS ACCOUNT ARROWS), 1
     // for editing - other buttons are ingredients
-    const size_t numOfRows = 3;
-    const size_t offset = 1; // Number of rows before list
+    const std::size_t numOfRows = 3;
+    const std::size_t offset = 1; // Number of rows before list
 
-    const size_t recipesToShow = std::min(numOfRecipesOnPage, state.searchItems.size());
+    const std::size_t recipesToShow = std::min(numOfRecipesOnPage, state.searchItems.size());
 
     InlineKeyboard keyboard = constructNavigationsMarkup(offset, numOfRows + recipesToShow, numOfRecipesOnPage, state);
     if (keyboard.empty()) { // If error happened
@@ -123,7 +123,7 @@ InlineKeyboard constructMarkup(size_t numOfRecipesOnPage, const states::CustomRe
 } // namespace
 
 void renderRecipeIngredientsSearch(const states::CustomRecipeIngredientsSearch& state,
-                                   size_t numOfIngredientsOnPage,
+                                   std::size_t numOfIngredientsOnPage,
                                    UserId userId,
                                    ChatId chatId,
                                    BotRef bot) {
@@ -136,13 +136,8 @@ void renderRecipeIngredientsSearch(const states::CustomRecipeIngredientsSearch& 
     auto text = utils::utf8str(u8"📝Нажмите на кнопку ✏️ Редактировать и начните вводить названия продуктов:\n\n") +
                 std::move(list);
     if (auto messageId = message::getMessageId(userId)) {
-        bot.editMessageText(text,
-                            chatId,
-                            *messageId,
-                            "",
-                            "",
-                            nullptr,
-                            makeKeyboardMarkup(constructMarkup(numOfIngredientsOnPage, state)));
+        bot.editMessageText(
+            text, chatId, *messageId, makeKeyboardMarkup(constructMarkup(numOfIngredientsOnPage, state)));
     }
 }
 

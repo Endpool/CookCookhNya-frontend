@@ -1,5 +1,6 @@
 #include "create.hpp"
 
+#include "backend/api/ingredients.hpp"
 #include "backend/models/ingredient.hpp"
 #include "handlers/common.hpp"
 #include "message_tracker.hpp"
@@ -12,8 +13,11 @@ namespace cookcookhnya::handlers::personal_account::ingredients {
 
 using namespace render::personal_account::ingredients;
 
-void handleCustomIngredientCreationEnterNameMsg(
-    CustomIngredientCreationEnterName& state, MessageRef m, BotRef& bot, SMRef stateManager, IngredientsApiRef api) {
+void handleCustomIngredientCreationEnterNameMsg(CustomIngredientCreationEnterName& state,
+                                                MessageRef m,
+                                                BotRef& bot,
+                                                SMRef stateManager,
+                                                api::IngredientsApiRef api) {
     auto name = m.text;
     auto userId = m.from->id;
     auto chatId = m.chat->id;
@@ -31,7 +35,7 @@ void handleCustomIngredientCreationEnterNameCQ(CustomIngredientCreationEnterName
                                                CallbackQueryRef cq,
                                                BotRef& bot,
                                                SMRef stateManager,
-                                               IngredientsApiRef api) {
+                                               api::IngredientsApiRef api) {
     bot.answerCallbackQuery(cq.id);
     auto userId = cq.from->id;
     auto chatId = cq.message->chat->id;
@@ -41,8 +45,11 @@ void handleCustomIngredientCreationEnterNameCQ(CustomIngredientCreationEnterName
     }
 }
 
-void handleCustomIngredientConfirmationCQ(
-    CustomIngredientConfirmation& state, CallbackQueryRef cq, BotRef& bot, SMRef stateManager, IngredientsApiRef api) {
+void handleCustomIngredientConfirmationCQ(CustomIngredientConfirmation& state,
+                                          CallbackQueryRef cq,
+                                          BotRef& bot,
+                                          SMRef stateManager,
+                                          api::IngredientsApiRef api) {
     bot.answerCallbackQuery(cq.id);
     auto userId = cq.from->id;
     auto chatId = cq.message->chat->id;

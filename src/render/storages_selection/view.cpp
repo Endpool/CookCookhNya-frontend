@@ -1,10 +1,10 @@
 #include "view.hpp"
 
+#include "backend/api/storages.hpp"
 #include "backend/models/storage.hpp"
 #include "message_tracker.hpp"
 #include "render/common.hpp"
 #include "states.hpp"
-#include "utils/to_string.hpp"
 #include "utils/utils.hpp"
 
 #include <algorithm>
@@ -23,7 +23,7 @@ using namespace tg_types;
 using namespace std::views;
 
 void renderStorageSelection(
-    const StoragesSelection& state, UserId userId, ChatId chatId, BotRef bot, StorageApiRef storageApi) {
+    const StoragesSelection& state, UserId userId, ChatId chatId, BotRef bot, api::StorageApiRef storageApi) {
     const auto& selectedStorages = state.selectedStorages;
     auto allStorages = storageApi.getStoragesList(userId);
 
