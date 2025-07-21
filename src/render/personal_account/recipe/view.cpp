@@ -38,13 +38,13 @@ std::pair<std::vector<Ingredient>, std::string> renderCustomRecipe(
         });
     }
 
-    toPrint += "\n🌐 [Статус проверки] " + utils::to_string(recipeDetails.moderationStatus.value());
+    toPrint += "\n🌐 [Статус проверки] " + utils::to_string(recipeDetails.moderationStatus);
 
     keyboard << makeCallbackButton(u8"🚮 Удалить", "delete") << NewRow{};
     keyboard << makeCallbackButton(u8"✏️ Редактировать", "change") << NewRow{};
     // Show publish button only iff the status is not emty AND not rejected
-    if (recipeDetails.moderationStatus.value() == PublicationRequestStatus::NO_REQUEST ||
-        recipeDetails.moderationStatus.value() == PublicationRequestStatus::REJECTED) {
+    if (recipeDetails.moderationStatus == PublicationRequestStatus::NO_REQUEST ||
+        recipeDetails.moderationStatus == PublicationRequestStatus::REJECTED) {
         keyboard << makeCallbackButton(u8"📢 Опубликовать", "publish") << NewRow{};
     } else {
         keyboard << makeCallbackButton(u8"📢 История публикаций", "peekpublish") << NewRow{};

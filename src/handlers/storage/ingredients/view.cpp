@@ -101,7 +101,7 @@ void handleStorageIngredientsListCQ(
     }
 
     if (cq.data.starts_with("ingredient_")) {
-        std::string ingredientName{std::string_view{cq.data}.substr("ingredient_"sv.size())};
+        const std::string ingredientName{std::string_view{cq.data}.substr("ingredient_"sv.size())};
         renderCustomIngredientConfirmation(true, ingredientName, userId, chatId, bot, api);
         stateManager.put(CustomIngredientConfirmation{ingredientName, std::nullopt, std::nullopt, state.storageId});
     }

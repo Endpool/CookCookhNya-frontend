@@ -8,6 +8,7 @@
 #include "utils/utils.hpp"
 
 #include <chrono>
+#include <cstddef>
 #include <format>
 #include <ranges>
 #include <vector>
@@ -30,11 +31,11 @@ void renderPublicationHistory(UserId userId,
     std::string toPrint;
     toPrint = (utils::utf8str(u8"История запросов на публикацию *") + recipeName + "*\n");
     if (!history.empty()) {
-        toPrint += utils::utf8str(u8"ℹ️ Текущий статус: ") + utils::to_string(history[history.size() - 1].status) +
-                   (history[history.size() - 1].reason.has_value()
-                        ? std::format(" по причине {} ", history[history.size() - 1].reason.value())
-                        : " ") +
-                   utils::to_string(history[history.size() - 1].created) + "\n\n";
+        size_t lastUpdate = history.size() - 1;
+        toPrint += utils::utf8str(u8"ℹ️ Текущий статус: ") + utils::to_string(history[lastUpdate].status) +
+                   std::format(" по причине {} ",
+                               history[lastUpdate].reason.has_value() ? history[lastUpdate].reason.value() : " ") +
+                   utils::to_string(history[lastUpdate].created) + "\n\n";
         // Remove the lastest history instance as it's showed differently
         history.erase(history.end());
 

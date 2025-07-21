@@ -51,7 +51,7 @@ void handleRecipeCustomViewCQ(
 
     if (data == "publish") {
         // Not peeking (if button with this data then idle or rejected)
-        bool isPeeking = false;
+        const bool isPeeking = false;
         renderPublicationHistory(userId, chatId, state.recipeId, state.recipeName, isPeeking, bot, api);
         stateManager.put(CustomRecipePublicationHistory{
             .recipeId = state.recipeId, .pageNo = state.pageNo, .recipeName = state.recipeName});
@@ -60,7 +60,7 @@ void handleRecipeCustomViewCQ(
     }
     if (data == "peekpublish") {
         // Peeking (if button with this data then accepted or pending)
-        bool isPeeking = true;
+        const bool isPeeking = true;
         renderPublicationHistory(userId, chatId, state.recipeId, state.recipeName, isPeeking, bot, api);
         stateManager.put(CustomRecipePublicationHistory{
             .recipeId = state.recipeId, .pageNo = state.pageNo, .recipeName = state.recipeName});

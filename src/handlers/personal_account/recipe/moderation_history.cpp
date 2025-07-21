@@ -26,7 +26,7 @@ void handleCustomRecipePublicationHistoryCQ(
     if (data == "confirm") {
         // Peeking (if button with this data then accepted or pending)
         api.getRecipesApi().publishCustom(userId, state.recipeId);
-        bool isPeeking = true;
+        const bool isPeeking = true;
         renderPublicationHistory(userId, chatId, state.recipeId, state.recipeName, isPeeking, bot, api);
         stateManager.put(states::CustomRecipePublicationHistory{
             .recipeId = state.recipeId, .pageNo = state.pageNo, .recipeName = state.recipeName});

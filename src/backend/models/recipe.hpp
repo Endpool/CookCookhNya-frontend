@@ -45,7 +45,7 @@ struct RecipeDetails {
     std::string name;
     std::optional<std::string> link;
     std::optional<user::UserDetails> creator;
-    std::optional<moderation::PublicationRequestStatus> moderationStatus;
+    moderation::PublicationRequestStatus moderationStatus = moderation::PublicationRequestStatus::NO_REQUEST;
 
     friend RecipeDetails tag_invoke(boost::json::value_to_tag<RecipeDetails>, const boost::json::value& j);
 };

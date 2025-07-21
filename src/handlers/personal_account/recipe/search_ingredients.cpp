@@ -93,7 +93,7 @@ void handleCustomRecipeIngredientsSearchCQ(
     }
 
     if (cq.data.starts_with("ingredient_")) {
-        std::string ingredientName{std::string_view{cq.data}.substr("ingredient_"sv.size())};
+        const std::string ingredientName{std::string_view{cq.data}.substr("ingredient_"sv.size())};
         renderCustomIngredientConfirmation(true, ingredientName, userId, chatId, bot, api);
         auto ingredients = state.recipeIngredients.getValues() | as_rvalue | to<std::vector>();
         stateManager.put(CustomIngredientConfirmation{ingredientName, state.recipeId, ingredients, std::nullopt});

@@ -67,7 +67,7 @@ void handleCustomIngredientConfirmationCQ(
     if (cq.data == "back") {
         const std::size_t numOfIngredientsOnPage = 5;
 
-        if (state.recipeFrom.has_value()) {
+        if (state.recipeFrom.has_value() && state.ingredients.has_value()) {
             auto newState =
                 CustomRecipeIngredientsSearch{state.recipeFrom.value(), state.ingredients.value() | as_rvalue, ""};
             renderRecipeIngredientsSearch(newState, numOfIngredientsOnPage, userId, chatId, bot);
