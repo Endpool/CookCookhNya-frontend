@@ -66,7 +66,7 @@ void renderPublicationHistory(UserId userId,
 
 void renderPublicationRules(UserId userId, ChatId chatId, BotRef bot) {
     // Rules
-    std::string toPrint =
+    const std::string toPrint =
         utils::utf8str(u8"❗️ *Правила публикации рецептов:*") +
         "\n1. *Статус рецепта*\nНельзя отправить запрос на публикацию, если рецепт:\n    - уже принят "
         "(опубликован);\n    - находится на рассмотрении модерации.  \n2. *Ингредиенты*  \n   Запрещено публиковать "
