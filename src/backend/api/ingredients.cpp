@@ -82,7 +82,7 @@ IngredientSearchResponse IngredientsApi::search(UserId user,
                                                     {"filter", utils::to_string(filter)}});
 }
 
-// GET /recipes
+// GET /ingredients
 IngredientList
 IngredientsApi::getList(UserId user, PublicityFilterType filter, std::size_t count, std::size_t offset) const {
     auto result = search(user, filter, "", 0, count, offset);

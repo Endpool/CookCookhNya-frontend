@@ -15,7 +15,7 @@ std::string to_string(const Uuid& u) {
     return boost::lexical_cast<std::string>(u);
 }
 
-std::string to_string(const cookcookhnya::api::models::status::PublicationRequestStatus status) {
+std::string to_string(const cookcookhnya::api::models::moderation::PublicationRequestStatus status) {
     const std::array statusStr = {utf8str(u8"🟡 На рассмотрении"),
                                   utf8str(u8"🟢 Принят"),
                                   utf8str(u8"🔴 Отклонен"),

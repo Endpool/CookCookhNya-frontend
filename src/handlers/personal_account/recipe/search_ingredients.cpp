@@ -12,6 +12,7 @@
 #include <algorithm>
 #include <cstddef>
 #include <functional>
+#include <optional>
 #include <ranges>
 #include <utility>
 #include <vector>
@@ -90,7 +91,10 @@ void handleCustomRecipeIngredientsSearchCQ(
             state.recipeIngredients.remove(*mIngredient);
         } else {
             api.getIngredientsApi().putToRecipe(userId, state.recipeId, *mIngredient);
-            state.recipeIngredients.put({.id = it->id, .name = it->name});
+            state.recipeIngredients.put(
+                {.id = it->id,
+                 .name = it->name,
+                 .moderationStatus = api::models::moderation::PublicationRequestStatus::NO_REQUEST});
         }
         it->isInRecipe = !it->isInRecipe;
         renderRecipeIngredientsSearch(state, numOfIngredientsOnPage, userId, chatId, bot);

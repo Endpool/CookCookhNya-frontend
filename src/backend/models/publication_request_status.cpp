@@ -1,16 +1,16 @@
 #include "backend/models/publication_request_status.hpp"
 
-namespace cookcookhnya::api::models::status {
+namespace cookcookhnya::api::models::moderation {
 
 PublicationRequestStatus tag_invoke(boost::json::value_to_tag<PublicationRequestStatus> /*tag*/,
                                     const boost::json::value& j) {
-    if (j.at("status") == "Pending")
+    if (j == "pending")
         return PublicationRequestStatus::PENDING;
-    if (j.at("status") == "Accepted")
+    if (j == "accepted")
         return PublicationRequestStatus::ACCEPTED;
-    if (j.at("status") == "Rejected")
+    if (j == "rejected")
         return PublicationRequestStatus::REJECTED;
     return PublicationRequestStatus::NO_REQUEST;
 }
 
-} // namespace cookcookhnya::api::models::status
+} // namespace cookcookhnya::api::models::moderation

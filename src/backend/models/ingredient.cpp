@@ -1,4 +1,5 @@
 #include "backend/models/ingredient.hpp"
+#include "backend/models/publication_request_status.hpp"
 
 #include <boost/json/conversion.hpp>
 #include <boost/json/value.hpp>
@@ -12,9 +13,9 @@ Ingredient tag_invoke(json::value_to_tag<Ingredient> /*tag*/, const json::value&
     return {
         .id = value_to<decltype(Ingredient::id)>(j.at("id")),
         .name = value_to<decltype(Ingredient::name)>(j.at("name")),
-        .status = j.as_object().if_contains("moderation_status")
-                      ? value_to<decltype(Ingredient::status)>(j.at("moderation_status"))
-                      : std::nullopt,
+        .moderationStatus = j.as_object().if_contains("moderationStatus")
+                                ? value_to<decltype(Ingredient::moderationStatus)>(j.at("moderationStatus"))
+                                : moderation::PublicationRequestStatus::NO_REQUEST,
     };
 }
 

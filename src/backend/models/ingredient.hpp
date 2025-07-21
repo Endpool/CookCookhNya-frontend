@@ -7,7 +7,6 @@
 #include <boost/json/value.hpp>
 
 #include <cstddef>
-#include <optional>
 #include <string>
 #include <vector>
 
@@ -16,7 +15,7 @@ namespace cookcookhnya::api::models::ingredient {
 struct Ingredient {
     IngredientId id;
     std::string name;
-    std::optional<status::PublicationRequestStatus> status = std::nullopt;
+    moderation::PublicationRequestStatus moderationStatus = moderation::PublicationRequestStatus::NO_REQUEST;
 
     friend Ingredient tag_invoke(boost::json::value_to_tag<Ingredient>, const boost::json::value& j);
 };

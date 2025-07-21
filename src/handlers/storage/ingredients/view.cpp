@@ -84,7 +84,10 @@ void handleStorageIngredientsListCQ(
             state.storageIngredients.remove(*mIngredient);
         } else {
             api.getIngredientsApi().putToStorage(userId, state.storageId, *mIngredient);
-            state.storageIngredients.put({.id = it->id, .name = it->name});
+            state.storageIngredients.put(
+                {.id = it->id,
+                 .name = it->name,
+                 .moderationStatus = api::models::moderation::PublicationRequestStatus::NO_REQUEST});
         }
         it->isInStorage = !it->isInStorage;
         renderIngredientsListSearch(state, numOfIngredientsOnPage, userId, chatId, bot);

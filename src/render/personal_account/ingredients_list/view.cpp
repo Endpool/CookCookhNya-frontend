@@ -30,9 +30,7 @@ std::pair<std::string, std::vector<TgBot::InlineKeyboardButton::Ptr>> constructN
 
     text = utils::utf8str(u8"📋 Вы находитесь в Мои ингредиенты\\. \nВами созданные ингредиенты:\n\n");
     for (const auto& ing : ingredientsList.page) {
-        if (ing.status) {
-            text += std::format("• {}, Статус: {}\n", utils::to_string(*ing.status), ing.name);
-        }
+        text += std::format("• {}, Статус: {}\n", ing.name, utils::to_string(ing.moderationStatus));
     }
 
     std::vector<TgBot::InlineKeyboardButton::Ptr> buttons;
@@ -72,9 +70,7 @@ std::pair<std::string, InlineKeyboard> constructMessage(size_t pageNo,
     } else if (ingredientsList.found <= numOfIngredientsOnPage) {
         text = utils::utf8str(u8"📋 Вы находитесь в Мои ингредиенты\\. \nВами созданные ингредиенты:\n\n");
         for (const auto& ing : ingredientsList.page) {
-            if (ing.status) {
-                text += std::format("• {}, Статус: {}\n", utils::to_string(*ing.status), ing.name);
-            }
+            text += std::format("• {}, Статус: {}\n", ing.name, utils::to_string(ing.moderationStatus));
         }
         keyboard[0].push_back(makeCallbackButton(u8"🆕 Создать", "create"));
         keyboard[1].push_back(makeCallbackButton(u8"📢 Опубликовать", "publish"));

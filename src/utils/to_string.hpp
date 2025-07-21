@@ -17,6 +17,6 @@ std::string to_string(const T& t) {
 
 std::string to_string(const Uuid& u);
 
-std::string to_string(api::models::status::PublicationRequestStatus status);
+std::string to_string(api::models::moderation::PublicationRequestStatus status);
 
 } // namespace cookcookhnya::utils
