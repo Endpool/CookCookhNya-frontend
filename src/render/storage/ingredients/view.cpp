@@ -80,7 +80,7 @@ void renderSuggestIngredientCustomisation(const states::StorageIngredientsList& 
                                           ChatId chatId,
                                           BotRef bot) {
     InlineKeyboard keyboard(3);
-    std::string text = utils::utf8str(u8"📝 Продолжите редактирование запроса или объявите личный ингредиент");
+    const std::string text = utils::utf8str(u8"📝 Продолжите редактирование запроса или объявите личный ингредиент");
 
     auto searchButton = std::make_shared<TgBot::InlineKeyboardButton>();
     searchButton->text = utils::utf8str(u8"✏️ Редактировать");
