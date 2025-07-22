@@ -45,7 +45,7 @@ struct RecipeDetails {
     std::string name;
     std::optional<std::string> link;
     std::optional<user::UserDetails> creator;
-    moderation::PublicationRequestStatus moderationStatus = moderation::PublicationRequestStatus::NO_REQUEST;
+    moderation::PublicationRequestStatusStruct moderationStatus;
 
     friend RecipeDetails tag_invoke(boost::json::value_to_tag<RecipeDetails>, const boost::json::value& j);
 };
@@ -82,10 +82,9 @@ struct RecipeSearchResponse {
 };
 
 struct RecipePublicationRequest {
-    moderation::PublicationRequestStatus status = moderation::PublicationRequestStatus::NO_REQUEST;
+    moderation::PublicationRequestStatusStruct status;
     std::chrono::system_clock::time_point created;
     std::optional<std::chrono::system_clock::time_point> updated;
-    std::optional<std::string> reason;
 
     friend RecipePublicationRequest tag_invoke(boost::json::value_to_tag<RecipePublicationRequest>,
                                                const boost::json::value& j);

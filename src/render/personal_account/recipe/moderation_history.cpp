@@ -19,6 +19,7 @@ using namespace std::views;
 void renderPublicationHistory(UserId userId,
                               ChatId chatId,
                               std::string& recipeName,
+                              std::string& errorReport,
                               std::vector<api::models::recipe::RecipePublicationRequest> history,
                               BotRef bot) {
 
@@ -29,11 +30,13 @@ void renderPublicationHistory(UserId userId,
     toPrint = (utils::utf8str(u8"История запросов на публикацию *") + recipeName + "*\n\n");
     if (!history.empty()) {
         // Show confirm only if in those states
-        isConfirm = history[history.size() - 1].status == api::models::moderation::PublicationRequestStatus::REJECTED;
+        isConfirm =
+            history[history.size() - 1].status.status == api::models::moderation::PublicationRequestStatus::REJECTED;
         const size_t lastUpdatedInstance = history.size() - 1;
         // Construct current status string
-        toPrint += utils::utf8str(u8"ℹ️ Текущий статус: ") + utils::to_string(history[lastUpdatedInstance].status);
-        if (auto reason = history[lastUpdatedInstance].reason) {
+        toPrint +=
+            utils::utf8str(u8"ℹ️ Текущий статус: ") + utils::to_string(history[lastUpdatedInstance].status.status);
+        if (auto reason = history[lastUpdatedInstance].status.reason) {
             toPrint += std::format(" по причине {}", reason.value());
         }
         toPrint += " " + utils::to_string(history[lastUpdatedInstance].created) + "\n\n";
@@ -42,9 +45,9 @@ void renderPublicationHistory(UserId userId,
         history.erase(history.end());
 
         for (auto& req : history | reverse) {
-            toPrint += std::format("Статус: {} ", utils::to_string(req.status));
-            if (req.reason.has_value())
-                toPrint += std::format("по причине: {} ", req.reason.value());
+            toPrint += std::format("Статус: {} ", utils::to_string(req.status.status));
+            if (req.status.reason.has_value())
+                toPrint += std::format("по причине: {} ", req.status.reason.value());
             toPrint += std::format("запрос создан: {} ", utils::to_string(req.created));
             if (req.updated.has_value()) {
                 toPrint += std::format("последенее обновление: {}", utils::to_string(req.updated.value()));
@@ -52,6 +55,8 @@ void renderPublicationHistory(UserId userId,
             toPrint += "\n\n";
         }
     }
+
+    toPrint += errorReport;
 
     if (isConfirm) {
         keyboard << makeCallbackButton(u8"▶️Подтвердить", "confirm") << NewRow{};

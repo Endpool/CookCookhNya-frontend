@@ -2,10 +2,11 @@
 
 #include "utils/utils.hpp"
 
+#include <array>
 #include <boost/json/conversion.hpp>
 #include <boost/json/value.hpp>
-
-#include <array>
+#include <boost/json/value_from.hpp>
+#include <boost/json/value_to.hpp>
 #include <cstddef>
 #include <string>
 
@@ -20,6 +21,18 @@ PublicationRequestStatus tag_invoke(boost::json::value_to_tag<PublicationRequest
     if (j == "rejected")
         return PublicationRequestStatus::REJECTED;
     return PublicationRequestStatus::NO_REQUEST;
+};
+
+PublicationRequestStatusStruct tag_invoke(boost::json::value_to_tag<PublicationRequestStatusStruct> /*unused*/,
+                                          const boost::json::value& j) {
+    if (j.is_object()) {
+        return {.status = j.as_object().if_contains("type") ? value_to<PublicationRequestStatus>(j.at("type"))
+                                                            : PublicationRequestStatus::NO_REQUEST,
+                .reason = j.as_object().if_contains("reason")
+                              ? value_to<decltype(PublicationRequestStatusStruct::reason)>(j.at("reason"))
+                              : std::nullopt};
+    }
+    return {.status = PublicationRequestStatus::NO_REQUEST, .reason = std::nullopt};
 }
 
 } // namespace cookcookhnya::api::models::moderation

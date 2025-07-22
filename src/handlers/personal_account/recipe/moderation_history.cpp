@@ -17,7 +17,7 @@ void handleCustomRecipePublicationHistoryCQ(
 
     if (data == "backFromRules") {
         auto history = api.getRecipesApi().getRecipeRequestHistory(userId, state.recipeId);
-        renderPublicationHistory(userId, chatId, state.recipeName, history, bot);
+        renderPublicationHistory(userId, chatId, state.recipeName, state.errorReport, history, bot);
         bot.answerCallbackQuery(cq.id);
         return;
     }
@@ -36,19 +36,24 @@ void handleCustomRecipePublicationHistoryCQ(
     }
 
     if (data == "confirm") {
-        // Peeking (if button with this data then accepted or pending)
-        auto history = api.getRecipesApi().getRecipeRequestHistory(userId, state.recipeId);
 
+        auto history = api.getRecipesApi().getRecipeRequestHistory(userId, state.recipeId);
         // Here check for emptiness first, thanks to lazy compilator
-        const bool shouldPublish =
-            history.empty() || (history.back().status == api::models::moderation::PublicationRequestStatus::REJECTED);
+        const bool shouldPublish = history.empty() || (history.back().status.status ==
+                                                       api::models::moderation::PublicationRequestStatus::REJECTED);
 
         if (shouldPublish) {
-            api.getRecipesApi().publishCustom(userId, state.recipeId);
+            try {
+                api.getRecipesApi().publishCustom(userId, state.recipeId);
+                state.errorReport = "";
+            } catch (...) {
+                state.errorReport =
+                    utils::utf8str(u8"⚠️Что-то пошло не так, вероятно ваш рецепт содержит неопубликованные ингредиенты");
+            }
             // Get updated history
             history = api.getRecipesApi().getRecipeRequestHistory(userId, state.recipeId);
         }
-        renderPublicationHistory(userId, chatId, state.recipeName, history, bot);
+        renderPublicationHistory(userId, chatId, state.recipeName, state.errorReport, history, bot);
         bot.answerCallbackQuery(cq.id);
         return;
     }

@@ -58,9 +58,11 @@ RecipeDetails tag_invoke(json::value_to_tag<RecipeDetails> /*tag*/, const json::
         // Deal with optionals using ternary operator
         .creator = j.as_object().if_contains("creator") ? value_to<decltype(RecipeDetails::creator)>(j.at("creator"))
                                                         : std::nullopt,
-        .moderationStatus = j.as_object().if_contains("moderationStatus")
-                                ? value_to<PublicationRequestStatus>(j.at("moderationStatus"))
-                                : PublicationRequestStatus::NO_REQUEST,
+        .moderationStatus =
+            j.as_object().if_contains("moderationStatus")
+                ? value_to<moderation::PublicationRequestStatusStruct>(j.at("moderationStatus"))
+                : moderation::PublicationRequestStatusStruct{.status = PublicationRequestStatus::NO_REQUEST,
+                                                             .reason = std::nullopt},
     };
 }
 
@@ -73,15 +75,14 @@ RecipeSearchResponse tag_invoke(json::value_to_tag<RecipeSearchResponse> /*tag*/
 
 RecipePublicationRequest tag_invoke(json::value_to_tag<RecipePublicationRequest> /*tag*/, const json::value& j) {
     return {
-        .status = j.as_object().if_contains("status") ? value_to<moderation::PublicationRequestStatus>(j.at("status"))
-                                                      : moderation::PublicationRequestStatus::NO_REQUEST,
+        .status = j.as_object().if_contains("status")
+                      ? value_to<moderation::PublicationRequestStatusStruct>(j.at("status"))
+                      : moderation::PublicationRequestStatusStruct{.status = PublicationRequestStatus::NO_REQUEST,
+                                                                   .reason = std::nullopt},
         .created = utils::parseIsoTime(value_to<std::string>(j.at("createdAt"))),
         .updated = j.as_object().if_contains("updatedAt")
                        ? std::optional{utils::parseIsoTime(value_to<std::string>(j.at("updatedAt")))}
                        : std::nullopt,
-        .reason = j.as_object().if_contains("reason")
-                      ? value_to<decltype(RecipePublicationRequest::reason)>(j.at("reason"))
-                      : std::nullopt,
     };
 }
 

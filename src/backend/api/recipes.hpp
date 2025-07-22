@@ -47,6 +47,8 @@ class RecipesApi : ApiBase {
     void delete_(UserId user, RecipeId recipe) const;
 
     void publishCustom(UserId user, RecipeId recipe) const;
+
+    [[nodiscard]] bool canPublish(UserId user, RecipeId recipe) const;
 };
 
 using RecipesApiRef = const api::RecipesApi&;
