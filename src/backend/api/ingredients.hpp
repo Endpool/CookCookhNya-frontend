@@ -51,6 +51,13 @@ class IngredientsApi : ApiBase {
                                                              PublicityFilterType filter = PublicityFilterType::All,
                                                              std::size_t count = 50, // NOLINT(*magic-number*)
                                                              std::size_t offset = 0) const;
+  
+    [[nodiscard]] models::ingredient::CustomIngredientList customIngredientsSearch(UserId user,
+                                                             std::string query, 
+                                                             std::size_t threshold,
+                                                             std::size_t count = 50, // NOLINT(*magic-number*)
+                                                             std::size_t offset = 0) const;
+    
 
     [[nodiscard]] models::ingredient::Ingredient getPublicIngredient(IngredientId ingredient) const;
 

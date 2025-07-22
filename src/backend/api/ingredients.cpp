@@ -89,6 +89,18 @@ IngredientsApi::getList(UserId user, PublicityFilterType filter, std::size_t cou
     return {.page = std::move(result.page), .found = result.found};
 }
 
+// GET /ingredients
+CustomIngredientList
+IngredientsApi::customIngredientsSearch(UserId user, std::string query, std::size_t threshold, std::size_t count, std::size_t offset) const {
+    return jsonGetAuthed<CustomIngredientList>(user,
+                                                   "/ingredients",
+                                                   {{"query", std::move(query)},
+                                                    {"size", utils::to_string(count)},
+                                                    {"offset", utils::to_string(offset)},
+                                                    {"threshold", utils::to_string(threshold)},
+                                                    {"filter", utils::to_string(PublicityFilterType::Custom)}});
+}
+
 // GET /public/ingredients/{ingredientId}
 Ingredient IngredientsApi::getPublicIngredient(IngredientId ingredient) const {
     return jsonGet<Ingredient>(std::format("/public/ingredients/{}", ingredient));

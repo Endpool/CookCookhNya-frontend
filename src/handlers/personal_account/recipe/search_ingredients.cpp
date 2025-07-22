@@ -93,8 +93,7 @@ void handleCustomRecipeIngredientsSearchCQ(
             api.getIngredientsApi().putToRecipe(userId, state.recipeId, *mIngredient);
             state.recipeIngredients.put(
                 {.id = it->id,
-                 .name = it->name,
-                 .moderationStatus = api::models::moderation::PublicationRequestStatus::NO_REQUEST});
+                 .name = it->name});
         }
         it->isInRecipe = !it->isInRecipe;
         renderRecipeIngredientsSearch(state, numOfIngredientsOnPage, userId, chatId, bot);

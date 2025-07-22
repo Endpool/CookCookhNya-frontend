@@ -7,6 +7,7 @@
 #include <boost/json/value.hpp>
 
 #include <cstddef>
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -15,9 +16,17 @@ namespace cookcookhnya::api::models::ingredient {
 struct Ingredient {
     IngredientId id;
     std::string name;
-    moderation::PublicationRequestStatus moderationStatus = moderation::PublicationRequestStatus::NO_REQUEST;
 
     friend Ingredient tag_invoke(boost::json::value_to_tag<Ingredient>, const boost::json::value& j);
+};
+
+struct CustomIngredient {
+    IngredientId id;
+    std::string name;
+    moderation::PublicationRequestStatus moderationStatus = moderation::PublicationRequestStatus::NO_REQUEST;
+    std::optional<std::string> reason = std::nullopt;
+
+    friend CustomIngredient tag_invoke(boost::json::value_to_tag<CustomIngredient>, const boost::json::value& j);
 };
 
 struct IngredientCreateBody {
@@ -73,6 +82,13 @@ struct IngredientList {
     std::size_t found;
 
     friend IngredientList tag_invoke(boost::json::value_to_tag<IngredientList>, const boost::json::value& j);
+};
+
+struct CustomIngredientList {
+    std::vector<CustomIngredient> page;
+    std::size_t found;
+
+    friend CustomIngredientList tag_invoke(boost::json::value_to_tag<CustomIngredientList>, const boost::json::value& j);
 };
 
 } // namespace cookcookhnya::api::models::ingredient

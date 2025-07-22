@@ -1,6 +1,5 @@
 #include "publish.hpp"
 
-#include "backend/api/publicity_filter.hpp"
 #include "backend/models/ingredient.hpp"
 #include "backend/models/publication_request_status.hpp"
 #include "message_tracker.hpp"
@@ -19,10 +18,10 @@ namespace cookcookhnya::render::personal_account::ingredients {
 using namespace std::views;
 
 void renderCustomIngredientPublication(UserId userId, ChatId chatId, BotRef bot, IngredientsApiRef api) {
-    auto ingredientsResp = api.search(userId, PublicityFilterType::Custom);
+    auto ingredientsResp = api.customIngredientsSearch(userId, "", 0);
 
     // TODO: make pagination for ingredients
-    std::vector<api::models::ingredient::Ingredient> ingredients;
+    std::vector<api::models::ingredient::CustomIngredient> ingredients;
     for (const auto& ing : ingredientsResp.page){
         if (ing.moderationStatus == api::models::moderation::PublicationRequestStatus::NO_REQUEST) {
             ingredients.push_back(ing);

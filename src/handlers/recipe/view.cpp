@@ -7,7 +7,6 @@
 #include "render/recipes_suggestions/view.hpp"
 #include "render/shopping_list/create.hpp"
 
-#include <optional>
 #include <string>
 #include <vector>
 
@@ -32,13 +31,11 @@ void handleRecipeViewCQ(RecipeView& state, CallbackQueryRef cq, BotRef bot, SMRe
             if (infoPair.second.available == utils::AvailabiltiyType::not_available) {
                 selectedIngredients.push_back(
                     {.id = infoPair.first.id,
-                     .name = infoPair.first.name,
-                     .moderationStatus = api::models::moderation::PublicationRequestStatus::NO_REQUEST});
+                     .name = infoPair.first.name});
             }
             allIngredients.push_back(
                 {.id = infoPair.first.id,
-                 .name = infoPair.first.name,
-                 .moderationStatus = api::models::moderation::PublicationRequestStatus::NO_REQUEST});
+                 .name = infoPair.first.name});
         }
         renderShoppingListCreation(selectedIngredients, allIngredients, userId, chatId, bot);
         stateManager.put(ShoppingListCreation{.selectedStorages = state.selectedStorages,

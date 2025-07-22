@@ -27,8 +27,7 @@ std::vector<api::models::ingredient::Ingredient> renderCustomRecipe(
     for (auto& it : recipeDetails.ingredients) {
         toPrint += std::format("• {}\n", it.name);
         ingredients.push_back({.id = it.id,
-                               .name = it.name,
-                               .moderationStatus = api::models::moderation::PublicationRequestStatus::NO_REQUEST});
+                               .name = it.name});
     }
 
     if (recipeDetails.link)

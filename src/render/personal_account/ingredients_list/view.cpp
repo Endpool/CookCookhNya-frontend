@@ -1,7 +1,7 @@
 #include "view.hpp"
 
-#include "backend/api/publicity_filter.hpp"
 #include "backend/models/ingredient.hpp"
+#include "backend/models/publication_request_status.hpp"
 #include "message_tracker.hpp"
 #include "render/common.hpp"
 #include "utils/to_string.hpp"
@@ -21,7 +21,7 @@ using namespace tg_types;
 namespace {
 
 std::pair<std::string, std::vector<TgBot::InlineKeyboardButton::Ptr>> constructNavigationMessage(
-    std::size_t pageNo, std::size_t numOfRecipesOnPage, api::models::ingredient::IngredientList& ingredientsList) {
+    std::size_t pageNo, std::size_t numOfRecipesOnPage, api::models::ingredient::CustomIngredientList& ingredientsList) {
     const size_t amountOfRecipes = ingredientsList.found;
     const std::size_t maxPageNum =
         std::ceil(static_cast<double>(amountOfRecipes) / static_cast<double>(numOfRecipesOnPage));
@@ -31,6 +31,9 @@ std::pair<std::string, std::vector<TgBot::InlineKeyboardButton::Ptr>> constructN
     text = utils::utf8str(u8"📋 Вы находитесь в Мои ингредиенты\\. \nВами созданные ингредиенты:\n\n");
     for (const auto& ing : ingredientsList.page) {
         text += std::format("• {}, Статус: {}\n", ing.name, utils::to_string(ing.moderationStatus));
+        if (ing.moderationStatus == api::models::moderation::PublicationRequestStatus::REJECTED){
+            
+        }
     }
 
     std::vector<TgBot::InlineKeyboardButton::Ptr> buttons;
@@ -52,7 +55,7 @@ std::pair<std::string, std::vector<TgBot::InlineKeyboardButton::Ptr>> constructN
 
 std::pair<std::string, InlineKeyboard> constructMessage(size_t pageNo,
                                                         size_t numOfIngredientsOnPage,
-                                                        api::models::ingredient::IngredientList& ingredientsList) {
+                                                        api::models::ingredient::CustomIngredientList& ingredientsList) {
     std::size_t numOfRows = 0;
     if (ingredientsList.found == 0)
         numOfRows = 2;
@@ -96,7 +99,7 @@ void renderCustomIngredientsList(
     const std::size_t numOfIngredientsOnPage = 10;
 
     auto ingredientsList =
-        api.getList(userId, PublicityFilterType::Custom, numOfIngredientsOnPage, pageNo * numOfIngredientsOnPage);
+        api.customIngredientsSearch(userId, "", 0, numOfIngredientsOnPage, pageNo * numOfIngredientsOnPage);
 
     auto res = constructMessage(pageNo, numOfIngredientsOnPage, ingredientsList);
     auto text = res.first;
