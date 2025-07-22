@@ -26,8 +26,7 @@ std::vector<api::models::ingredient::Ingredient> renderCustomRecipe(
     toPrint += (utils::utf8str(u8"Рецепт: ") + recipeDetails.name + "\n");
     for (auto& it : recipeDetails.ingredients) {
         toPrint += std::format("• {}\n", it.name);
-        ingredients.push_back({.id = it.id,
-                               .name = it.name});
+        ingredients.push_back({.id = it.id, .name = it.name});
     }
 
     if (recipeDetails.link)

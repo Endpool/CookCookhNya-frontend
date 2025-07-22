@@ -1,4 +1,5 @@
 #include "backend/models/ingredient.hpp"
+#include "backend/models/publication_request_status.hpp"
 
 #include <boost/json/conversion.hpp>
 #include <boost/json/value.hpp>
@@ -17,14 +18,22 @@ Ingredient tag_invoke(json::value_to_tag<Ingredient> /*tag*/, const json::value&
 }
 
 CustomIngredient tag_invoke(json::value_to_tag<CustomIngredient> /*tag*/, const json::value& j) {
-    const auto& status = j.at("status");
+    const auto& status = j.at("moderationStatus");
+    if (status.is_object()) {
+        return {
+            .id = value_to<decltype(CustomIngredient::id)>(j.at("id")),
+            .name = value_to<decltype(CustomIngredient::name)>(j.at("name")),
+            .moderationStatus = value_to<decltype(CustomIngredient::moderationStatus)>(status.at("type")),
+            .reason = status.as_object().if_contains("reason")
+                          ? value_to<decltype(CustomIngredient::reason)>(status.at("reason"))
+                          : std::nullopt,
+        };
+    }
     return {
         .id = value_to<decltype(CustomIngredient::id)>(j.at("id")),
         .name = value_to<decltype(CustomIngredient::name)>(j.at("name")),
-        .moderationStatus = value_to<decltype(CustomIngredient::moderationStatus)>(status.at("type")),
-        .reason = status.as_object().if_contains("reason")
-                                ? value_to<decltype(CustomIngredient::reason)>(j.at("reason"))
-                                : std::nullopt,
+        .moderationStatus = moderation::PublicationRequestStatus::NO_REQUEST,
+        .reason = std::nullopt,
     };
 }
 

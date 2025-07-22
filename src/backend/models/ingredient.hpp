@@ -88,7 +88,8 @@ struct CustomIngredientList {
     std::vector<CustomIngredient> page;
     std::size_t found;
 
-    friend CustomIngredientList tag_invoke(boost::json::value_to_tag<CustomIngredientList>, const boost::json::value& j);
+    friend CustomIngredientList tag_invoke(boost::json::value_to_tag<CustomIngredientList>,
+                                           const boost::json::value& j);
 };
 
 } // namespace cookcookhnya::api::models::ingredient

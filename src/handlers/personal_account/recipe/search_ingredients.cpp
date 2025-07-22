@@ -91,9 +91,7 @@ void handleCustomRecipeIngredientsSearchCQ(
             state.recipeIngredients.remove(*mIngredient);
         } else {
             api.getIngredientsApi().putToRecipe(userId, state.recipeId, *mIngredient);
-            state.recipeIngredients.put(
-                {.id = it->id,
-                 .name = it->name});
+            state.recipeIngredients.put({.id = it->id, .name = it->name});
         }
         it->isInRecipe = !it->isInRecipe;
         renderRecipeIngredientsSearch(state, numOfIngredientsOnPage, userId, chatId, bot);

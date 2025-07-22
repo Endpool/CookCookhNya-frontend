@@ -29,13 +29,9 @@ void handleRecipeViewCQ(RecipeView& state, CallbackQueryRef cq, BotRef bot, SMRe
         std::vector<api::models::ingredient::Ingredient> allIngredients;
         for (const auto& infoPair : state.availability) {
             if (infoPair.second.available == utils::AvailabiltiyType::not_available) {
-                selectedIngredients.push_back(
-                    {.id = infoPair.first.id,
-                     .name = infoPair.first.name});
+                selectedIngredients.push_back({.id = infoPair.first.id, .name = infoPair.first.name});
             }
-            allIngredients.push_back(
-                {.id = infoPair.first.id,
-                 .name = infoPair.first.name});
+            allIngredients.push_back({.id = infoPair.first.id, .name = infoPair.first.name});
         }
         renderShoppingListCreation(selectedIngredients, allIngredients, userId, chatId, bot);
         stateManager.put(ShoppingListCreation{.selectedStorages = state.selectedStorages,

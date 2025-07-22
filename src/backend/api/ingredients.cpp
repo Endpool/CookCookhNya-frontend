@@ -90,15 +90,15 @@ IngredientsApi::getList(UserId user, PublicityFilterType filter, std::size_t cou
 }
 
 // GET /ingredients
-CustomIngredientList
-IngredientsApi::customIngredientsSearch(UserId user, std::string query, std::size_t threshold, std::size_t count, std::size_t offset) const {
+CustomIngredientList IngredientsApi::customIngredientsSearch(
+    UserId user, std::string query, std::size_t threshold, std::size_t count, std::size_t offset) const {
     return jsonGetAuthed<CustomIngredientList>(user,
-                                                   "/ingredients",
-                                                   {{"query", std::move(query)},
-                                                    {"size", utils::to_string(count)},
-                                                    {"offset", utils::to_string(offset)},
-                                                    {"threshold", utils::to_string(threshold)},
-                                                    {"filter", utils::to_string(PublicityFilterType::Custom)}});
+                                               "/ingredients",
+                                               {{"query", std::move(query)},
+                                                {"size", utils::to_string(count)},
+                                                {"offset", utils::to_string(offset)},
+                                                {"threshold", utils::to_string(threshold)},
+                                                {"filter", utils::to_string(PublicityFilterType::Custom)}});
 }
 
 // GET /public/ingredients/{ingredientId}

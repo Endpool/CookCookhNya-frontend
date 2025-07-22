@@ -20,42 +20,32 @@ using namespace tg_types;
 
 namespace {
 
-std::pair<std::string, std::vector<TgBot::InlineKeyboardButton::Ptr>> constructNavigationMessage(
-    std::size_t pageNo, std::size_t numOfRecipesOnPage, api::models::ingredient::CustomIngredientList& ingredientsList) {
-    const size_t amountOfRecipes = ingredientsList.found;
-    const std::size_t maxPageNum =
-        std::ceil(static_cast<double>(amountOfRecipes) / static_cast<double>(numOfRecipesOnPage));
-
-    std::string text;
-
-    text = utils::utf8str(u8"📋 Вы находитесь в Мои ингредиенты\\. \nВами созданные ингредиенты:\n\n");
-    for (const auto& ing : ingredientsList.page) {
-        text += std::format("• {}, Статус: {}\n", ing.name, utils::to_string(ing.moderationStatus));
-        if (ing.moderationStatus == api::models::moderation::PublicationRequestStatus::REJECTED){
-            
-        }
-    }
-
+std::vector<TgBot::InlineKeyboardButton::Ptr> constructNavigationButtons(std::size_t pageNo, std::size_t maxPageNum) {
     std::vector<TgBot::InlineKeyboardButton::Ptr> buttons;
+    auto forward = makeCallbackButton(u8"▶️", "next");
+    auto backward = makeCallbackButton(u8"◀️", "prev");
+    auto dont_handle = makeCallbackButton(u8"ㅤ", "dont_handle");
+    auto page = makeCallbackButton(std::format("{} из {}", (pageNo + 1), maxPageNum), "dont_handle");
     if (pageNo == maxPageNum) {
-        buttons.push_back(makeCallbackButton(u8"◀️", utils::to_string(pageNo - 1)));
-        buttons.push_back(makeCallbackButton(std::format("{} из {}", (pageNo + 1), (maxPageNum + 1)), "dont_handle"));
-        buttons.push_back(makeCallbackButton(u8"ㅤ", "dont_handle"));
+        buttons.push_back(backward);
+        buttons.push_back(page);
+        buttons.push_back(dont_handle);
     } else if (pageNo == 0) {
-        buttons.push_back(makeCallbackButton(u8"ㅤ", "dont_handle"));
-        buttons.push_back(makeCallbackButton(std::format("{} из {}", (pageNo + 1), (maxPageNum + 1)), "dont_handle"));
-        buttons.push_back(makeCallbackButton(u8"▶️", utils::to_string(pageNo + 1)));
+        buttons.push_back(dont_handle);
+        buttons.push_back(page);
+        buttons.push_back(forward);
     } else {
-        buttons.push_back(makeCallbackButton(u8"◀️", utils::to_string(pageNo - 1)));
-        buttons.push_back(makeCallbackButton(std::format("{} из {}", (pageNo + 1), (maxPageNum + 1)), "dont_handle"));
-        buttons.push_back(makeCallbackButton(u8"▶️", utils::to_string(pageNo + 1)));
+        buttons.push_back(backward);
+        buttons.push_back(page);
+        buttons.push_back(forward);
     }
-    return std::make_pair(text, buttons);
+    return buttons;
 }
 
-std::pair<std::string, InlineKeyboard> constructMessage(size_t pageNo,
-                                                        size_t numOfIngredientsOnPage,
-                                                        api::models::ingredient::CustomIngredientList& ingredientsList) {
+std::pair<std::string, InlineKeyboard> constructMessage( // NOLINT(*complexity*)
+    size_t pageNo,
+    size_t numOfIngredientsOnPage,
+    api::models::ingredient::CustomIngredientList& ingredientsList) {
     std::size_t numOfRows = 0;
     if (ingredientsList.found == 0)
         numOfRows = 2;
@@ -65,26 +55,50 @@ std::pair<std::string, InlineKeyboard> constructMessage(size_t pageNo,
         numOfRows = 4;
     std::string text;
     InlineKeyboard keyboard(numOfRows);
+
     if (ingredientsList.found == 0) {
         text =
             utils::utf8str(u8"📋 Вы находитесь в Мои ингредиенты\\. Создавайте и делитесь новыми ингредиентами\\.\n\n");
         keyboard[0].push_back(makeCallbackButton(u8"🆕 Создать", "create"));
         keyboard[1].push_back(makeCallbackButton(u8"↩️ Назад", "back"));
-    } else if (ingredientsList.found <= numOfIngredientsOnPage) {
+    } else if (ingredientsList.found <= numOfIngredientsOnPage && pageNo == 0) {
         text = utils::utf8str(u8"📋 Вы находитесь в Мои ингредиенты\\. \nВами созданные ингредиенты:\n\n");
         for (const auto& ing : ingredientsList.page) {
-            text += std::format("• {}, Статус: {}\n", ing.name, utils::to_string(ing.moderationStatus));
+            if (ing.moderationStatus == api::models::moderation::PublicationRequestStatus::NO_REQUEST) {
+                text += std::format("• {}\n", ing.name);
+            } else {
+                if (ing.reason) {
+                    text += std::format(
+                    "• {}, Статус: {}, Причина: {}\n", ing.name, utils::to_string(ing.moderationStatus), *ing.reason);
+                } else {
+                    text += std::format("• {}, Статус: {}\n", ing.name, utils::to_string(ing.moderationStatus));
+                }
+            }
         }
         keyboard[0].push_back(makeCallbackButton(u8"🆕 Создать", "create"));
         keyboard[1].push_back(makeCallbackButton(u8"📢 Опубликовать", "publish"));
         keyboard[2].push_back(makeCallbackButton(u8"↩️ Назад", "back"));
     } else {
-        auto message = constructNavigationMessage(pageNo, numOfIngredientsOnPage, ingredientsList);
-        text = message.first;
+        text = utils::utf8str(u8"📋 Вы находитесь в Мои ингредиенты\\. \nВами созданные ингредиенты:\n\n");
+        for (const auto& ing : ingredientsList.page) {
+            if (ing.moderationStatus == api::models::moderation::PublicationRequestStatus::NO_REQUEST) {
+                text += std::format("• {}\n", ing.name);
+            } else {
+                if (ing.reason) {
+                    text += std::format(
+                    "• {}, Статус: {}, Причина: {}\n", ing.name, utils::to_string(ing.moderationStatus), *ing.reason);
+                } else {
+                    text += std::format("• {}, Статус: {}\n", ing.name, utils::to_string(ing.moderationStatus));
+                }
+            }
+
+        }
         keyboard[0].push_back(makeCallbackButton(u8"🆕 Создать", "create"));
         keyboard[1].push_back(makeCallbackButton(u8"📢 Опубликовать", "publish"));
         keyboard[2].reserve(3);
-        for (const auto& navigButton : message.second) {
+        const std::size_t maxPageNum =
+            std::ceil(static_cast<double>(ingredientsList.found) / static_cast<double>(numOfIngredientsOnPage));
+        for (const auto& navigButton : constructNavigationButtons(pageNo, maxPageNum)) {
             keyboard[2].push_back(navigButton);
         }
         keyboard[3].push_back(makeCallbackButton(u8"↩️ Назад", "back"));
@@ -96,7 +110,7 @@ std::pair<std::string, InlineKeyboard> constructMessage(size_t pageNo,
 
 void renderCustomIngredientsList(
     bool toBeEdited, std::size_t pageNo, UserId userId, ChatId chatId, BotRef bot, IngredientsApiRef api) {
-    const std::size_t numOfIngredientsOnPage = 10;
+    const std::size_t numOfIngredientsOnPage = 5;
 
     auto ingredientsList =
         api.customIngredientsSearch(userId, "", 0, numOfIngredientsOnPage, pageNo * numOfIngredientsOnPage);

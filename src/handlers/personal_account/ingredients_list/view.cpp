@@ -7,8 +7,6 @@
 #include "render/personal_account/view.hpp"
 
 #include "states.hpp"
-#include "utils/parsing.hpp"
-#include <cstddef>
 
 namespace cookcookhnya::handlers::personal_account::ingredients {
 
@@ -35,10 +33,16 @@ void handleCustomIngredientsListCQ(
         stateManager.put(PersonalAccountMenu{});
         return;
     }
-    auto pageNo = utils::parseSafe<std::size_t>(cq.data);
-    if (pageNo) {
-        renderCustomIngredientsList(true, *pageNo, userId, chatId, bot, api);
-        stateManager.put(CustomIngredientsList{.pageNo = *pageNo});
+    if (cq.data == "prev") {
+        state.pageNo -= 1;
+        renderCustomIngredientsList(true, state.pageNo, userId, chatId, bot, api);
+        stateManager.put(CustomIngredientsList{.pageNo = state.pageNo});
+        return;
+    }
+    if (cq.data == "next") {
+        state.pageNo += 1;
+        renderCustomIngredientsList(true, state.pageNo, userId, chatId, bot, api);
+        stateManager.put(CustomIngredientsList{.pageNo = state.pageNo});
         return;
     }
 }
