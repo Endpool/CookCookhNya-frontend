@@ -17,7 +17,7 @@ runs:
           path: |
             ~/.conan2
             /tmp/deps
-          key: ${{ runner.os }}-conan-cpp23-${{ hashFiles('Frontend/conanfile.txt') }}-tgbotstater-0.4.1
+          key: ${{ runner.os }}-conan-cpp23-${{ hashFiles('Frontend/conanfile.txt') }}-tgbotstater-0.4.2
           restore-keys: |
             ${{ runner.os }}-conan-cpp23-
 
@@ -54,9 +54,9 @@ runs:
         run: |
           mkdir -p /tmp/deps
           cd /tmp/deps
-          wget https://github.com/Makcal/TgBotStater/archive/refs/tags/v0.4.1.tar.gz -O tgbotstater.tar.gz
+          wget https://github.com/Makcal/TgBotStater/archive/refs/tags/v0.4.2.tar.gz -O tgbotstater.tar.gz
           tar -xf tgbotstater.tar.gz
-          cd TgBotStater-0.4.1
+          cd TgBotStater-0.4.2
           conan create . --build=missing
 
       - name: Install project dependencies
