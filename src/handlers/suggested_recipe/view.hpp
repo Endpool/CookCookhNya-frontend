@@ -5,6 +5,7 @@
 
 namespace cookcookhnya::handlers::suggested_recipe {
 
-void handleRecipeViewCQ(RecipeView& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, api::ApiClientRef api);
+void handleRecipeViewCQ(
+    SuggestedRecipeView& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, api::ApiClientRef api);
 
 } // namespace cookcookhnya::handlers::suggested_recipe

@@ -25,7 +25,7 @@ using states::StorageList;
 using states::TotalPublicationHistory;
 
 using states::RecipeStorageAddition;
-using states::RecipeView;
+using states::SuggestedRecipeView;
 
 using states::StorageCreationEnterName;
 using states::StorageDeletion;

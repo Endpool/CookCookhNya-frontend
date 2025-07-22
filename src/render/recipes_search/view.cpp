@@ -28,7 +28,7 @@ void renderRecipesSearch(const states::helpers::Pagination& pagination,
     keyboard << std::move(searchButton) << NewRow{};
 
     auto makeRecipeButton = [](const RecipeSummary& r) {
-        return makeCallbackButton(r.name, "recipe_" + utils::to_string(r.id));
+        return makeCallbackButton(utils::utf8str(u8"🔖 ") + r.name, "recipe_" + utils::to_string(r.id));
     };
     keyboard << constructPagination(pagination.pageNo, page.size(), pagination.totalItems, page, makeRecipeButton);
 

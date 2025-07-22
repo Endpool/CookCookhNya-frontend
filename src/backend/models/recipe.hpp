@@ -40,14 +40,15 @@ struct IngredientInRecipe {
     friend IngredientInRecipe tag_invoke(boost::json::value_to_tag<IngredientInRecipe>, const boost::json::value& j);
 };
 
-struct RecipeDetails {
+struct SuggestedRecipeDetails {
     std::vector<IngredientInRecipe> ingredients;
     std::string name;
     std::optional<std::string> link;
     std::optional<user::UserDetails> creator;
     moderation::PublicationRequestStatus moderationStatus = moderation::PublicationRequestStatus::NO_REQUEST;
 
-    friend RecipeDetails tag_invoke(boost::json::value_to_tag<RecipeDetails>, const boost::json::value& j);
+    friend SuggestedRecipeDetails tag_invoke(boost::json::value_to_tag<SuggestedRecipeDetails>,
+                                             const boost::json::value& j);
 };
 
 struct RecipesList {

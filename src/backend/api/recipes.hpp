@@ -43,7 +43,7 @@ class RecipesApi : ApiBase {
     [[nodiscard]] std::vector<models::recipe::RecipePublicationRequest> getRecipeRequestHistory(UserId user,
                                                                                                 RecipeId recipe) const;
 
-    [[nodiscard]] models::recipe::RecipeDetails get(UserId user, RecipeId recipeId) const;
+    [[nodiscard]] models::recipe::SuggestedRecipeDetails getSuggested(UserId user, RecipeId recipeId) const;
 
     void delete_(UserId user, RecipeId recipe) const;
 

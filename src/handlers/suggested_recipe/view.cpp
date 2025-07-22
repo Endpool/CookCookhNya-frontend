@@ -19,10 +19,11 @@ using namespace render::recipes_suggestions;
 using namespace render::shopping_list;
 using namespace render::suggested_recipe;
 using namespace api::models::ingredient;
-using IngredientAvailability = states::RecipeView::IngredientAvailability;
-using AvailabilityType = states::RecipeView::AvailabilityType;
+using IngredientAvailability = states::SuggestedRecipeView::IngredientAvailability;
+using AvailabilityType = states::SuggestedRecipeView::AvailabilityType;
 
-void handleRecipeViewCQ(RecipeView& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, api::ApiClientRef api) {
+void handleRecipeViewCQ(
+    SuggestedRecipeView& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, api::ApiClientRef api) {
     const std::string data = cq.data;
     auto chatId = cq.message->chat->id;
     auto userId = cq.from->id;

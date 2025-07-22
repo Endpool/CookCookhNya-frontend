@@ -16,14 +16,14 @@ struct TextGenInfo {
     bool isIngredientIsOtherStorages;
 };
 
-void renderRecipeView(std::vector<states::RecipeView::IngredientAvailability>& inStoragesAvailability,
+void renderRecipeView(std::vector<states::SuggestedRecipeView::IngredientAvailability>& inStoragesAvailability,
                       api::RecipeId recipeId,
                       UserId userId,
                       ChatId chatId,
                       BotRef bot,
                       api::ApiClientRef api);
 
-TextGenInfo recipeView(const std::vector<states::RecipeView::IngredientAvailability>& inStoragesAvailability,
+TextGenInfo recipeView(const std::vector<states::SuggestedRecipeView::IngredientAvailability>& inStoragesAvailability,
                        api::RecipeId recipeId,
                        UserId userId,
                        api::ApiClientRef api);

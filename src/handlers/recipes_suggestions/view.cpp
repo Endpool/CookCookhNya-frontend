@@ -55,7 +55,7 @@ void handleSuggestedRecipesListCQ(
             return;
         auto inStorage = utils::inStoragesAvailability(state.selectedStorages, *recipeId, userId, api);
         renderRecipeView(inStorage, *recipeId, userId, chatId, bot, api);
-        stateManager.put(RecipeView{
+        stateManager.put(SuggestedRecipeView{
             .prevState = std::move(state),
             .addedStorages = {},
             .availability = inStorage,

@@ -52,8 +52,8 @@ RecipesList RecipesApi::getList(UserId user, PublicityFilterType filter, std::si
 }
 
 // GET /recipes/{recipeId}
-RecipeDetails RecipesApi::get(UserId user, RecipeId recipe) const {
-    return jsonGetAuthed<RecipeDetails>(user, std::format("/recipes/{}", recipe));
+SuggestedRecipeDetails RecipesApi::getSuggested(UserId user, RecipeId recipe) const {
+    return jsonGetAuthed<SuggestedRecipeDetails>(user, std::format("/recipes/{}", recipe));
 }
 
 // POST /recipes

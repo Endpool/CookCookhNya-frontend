@@ -17,19 +17,19 @@
 namespace cookcookhnya::render::suggested_recipe {
 
 using namespace api::models::recipe;
-using IngredientAvailability = states::RecipeView::IngredientAvailability;
-using AvailabilityType = states::RecipeView::AvailabilityType;
+using IngredientAvailability = states::SuggestedRecipeView::IngredientAvailability;
+using AvailabilityType = states::SuggestedRecipeView::AvailabilityType;
 
 TextGenInfo recipeView(const std::vector<IngredientAvailability>& inStoragesAvailability,
                        api::RecipeId recipeId,
                        UserId userId,
                        api::ApiClientRef api) {
-    auto recipeIngredients = api.getRecipesApi().get(userId, recipeId);
+    auto recipeIngredients = api.getRecipesApi().getSuggested(userId, recipeId);
 
     bool isIngredientNotAvailable = false;
     bool isIngredientIsOtherStorages = false;
     std::string& recipeName = recipeIngredients.name;
-    auto text = std::format("{} Ингредиенты для *{}* \n\n", utils::utf8str(u8"📖"), recipeName);
+    auto text = std::format("{} *{}* \n\n", utils::utf8str(u8"📖 Ингредиенты для"), recipeName);
 
     for (const auto& availability : inStoragesAvailability) {
         if (availability.available == AvailabilityType::AVAILABLE) {

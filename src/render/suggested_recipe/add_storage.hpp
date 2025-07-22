@@ -11,19 +11,21 @@
 
 namespace cookcookhnya::render::suggested_recipe {
 
-TextGenInfo storageAdditionView(const std::vector<states::RecipeView::IngredientAvailability>& inStoragesAvailability,
-                                const std::vector<api::models::storage::StorageSummary>& selectedStorages,
-                                api::RecipeId recipeId,
-                                UserId userId,
-                                api::ApiClientRef api);
+TextGenInfo
+storageAdditionView(const std::vector<states::SuggestedRecipeView::IngredientAvailability>& inStoragesAvailability,
+                    const std::vector<api::models::storage::StorageSummary>& selectedStorages,
+                    api::RecipeId recipeId,
+                    UserId userId,
+                    api::ApiClientRef api);
 
-void renderStoragesSuggestion(const std::vector<states::RecipeView::IngredientAvailability>& inStoragesAvailability,
-                              const std::vector<api::models::storage::StorageSummary>& selectedStorages,
-                              const std::vector<api::models::storage::StorageSummary>& addedStorages,
-                              api::RecipeId recipeId,
-                              UserId userId,
-                              ChatId chatId,
-                              BotRef bot,
-                              api::ApiClientRef api);
+void renderStoragesSuggestion(
+    const std::vector<states::SuggestedRecipeView::IngredientAvailability>& inStoragesAvailability,
+    const std::vector<api::models::storage::StorageSummary>& selectedStorages,
+    const std::vector<api::models::storage::StorageSummary>& addedStorages,
+    api::RecipeId recipeId,
+    UserId userId,
+    ChatId chatId,
+    BotRef bot,
+    api::ApiClientRef api);
 
 } // namespace cookcookhnya::render::suggested_recipe
