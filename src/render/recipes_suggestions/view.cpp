@@ -49,10 +49,10 @@ void renderRecipesSuggestion(std::vector<StorageSummary>& storages,
                              BotRef bot,
                              api::RecipesApiRef recipesApi) {
     const std::size_t numOfRecipesOnPage = 5;
-    const std::size_t numOfRecipes = 500;
 
     auto storagesIds = storages | views::transform(&StorageSummary::id) | to<std::vector>();
-    auto recipesList = recipesApi.getSuggestedRecipes(userId, storagesIds, numOfRecipes, pageNo * numOfRecipesOnPage);
+    auto recipesList =
+        recipesApi.getSuggestedRecipes(userId, storagesIds, numOfRecipesOnPage, pageNo * numOfRecipesOnPage);
 
     const std::string text =
         utils::utf8str(recipesList.found > 0 ? u8"🔪 Рецепты подобранные специально для вас"
