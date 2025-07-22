@@ -17,7 +17,6 @@
 
 #include <algorithm>
 #include <cstddef>
-#include <functional>
 #include <optional>
 #include <string>
 #include <string_view>
@@ -47,9 +46,9 @@ void updateSearch(StorageIngredientsList& state,
     auto response = api.searchForStorage(userId,
                                          state.storageId,
                                          state.inlineQuery,
-                                         threshhold,
                                          numOfIngredientsOnPage,
-                                         state.pageNo * numOfIngredientsOnPage);
+                                         state.pageNo * numOfIngredientsOnPage,
+                                         threshhold);
     const auto idGetter = &IngredientSearchForStorageItem::id;
     if (std::ranges::equal(response.page, state.searchItems, {}, idGetter, idGetter))
         return;

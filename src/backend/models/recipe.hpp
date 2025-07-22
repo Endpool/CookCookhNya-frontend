@@ -1,6 +1,7 @@
 #pragma once
 
 #include "backend/id_types.hpp"
+#include "backend/models/ingredient.hpp"
 #include "publication_request_status.hpp"
 #include "storage.hpp"
 #include "user.hpp"
@@ -20,6 +21,15 @@ struct RecipeSummary {
     std::string name;
 
     friend RecipeSummary tag_invoke(boost::json::value_to_tag<RecipeSummary>, const boost::json::value& j);
+};
+
+struct RecipeDetails {
+    std::vector<ingredient::Ingredient> ingredients;
+    std::string name;
+    std::optional<std::string> link;
+    std::optional<user::UserDetails> creator;
+
+    friend RecipeDetails tag_invoke(boost::json::value_to_tag<RecipeDetails>, const boost::json::value& j);
 };
 
 struct RecipeSummaryWithIngredients {

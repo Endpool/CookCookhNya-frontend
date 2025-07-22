@@ -50,6 +50,8 @@
 
 #include "recipes_search/view.hpp"
 
+#include "recipe/view.hpp"
+
 #include <tg_stater/handler/event.hpp>
 #include <tg_stater/handler/handler.hpp>
 
@@ -70,6 +72,7 @@ using namespace handlers::storages_list;
 using namespace handlers::storages_selection;
 using namespace handlers::recipes_suggestions;
 using namespace handlers::recipes_search;
+using namespace handlers::recipe;
 
 using namespace tg_stater;
 
@@ -137,7 +140,7 @@ using storageIngredientsListIQHandler = Handler<Events::InlineQuery{}, handleSto
 using storageIngredientsDeletionCQHandler = Handler<Events::CallbackQuery{}, handleStorageIngredientsDeletionCQ>;
 
 // RecipeView
-using recipeViewCQHandler = Handler<Events::CallbackQuery{}, handleRecipeViewCQ>;
+using suggestedRecipeViewCQHandler = Handler<Events::CallbackQuery{}, suggested_recipe::handleRecipeViewCQ>;
 using recipeStorageAdditionCQHandler = Handler<Events::CallbackQuery{}, handleRecipeStorageAdditionCQ>;
 using shoppingListCreationCQHandler = Handler<Events::CallbackQuery{}, handleShoppingListCreationCQ>;
 
@@ -167,5 +170,8 @@ using customRecipePublicationHistoryCQHandler =
 // Recipes search
 using recipesSearchCQHandler = Handler<Events::CallbackQuery{}, handleRecipesSearchCQ>;
 using recipesSearchIQHandler = Handler<Events::InlineQuery{}, handleRecipesSearchIQ>;
+
+// Recipe
+using recipeViewCQHandler = Handler<Events::CallbackQuery{}, handlers::recipe::handleRecipeViewCQ>;
 
 } // namespace cookcookhnya::handlers::bot_handlers

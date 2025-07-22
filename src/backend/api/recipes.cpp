@@ -35,7 +35,7 @@ RecipeSearchResponse RecipesApi::search(UserId user,
                                         std::string query,
                                         std::size_t size,
                                         std::size_t offset,
-                                        std::size_t threshold) const {
+                                        unsigned threshold) const {
     return jsonGetAuthed<RecipeSearchResponse>(user,
                                                "/recipes",
                                                {{"query", std::move(query)},
@@ -49,6 +49,11 @@ RecipeSearchResponse RecipesApi::search(UserId user,
 RecipesList RecipesApi::getList(UserId user, PublicityFilterType filter, std::size_t size, std::size_t offset) const {
     auto result = search(user, filter, "", size, offset, 0);
     return {.page = std::move(result.page), .found = result.found};
+}
+
+// GET /recipes/{recipeId}
+RecipeDetails RecipesApi::get(UserId user, RecipeId recipe) const {
+    return jsonGetAuthed<RecipeDetails>(user, std::format("/recipes/{}", recipe));
 }
 
 // GET /recipes/{recipeId}

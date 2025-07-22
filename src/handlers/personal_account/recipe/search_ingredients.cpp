@@ -14,7 +14,6 @@
 
 #include <algorithm>
 #include <cstddef>
-#include <functional>
 #include <optional>
 #include <ranges>
 #include <string>
@@ -44,7 +43,7 @@ void updateSearch(CustomRecipeIngredientsSearch& state,
     state.pageNo = isQueryChanged ? 0 : state.pageNo;
 
     auto response = api.searchForRecipe(
-        userId, state.recipeId, state.query, threshhold, numOfIngredientsOnPage, state.pageNo * numOfIngredientsOnPage);
+        userId, state.recipeId, state.query, numOfIngredientsOnPage, state.pageNo * numOfIngredientsOnPage, threshhold);
     const auto idGetter = &IngredientSearchForRecipeItem::id;
     if (std::ranges::equal(response.page, state.searchItems, {}, idGetter, idGetter))
         return;

@@ -21,6 +21,17 @@ RecipeSummary tag_invoke(json::value_to_tag<RecipeSummary> /*tag*/, const json::
     };
 }
 
+RecipeDetails tag_invoke(json::value_to_tag<RecipeDetails> /*tag*/, const json::value& j) {
+    return {
+        .ingredients = value_to<decltype(RecipeDetails::ingredients)>(j.at("ingredients")),
+        .name = value_to<decltype(RecipeDetails::name)>(j.at("name")),
+        .link = value_to<decltype(RecipeDetails::link)>(j.at("sourceLink")),
+        // Deal with optionals using ternary operator
+        .creator = j.as_object().if_contains("creator") ? value_to<decltype(RecipeDetails::creator)>(j.at("creator"))
+                                                        : std::nullopt,
+    };
+}
+
 RecipeSummaryWithIngredients tag_invoke(json::value_to_tag<RecipeSummaryWithIngredients> /*tag*/,
                                         const json::value& j) {
     return {

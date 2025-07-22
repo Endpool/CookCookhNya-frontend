@@ -201,6 +201,11 @@ struct RecipesSearch {
     std::vector<api::models::recipe::RecipeSummary> page;
 };
 
+struct RecipeView {
+    RecipesSearch prevState;
+    api::models::recipe::RecipeDetails recipe;
+};
+
 using State = std::variant<MainMenu,
                            PersonalAccountMenu,
                            CustomIngredientsList,
@@ -231,7 +236,8 @@ using State = std::variant<MainMenu,
                            CustomRecipePublicationHistory,
                            TotalPublicationHistory,
                            ShoppingListIngredientSearch,
-                           RecipesSearch>;
+                           RecipesSearch,
+                           RecipeView>;
 
 using StateManager = tg_stater::StateProxy<tg_stater::MemoryStateStorage<State>>;
 
