@@ -15,6 +15,8 @@ using namespace tg_types;
 using namespace std::views;
 
 void renderStorageList(bool toBeEdited, UserId userId, ChatId chatId, BotRef bot, api::StorageApiRef storageApi) {
+    const auto text = utils::utf8str(u8"🍱 Ваши хранилища");
+
     auto storages = storageApi.getStoragesList(userId);
 
     const std::size_t buttonRows = ((storages.size() + 1) / 2) + 1; // ceil(storagesCount / 2) and back
@@ -29,7 +31,6 @@ void renderStorageList(bool toBeEdited, UserId userId, ChatId chatId, BotRef bot
 
     keyboard << makeCallbackButton(u8"↩️ Назад", "back") << makeCallbackButton(u8"🆕 Создать", "create");
 
-    auto text = utils::utf8str(u8"🍱 Ваши хранилища");
     if (toBeEdited) {
         auto messageId = message::getMessageId(userId);
         if (messageId) {

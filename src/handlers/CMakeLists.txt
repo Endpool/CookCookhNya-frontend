@@ -45,4 +45,6 @@ target_sources(main PRIVATE
     src/handlers/storages_list/view.cpp
 
     src/handlers/storages_selection/view.cpp
+
+    src/handlers/recipes_search/view.cpp
 )

@@ -39,4 +39,6 @@ target_sources(main PRIVATE
     src/render/storages_list/view.cpp
 
     src/render/storages_selection/view.cpp
+
+    src/render/recipes_search/view.cpp
 )

@@ -25,12 +25,13 @@ class RecipesApi : ApiBase {
                         size_t size = 500, // NOLINT(*magic-number*)
                         size_t offset = 0) const;
 
-    [[nodiscard]] models::recipe::RecipeSearchResponse search(UserId user,
-                                                              PublicityFilterType filter = PublicityFilterType::All,
-                                                              std::string query = "",
-                                                              std::size_t threshold = 50, // NOLINT(*magic-number*)
-                                                              std::size_t size = 100,     // NOLINT(*magic-number*)
-                                                              std::size_t offset = 0) const;
+    [[nodiscard]] models::recipe::RecipeSearchResponse
+    search(UserId user,
+           PublicityFilterType filter = PublicityFilterType::All,
+           std::string query = "",
+           std::size_t size = 100, // NOLINT(*magic-number*)
+           std::size_t offset = 0,
+           std::size_t threshold = 50) const; // NOLINT(*magic-number*)
 
     [[nodiscard]] models::recipe::RecipesList getList(UserId user,
                                                       PublicityFilterType filter = PublicityFilterType::All,

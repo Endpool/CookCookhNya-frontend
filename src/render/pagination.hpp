@@ -45,7 +45,7 @@ template <std::ranges::sized_range R, typename ItemButtonMaker>
 auto constructPagination(
     std::size_t pageNo, std::size_t pageSize, std::size_t totalItems, R&& page, ItemButtonMaker&& makeItemButton) {
     using namespace std::views;
-    const std::size_t pagesCount = (totalItems + pageSize - 1) / pageSize; // ceiling
+    const std::size_t pagesCount = pageSize != 0 ? (totalItems + pageSize - 1) / pageSize : 0; // ceiling
     const bool lastPage = pageNo + 1 >= pagesCount;
 
     auto itemButtons = std::forward<R>(page) | transform(std::forward<ItemButtonMaker>(makeItemButton));

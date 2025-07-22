@@ -48,6 +48,8 @@
 
 #include "storages_selection/view.hpp"
 
+#include "recipes_search/view.hpp"
+
 #include <tg_stater/handler/event.hpp>
 #include <tg_stater/handler/handler.hpp>
 
@@ -67,6 +69,7 @@ using namespace handlers::storage::members;
 using namespace handlers::storages_list;
 using namespace handlers::storages_selection;
 using namespace handlers::recipes_suggestions;
+using namespace handlers::recipes_search;
 
 using namespace tg_stater;
 
@@ -160,5 +163,9 @@ using customRecipeIngredientsSearchCQHandler = Handler<Events::CallbackQuery{}, 
 using customRecipeIngredientsSearchIQHandler = Handler<Events::InlineQuery{}, handleCustomRecipeIngredientsSearchIQ>;
 using customRecipePublicationHistoryCQHandler =
     Handler<Events::CallbackQuery{}, handleCustomRecipePublicationHistoryCQ>;
+
+// Recipes search
+using recipesSearchCQHandler = Handler<Events::CallbackQuery{}, handleRecipesSearchCQ>;
+using recipesSearchIQHandler = Handler<Events::InlineQuery{}, handleRecipesSearchIQ>;
 
 } // namespace cookcookhnya::handlers::bot_handlers

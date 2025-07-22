@@ -50,16 +50,14 @@ void updateSearch(StorageIngredientsList& state,
                                          threshhold,
                                          numOfIngredientsOnPage,
                                          state.pageNo * numOfIngredientsOnPage);
-    if (response.found != state.totalFound || !std::ranges::equal(response.page,
-                                                                  state.searchItems,
-                                                                  std::ranges::equal_to{},
-                                                                  &IngredientSearchForStorageItem::id,
-                                                                  &IngredientSearchForStorageItem::id)) {
-        state.searchItems = std::move(response.page);
-        state.totalFound = response.found;
-        if (auto mMessageId = message::getMessageId(userId))
-            renderIngredientsListSearch(state, userId, userId, bot);
-    }
+    const auto idGetter = &IngredientSearchForStorageItem::id;
+    if (std::ranges::equal(response.page, state.searchItems, {}, idGetter, idGetter))
+        return;
+
+    state.searchItems = std::move(response.page);
+    state.totalFound = response.found;
+    if (auto mMessageId = message::getMessageId(userId))
+        renderIngredientsListSearch(state, userId, userId, bot);
     if (state.totalFound == 0)
         renderSuggestIngredientCustomisation(state, userId, userId, bot);
 }
