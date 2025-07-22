@@ -11,6 +11,7 @@
 #include "utils/parsing.hpp"
 
 #include <string>
+#include <string_view>
 
 namespace cookcookhnya::handlers::personal_account::recipes {
 
@@ -18,6 +19,7 @@ void handleCustomRecipesListCQ(
     CustomRecipesList& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, api::ApiClientRef api) {
     using namespace render::personal_account;
     using namespace render::personal_account::recipes;
+    using namespace std::literals;
 
     bot.answerCallbackQuery(cq.id);
 
@@ -39,8 +41,8 @@ void handleCustomRecipesListCQ(
         return;
     }
 
-    if (data[0] == 'r') {
-        auto recipeId = utils::parseSafe<api::RecipeId>(data.substr(1, data.size()));
+    if (data.starts_with("recipe_") {
+        auto recipeId = utils::parseSafe<api::RecipeId>(std::string_view{data}.substr("recipe_"sv.size()));
         if (recipeId) {
             auto ingredients = renderCustomRecipe(true, userId, chatId, recipeId.value(), bot, api);
             stateManager.put(
