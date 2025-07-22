@@ -2,6 +2,7 @@
 
 #include "backend/api/api.hpp"
 #include "handlers/common.hpp"
+#include "render/personal_account/recipe/moderation_history.hpp"
 #include "render/personal_account/recipe/search_ingredients.hpp"
 #include "render/personal_account/recipes_list/view.hpp"
 #include "states.hpp"
@@ -11,16 +12,16 @@
 #include <string>
 #include <utility>
 
-namespace cookcookhnya::handlers::personal_account::recipes {
+namespace cookcookhnya::handlers::personal_account::recipe {
 
-using namespace render::personal_account::recipes;
-using namespace render::recipe::ingredients;
+using namespace render::personal_account::recipes_list;
+using namespace render::personal_account::recipe;
 using namespace std::views;
 
 const std::size_t numOfIngredientsOnPage = 5;
 
 void handleRecipeCustomViewCQ(
-    RecipeCustomView& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, api::ApiClientRef api) {
+    CustomRecipeView& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, api::ApiClientRef api) {
     const std::string data = cq.data;
     auto chatId = cq.message->chat->id;
     auto userId = cq.from->id;
@@ -44,13 +45,18 @@ void handleRecipeCustomViewCQ(
         // Made to avoid bug when delete last recipe on page -> will return to the non-existent page
         renderCustomRecipesList(0, userId, chatId, bot, api);
         stateManager.put(CustomRecipesList{.pageNo = 0});
+        bot.answerCallbackQuery(cq.id);
         return;
     }
 
-    if (data == "publish") { // Should also create backend endpoint to track status of publish
-        api.getRecipesApi().publishCustom(userId, state.recipeId);
+    if (data == "publish") {
+        auto history = api.getRecipesApi().getRecipeRequestHistory(userId, state.recipeId);
+        renderPublicationHistory(userId, chatId, state.recipeName, history, bot);
+        stateManager.put(CustomRecipePublicationHistory{
+            .recipeId = state.recipeId, .pageNo = state.pageNo, .recipeName = state.recipeName});
+        bot.answerCallbackQuery(cq.id);
         return;
     }
 }
 
-} // namespace cookcookhnya::handlers::personal_account::recipes
+} // namespace cookcookhnya::handlers::personal_account::recipe

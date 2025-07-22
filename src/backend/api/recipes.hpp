@@ -37,9 +37,12 @@ class RecipesApi : ApiBase {
                                                       std::size_t size = 100, // NOLINT(*magic-number*)
                                                       std::size_t offset = 0) const;
 
-    [[nodiscard]] models::recipe::RecipeDetails get(UserId user, RecipeId recipeId) const;
+    RecipeId create(UserId user, // NOLINT(*-nodiscard)
+                    const models::recipe::RecipeCreateBody& body) const;
+    [[nodiscard]] std::vector<models::recipe::RecipePublicationRequest> getRecipeRequestHistory(UserId user,
+                                                                                                RecipeId recipe) const;
 
-    RecipeId create(UserId user, const models::recipe::RecipeCreateBody& body) const; // NOLINT(*nodiscard)
+    [[nodiscard]] models::recipe::RecipeDetails get(UserId user, RecipeId recipeId) const;
 
     void delete_(UserId user, RecipeId recipe) const;
 

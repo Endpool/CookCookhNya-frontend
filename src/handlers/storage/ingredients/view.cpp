@@ -7,6 +7,9 @@
 #include "message_tracker.hpp"
 #include "render/storage/ingredients/delete.hpp"
 #include "render/storage/ingredients/view.hpp"
+
+#include "render/personal_account/ingredients_list/create.hpp"
+
 #include "render/storage/view.hpp"
 #include "states.hpp"
 #include "tg_types.hpp"
@@ -15,6 +18,9 @@
 #include <algorithm>
 #include <cstddef>
 #include <functional>
+#include <optional>
+#include <string>
+#include <string_view>
 #include <utility>
 #include <vector>
 
@@ -22,7 +28,10 @@ namespace cookcookhnya::handlers::storage::ingredients {
 
 using namespace render::storage;
 using namespace render::storage::ingredients;
+using namespace render::suggest_custom_ingredient;
+using namespace render::personal_account::ingredients;
 using namespace api::models::ingredient;
+using namespace std::literals;
 
 namespace {
 
@@ -51,6 +60,8 @@ void updateSearch(StorageIngredientsList& state,
         if (auto mMessageId = message::getMessageId(userId))
             renderIngredientsListSearch(state, userId, userId, bot);
     }
+    if (state.totalFound == 0)
+        renderSuggestIngredientCustomisation(state, userId, userId, bot);
 }
 } // namespace
 
@@ -87,6 +98,12 @@ void handleStorageIngredientsListCQ(
         state.pageNo += 1;
         updateSearch(state, false, bot, userId, api);
         return;
+    }
+
+    if (cq.data.starts_with("ingredient_")) {
+        const std::string ingredientName{std::string_view{cq.data}.substr("ingredient_"sv.size())};
+        renderCustomIngredientConfirmation(true, ingredientName, userId, chatId, bot, api);
+        stateManager.put(CustomIngredientConfirmation{ingredientName, std::nullopt, std::nullopt, state.storageId});
     }
 
     if (cq.data != "dont_handle") {

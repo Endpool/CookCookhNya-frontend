@@ -68,7 +68,13 @@ void RecipesApi::delete_(UserId user, RecipeId recipeId) const {
 
 // POST /recipes/{recipeId}/request-publication
 void RecipesApi::publishCustom(UserId user, RecipeId recipe) const {
-    jsonPostAuthed<void>(user, std::format("my/recipes/{}/request-publication", recipe));
+    jsonPostAuthed<void>(user, std::format("recipes/{}/request-publication", recipe));
+}
+
+// GET /recipe/{id}/moderation-history
+std::vector<RecipePublicationRequest> RecipesApi::getRecipeRequestHistory(UserId user, RecipeId recipe) const {
+    return jsonGetAuthed<std::vector<RecipePublicationRequest>>(user,
+                                                                std::format("/recipes/{}/moderation-history", recipe));
 }
 
 } // namespace cookcookhnya::api

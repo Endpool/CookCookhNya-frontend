@@ -12,6 +12,7 @@
 #include <tg_stater/state_storage/memory.hpp>
 
 #include <cstddef>
+#include <optional>
 #include <string>
 #include <utility>
 #include <variant>
@@ -44,8 +45,21 @@ struct CustomIngredientCreationEnterName {
     std::size_t pageNo;
 };
 struct CustomIngredientConfirmation {
-    std::size_t pageNo;
+    std::size_t pageNo{};
     std::string name;
+
+    // All optionals are for "back" from this menu, so this state won't erase all info
+    std::optional<api::RecipeId> recipeFrom;
+    std::optional<std::vector<api::models::ingredient::Ingredient>> ingredients;
+
+    std::optional<api::StorageId> storageFrom;
+
+    explicit CustomIngredientConfirmation(
+        std::string name,
+        std::optional<api::RecipeId> recipeId = std::nullopt,
+        std::optional<std::vector<api::models::ingredient::Ingredient>> ingredients = std::nullopt,
+        std::optional<api::StorageId> storageId = std::nullopt)
+        : name(std::move(name)), recipeFrom(recipeId), ingredients(std::move(ingredients)), storageFrom(storageId) {};
 };
 struct CustomIngredientPublish {
     std::size_t pageNo;
@@ -133,10 +147,11 @@ struct CustomRecipeIngredientsSearch {
         : recipeId(recipeId), recipeIngredients{std::forward<R>(ingredients)}, query(std::move(inlineQuery)) {}
 };
 
-struct RecipeCustomView {
+struct CustomRecipeView {
     api::RecipeId recipeId;
     std::size_t pageNo;
     std::vector<api::models::ingredient::Ingredient> ingredients;
+    std::string recipeName;
 };
 
 struct CreateCustomRecipe {
@@ -171,6 +186,16 @@ struct ShoppingListIngredientSearch {
     std::vector<api::models::ingredient::Ingredient> page;
 };
 
+struct CustomRecipePublicationHistory {
+    api::RecipeId recipeId;
+    std::size_t pageNo;
+    std::string recipeName;
+};
+
+struct TotalPublicationHistory {
+    std::size_t pageNo;
+};
+
 using State = std::variant<MainMenu,
                            PersonalAccountMenu,
                            CustomIngredientsList,
@@ -193,11 +218,13 @@ using State = std::variant<MainMenu,
                            ShoppingListView,
                            ShoppingListStorageSelectionToBuy,
                            CreateCustomRecipe,
-                           RecipeCustomView,
+                           CustomRecipeView,
                            CustomRecipeIngredientsSearch,
                            CustomRecipesList,
                            RecipeStorageAddition,
                            RecipeIngredientsSearch,
+                           CustomRecipePublicationHistory,
+                           TotalPublicationHistory,
                            ShoppingListIngredientSearch>;
 
 using StateManager = tg_stater::StateProxy<tg_stater::MemoryStateStorage<State>>;

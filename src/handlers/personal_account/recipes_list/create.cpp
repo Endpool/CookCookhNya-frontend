@@ -6,20 +6,21 @@
 #include "render/personal_account/recipe/view.hpp"
 #include "render/personal_account/recipes_list/view.hpp"
 
-namespace cookcookhnya::handlers::personal_account::recipes {
+namespace cookcookhnya::handlers::personal_account::recipes_list {
 
-using namespace render::personal_account::recipes;
+using namespace api::models::recipe;
+using namespace render::personal_account::recipes_list;
+using namespace render::personal_account::recipe;
 
 void handleCreateCustomRecipeMsg(
     CreateCustomRecipe& /*unused*/, MessageRef m, BotRef bot, SMRef stateManager, api::RecipesApiRef recipeApi) {
     // Init with no ingredients and link. My suggestion: to use link as author's alias
-    auto recipeId = recipeApi.create(
-        m.from->id, api::models::recipe::RecipeCreateBody{.name = m.text, .ingredients = {}, .link = ""});
+    auto recipeId = recipeApi.create(m.from->id, RecipeCreateBody{.name = m.text, .ingredients = {}, .link = ""});
 
     renderCustomRecipe(false, m.from->id, m.chat->id, recipeId, bot, recipeApi);
     // If it went from creation then as user will return
     // from RecipeView to RecipesList on 1st page
-    stateManager.put(RecipeCustomView{.recipeId = recipeId, .pageNo = 0, .ingredients = {}});
+    stateManager.put(CustomRecipeView{.recipeId = recipeId, .pageNo = 0, .ingredients = {}, .recipeName = m.text});
 };
 
 void handleCreateCustomRecipeCQ(
@@ -34,4 +35,4 @@ void handleCreateCustomRecipeCQ(
     }
 };
 
-} // namespace cookcookhnya::handlers::personal_account::recipes
+} // namespace cookcookhnya::handlers::personal_account::recipes_list

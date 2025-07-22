@@ -1,5 +1,6 @@
 #pragma once
 
+#include "backend/api/api.hpp"
 #include "backend/api/ingredients.hpp"
 #include "handlers/common.hpp"
 
@@ -21,6 +22,6 @@ void handleCustomIngredientConfirmationCQ(CustomIngredientConfirmation& /*unused
                                           CallbackQueryRef cq,
                                           BotRef& bot,
                                           SMRef stateManager,
-                                          api::IngredientsApiRef api);
+                                          api::ApiClientRef api);
 
 } // namespace cookcookhnya::handlers::personal_account::ingredients

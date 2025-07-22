@@ -37,5 +37,5 @@ CheckOptions:
   cppcoreguidelines-pro-type-member-init.IgnoreArrays: true
   readability-implicit-bool-conversion.AllowPointerConditions: true
   readability-braces-around-statements.ShortStatementLines: 3
+  misc-include-cleaner.MissingIncludes: false
 FormatStyle: none
-
