@@ -1,32 +1,48 @@
 #include "view.hpp"
 
+#include "backend/api/api.hpp"
 #include "backend/id_types.hpp"
 #include "backend/models/ingredient.hpp"
 #include "handlers/common.hpp"
 #include "message_tracker.hpp"
+#include "render/storage/ingredients/delete.hpp"
 #include "render/storage/ingredients/view.hpp"
+
+#include "render/personal_account/ingredients_list/create.hpp"
+
 #include "render/storage/view.hpp"
+#include "states.hpp"
 #include "tg_types.hpp"
 #include "utils/parsing.hpp"
 
 #include <algorithm>
 #include <cstddef>
 #include <functional>
+#include <optional>
+#include <string>
+#include <string_view>
 #include <utility>
+#include <vector>
 
 namespace cookcookhnya::handlers::storage::ingredients {
 
 using namespace render::storage;
 using namespace render::storage::ingredients;
+using namespace render::suggest_custom_ingredient;
+using namespace render::personal_account::ingredients;
 using namespace api::models::ingredient;
+using namespace std::literals;
 
-// Global vars
+namespace {
+
 const size_t numOfIngredientsOnPage = 5;
 const size_t threshhold = 70;
 
-namespace {
-void updateSearch(
-    StorageIngredientsList& state, bool isQueryChanged, BotRef bot, tg_types::UserId userId, IngredientsApiRef api) {
+void updateSearch(StorageIngredientsList& state,
+                  bool isQueryChanged,
+                  BotRef bot,
+                  tg_types::UserId userId,
+                  api::IngredientsApiRef api) {
     state.pageNo = isQueryChanged ? 0 : state.pageNo;
     auto response = api.searchForStorage(userId,
                                          state.storageId,
@@ -42,13 +58,15 @@ void updateSearch(
         state.searchItems = std::move(response.page);
         state.totalFound = response.found;
         if (auto mMessageId = message::getMessageId(userId))
-            renderIngredientsListSearch(state, numOfIngredientsOnPage, userId, userId, bot);
+            renderIngredientsListSearch(state, userId, userId, bot);
     }
+    if (state.totalFound == 0)
+        renderSuggestIngredientCustomisation(state, userId, userId, bot);
 }
 } // namespace
 
 void handleStorageIngredientsListCQ(
-    StorageIngredientsList& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
+    StorageIngredientsList& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, api::ApiClientRef api) {
     bot.answerCallbackQuery(cq.id);
     const auto userId = cq.from->id;
     const auto chatId = cq.message->chat->id;
@@ -58,20 +76,37 @@ void handleStorageIngredientsListCQ(
         stateManager.put(StorageView{state.storageId});
         return;
     }
-    if (cq.data == "prev") {
+
+    if (cq.data == "delete") {
+        std::vector<api::models::ingredient::Ingredient> ingredients;
+        for (auto& ing : state.storageIngredients.getValues()) {
+            ingredients.push_back(ing);
+        }
+        auto newState = StorageIngredientsDeletion{state.storageId, {}, ingredients, false, 0};
+        renderStorageIngredientsDeletion(newState, userId, chatId, bot);
+        stateManager.put(newState);
+        return;
+    }
+
+    if (cq.data == "page_left") {
         state.pageNo -= 1;
         updateSearch(state, false, bot, userId, api);
         return;
     }
 
-    if (cq.data == "next") {
+    if (cq.data == "page_right") {
         state.pageNo += 1;
         updateSearch(state, false, bot, userId, api);
         return;
     }
 
-    if (cq.data != "dont_handle") {
+    if (cq.data.starts_with("ingredient_")) {
+        const std::string ingredientName{std::string_view{cq.data}.substr("ingredient_"sv.size())};
+        renderCustomIngredientConfirmation(true, ingredientName, userId, chatId, bot, api);
+        stateManager.put(CustomIngredientConfirmation{ingredientName, std::nullopt, std::nullopt, state.storageId});
+    }
 
+    if (cq.data != "dont_handle") {
         auto mIngredient = utils::parseSafe<api::IngredientId>(cq.data);
         if (!mIngredient)
             return;
@@ -87,26 +122,26 @@ void handleStorageIngredientsListCQ(
             state.storageIngredients.put({.id = it->id, .name = it->name});
         }
         it->isInStorage = !it->isInStorage;
-        renderIngredientsListSearch(state, numOfIngredientsOnPage, userId, chatId, bot);
+        renderIngredientsListSearch(state, userId, chatId, bot);
     }
 }
 
 void handleStorageIngredientsListIQ(StorageIngredientsList& state,
                                     InlineQueryRef iq,
                                     BotRef bot,
-                                    IngredientsApiRef api) {
+                                    api::IngredientsApiRef api) {
     const auto userId = iq.from->id;
     state.inlineQuery = iq.query;
     if (iq.query.empty()) {
         state.searchItems.clear();
         // When query is empty then search shouldn't happen
         state.totalFound = 0;
-        renderIngredientsListSearch(state, numOfIngredientsOnPage, userId, userId, bot);
+        renderIngredientsListSearch(state, userId, userId, bot);
     } else {
         updateSearch(state, true, bot, userId, api);
     }
     // Cache is not disabled on Windows and Linux desktops. Works on Android and Web
-    bot.answerInlineQuery(iq.id, {}, 0);
+    // bot.answerInlineQuery(iq.id, {}, 0);
 }
 
 } // namespace cookcookhnya::handlers::storage::ingredients

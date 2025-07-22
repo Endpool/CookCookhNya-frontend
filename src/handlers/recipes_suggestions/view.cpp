@@ -1,5 +1,6 @@
 #include "view.hpp"
 
+#include "backend/api/api.hpp"
 #include "backend/id_types.hpp"
 #include "handlers/common.hpp"
 #include "render/main_menu/view.hpp"
@@ -10,6 +11,7 @@
 #include "utils/ingredients_availability.hpp"
 #include "utils/parsing.hpp"
 
+#include <optional>
 #include <string>
 #include <utility>
 
@@ -22,7 +24,7 @@ using namespace render::recipe;
 using namespace render::main_menu;
 
 void handleSuggestedRecipesListCQ(
-    SuggestedRecipesList& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
+    SuggestedRecipesList& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, api::ApiClientRef api) {
     bot.answerCallbackQuery(cq.id);
     auto chatId = cq.message->chat->id;
     auto userId = cq.from->id;
@@ -35,7 +37,7 @@ void handleSuggestedRecipesListCQ(
             stateManager.put(StorageView{state.selectedStorages[0].id}); // Go to the only one storage
         } else {
             if (api.getStoragesApi().getStoragesList(userId).size() == 1) {
-                renderMainMenu(true, userId, chatId, bot, api);
+                renderMainMenu(true, std::nullopt, userId, chatId, bot, api);
                 stateManager.put(MainMenu{});
             } else {
                 auto newState = StoragesSelection{.selectedStorages = std::move(state.selectedStorages)};
@@ -53,22 +55,21 @@ void handleSuggestedRecipesListCQ(
             return;
         auto inStorage = utils::inStoragesAvailability(state.selectedStorages, *recipeId, userId, api);
         renderRecipeView(inStorage, *recipeId, userId, chatId, bot, api);
-        stateManager.put(RecipeView{.selectedStorages = state.selectedStorages,
-                                    .addedStorages = {},
-                                    .availability = inStorage,
-                                    .recipeId = *recipeId,
-                                    .fromStorage = state.fromStorage,
-                                    .pageNo = state.pageNo});
-
+        stateManager.put(RecipeView{
+            .prevState = std::move(state),
+            .addedStorages = {},
+            .availability = inStorage,
+            .recipeId = *recipeId,
+        });
         return;
     }
 
     if (data != "dont_handle") {
-        auto pageNo = utils::parseSafe<std::size_t>(data);
-        if (pageNo) {
-            state.pageNo = *pageNo;
-        }
-        renderRecipesSuggestion(state.selectedStorages, *pageNo, userId, chatId, bot, api);
+        if (data == "page_left")
+            state.pageNo--;
+        else if (data == "page_right")
+            state.pageNo++;
+        renderRecipesSuggestion(state.selectedStorages, state.pageNo, userId, chatId, bot, api);
         return;
     }
 }

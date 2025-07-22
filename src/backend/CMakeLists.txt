@@ -8,6 +8,7 @@ target_sources(main PRIVATE
     src/backend/api/users.cpp
     src/backend/api/recipes.cpp
     src/backend/api/shopping_lists.cpp
+    src/backend/api/moderation.cpp
 
     src/backend/models/storage.cpp
     src/backend/models/ingredient.cpp
@@ -15,4 +16,5 @@ target_sources(main PRIVATE
     src/backend/models/recipe.cpp
     src/backend/models/shopping_list.cpp
     src/backend/models/publication_request_status.cpp
+    src/backend/models/moderation.cpp
 )

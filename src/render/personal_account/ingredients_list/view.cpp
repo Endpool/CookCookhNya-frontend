@@ -1,11 +1,15 @@
 #include "view.hpp"
 
+#include "backend/api/ingredients.hpp"
 #include "backend/models/ingredient.hpp"
 #include "backend/models/publication_request_status.hpp"
 #include "message_tracker.hpp"
 #include "render/common.hpp"
 #include "utils/utils.hpp"
 
+#include <tgbot/types/InlineKeyboardButton.h>
+
+#include <cmath>
 #include <cstddef>
 #include <format>
 #include <string>
@@ -15,6 +19,7 @@
 
 namespace cookcookhnya::render::personal_account::ingredients {
 
+using namespace api::models::ingredient;
 using namespace tg_types;
 using namespace cookcookhnya::api::models::moderation;
 
@@ -92,7 +97,8 @@ constructMessage(api::models::ingredient::CustomIngredientList& ingredientsList)
 
 } // namespace
 
-void renderCustomIngredientsList(bool toBeEdited, UserId userId, ChatId chatId, BotRef bot, IngredientsApiRef api) {
+void renderCustomIngredientsList(
+    bool toBeEdited, UserId userId, ChatId chatId, BotRef bot, api::IngredientsApiRef api) {
     const std::size_t numOfIngredientsOnPage = 500;
 
     auto ingredientsList = api.customIngredientsSearch(userId, "", 0, numOfIngredientsOnPage);

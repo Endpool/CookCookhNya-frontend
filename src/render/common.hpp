@@ -1,11 +1,5 @@
 #pragma once
 
-#include "backend/api/api.hpp"
-#include "backend/api/ingredients.hpp"
-#include "backend/api/recipes.hpp"
-#include "backend/api/shopping_lists.hpp"
-#include "backend/api/storages.hpp"
-#include "backend/api/users.hpp"
 #include "patched_bot.hpp"
 #include "tg_types.hpp"
 #include "utils/utils.hpp"
@@ -14,7 +8,6 @@
 #include <initializer_list>
 #include <memory>
 #include <string_view>
-#include <tgbot/types/KeyboardButton.h>
 #include <utility>
 #include <vector>
 
@@ -26,14 +19,6 @@ class InlineKeyboardMarkup;
 } // namespace TgBot
 
 namespace cookcookhnya::render {
-
-// API
-using ApiClient = const api::ApiClient&;
-using StorageApiRef = const api::StoragesApi&;
-using IngredientsApiRef = const api::IngredientsApi&;
-using UserApiRef = const api::UsersApi&;
-using RecipesApiRef = const api::RecipesApi&;
-using ShoppingListApiRef = const api::ShoppingListApi&;
 
 using UserId = tg_types::UserId;
 using ChatId = tg_types::ChatId;

@@ -1,6 +1,6 @@
 #include "view.hpp"
 
-#include "backend/api/storages.hpp"
+#include "backend/api/api.hpp"
 #include "backend/id_types.hpp"
 #include "handlers/common.hpp"
 #include "render/main_menu/view.hpp"
@@ -13,25 +13,28 @@
 namespace cookcookhnya::handlers::storages_list {
 
 using namespace render::main_menu;
-using namespace render::create_storage;
+using namespace render::storages_list;
 using namespace render::storage;
 
 void handleStorageListCQ(
-    StorageList& /*unused*/, CallbackQueryRef cq, BotRef& bot, SMRef stateManager, ApiClientRef api) {
+    StorageList& /*unused*/, CallbackQueryRef cq, BotRef& bot, SMRef stateManager, api::ApiClientRef api) {
     bot.answerCallbackQuery(cq.id);
     auto userId = cq.from->id;
     auto chatId = cq.message->chat->id;
     auto storages = api.getStoragesApi().getStoragesList(userId);
+
     if (cq.data == "create") {
         renderStorageCreation(chatId, userId, bot);
         stateManager.put(StorageCreationEnterName{});
         return;
     }
+
     if (cq.data == "back") {
-        renderMainMenu(true, userId, chatId, bot, api);
+        renderMainMenu(true, std::nullopt, userId, chatId, bot, api);
         stateManager.put(MainMenu{});
         return;
     }
+
     auto storageId = utils::parseSafe<api::StorageId>(cq.data);
     if (storageId) {
         renderStorageView(*storageId, cq.from->id, chatId, bot, api);

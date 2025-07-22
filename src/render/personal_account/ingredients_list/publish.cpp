@@ -2,9 +2,10 @@
 
 #include "backend/models/ingredient.hpp"
 #include "backend/models/publication_request_status.hpp"
+
+#include "backend/api/ingredients.hpp"
 #include "message_tracker.hpp"
 #include "render/common.hpp"
-#include "utils/to_string.hpp"
 #include "utils/utils.hpp"
 
 #include <format>
@@ -16,8 +17,9 @@ namespace cookcookhnya::render::personal_account::ingredients {
 
 using namespace std::views;
 
-void renderCustomIngredientPublication(UserId userId, ChatId chatId, BotRef bot, IngredientsApiRef api) {
-    auto ingredientsResp = api.customIngredientsSearch(userId, "", 0);
+void renderCustomIngredientPublication(UserId userId, ChatId chatId, BotRef bot, api::IngredientsApiRef api) {
+    const std::size_t numOfIng = 500;
+    auto ingredientsResp = api.customIngredientsSearch(userId, "", 0, numOfIng);
 
     // TODO: make pagination for ingredients
     std::vector<api::models::ingredient::CustomIngredient> ingredients;

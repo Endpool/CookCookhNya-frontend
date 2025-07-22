@@ -16,7 +16,7 @@ namespace cookcookhnya::render::personal_account::ingredients {
 
 using namespace std::views;
 
-void renderCustomIngredientDeletion(UserId userId, ChatId chatId, BotRef bot, IngredientsApiRef api) {
+void renderCustomIngredientDeletion(UserId userId, ChatId chatId, BotRef bot, api::IngredientsApiRef api) {
     auto ingredientsResp = api.customIngredientsSearch(userId, "", 0);
 
     // TODO: make pagination for ingredients

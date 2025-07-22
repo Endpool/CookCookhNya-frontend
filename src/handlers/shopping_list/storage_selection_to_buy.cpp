@@ -1,5 +1,6 @@
 #include "storage_selection_to_buy.hpp"
 
+#include "backend/api/shopping_lists.hpp"
 #include "backend/id_types.hpp"
 #include "handlers/common.hpp"
 #include "render/shopping_list/view.hpp"
@@ -17,7 +18,7 @@ void handleShoppingListStorageSelectionToBuyCQ(ShoppingListStorageSelectionToBuy
                                                CallbackQueryRef cq,
                                                BotRef bot,
                                                SMRef stateManager,
-                                               ShoppingListApiRef api) {
+                                               api::ShoppingListApiRef api) {
     bot.answerCallbackQuery(cq.id);
     auto userId = cq.from->id;
     auto chatId = cq.message->chat->id;

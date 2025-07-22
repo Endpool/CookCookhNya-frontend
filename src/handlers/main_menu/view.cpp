@@ -1,5 +1,6 @@
 #include "view.hpp"
 
+#include "backend/api/api.hpp"
 #include "backend/api/storages.hpp"
 #include "backend/models/storage.hpp"
 #include "handlers/common.hpp"
@@ -22,7 +23,8 @@ using namespace render::shopping_list;
 using namespace render::personal_account;
 using namespace std::views;
 
-void handleMainMenuCQ(MainMenu& /*unused*/, CallbackQueryRef cq, BotRef& bot, SMRef stateManager, ApiClientRef api) {
+void handleMainMenuCQ(
+    MainMenu& /*unused*/, CallbackQueryRef cq, BotRef& bot, SMRef stateManager, api::ApiClientRef api) {
     bot.answerCallbackQuery(cq.id);
     auto userId = cq.from->id;
     auto chatId = cq.message->chat->id;
@@ -38,7 +40,7 @@ void handleMainMenuCQ(MainMenu& /*unused*/, CallbackQueryRef cq, BotRef& bot, SM
         if (storages.size() == 1) {
             std::vector<api::models::storage::StorageSummary> storage = {storages[0]};
             renderRecipesSuggestion(storage, 0, userId, chatId, bot, api);
-            stateManager.put(SuggestedRecipesList{.pageNo = 0, .selectedStorages = storage, .fromStorage = false});
+            stateManager.put(SuggestedRecipesList{.selectedStorages = storage, .pageNo = 0, .fromStorage = false});
             return;
         }
         renderStorageSelection({}, userId, chatId, bot, api);
@@ -49,10 +51,8 @@ void handleMainMenuCQ(MainMenu& /*unused*/, CallbackQueryRef cq, BotRef& bot, SM
     if (cq.data == "shopping_list") {
         const bool canBuy = !storages.empty();
         auto items = api.getShoppingListApi().get(userId);
-        ShoppingListView::ItemsDb itemsDb{
-            items | transform([](auto& i) { return ShoppingListView::SelectableItem{std::move(i)}; })};
 
-        auto newState = ShoppingListView{.items = std::move(itemsDb), .canBuy = canBuy};
+        auto newState = ShoppingListView{.items = std::move(items), .canBuy = canBuy};
         renderShoppingList(newState, userId, chatId, bot);
         stateManager.put(std::move(newState));
         return;

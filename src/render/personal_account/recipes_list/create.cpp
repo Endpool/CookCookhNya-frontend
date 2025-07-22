@@ -6,7 +6,7 @@
 
 #include <utility>
 
-namespace cookcookhnya::render::personal_account::recipes {
+namespace cookcookhnya::render::personal_account::recipes_list {
 
 void renderRecipeCreation(ChatId chatId, UserId userId, BotRef bot) { // BackendProvider bkn
     InlineKeyboard keyboard(1);
@@ -18,4 +18,4 @@ void renderRecipeCreation(ChatId chatId, UserId userId, BotRef bot) { // Backend
     }
 };
 
-} // namespace cookcookhnya::render::personal_account::recipes
+} // namespace cookcookhnya::render::personal_account::recipes_list
