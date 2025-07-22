@@ -1,4 +1,4 @@
-#include "publish.hpp"
+#include "delete.hpp"
 
 #include "backend/id_types.hpp"
 #include "handlers/common.hpp"
@@ -10,15 +10,15 @@ namespace cookcookhnya::handlers::personal_account::ingredients {
 
 using namespace render::personal_account::ingredients;
 
-void handleCustomIngredientPublishCQ(
-    CustomIngredientPublish& /*unused*/, CallbackQueryRef cq, BotRef& bot, SMRef stateManager, IngredientsApiRef api) {
+void handleCustomIngredientDeletionCQ(
+    CustomIngredientDeletion& /*unused*/, CallbackQueryRef cq, BotRef& bot, SMRef stateManager, IngredientsApiRef api) {
     bot.answerCallbackQuery(cq.id);
     auto userId = cq.from->id;
     auto chatId = cq.message->chat->id;
 
     auto ingredientId = utils::parseSafe<api::IngredientId>(cq.data);
     if (ingredientId) {
-        api.publishCustom(userId, *ingredientId);
+        api.deleteCustom(userId, *ingredientId);
     }
     renderCustomIngredientsList(true, userId, chatId, bot, api);
     stateManager.put(CustomIngredientsList{});

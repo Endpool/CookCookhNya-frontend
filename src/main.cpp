@@ -41,6 +41,7 @@ int main(int argc, char* argv[]) {
                                                       customIngredientCreationEnterNameCQHandler,
                                                       customIngredientConfirmationCQHandler,
                                                       customIngredientPublishCQHandler,
+                                                      handleCustomIngredientDeletionCQHandler,
                                                       storageListCQHandler,
                                                       storageCreationEnterNameMsgHandler,
                                                       storageCreationEnterNameCQHandler,

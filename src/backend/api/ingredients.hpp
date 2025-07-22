@@ -76,6 +76,8 @@ class IngredientsApi : ApiBase {
     IngredientId createCustom(UserId user, // NOLINT(*-nodiscard)
                               const models::ingredient::IngredientCreateBody& body) const;
 
+    void deleteCustom(UserId user, IngredientId ingredient) const; // NOLINT(*-nodiscard)
+
     void publishCustom(UserId user, IngredientId ingredient) const;
 };
 

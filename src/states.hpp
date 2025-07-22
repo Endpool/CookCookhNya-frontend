@@ -33,19 +33,13 @@ struct MainMenu {};
 
 struct PersonalAccountMenu {};
 
-struct CustomIngredientsList {
-    std::size_t pageNo;
-};
-struct CustomIngredientCreationEnterName {
-    std::size_t pageNo;
-};
+struct CustomIngredientsList {};
+struct CustomIngredientCreationEnterName {};
 struct CustomIngredientConfirmation {
-    std::size_t pageNo;
     std::string name;
 };
-struct CustomIngredientPublish {
-    std::size_t pageNo;
-};
+struct CustomIngredientDeletion {};
+struct CustomIngredientPublish {};
 
 struct StorageList {};
 struct StorageCreationEnterName {};
@@ -167,6 +161,7 @@ using State = std::variant<MainMenu,
                            CustomIngredientsList,
                            CustomIngredientCreationEnterName,
                            CustomIngredientConfirmation,
+                           CustomIngredientDeletion,
                            CustomIngredientPublish,
                            StorageList,
                            StorageDeletion,

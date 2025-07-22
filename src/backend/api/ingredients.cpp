@@ -137,6 +137,11 @@ IngredientId IngredientsApi::createCustom(UserId user, const IngredientCreateBod
     return utils::parse<IngredientId>(postWithJsonAuthed(user, "/ingredients", body));
 }
 
+// DELETE /ingredients/{ingredientId}
+void IngredientsApi::deleteCustom(UserId user, IngredientId ingredient) const {
+    jsonDeleteAuthed<void>(user, std::format("/ingredients/{}", ingredient));
+}
+
 // POST /recipes/{ingredientId}/request-publication
 void IngredientsApi::publishCustom(UserId user, IngredientId ingredient) const {
     jsonPostAuthed<void>(user, std::format("/ingredients/{}/request-publication", ingredient));

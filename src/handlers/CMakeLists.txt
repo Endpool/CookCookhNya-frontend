@@ -6,6 +6,7 @@ target_sources(main PRIVATE
     src/handlers/personal_account/ingredients_list/create.cpp
     src/handlers/personal_account/ingredients_list/publish.cpp
     src/handlers/personal_account/ingredients_list/view.cpp
+    src/handlers/personal_account/ingredients_list/delete.cpp
 
     src/handlers/personal_account/recipes_list/create.cpp
     src/handlers/personal_account/recipes_list/view.cpp
