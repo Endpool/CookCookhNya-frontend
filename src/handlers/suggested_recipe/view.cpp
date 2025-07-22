@@ -13,11 +13,11 @@
 #include <utility>
 #include <vector>
 
-namespace cookcookhnya::handlers::recipe {
+namespace cookcookhnya::handlers::suggested_recipe {
 
 using namespace render::recipes_suggestions;
 using namespace render::shopping_list;
-using namespace render::recipe;
+using namespace render::suggested_recipe;
 using namespace api::models::ingredient;
 using IngredientAvailability = states::RecipeView::IngredientAvailability;
 using AvailabilityType = states::RecipeView::AvailabilityType;
@@ -72,4 +72,4 @@ void handleRecipeViewCQ(RecipeView& state, CallbackQueryRef cq, BotRef bot, SMRe
     }
 }
 
-} // namespace cookcookhnya::handlers::recipe
+} // namespace cookcookhnya::handlers::suggested_recipe

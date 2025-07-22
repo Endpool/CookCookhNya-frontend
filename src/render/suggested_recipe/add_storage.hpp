@@ -9,7 +9,7 @@
 
 #include <vector>
 
-namespace cookcookhnya::render::recipe {
+namespace cookcookhnya::render::suggested_recipe {
 
 TextGenInfo storageAdditionView(const std::vector<states::RecipeView::IngredientAvailability>& inStoragesAvailability,
                                 const std::vector<api::models::storage::StorageSummary>& selectedStorages,
@@ -26,4 +26,4 @@ void renderStoragesSuggestion(const std::vector<states::RecipeView::IngredientAv
                               BotRef bot,
                               api::ApiClientRef api);
 
-} // namespace cookcookhnya::render::recipe
+} // namespace cookcookhnya::render::suggested_recipe

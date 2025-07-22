@@ -4,8 +4,8 @@
 #include "backend/id_types.hpp"
 #include "backend/models/ingredient.hpp"
 #include "handlers/common.hpp"
-#include "render/recipe/view.hpp"
 #include "render/shopping_list/create.hpp"
+#include "render/suggested_recipe/view.hpp"
 #include "utils/parsing.hpp"
 
 #include <algorithm>
@@ -16,7 +16,7 @@
 namespace cookcookhnya::handlers::shopping_list {
 
 using namespace render::shopping_list;
-using namespace render::recipe;
+using namespace render::suggested_recipe;
 
 void handleShoppingListCreationCQ(
     ShoppingListCreation& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, api::ApiClientRef api) {

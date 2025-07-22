@@ -8,7 +8,7 @@
 #include <string>
 #include <vector>
 
-namespace cookcookhnya::render::recipe {
+namespace cookcookhnya::render::suggested_recipe {
 
 struct TextGenInfo {
     std::string text;
@@ -28,4 +28,4 @@ TextGenInfo recipeView(const std::vector<states::RecipeView::IngredientAvailabil
                        UserId userId,
                        api::ApiClientRef api);
 
-} // namespace cookcookhnya::render::recipe
+} // namespace cookcookhnya::render::suggested_recipe

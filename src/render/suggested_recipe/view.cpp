@@ -14,7 +14,7 @@
 #include <utility>
 #include <vector>
 
-namespace cookcookhnya::render::recipe {
+namespace cookcookhnya::render::suggested_recipe {
 
 using namespace api::models::recipe;
 using IngredientAvailability = states::RecipeView::IngredientAvailability;
@@ -78,4 +78,4 @@ void renderRecipeView(std::vector<IngredientAvailability>& inStoragesAvailabilit
     }
 }
 
-} // namespace cookcookhnya::render::recipe
+} // namespace cookcookhnya::render::suggested_recipe

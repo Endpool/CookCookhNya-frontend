@@ -21,8 +21,8 @@ target_sources(main PRIVATE
     src/handlers/personal_account/view.cpp
     src/handlers/personal_account/publication_history.cpp
 
-    src/handlers/recipe/add_storage.cpp
-    src/handlers/recipe/view.cpp
+    src/handlers/suggested_recipe/add_storage.cpp
+    src/handlers/suggested_recipe/view.cpp
 
     src/handlers/recipes_suggestions/view.cpp
 

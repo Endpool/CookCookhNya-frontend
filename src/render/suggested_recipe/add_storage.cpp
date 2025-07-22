@@ -17,7 +17,7 @@
 #include <utility>
 #include <vector>
 
-namespace cookcookhnya::render::recipe {
+namespace cookcookhnya::render::suggested_recipe {
 
 using namespace api::models::recipe;
 using namespace api::models::storage;
@@ -110,4 +110,4 @@ void renderStoragesSuggestion(const std::vector<IngredientAvailability>& inStora
         bot.editMessageText(textGen.text, chatId, *messageId, makeKeyboardMarkup(std::move(keyboard)), "Markdown");
     }
 }
-} // namespace cookcookhnya::render::recipe
+} // namespace cookcookhnya::render::suggested_recipe

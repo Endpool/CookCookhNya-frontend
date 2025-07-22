@@ -15,9 +15,9 @@
 #include <string_view>
 #include <utility>
 
-namespace cookcookhnya::handlers::recipe {
+namespace cookcookhnya::handlers::suggested_recipe {
 
-using namespace render::recipe;
+using namespace render::suggested_recipe;
 using namespace api::models::storage;
 
 void handleRecipeStorageAdditionCQ(
@@ -71,4 +71,4 @@ void handleRecipeStorageAdditionCQ(
     }
 }
 
-} // namespace cookcookhnya::handlers::recipe
+} // namespace cookcookhnya::handlers::suggested_recipe

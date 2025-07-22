@@ -23,8 +23,8 @@
 #include "personal_account/publication_history.hpp"
 #include "personal_account/view.hpp"
 
-#include "recipe/add_storage.hpp"
-#include "recipe/view.hpp"
+#include "suggested_recipe/add_storage.hpp"
+#include "suggested_recipe/view.hpp"
 
 #include "recipes_suggestions/view.hpp"
 
@@ -60,7 +60,7 @@ using namespace handlers::personal_account::ingredients;
 using namespace handlers::personal_account::recipe;
 using namespace handlers::personal_account::recipes_list;
 using namespace handlers::shopping_list;
-using namespace handlers::recipe;
+using namespace handlers::suggested_recipe;
 using namespace handlers::storage;
 using namespace handlers::storage::ingredients;
 using namespace handlers::storage::members;
