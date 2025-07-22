@@ -24,7 +24,7 @@ namespace detail {
 
 struct StorageIdMixin {
     api::StorageId storageId;
-    StorageIdMixin(api::StorageId storageId) : storageId{storageId} {} // NOLINT(*-explicit-*)
+    StorageIdMixin(api::StorageId storageId) : storageId{storageId} {} // NOLINT(*explicit*)
 };
 
 struct Pagination {
@@ -166,8 +166,10 @@ struct RecipeIngredientsSearch {
 struct ShoppingListView { // NOLINT(*member-init) // Strange. Flags only this struct due to ItemsDb
     struct SelectableItem : api::models::shopping_list::ShoppingListItem {
         bool selected = false;
+        SelectableItem(api::models::shopping_list::ShoppingListItem item) // NOLINT(*explicit*)
+            : ShoppingListItem{std::move(item)} {}
     };
-    using ItemsDb = utils::FastSortedDb<SelectableItem, &api::models::shopping_list::ShoppingListItem::ingredientId>;
+    using ItemsDb = utils::FastSortedDb<SelectableItem, &SelectableItem::ingredientId>;
 
     ItemsDb items;
     bool canBuy;

@@ -22,6 +22,7 @@ using namespace std::literals;
 
 void handleCustomRecipesListCQ(
     CustomRecipesList& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, api::ApiClientRef api) {
+
     bot.answerCallbackQuery(cq.id);
 
     auto chatId = cq.message->chat->id;
