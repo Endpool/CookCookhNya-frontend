@@ -32,10 +32,7 @@ std::pair<std::vector<Ingredient>, std::string> renderCustomRecipe(
 
     for (auto& it : recipeDetails.ingredients) {
         toPrint += std::format("• {}\n", it.name);
-        ingredients.push_back({
-            .id = it.id,
-            .name = it.name,
-        });
+        ingredients.push_back({.id = it.id, .name = it.name});
     }
 
     toPrint += "\n🌐 [Статус проверки] " + utils::to_string(recipeDetails.moderationStatus);

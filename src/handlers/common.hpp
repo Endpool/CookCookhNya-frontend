@@ -17,6 +17,7 @@ using states::PersonalAccountMenu;
 
 using states::CustomIngredientConfirmation;
 using states::CustomIngredientCreationEnterName;
+using states::CustomIngredientDeletion;
 using states::CustomIngredientPublish;
 using states::CustomIngredientsList;
 
