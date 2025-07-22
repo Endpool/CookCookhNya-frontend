@@ -1,6 +1,5 @@
 #include "view.hpp"
 
-#include "backend/api/api.hpp"
 #include "backend/models/recipe.hpp"
 #include "backend/models/storage.hpp"
 #include "message_tracker.hpp"
