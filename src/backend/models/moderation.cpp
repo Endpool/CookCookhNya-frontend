@@ -1,7 +1,7 @@
 #include "moderation.hpp"
 
 #include "publication_request_status.hpp"
-#include "utils/serialization.hpp"
+#include "utils/parsing.hpp"
 
 #include <boost/json/conversion.hpp>
 #include <boost/json/value.hpp>
