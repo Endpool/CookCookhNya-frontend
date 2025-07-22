@@ -71,11 +71,13 @@ int main(int argc, char* argv[]) {
                                                       customRecipeIngredientsSearchCQHandler,
                                                       customRecipeIngredientsSearchIQHandler,
                                                       shoppingListStorageSelectionToBuyCQHandler,
+                                                      customRecipePublicationHistoryCQHandler,
+                                                      totalPublicationHistoryCQHandler,
                                                       shoppingListIngredientSearchCQHandler,
                                                       shoppingListIngredientSearchIQHandler>
             bot{{}, {ApiClient{utils::getenvWithError("API_URL")}}};
 
-        TgBot::Bot tgBot{utils::getenvWithError("BOT_TOKEN")};
+        TgBot::Bot tgBot{utils::getenvWithError("BOT_TOKEN")}; // sdf
         if (useWebhook) {
             const std::string path = "/"s + utils::getenvWithError("WEBHOOK_SECRET"); // NOLINT(*include*)
             bot.startWebhook(std::move(tgBot),

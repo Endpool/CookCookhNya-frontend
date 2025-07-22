@@ -18,7 +18,7 @@ namespace TgBot {
 class InlineKeyboardMarkup;
 } // namespace TgBot
 
-namespace cookcookhnya::render::personal_account::recipes {
+namespace cookcookhnya::render::personal_account::recipes_list {
 
 using namespace api::models::recipe;
 
@@ -52,4 +52,5 @@ void renderCustomRecipesList(
         bot.editMessageText(pageInfo, chatId, *messageId, constructKeyboard(pageNo, numOfRecipesOnPage, recipesList));
     }
 }
-} // namespace cookcookhnya::render::personal_account::recipes
+
+} // namespace cookcookhnya::render::personal_account::recipes_list

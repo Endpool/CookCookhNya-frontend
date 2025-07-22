@@ -5,7 +5,7 @@
 
 namespace cookcookhnya::handlers::personal_account::recipe {
 
-void handleRecipeCustomViewCQ(
-    CustomRecipeView& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, api::ApiClientRef api);
+void handleCustomRecipePublicationHistoryCQ(
+    CustomRecipePublicationHistory& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, api::ApiClientRef api);
 
 } // namespace cookcookhnya::handlers::personal_account::recipe

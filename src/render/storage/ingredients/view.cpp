@@ -55,19 +55,44 @@ void renderIngredientsListSearch(const states::StorageIngredientsList& state,
                                  ChatId chatId,
                                  BotRef bot) {
     const std::size_t numOfIngredientsOnPage = 5;
+
     const std::string list = state.storageIngredients.getValues() |
                              transform([](auto& i) { return std::format("• {}\n", i.name); }) | join |
                              to<std::string>();
-
     auto text =
         state.storageIngredients.getValues().empty()
             ? utils::utf8str(u8"🍗 Кажется, в вашем хранилище пока нет никаких продуктов. Чтобы добавить новый, "
                              u8"нажмите на кнопку 🛒 Добавить и начните вводить название продукта...\n\n")
             : utils::utf8str(u8"🍗 Ваши продукты:\n\n");
     text += list;
+
     if (auto messageId = message::getMessageId(userId)) {
         bot.editMessageText(text, chatId, *messageId, constructKeyboard(state.pageNo, numOfIngredientsOnPage, state));
     }
 }
 
 } // namespace cookcookhnya::render::storage::ingredients
+
+namespace cookcookhnya::render::suggest_custom_ingredient {
+
+void renderSuggestIngredientCustomisation(const states::StorageIngredientsList& state,
+                                          UserId userId,
+                                          ChatId chatId,
+                                          BotRef bot) {
+    InlineKeyboard keyboard(3);
+    const std::string text = utils::utf8str(u8"📝 Продолжите редактирование запроса или объявите личный ингредиент");
+
+    auto searchButton = std::make_shared<TgBot::InlineKeyboardButton>();
+    searchButton->text = utils::utf8str(u8"✏️ Редактировать");
+    searchButton->switchInlineQueryCurrentChat = "";
+    keyboard[0].push_back(std::move(searchButton));
+    // Mark as ingredient
+    keyboard[1].push_back(makeCallbackButton(std::format("Создать личный ингредиент: {}", state.inlineQuery),
+                                             "ingredient_" + state.inlineQuery));
+    keyboard[2].push_back(makeCallbackButton(u8"↩️ Назад", "back"));
+
+    if (auto messageId = message::getMessageId(userId)) {
+        bot.editMessageText(text, chatId, *messageId, makeKeyboardMarkup(std::move(keyboard)));
+    }
+}
+} // namespace cookcookhnya::render::suggest_custom_ingredient

@@ -13,13 +13,15 @@
 #include <string>
 #include <string_view>
 
-namespace cookcookhnya::handlers::personal_account::recipes {
+namespace cookcookhnya::handlers::personal_account::recipes_list {
+
+using namespace render::personal_account;
+using namespace render::personal_account::recipe;
+using namespace render::personal_account::recipes_list;
+using namespace std::literals;
 
 void handleCustomRecipesListCQ(
     CustomRecipesList& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, api::ApiClientRef api) {
-    using namespace render::personal_account;
-    using namespace render::personal_account::recipes;
-    using namespace std::literals;
 
     bot.answerCallbackQuery(cq.id);
 
@@ -44,10 +46,13 @@ void handleCustomRecipesListCQ(
     if (data.starts_with("recipe_")) {
         auto recipeId = utils::parseSafe<api::RecipeId>(std::string_view{data}.substr("recipe_"sv.size()));
         if (recipeId) {
-            auto ingredients = renderCustomRecipe(true, userId, chatId, recipeId.value(), bot, api);
-            stateManager.put(
-                RecipeCustomView{.recipeId = recipeId.value(), .pageNo = state.pageNo, .ingredients = ingredients});
+            auto ingredientsAndName = renderCustomRecipe(true, userId, chatId, recipeId.value(), bot, api);
+            stateManager.put(CustomRecipeView{.recipeId = recipeId.value(),
+                                              .pageNo = state.pageNo,
+                                              .ingredients = ingredientsAndName.first,
+                                              .recipeName = ingredientsAndName.second});
         }
+        bot.answerCallbackQuery(cq.id);
         return;
     }
 
@@ -61,4 +66,4 @@ void handleCustomRecipesListCQ(
     }
 }
 
-} // namespace cookcookhnya::handlers::personal_account::recipes
+} // namespace cookcookhnya::handlers::personal_account::recipes_list

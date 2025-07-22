@@ -7,7 +7,7 @@
 #include "render/storages_list/view.hpp"
 #include "states.hpp"
 
-namespace cookcookhnya::handlers::storages_list {
+namespace cookcookhnya::handlers::storage {
 
 using namespace render::storages_list;
 using namespace render::storage;
@@ -26,4 +26,4 @@ void handleStorageDeletionCQ(
     }
 };
 
-} // namespace cookcookhnya::handlers::storages_list
+} // namespace cookcookhnya::handlers::storage

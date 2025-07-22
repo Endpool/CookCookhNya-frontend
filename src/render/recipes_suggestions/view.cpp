@@ -1,5 +1,6 @@
 #include "view.hpp"
 
+#include "backend/api/recipes.hpp"
 #include "backend/models/recipe.hpp"
 #include "backend/models/storage.hpp"
 #include "message_tracker.hpp"
@@ -23,7 +24,7 @@ namespace cookcookhnya::render::recipes_suggestions {
 using namespace api::models::storage;
 using namespace api::models::recipe;
 using namespace std::views;
-using namespace std::ranges;
+using std::ranges::to;
 
 namespace {
 
@@ -49,7 +50,7 @@ void renderRecipesSuggestion(std::vector<StorageSummary>& storages,
                              api::RecipesApiRef recipesApi) {
     const std::size_t numOfRecipesOnPage = 5;
 
-    auto storagesIds = storages | views::transform(&StorageSummary::id) | to<std::vector>();
+    auto storagesIds = storages | transform(&StorageSummary::id) | to<std::vector>();
     auto recipesList =
         recipesApi.getSuggestedRecipes(userId, storagesIds, numOfRecipesOnPage, pageNo * numOfRecipesOnPage);
 

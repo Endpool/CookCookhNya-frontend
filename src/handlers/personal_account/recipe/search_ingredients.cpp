@@ -6,6 +6,7 @@
 #include "backend/models/ingredient.hpp"
 #include "handlers/common.hpp"
 #include "message_tracker.hpp"
+#include "render/personal_account/ingredients_list/create.hpp"
 #include "render/personal_account/recipe/search_ingredients.hpp"
 #include "render/personal_account/recipe/view.hpp"
 #include "tg_types.hpp"
@@ -14,17 +15,21 @@
 #include <algorithm>
 #include <cstddef>
 #include <functional>
+#include <optional>
 #include <ranges>
+#include <string>
+#include <string_view>
 #include <utility>
 #include <vector>
 
-namespace cookcookhnya::handlers::personal_account::recipes {
+namespace cookcookhnya::handlers::personal_account::recipe {
 
 using namespace api::models::ingredient;
-using namespace render::recipe::ingredients;
-using namespace render::personal_account::recipes;
-using namespace std::ranges;
+using namespace render::personal_account::ingredients;
+using namespace render::personal_account::recipe;
+using namespace std::literals;
 using namespace std::views;
+using std::ranges::to;
 
 namespace {
 
@@ -46,9 +51,15 @@ void updateSearch(CustomRecipeIngredientsSearch& state,
                                                                   &IngredientSearchForRecipeItem::id)) {
         state.searchItems = std::move(response.page);
         state.totalFound = response.found;
-        if (auto mMessageId = message::getMessageId(userId))
-            renderRecipeIngredientsSearch(state, numOfIngredientsOnPage, userId, userId, bot);
+        if (auto mMessageId = message::getMessageId(userId)) {
+            if (state.totalFound != 0) {
+                renderRecipeIngredientsSearch(state, numOfIngredientsOnPage, userId, userId, bot);
+                return;
+            }
+        }
     }
+    if (state.totalFound == 0)
+        renderSuggestIngredientCustomisation(state, userId, userId, bot);
 }
 
 } // namespace
@@ -60,10 +71,12 @@ void handleCustomRecipeIngredientsSearchCQ(
     const auto chatId = cq.message->chat->id;
 
     if (cq.data == "back") {
-        renderCustomRecipe(true, userId, chatId, state.recipeId, bot, api);
+        auto ingredientsAndName = renderCustomRecipe(true, userId, chatId, state.recipeId, bot, api);
         auto ingredients = state.recipeIngredients.getValues() | as_rvalue | to<std::vector>();
-        stateManager.put(
-            RecipeCustomView{.recipeId = state.recipeId, .pageNo = 0, .ingredients = std::move(ingredients)});
+        stateManager.put(CustomRecipeView{.recipeId = state.recipeId,
+                                          .pageNo = 0,
+                                          .ingredients = std::move(ingredients),
+                                          .recipeName = ingredientsAndName.second});
         return;
     }
 
@@ -77,6 +90,13 @@ void handleCustomRecipeIngredientsSearchCQ(
         state.pageNo += 1;
         updateSearch(state, false, bot, userId, api);
         return;
+    }
+
+    if (cq.data.starts_with("ingredient_")) {
+        const std::string ingredientName{std::string_view{cq.data}.substr("ingredient_"sv.size())};
+        renderCustomIngredientConfirmation(true, ingredientName, userId, chatId, bot, api);
+        auto ingredients = state.recipeIngredients.getValues() | as_rvalue | to<std::vector>();
+        stateManager.put(CustomIngredientConfirmation{ingredientName, state.recipeId, ingredients, std::nullopt});
     }
 
     if (cq.data != "dont_handle") {
@@ -117,4 +137,4 @@ void handleCustomRecipeIngredientsSearchIQ(CustomRecipeIngredientsSearch& state,
     // bot.answerInlineQuery(iq.id, {}, 0);
 }
 
-} // namespace cookcookhnya::handlers::personal_account::recipes
+} // namespace cookcookhnya::handlers::personal_account::recipe

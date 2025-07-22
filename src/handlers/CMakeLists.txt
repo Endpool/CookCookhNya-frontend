@@ -16,8 +16,10 @@ target_sources(main PRIVATE
 
     src/handlers/personal_account/recipe/search_ingredients.cpp
     src/handlers/personal_account/recipe/view.cpp
+    src/handlers/personal_account/recipe/moderation_history.cpp
 
     src/handlers/personal_account/view.cpp
+    src/handlers/personal_account/publication_history.cpp
 
     src/handlers/recipe/add_storage.cpp
     src/handlers/recipe/view.cpp

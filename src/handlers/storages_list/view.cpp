@@ -13,7 +13,7 @@
 namespace cookcookhnya::handlers::storages_list {
 
 using namespace render::main_menu;
-using namespace render::create_storage;
+using namespace render::storages_list;
 using namespace render::storage;
 
 void handleStorageListCQ(

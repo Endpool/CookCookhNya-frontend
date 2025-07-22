@@ -1,8 +1,9 @@
 #pragma once
 
 #include "backend/id_types.hpp"
-#include "backend/models/storage.hpp"
-#include "backend/models/user.hpp"
+#include "publication_request_status.hpp"
+#include "storage.hpp"
+#include "user.hpp"
 
 #include <boost/json/conversion.hpp>
 #include <boost/json/value.hpp>
@@ -44,6 +45,7 @@ struct RecipeDetails {
     std::string name;
     std::optional<std::string> link;
     std::optional<user::UserDetails> creator;
+    moderation::PublicationRequestStatus moderationStatus = moderation::PublicationRequestStatus::NO_REQUEST;
 
     friend RecipeDetails tag_invoke(boost::json::value_to_tag<RecipeDetails>, const boost::json::value& j);
 };
@@ -77,6 +79,16 @@ struct RecipeSearchResponse {
 
     friend RecipeSearchResponse tag_invoke(boost::json::value_to_tag<RecipeSearchResponse>,
                                            const boost::json::value& j);
+};
+
+struct RecipePublicationRequest {
+    moderation::PublicationRequestStatus status = moderation::PublicationRequestStatus::NO_REQUEST;
+    std::chrono::system_clock::time_point created;
+    std::optional<std::chrono::system_clock::time_point> updated;
+    std::optional<std::string> reason;
+
+    friend RecipePublicationRequest tag_invoke(boost::json::value_to_tag<RecipePublicationRequest>,
+                                               const boost::json::value& j);
 };
 
 } // namespace cookcookhnya::api::models::recipe
