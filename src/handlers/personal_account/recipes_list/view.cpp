@@ -41,7 +41,7 @@ void handleCustomRecipesListCQ(
         return;
     }
 
-    if (data.starts_with("recipe_") {
+    if (data.starts_with("recipe_")) {
         auto recipeId = utils::parseSafe<api::RecipeId>(std::string_view{data}.substr("recipe_"sv.size()));
         if (recipeId) {
             auto ingredients = renderCustomRecipe(true, userId, chatId, recipeId.value(), bot, api);
