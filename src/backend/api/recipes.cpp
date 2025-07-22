@@ -77,9 +77,4 @@ std::vector<RecipePublicationRequest> RecipesApi::getRecipeRequestHistory(UserId
         user, std::format("/recipes/{}/publication-requests", recipe));
 }
 
-// GET /recipes/{id}/can-publish
-bool RecipesApi::canPublish(UserId user, RecipeId recipe) const {
-    return jsonGetAuthed<bool>(user, std::format("/recipes/{}/publication-requests", recipe));
-}
-
 } // namespace cookcookhnya::api
