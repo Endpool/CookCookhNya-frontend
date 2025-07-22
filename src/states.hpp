@@ -202,7 +202,7 @@ struct RecipesSearch {
 };
 
 struct RecipeView {
-    RecipesSearch prevState;
+    std::optional<RecipesSearch> prevState;
     api::models::recipe::RecipeDetails recipe;
 };
 

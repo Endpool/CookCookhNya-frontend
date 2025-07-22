@@ -42,7 +42,7 @@ void renderShareLinkMemberAddition(
     const api::InvitationId hash = storageApi.inviteMember(userId, storageId);
     const std::string telegramBotAlias = bot.getUnderlying().getMe()->username;
     const std::string inviteText = "Нажми на ссылку, чтобы стать участником хранилища 🍱**" + storage.name +
-                                   "** в CookCookhNya!\nhttps://t.me/" + telegramBotAlias + "?start=" + hash;
+                                   "** в CookCookhNya!\nhttps://t.me/" + telegramBotAlias + "?start=invite_" + hash;
     inviteButton->url = "https://t.me/share/url?url=" + inviteText;
 
     keyboard[0].push_back(std::move(inviteButton));
