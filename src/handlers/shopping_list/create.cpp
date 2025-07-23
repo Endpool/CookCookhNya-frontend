@@ -4,8 +4,8 @@
 #include "backend/id_types.hpp"
 #include "backend/models/ingredient.hpp"
 #include "handlers/common.hpp"
+#include "render/cooking_planning/view.hpp"
 #include "render/shopping_list/create.hpp"
-#include "render/suggested_recipe/view.hpp"
 #include "utils/parsing.hpp"
 
 #include <algorithm>
@@ -16,7 +16,7 @@
 namespace cookcookhnya::handlers::shopping_list {
 
 using namespace render::shopping_list;
-using namespace render::suggested_recipe;
+using namespace render::cooking_planning;
 
 void handleShoppingListCreationCQ(
     ShoppingListCreation& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, api::ApiClientRef api) {
@@ -25,7 +25,7 @@ void handleShoppingListCreationCQ(
     auto userId = cq.from->id;
 
     if (data == "back") {
-        renderRecipeView(state.prevState.availability, state.prevState.recipeId, userId, chatId, bot, api);
+        renderCookingPlanning(state.prevState.availability, state.prevState.recipeId, userId, chatId, bot, api);
         stateManager.put(auto{std::move(state.prevState)});
         bot.answerCallbackQuery(cq.id);
         return;
@@ -39,7 +39,7 @@ void handleShoppingListCreationCQ(
             putIds.push_back(ingredient.id);
         }
         shoppingApi.put(userId, putIds);
-        renderRecipeView(state.prevState.availability, state.prevState.recipeId, userId, chatId, bot, api);
+        renderCookingPlanning(state.prevState.availability, state.prevState.recipeId, userId, chatId, bot, api);
         stateManager.put(auto{std::move(state.prevState)});
         bot.answerCallbackQuery(cq.id);
         return;

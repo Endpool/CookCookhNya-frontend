@@ -24,8 +24,8 @@
 #include "personal_account/publication_history.hpp"
 #include "personal_account/view.hpp"
 
-#include "suggested_recipe/add_storage.hpp"
-#include "suggested_recipe/view.hpp"
+#include "cooking_planning/add_storage.hpp"
+#include "cooking_planning/view.hpp"
 
 #include "recipes_suggestions/view.hpp"
 
@@ -65,7 +65,7 @@ using namespace handlers::personal_account::ingredients;
 using namespace handlers::personal_account::recipe;
 using namespace handlers::personal_account::recipes_list;
 using namespace handlers::shopping_list;
-using namespace handlers::suggested_recipe;
+using namespace handlers::cooking_planning;
 using namespace handlers::storage;
 using namespace handlers::storage::ingredients;
 using namespace handlers::storage::members;
@@ -142,7 +142,7 @@ using storageIngredientsListIQHandler = Handler<Events::InlineQuery{}, handleSto
 using storageIngredientsDeletionCQHandler = Handler<Events::CallbackQuery{}, handleStorageIngredientsDeletionCQ>;
 
 // RecipeView
-using suggestedRecipeViewCQHandler = Handler<Events::CallbackQuery{}, suggested_recipe::handleRecipeViewCQ>;
+using cookingPlanningCQHandler = Handler<Events::CallbackQuery{}, cooking_planning::handleCookingPlanningCQ>;
 using recipeStorageAdditionCQHandler = Handler<Events::CallbackQuery{}, handleRecipeStorageAdditionCQ>;
 using shoppingListCreationCQHandler = Handler<Events::CallbackQuery{}, handleShoppingListCreationCQ>;
 

@@ -18,8 +18,8 @@ namespace cookcookhnya::utils {
 using namespace api;
 using namespace api::models::storage;
 using namespace tg_types;
-using IngredientAvailability = states::SuggestedRecipeView::IngredientAvailability;
-using AvailabilityType = states::SuggestedRecipeView::AvailabilityType;
+using IngredientAvailability = states::CookingPlanning::IngredientAvailability;
+using AvailabilityType = states::CookingPlanning::AvailabilityType;
 using namespace std::views;
 using namespace std::ranges;
 

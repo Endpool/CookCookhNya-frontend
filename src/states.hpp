@@ -100,7 +100,7 @@ struct SuggestedRecipesList {
     std::size_t pageNo;
     bool fromStorage;
 };
-struct SuggestedRecipeView {
+struct CookingPlanning {
     enum struct AvailabilityType : std::uint8_t { NOT_AVAILABLE, AVAILABLE, OTHER_STORAGES };
 
     struct IngredientAvailability {
@@ -116,11 +116,11 @@ struct SuggestedRecipeView {
 };
 
 struct RecipeStorageAddition {
-    SuggestedRecipeView prevState;
+    CookingPlanning prevState;
 };
 
 struct ShoppingListCreation {
-    SuggestedRecipeView prevState;
+    CookingPlanning prevState;
     std::vector<api::models::ingredient::Ingredient> selectedIngredients;
     std::vector<api::models::ingredient::Ingredient> allIngredients;
 };
@@ -218,7 +218,7 @@ using State = std::variant<MainMenu,
                            StorageIngredientsDeletion,
                            StoragesSelection,
                            SuggestedRecipesList,
-                           SuggestedRecipeView,
+                           CookingPlanning,
                            ShoppingListCreation,
                            ShoppingListView,
                            ShoppingListStorageSelectionToBuy,

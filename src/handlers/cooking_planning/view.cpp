@@ -4,26 +4,26 @@
 #include "backend/id_types.hpp"
 #include "backend/models/ingredient.hpp"
 #include "handlers/common.hpp"
+#include "render/cooking_planning/add_storage.hpp"
 #include "render/recipes_suggestions/view.hpp"
 #include "render/shopping_list/create.hpp"
-#include "render/suggested_recipe/add_storage.hpp"
 #include "states.hpp"
 
 #include <string>
 #include <utility>
 #include <vector>
 
-namespace cookcookhnya::handlers::suggested_recipe {
+namespace cookcookhnya::handlers::cooking_planning {
 
 using namespace render::recipes_suggestions;
 using namespace render::shopping_list;
-using namespace render::suggested_recipe;
+using namespace render::cooking_planning;
 using namespace api::models::ingredient;
-using IngredientAvailability = states::SuggestedRecipeView::IngredientAvailability;
-using AvailabilityType = states::SuggestedRecipeView::AvailabilityType;
+using IngredientAvailability = states::CookingPlanning::IngredientAvailability;
+using AvailabilityType = states::CookingPlanning::AvailabilityType;
 
-void handleRecipeViewCQ(
-    SuggestedRecipeView& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, api::ApiClientRef api) {
+void handleCookingPlanningCQ(
+    CookingPlanning& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, api::ApiClientRef api) {
     const std::string data = cq.data;
     auto chatId = cq.message->chat->id;
     auto userId = cq.from->id;
@@ -73,4 +73,4 @@ void handleRecipeViewCQ(
     }
 }
 
-} // namespace cookcookhnya::handlers::suggested_recipe
+} // namespace cookcookhnya::handlers::cooking_planning

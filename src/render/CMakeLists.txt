@@ -16,8 +16,8 @@ target_sources(main PRIVATE
     src/render/personal_account/view.cpp
     src/render/personal_account/publication_history.cpp
 
-    src/render/suggested_recipe/add_storage.cpp
-    src/render/suggested_recipe/view.cpp
+    src/render/cooking_planning/add_storage.cpp
+    src/render/cooking_planning/view.cpp
 
     src/render/recipes_suggestions/view.cpp
 

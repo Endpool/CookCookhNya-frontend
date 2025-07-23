@@ -4,8 +4,8 @@
 #include "backend/id_types.hpp"
 #include "backend/models/storage.hpp"
 #include "handlers/common.hpp"
-#include "render/suggested_recipe/add_storage.hpp"
-#include "render/suggested_recipe/view.hpp"
+#include "render/cooking_planning/add_storage.hpp"
+#include "render/cooking_planning/view.hpp"
 #include "states.hpp"
 #include "utils/ingredients_availability.hpp"
 #include "utils/parsing.hpp"
@@ -15,9 +15,9 @@
 #include <string_view>
 #include <utility>
 
-namespace cookcookhnya::handlers::suggested_recipe {
+namespace cookcookhnya::handlers::cooking_planning {
 
-using namespace render::suggested_recipe;
+using namespace render::cooking_planning;
 using namespace api::models::storage;
 
 void handleRecipeStorageAdditionCQ(
@@ -28,7 +28,7 @@ void handleRecipeStorageAdditionCQ(
     auto userId = cq.from->id;
 
     if (data == "back") {
-        renderRecipeView(state.prevState.availability, state.prevState.recipeId, userId, chatId, bot, api);
+        renderCookingPlanning(state.prevState.availability, state.prevState.recipeId, userId, chatId, bot, api);
         stateManager.put(auto{std::move(state.prevState)});
         return;
     }
@@ -71,4 +71,4 @@ void handleRecipeStorageAdditionCQ(
     }
 }
 
-} // namespace cookcookhnya::handlers::suggested_recipe
+} // namespace cookcookhnya::handlers::cooking_planning

@@ -14,11 +14,11 @@
 #include <utility>
 #include <vector>
 
-namespace cookcookhnya::render::suggested_recipe {
+namespace cookcookhnya::render::cooking_planning {
 
 using namespace api::models::recipe;
-using IngredientAvailability = states::SuggestedRecipeView::IngredientAvailability;
-using AvailabilityType = states::SuggestedRecipeView::AvailabilityType;
+using IngredientAvailability = states::CookingPlanning::IngredientAvailability;
+using AvailabilityType = states::CookingPlanning::AvailabilityType;
 
 TextGenInfo recipeView(const std::vector<IngredientAvailability>& inStoragesAvailability,
                        api::RecipeId recipeId,
@@ -50,12 +50,12 @@ TextGenInfo recipeView(const std::vector<IngredientAvailability>& inStoragesAvai
             .isIngredientIsOtherStorages = isIngredientIsOtherStorages};
 }
 
-void renderRecipeView(std::vector<IngredientAvailability>& inStoragesAvailability,
-                      api::RecipeId recipeId,
-                      UserId userId,
-                      ChatId chatId,
-                      BotRef bot,
-                      api::ApiClientRef api) {
+void renderCookingPlanning(std::vector<IngredientAvailability>& inStoragesAvailability,
+                           api::RecipeId recipeId,
+                           UserId userId,
+                           ChatId chatId,
+                           BotRef bot,
+                           api::ApiClientRef api) {
     auto textGen = recipeView(inStoragesAvailability, recipeId, userId, api);
     const std::size_t buttonRows = textGen.isIngredientNotAvailable ? 3 : 2;
     InlineKeyboard keyboard(buttonRows);
@@ -78,4 +78,4 @@ void renderRecipeView(std::vector<IngredientAvailability>& inStoragesAvailabilit
     }
 }
 
-} // namespace cookcookhnya::render::suggested_recipe
+} // namespace cookcookhnya::render::cooking_planning
