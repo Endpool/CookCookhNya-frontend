@@ -17,19 +17,19 @@
 #include <utility>
 #include <vector>
 
-namespace cookcookhnya::render::recipe {
+namespace cookcookhnya::render::suggested_recipe {
 
 using namespace api::models::recipe;
 using namespace api::models::storage;
-using IngredientAvailability = states::RecipeView::IngredientAvailability;
-using AvailabilityType = states::RecipeView::AvailabilityType;
+using IngredientAvailability = states::SuggestedRecipeView::IngredientAvailability;
+using AvailabilityType = states::SuggestedRecipeView::AvailabilityType;
 
-textGenInfo storageAdditionView(const std::vector<IngredientAvailability>& inStoragesAvailability,
+TextGenInfo storageAdditionView(const std::vector<IngredientAvailability>& inStoragesAvailability,
                                 const std::vector<StorageSummary>& selectedStorages,
                                 api::RecipeId recipeId,
                                 UserId userId,
                                 api::ApiClientRef api) {
-    auto recipe = api.getRecipesApi().get(userId, recipeId);
+    auto recipe = api.getRecipesApi().getSuggested(userId, recipeId);
 
     bool isIngredientNotAvailable = false;
     bool isIngredientIsOtherStorages = false;
@@ -110,4 +110,4 @@ void renderStoragesSuggestion(const std::vector<IngredientAvailability>& inStora
         bot.editMessageText(textGen.text, chatId, *messageId, makeKeyboardMarkup(std::move(keyboard)), "Markdown");
     }
 }
-} // namespace cookcookhnya::render::recipe
+} // namespace cookcookhnya::render::suggested_recipe

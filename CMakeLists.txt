@@ -40,6 +40,10 @@ include(src/handlers/CMakeLists.txt)
 include(src/render/CMakeLists.txt)
 include(src/utils/CMakeLists.txt)
 
+# settings
+target_compile_definitions(main PRIVATE
+    TGBOTSTATER_NOT_LOG_HANDLERS_CALLS)
+
 # setup
 target_include_directories(main PRIVATE
     ${CMAKE_SOURCE_DIR}/src

@@ -1,11 +1,10 @@
-#include "publish.hpp"
+#include "delete.hpp"
 
 #include "backend/models/ingredient.hpp"
 #include "backend/models/publication_request_status.hpp"
-
-#include "backend/api/ingredients.hpp"
 #include "message_tracker.hpp"
 #include "render/common.hpp"
+#include "utils/to_string.hpp"
 #include "utils/utils.hpp"
 
 #include <format>
@@ -17,9 +16,8 @@ namespace cookcookhnya::render::personal_account::ingredients {
 
 using namespace std::views;
 
-void renderCustomIngredientPublication(UserId userId, ChatId chatId, BotRef bot, api::IngredientsApiRef api) {
-    const std::size_t numOfIng = 500;
-    auto ingredientsResp = api.customIngredientsSearch(userId, "", 0, numOfIng);
+void renderCustomIngredientDeletion(UserId userId, ChatId chatId, BotRef bot, api::IngredientsApiRef api) {
+    auto ingredientsResp = api.customIngredientsSearch(userId, "", 0);
 
     // TODO: make pagination for ingredients
     std::vector<api::models::ingredient::CustomIngredient> ingredients;
@@ -40,9 +38,7 @@ void renderCustomIngredientPublication(UserId userId, ChatId chatId, BotRef bot,
 
     keyboard << makeCallbackButton(u8"↩️ Назад", "back");
 
-    auto text = std::format("{} Какой ингредиент вы хотите предложить для добавления в CookCookhNya? (Все предложения "
-                            "проходят проверку)\n ",
-                            utils::utf8str(u8"📥"));
+    auto text = std::format("{} Какой ингредиент вы хотите удалить?\n", utils::utf8str(u8"🚮"));
     auto messageId = message::getMessageId(userId);
     if (messageId) {
         bot.editMessageText(text, chatId, *messageId, std::move(keyboard));

@@ -30,11 +30,13 @@ void renderMainMenu(bool toBeEdited,
             text += utils::utf8str(u8"\n\nК сожалению, данное приглашение уже было использовано 🥲");
     }
 
-    InlineKeyboardBuilder keyboard{4};
+    const std::size_t rowsCount = 5;
+    InlineKeyboardBuilder keyboard{rowsCount};
     keyboard << makeCallbackButton(u8"🍱 Хранилища", "storage_list") << NewRow{};
     if (!storages.empty())
         keyboard << makeCallbackButton(u8"😋 Хочу кушать!", "wanna_eat") << NewRow{};
     keyboard << makeCallbackButton(u8"🧾 Список покупок", "shopping_list") << NewRow{}
+             << makeCallbackButton(u8"👨‍🍳 Рецепты", "recipes_search") << NewRow{}
              << makeCallbackButton(u8"👤 Личный кабинет", "personal_account");
 
     if (toBeEdited) {

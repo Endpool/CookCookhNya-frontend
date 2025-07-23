@@ -5,12 +5,12 @@
 #include "backend/models/storage.hpp"
 #include "handlers/common.hpp"
 #include "render/personal_account/view.hpp"
+#include "render/recipes_search/view.hpp"
 #include "render/recipes_suggestions/view.hpp"
 #include "render/shopping_list/view.hpp"
 #include "render/storages_list/view.hpp"
 #include "render/storages_selection/view.hpp"
 
-#include <ranges>
 #include <utility>
 #include <vector>
 
@@ -21,6 +21,7 @@ using namespace render::recipes_suggestions;
 using namespace render::select_storages;
 using namespace render::shopping_list;
 using namespace render::personal_account;
+using namespace render::recipes_search;
 using namespace std::views;
 
 void handleMainMenuCQ(
@@ -54,6 +55,13 @@ void handleMainMenuCQ(
 
         auto newState = ShoppingListView{.items = std::move(items), .canBuy = canBuy};
         renderShoppingList(newState, userId, chatId, bot);
+        stateManager.put(std::move(newState));
+        return;
+    }
+
+    if (cq.data == "recipes_search") {
+        auto newState = RecipesSearch{};
+        renderRecipesSearch(newState.pagination, newState.page, userId, chatId, bot);
         stateManager.put(std::move(newState));
         return;
     }

@@ -4,10 +4,10 @@
 #include "backend/id_types.hpp"
 #include "handlers/common.hpp"
 #include "render/main_menu/view.hpp"
-#include "render/recipe/view.hpp"
 #include "render/recipes_suggestions/view.hpp"
 #include "render/storage/view.hpp"
 #include "render/storages_selection/view.hpp"
+#include "render/suggested_recipe/view.hpp"
 #include "utils/ingredients_availability.hpp"
 #include "utils/parsing.hpp"
 
@@ -20,7 +20,7 @@ namespace cookcookhnya::handlers::recipes_suggestions {
 using namespace render::recipes_suggestions;
 using namespace render::select_storages;
 using namespace render::storage;
-using namespace render::recipe;
+using namespace render::suggested_recipe;
 using namespace render::main_menu;
 
 void handleSuggestedRecipesListCQ(
@@ -55,7 +55,7 @@ void handleSuggestedRecipesListCQ(
             return;
         auto inStorage = utils::inStoragesAvailability(state.selectedStorages, *recipeId, userId, api);
         renderRecipeView(inStorage, *recipeId, userId, chatId, bot, api);
-        stateManager.put(RecipeView{
+        stateManager.put(SuggestedRecipeView{
             .prevState = std::move(state),
             .addedStorages = {},
             .availability = inStorage,

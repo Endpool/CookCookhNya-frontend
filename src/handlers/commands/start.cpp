@@ -2,12 +2,13 @@
 
 #include "backend/api/api.hpp"
 #include "backend/id_types.hpp"
-#include "backend/models/user.hpp"
 #include "handlers/common.hpp"
+#include "message_tracker.hpp"
 #include "render/main_menu/view.hpp"
-#include "states.hpp"
+#include "render/recipe/view.hpp"
+#include "utils/parsing.hpp"
+#include "utils/uuid.hpp"
 
-#include <cstddef>
 #include <optional>
 #include <string>
 #include <string_view>
@@ -16,12 +17,13 @@
 namespace cookcookhnya::handlers::commands {
 
 using namespace render::main_menu;
+using namespace render::recipe;
 using namespace api::models::user;
 using namespace std::literals;
 
 void handleStartCmd(MessageRef m, BotRef bot, SMRef stateManager, api::ApiClientRef api) {
-    auto userId = m.from->id;
-    auto chatId = m.chat->id;
+    const auto userId = m.from->id;
+    const auto chatId = m.chat->id;
 
     std::string fullName = m.from->firstName;
     if (!m.from->lastName.empty()) {
@@ -33,22 +35,36 @@ void handleStartCmd(MessageRef m, BotRef bot, SMRef stateManager, api::ApiClient
     if (!m.from->username.empty())
         alias = m.from->username;
 
-    api.getUsersApi().updateInfo(userId,
-                                 UpdateUserInfoBody{.alias = std::move(alias), .fullName = std::move(fullName)});
+    api.getUsersApi().updateInfo(userId, {.alias = std::move(alias), .fullName = std::move(fullName)});
 
-    auto startText = m.text;
-    const std::size_t hashPos = "/start "sv.size();
-    if (startText.size() > hashPos - 1) {
-        auto hash = std::string(m.text).substr(hashPos);
-        auto storage = api.getStoragesApi().activate(userId, hash);
+    if (!m.text.starts_with("/start ")) {
+        // default case
+        renderMainMenu(false, std::nullopt, userId, chatId, bot, api);
+        stateManager.put(MainMenu{});
+        return;
+    }
+    const std::string_view payload = std::string_view{m.text}.substr("/start "sv.size());
+
+    if (payload.starts_with("invite_")) {
+        const std::string_view hash = payload.substr("invite_"sv.size());
+        auto storage = api.getStoragesApi().activate(userId, api::InvitationId{hash});
         if (!storage)
             return;
         renderMainMenu(false, storage->name, userId, chatId, bot, api);
         stateManager.put(MainMenu{});
         return;
     }
-    renderMainMenu(false, std::nullopt, userId, chatId, bot, api);
-    stateManager.put(MainMenu{});
+
+    if (payload.starts_with("recipe_")) {
+        const auto mRecipeId = utils::parseSafe<Uuid>(payload.substr("recipe_"sv.size()));
+        if (!mRecipeId)
+            return;
+        auto recipe = api.getRecipesApi().get(userId, *mRecipeId);
+        message::deleteMessageId(userId);
+        renderRecipeView(recipe, *mRecipeId, userId, chatId, bot);
+        stateManager.put(RecipeView{.prevState = std::nullopt, .recipe = std::move(recipe)});
+        return;
+    }
 };
 
 void handleNoState(MessageRef m, BotRef bot) {

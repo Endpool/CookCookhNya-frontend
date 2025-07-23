@@ -4,8 +4,8 @@
 #include "backend/id_types.hpp"
 #include "backend/models/storage.hpp"
 #include "handlers/common.hpp"
-#include "render/recipe/add_storage.hpp"
-#include "render/recipe/view.hpp"
+#include "render/suggested_recipe/add_storage.hpp"
+#include "render/suggested_recipe/view.hpp"
 #include "states.hpp"
 #include "utils/ingredients_availability.hpp"
 #include "utils/parsing.hpp"
@@ -15,9 +15,9 @@
 #include <string_view>
 #include <utility>
 
-namespace cookcookhnya::handlers::recipe {
+namespace cookcookhnya::handlers::suggested_recipe {
 
-using namespace render::recipe;
+using namespace render::suggested_recipe;
 using namespace api::models::storage;
 
 void handleRecipeStorageAdditionCQ(
@@ -71,4 +71,4 @@ void handleRecipeStorageAdditionCQ(
     }
 }
 
-} // namespace cookcookhnya::handlers::recipe
+} // namespace cookcookhnya::handlers::suggested_recipe

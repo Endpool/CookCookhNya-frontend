@@ -1,31 +1,14 @@
 #pragma once
 
-#include "backend/api/api.hpp"
-#include "backend/id_types.hpp"
+#include "backend/models/recipe.hpp"
 #include "render/common.hpp"
-#include "states.hpp"
-
-#include <string>
-#include <vector>
 
 namespace cookcookhnya::render::recipe {
 
-struct textGenInfo {
-    std::string text;
-    bool isIngredientNotAvailable;
-    bool isIngredientIsOtherStorages;
-};
-
-void renderRecipeView(std::vector<states::RecipeView::IngredientAvailability>& inStoragesAvailability,
-                      api::RecipeId recipeId,
+void renderRecipeView(const api::models::recipe::RecipeDetails& recipe,
+                      const api::RecipeId& recipeId,
                       UserId userId,
                       ChatId chatId,
-                      BotRef bot,
-                      api::ApiClientRef api);
-
-textGenInfo recipeView(const std::vector<states::RecipeView::IngredientAvailability>& inStoragesAvailability,
-                       api::RecipeId recipeId,
-                       UserId userId,
-                       api::ApiClientRef api);
+                      BotRef bot);
 
 } // namespace cookcookhnya::render::recipe

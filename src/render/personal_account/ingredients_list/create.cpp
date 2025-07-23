@@ -14,6 +14,9 @@
 
 namespace cookcookhnya::render::personal_account::ingredients {
 
+const std::size_t pageSize = 5;
+const unsigned threshold = 70;
+
 void renderCustomIngredientCreation(UserId userId, ChatId chatId, BotRef bot) {
     InlineKeyboard keyboard(1);
     keyboard[0].push_back(makeCallbackButton(u8"↩️ Назад", "back"));
@@ -30,8 +33,8 @@ void renderCustomIngredientConfirmation(
     keyboard[0].push_back(makeCallbackButton(u8"▶️ Подтвердить", "confirm"));
     keyboard[1].push_back(makeCallbackButton(u8"↩️ Назад", "back"));
 
-    // NOLINTNEXTLINE(*magic-numbers*)
-    auto similarIngredients = api.search(userId, PublicityFilterType::All, std::move(ingredientName), 70, 5, 0).page;
+    auto similarIngredients =
+        api.search(userId, PublicityFilterType::All, std::move(ingredientName), pageSize, 0, threshold).page;
 
     std::string text;
     if (!similarIngredients.empty()) {

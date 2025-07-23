@@ -4,6 +4,7 @@ target_sources(main PRIVATE
     src/render/personal_account/ingredients_list/create.cpp
     src/render/personal_account/ingredients_list/publish.cpp
     src/render/personal_account/ingredients_list/view.cpp
+    src/render/personal_account/ingredients_list/delete.cpp
 
     src/render/personal_account/recipes_list/create.cpp
     src/render/personal_account/recipes_list/view.cpp
@@ -15,8 +16,8 @@ target_sources(main PRIVATE
     src/render/personal_account/view.cpp
     src/render/personal_account/publication_history.cpp
 
-    src/render/recipe/add_storage.cpp
-    src/render/recipe/view.cpp
+    src/render/suggested_recipe/add_storage.cpp
+    src/render/suggested_recipe/view.cpp
 
     src/render/recipes_suggestions/view.cpp
 
@@ -39,4 +40,8 @@ target_sources(main PRIVATE
     src/render/storages_list/view.cpp
 
     src/render/storages_selection/view.cpp
+
+    src/render/recipes_search/view.cpp
+
+    src/render/recipe/view.cpp
 )

@@ -17,6 +17,7 @@ using states::PersonalAccountMenu;
 
 using states::CustomIngredientConfirmation;
 using states::CustomIngredientCreationEnterName;
+using states::CustomIngredientDeletion;
 using states::CustomIngredientPublish;
 using states::CustomIngredientsList;
 
@@ -25,7 +26,7 @@ using states::StorageList;
 using states::TotalPublicationHistory;
 
 using states::RecipeStorageAddition;
-using states::RecipeView;
+using states::SuggestedRecipeView;
 
 using states::StorageCreationEnterName;
 using states::StorageDeletion;
@@ -51,6 +52,10 @@ using states::CustomRecipeIngredientsSearch;
 using states::CustomRecipePublicationHistory;
 using states::CustomRecipesList;
 using states::CustomRecipeView;
+
+using states::RecipesSearch;
+
+using states::RecipeView;
 
 // Type aliases
 using BotRef = const TgBot::Api&;

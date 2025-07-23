@@ -9,6 +9,7 @@
 
 #include "main_menu/view.hpp"
 
+#include "personal_account/ingredients_list//delete.hpp"
 #include "personal_account/ingredients_list/create.hpp"
 #include "personal_account/ingredients_list/publish.hpp"
 #include "personal_account/ingredients_list/view.hpp"
@@ -23,8 +24,8 @@
 #include "personal_account/publication_history.hpp"
 #include "personal_account/view.hpp"
 
-#include "recipe/add_storage.hpp"
-#include "recipe/view.hpp"
+#include "suggested_recipe/add_storage.hpp"
+#include "suggested_recipe/view.hpp"
 
 #include "recipes_suggestions/view.hpp"
 
@@ -48,6 +49,10 @@
 
 #include "storages_selection/view.hpp"
 
+#include "recipes_search/view.hpp"
+
+#include "recipe/view.hpp"
+
 #include <tg_stater/handler/event.hpp>
 #include <tg_stater/handler/handler.hpp>
 
@@ -60,13 +65,15 @@ using namespace handlers::personal_account::ingredients;
 using namespace handlers::personal_account::recipe;
 using namespace handlers::personal_account::recipes_list;
 using namespace handlers::shopping_list;
-using namespace handlers::recipe;
+using namespace handlers::suggested_recipe;
 using namespace handlers::storage;
 using namespace handlers::storage::ingredients;
 using namespace handlers::storage::members;
 using namespace handlers::storages_list;
 using namespace handlers::storages_selection;
 using namespace handlers::recipes_suggestions;
+using namespace handlers::recipes_search;
+using namespace handlers::recipe;
 
 using namespace tg_stater;
 
@@ -103,9 +110,10 @@ using customIngredientCreationEnterNameMsgHandler =
 using customIngredientCreationEnterNameCQHandler =
     Handler<Events::CallbackQuery{}, handleCustomIngredientCreationEnterNameCQ>;
 using customIngredientConfirmationCQHandler = Handler<Events::CallbackQuery{}, handleCustomIngredientConfirmationCQ>;
+using handleCustomIngredientDeletionCQHandler = Handler<Events::CallbackQuery{}, handleCustomIngredientDeletionCQ>;
 using customIngredientPublishCQHandler = Handler<Events::CallbackQuery{}, handleCustomIngredientPublishCQ>;
 
-// StorageListCreate
+// StorageList
 using storageListCQHandler = Handler<Events::CallbackQuery{}, handleStorageListCQ>;
 using storageCreationEnterNameMsgHandler = Handler<Events::Message{}, handleStorageCreationEnterNameMsg>;
 using storageCreationEnterNameCQHandler = Handler<Events::CallbackQuery{}, handleStorageCreationEnterNameCQ>;
@@ -134,7 +142,7 @@ using storageIngredientsListIQHandler = Handler<Events::InlineQuery{}, handleSto
 using storageIngredientsDeletionCQHandler = Handler<Events::CallbackQuery{}, handleStorageIngredientsDeletionCQ>;
 
 // RecipeView
-using recipeViewCQHandler = Handler<Events::CallbackQuery{}, handleRecipeViewCQ>;
+using suggestedRecipeViewCQHandler = Handler<Events::CallbackQuery{}, suggested_recipe::handleRecipeViewCQ>;
 using recipeStorageAdditionCQHandler = Handler<Events::CallbackQuery{}, handleRecipeStorageAdditionCQ>;
 using shoppingListCreationCQHandler = Handler<Events::CallbackQuery{}, handleShoppingListCreationCQ>;
 
@@ -160,5 +168,12 @@ using customRecipeIngredientsSearchCQHandler = Handler<Events::CallbackQuery{}, 
 using customRecipeIngredientsSearchIQHandler = Handler<Events::InlineQuery{}, handleCustomRecipeIngredientsSearchIQ>;
 using customRecipePublicationHistoryCQHandler =
     Handler<Events::CallbackQuery{}, handleCustomRecipePublicationHistoryCQ>;
+
+// Recipes search
+using recipesSearchCQHandler = Handler<Events::CallbackQuery{}, handleRecipesSearchCQ>;
+using recipesSearchIQHandler = Handler<Events::InlineQuery{}, handleRecipesSearchIQ>;
+
+// Recipe
+using recipeViewCQHandler = Handler<Events::CallbackQuery{}, handlers::recipe::handleRecipeViewCQ>;
 
 } // namespace cookcookhnya::handlers::bot_handlers

@@ -45,6 +45,7 @@ int main(int argc, char* argv[]) {
                                                       customIngredientCreationEnterNameCQHandler,
                                                       customIngredientConfirmationCQHandler,
                                                       customIngredientPublishCQHandler,
+                                                      handleCustomIngredientDeletionCQHandler,
                                                       storageListCQHandler,
                                                       storageCreationEnterNameMsgHandler,
                                                       storageCreationEnterNameCQHandler,
@@ -59,7 +60,7 @@ int main(int argc, char* argv[]) {
                                                       storageIngredientsListIQHandler,
                                                       storageIngredientsDeletionCQHandler,
                                                       suggestedRecipeListCQHandler,
-                                                      recipeViewCQHandler,
+                                                      suggestedRecipeViewCQHandler,
                                                       recipeStorageAdditionCQHandler,
                                                       shoppingListCreationCQHandler,
                                                       shoppingListViewCQHandler,
@@ -74,7 +75,10 @@ int main(int argc, char* argv[]) {
                                                       customRecipePublicationHistoryCQHandler,
                                                       totalPublicationHistoryCQHandler,
                                                       shoppingListIngredientSearchCQHandler,
-                                                      shoppingListIngredientSearchIQHandler>
+                                                      shoppingListIngredientSearchIQHandler,
+                                                      recipesSearchCQHandler,
+                                                      recipesSearchIQHandler,
+                                                      recipeViewCQHandler>
             bot{{}, {ApiClient{utils::getenvWithError("API_URL")}}};
 
         TgBot::Bot tgBot{utils::getenvWithError("BOT_TOKEN")}; // sdf

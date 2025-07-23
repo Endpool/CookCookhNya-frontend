@@ -10,16 +10,16 @@
 
 namespace cookcookhnya::utils {
 
-std::vector<states::RecipeView::IngredientAvailability>
+std::vector<states::SuggestedRecipeView::IngredientAvailability>
 inStoragesAvailability(std::vector<api::models::storage::StorageSummary>& selectedStorages,
                        api::RecipeId recipeId,
                        tg_types::UserId userId,
                        const api::ApiClient& api);
 
-void addStorage(std::vector<states::RecipeView::IngredientAvailability>& availability,
+void addStorage(std::vector<states::SuggestedRecipeView::IngredientAvailability>& availability,
                 const api::models::storage::StorageSummary& storage);
 
-void deleteStorage(std::vector<states::RecipeView::IngredientAvailability>& availability,
+void deleteStorage(std::vector<states::SuggestedRecipeView::IngredientAvailability>& availability,
                    const api::models::storage::StorageSummary& storage);
 
 } // namespace cookcookhnya::utils

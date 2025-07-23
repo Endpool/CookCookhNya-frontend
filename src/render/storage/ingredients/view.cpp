@@ -37,7 +37,8 @@ constructKeyboard(std::size_t pageNo, std::size_t pageSize, const states::Storag
     keyboard << std::move(searchButton) << NewRow{};
 
     auto makeIngredientButton = [](const IngredientSearchForStorageItem& ing) {
-        return makeCallbackButton((ing.isInStorage ? "[ + ] " : "[ㅤ] ") + ing.name, utils::to_string(ing.id));
+        return makeCallbackButton((ing.isInStorage ? "[ + ] " : "[ㅤ] ") + ing.name,
+                                  "ingredient_" + utils::to_string(ing.id));
     };
     keyboard << constructPagination(pageNo, pageSize, state.totalFound, state.searchItems, makeIngredientButton);
 
@@ -87,8 +88,8 @@ void renderSuggestIngredientCustomisation(const states::StorageIngredientsList& 
     searchButton->switchInlineQueryCurrentChat = "";
     keyboard[0].push_back(std::move(searchButton));
     // Mark as ingredient
-    keyboard[1].push_back(makeCallbackButton(std::format("Создать личный ингредиент: {}", state.inlineQuery),
-                                             "ingredient_" + state.inlineQuery));
+    keyboard[1].push_back(
+        makeCallbackButton(std::format("Создать личный ингредиент: {}", state.inlineQuery), "create_ingredient"));
     keyboard[2].push_back(makeCallbackButton(u8"↩️ Назад", "back"));
 
     if (auto messageId = message::getMessageId(userId)) {

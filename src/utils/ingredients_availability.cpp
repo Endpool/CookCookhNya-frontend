@@ -18,8 +18,8 @@ namespace cookcookhnya::utils {
 using namespace api;
 using namespace api::models::storage;
 using namespace tg_types;
-using IngredientAvailability = states::RecipeView::IngredientAvailability;
-using AvailabilityType = states::RecipeView::AvailabilityType;
+using IngredientAvailability = states::SuggestedRecipeView::IngredientAvailability;
+using AvailabilityType = states::SuggestedRecipeView::AvailabilityType;
 using namespace std::views;
 using namespace std::ranges;
 
@@ -28,7 +28,7 @@ std::vector<IngredientAvailability> inStoragesAvailability(std::vector<StorageSu
                                                            UserId userId,
                                                            const api::ApiClient& api) {
     auto allStorages = api.getStoragesApi().getStoragesList(userId);
-    auto recipe = api.getRecipesApi().get(userId, recipeId);
+    auto recipe = api.getRecipesApi().getSuggested(userId, recipeId);
 
     auto selectedStoragesSet = selectedStorages | views::transform(&StorageSummary::id) | to<std::unordered_set>();
 

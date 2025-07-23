@@ -33,9 +33,9 @@ RecipesListWithIngredientsCount RecipesApi::getSuggestedRecipes(UserId user,
 RecipeSearchResponse RecipesApi::search(UserId user,
                                         PublicityFilterType filter,
                                         std::string query,
-                                        std::size_t threshold,
                                         std::size_t size,
-                                        std::size_t offset) const {
+                                        std::size_t offset,
+                                        unsigned threshold) const {
     return jsonGetAuthed<RecipeSearchResponse>(user,
                                                "/recipes",
                                                {{"query", std::move(query)},
@@ -47,13 +47,18 @@ RecipeSearchResponse RecipesApi::search(UserId user,
 
 // GET /recipes
 RecipesList RecipesApi::getList(UserId user, PublicityFilterType filter, std::size_t size, std::size_t offset) const {
-    auto result = search(user, filter, "", 0, size, offset);
+    auto result = search(user, filter, "", size, offset, 0);
     return {.page = std::move(result.page), .found = result.found};
 }
 
 // GET /recipes/{recipeId}
 RecipeDetails RecipesApi::get(UserId user, RecipeId recipe) const {
     return jsonGetAuthed<RecipeDetails>(user, std::format("/recipes/{}", recipe));
+}
+
+// GET /recipes/{recipeId}
+SuggestedRecipeDetails RecipesApi::getSuggested(UserId user, RecipeId recipe) const {
+    return jsonGetAuthed<SuggestedRecipeDetails>(user, std::format("/recipes/{}", recipe));
 }
 
 // POST /recipes
