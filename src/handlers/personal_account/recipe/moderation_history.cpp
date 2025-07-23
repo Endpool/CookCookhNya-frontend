@@ -49,6 +49,7 @@ void handleCustomRecipePublicationHistoryCQ(
             } catch (...) {
                 state.errorReport =
                     utils::utf8str(u8"⚠️Что-то пошло не так, вероятно ваш рецепт содержит неопубликованные ингредиенты");
+                bot.answerCallbackQuery(cq.id);
             }
             // Get updated history
             history = api.getRecipesApi().getRecipeRequestHistory(userId, state.recipeId);
