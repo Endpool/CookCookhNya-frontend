@@ -1,8 +1,10 @@
 #include "backend/models/ingredient.hpp"
+#include "backend/models/publication_request_status.hpp"
 
 #include <boost/json/conversion.hpp>
 #include <boost/json/value.hpp>
 #include <boost/json/value_to.hpp>
+#include <optional>
 
 #include <optional>
 
@@ -14,9 +16,26 @@ Ingredient tag_invoke(json::value_to_tag<Ingredient> /*tag*/, const json::value&
     return {
         .id = value_to<decltype(Ingredient::id)>(j.at("id")),
         .name = value_to<decltype(Ingredient::name)>(j.at("name")),
-        .status = j.as_object().if_contains("moderation_status")
-                      ? value_to<decltype(Ingredient::status)>(j.at("moderation_status"))
-                      : std::nullopt,
+    };
+}
+
+CustomIngredient tag_invoke(json::value_to_tag<CustomIngredient> /*tag*/, const json::value& j) {
+    const auto& status = j.at("moderationStatus");
+    if (status.is_object()) {
+        return {
+            .id = value_to<decltype(CustomIngredient::id)>(j.at("id")),
+            .name = value_to<decltype(CustomIngredient::name)>(j.at("name")),
+            .moderationStatus = value_to<decltype(CustomIngredient::moderationStatus)>(status.at("type")),
+            .reason = status.as_object().if_contains("reason")
+                          ? value_to<decltype(CustomIngredient::reason)>(status.at("reason"))
+                          : std::nullopt,
+        };
+    }
+    return {
+        .id = value_to<decltype(CustomIngredient::id)>(j.at("id")),
+        .name = value_to<decltype(CustomIngredient::name)>(j.at("name")),
+        .moderationStatus = moderation::PublicationRequestStatus::NO_REQUEST,
+        .reason = std::nullopt,
     };
 }
 
@@ -69,6 +88,13 @@ IngredientList tag_invoke(json::value_to_tag<IngredientList> /*tag*/, const json
     return {
         .page = value_to<decltype(IngredientList::page)>(j.at("results")),
         .found = value_to<decltype(IngredientList::found)>(j.at("found")),
+    };
+}
+
+CustomIngredientList tag_invoke(json::value_to_tag<CustomIngredientList> /*tag*/, const json::value& j) {
+    return {
+        .page = value_to<decltype(CustomIngredientList::page)>(j.at("results")),
+        .found = value_to<decltype(CustomIngredientList::found)>(j.at("found")),
     };
 }
 

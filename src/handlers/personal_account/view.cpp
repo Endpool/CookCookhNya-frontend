@@ -38,8 +38,8 @@ void handlePersonalAccountMenuCQ(
         return;
     }
     if (data == "ingredients") {
-        renderCustomIngredientsList(true, 0, userId, chatId, bot, api);
-        stateManager.put(CustomIngredientsList{.pageNo = 0});
+        renderCustomIngredientsList(true, userId, chatId, bot, api);
+        stateManager.put(CustomIngredientsList{});
         return;
     }
     if (data == "history") {

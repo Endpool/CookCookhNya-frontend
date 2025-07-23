@@ -9,6 +9,7 @@
 
 #include "main_menu/view.hpp"
 
+#include "personal_account/ingredients_list//delete.hpp"
 #include "personal_account/ingredients_list/create.hpp"
 #include "personal_account/ingredients_list/publish.hpp"
 #include "personal_account/ingredients_list/view.hpp"
@@ -109,9 +110,10 @@ using customIngredientCreationEnterNameMsgHandler =
 using customIngredientCreationEnterNameCQHandler =
     Handler<Events::CallbackQuery{}, handleCustomIngredientCreationEnterNameCQ>;
 using customIngredientConfirmationCQHandler = Handler<Events::CallbackQuery{}, handleCustomIngredientConfirmationCQ>;
+using handleCustomIngredientDeletionCQHandler = Handler<Events::CallbackQuery{}, handleCustomIngredientDeletionCQ>;
 using customIngredientPublishCQHandler = Handler<Events::CallbackQuery{}, handleCustomIngredientPublishCQ>;
 
-// StorageListCreate
+// StorageList
 using storageListCQHandler = Handler<Events::CallbackQuery{}, handleStorageListCQ>;
 using storageCreationEnterNameMsgHandler = Handler<Events::Message{}, handleStorageCreationEnterNameMsg>;
 using storageCreationEnterNameCQHandler = Handler<Events::CallbackQuery{}, handleStorageCreationEnterNameCQ>;

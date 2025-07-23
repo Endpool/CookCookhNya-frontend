@@ -41,14 +41,9 @@ struct TotalPublicationHistory {
     std::size_t pageNo;
 };
 
-struct CustomIngredientsList {
-    std::size_t pageNo;
-};
-struct CustomIngredientCreationEnterName {
-    std::size_t pageNo;
-};
+struct CustomIngredientsList {};
+struct CustomIngredientCreationEnterName {};
 struct CustomIngredientConfirmation {
-    std::size_t pageNo{};
     std::string name;
 
     // All optionals are for "back" from this menu, so this state won't erase all info
@@ -64,9 +59,8 @@ struct CustomIngredientConfirmation {
         std::optional<api::StorageId> storageId = std::nullopt)
         : name(std::move(name)), recipeFrom(recipeId), ingredients(std::move(ingredients)), storageFrom(storageId) {};
 };
-struct CustomIngredientPublish {
-    std::size_t pageNo;
-};
+struct CustomIngredientDeletion {};
+struct CustomIngredientPublish {};
 
 struct StorageList {};
 struct StorageCreationEnterName {};
@@ -211,6 +205,7 @@ using State = std::variant<MainMenu,
                            CustomIngredientsList,
                            CustomIngredientCreationEnterName,
                            CustomIngredientConfirmation,
+                           CustomIngredientDeletion,
                            CustomIngredientPublish,
                            StorageList,
                            StorageDeletion,

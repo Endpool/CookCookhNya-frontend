@@ -82,11 +82,23 @@ IngredientSearchResponse IngredientsApi::search(UserId user,
                                                     {"filter", utils::to_string(filter)}});
 }
 
-// GET /recipes
+// GET /ingredients
 IngredientList
 IngredientsApi::getList(UserId user, PublicityFilterType filter, std::size_t count, std::size_t offset) const {
     auto result = search(user, filter, "", count, offset, 0);
     return {.page = std::move(result.page), .found = result.found};
+}
+
+// GET /ingredients
+CustomIngredientList IngredientsApi::customIngredientsSearch(
+    UserId user, std::string query, std::size_t threshold, std::size_t count, std::size_t offset) const {
+    return jsonGetAuthed<CustomIngredientList>(user,
+                                               "/ingredients",
+                                               {{"query", std::move(query)},
+                                                {"size", utils::to_string(count)},
+                                                {"offset", utils::to_string(offset)},
+                                                {"threshold", utils::to_string(threshold)},
+                                                {"filter", utils::to_string(PublicityFilterType::Custom)}});
 }
 
 // GET /public/ingredients/{ingredientId}
@@ -119,6 +131,11 @@ IngredientSearchForRecipeResponse IngredientsApi::searchForRecipe(
 // POST /ingredients
 IngredientId IngredientsApi::createCustom(UserId user, const IngredientCreateBody& body) const {
     return utils::parse<IngredientId>(postWithJsonAuthed(user, "/ingredients", body));
+}
+
+// DELETE /ingredients/{ingredientId}
+void IngredientsApi::deleteCustom(UserId user, IngredientId ingredient) const {
+    jsonDeleteAuthed<void>(user, std::format("/ingredients/{}", ingredient));
 }
 
 // POST /recipes/{ingredientId}/request-publication

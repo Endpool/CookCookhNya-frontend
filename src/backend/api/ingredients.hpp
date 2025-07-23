@@ -54,6 +54,13 @@ class IngredientsApi : ApiBase {
                                                              std::size_t count = 50, // NOLINT(*magic-number*)
                                                              std::size_t offset = 0) const;
 
+    [[nodiscard]] models::ingredient::CustomIngredientList
+    customIngredientsSearch(UserId user,
+                            std::string query,
+                            std::size_t threshold,
+                            std::size_t count = 50, // NOLINT(*magic-number*)
+                            std::size_t offset = 0) const;
+
     [[nodiscard]] models::ingredient::Ingredient getPublicIngredient(IngredientId ingredient) const;
 
     void putToRecipe(UserId user, RecipeId recipeId, IngredientId ingredient) const;
@@ -69,6 +76,7 @@ class IngredientsApi : ApiBase {
 
     IngredientId createCustom(UserId user, // NOLINT(*-nodiscard)
                               const models::ingredient::IngredientCreateBody& body) const;
+    void deleteCustom(UserId user, IngredientId ingredient) const;
     void publishCustom(UserId user, IngredientId ingredient) const;
 };
 

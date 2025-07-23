@@ -12,6 +12,7 @@ namespace cookcookhnya::api::models::moderation {
 
 struct PublicationRequest {
     std::string name;
+    std::string requestType;
     PublicationRequestStatus status = PublicationRequestStatus::NO_REQUEST;
     std::chrono::system_clock::time_point created;
     std::optional<std::chrono::system_clock::time_point> updated;

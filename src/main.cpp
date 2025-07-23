@@ -45,6 +45,7 @@ int main(int argc, char* argv[]) {
                                                       customIngredientCreationEnterNameCQHandler,
                                                       customIngredientConfirmationCQHandler,
                                                       customIngredientPublishCQHandler,
+                                                      handleCustomIngredientDeletionCQHandler,
                                                       storageListCQHandler,
                                                       storageCreationEnterNameMsgHandler,
                                                       storageCreationEnterNameCQHandler,
@@ -80,7 +81,7 @@ int main(int argc, char* argv[]) {
                                                       recipeViewCQHandler>
             bot{{}, {ApiClient{utils::getenvWithError("API_URL")}}};
 
-        TgBot::Bot tgBot{utils::getenvWithError("BOT_TOKEN")};
+        TgBot::Bot tgBot{utils::getenvWithError("BOT_TOKEN")}; // sdf
         if (useWebhook) {
             const std::string path = "/"s + utils::getenvWithError("WEBHOOK_SECRET"); // NOLINT(*include*)
             bot.startWebhook(std::move(tgBot),

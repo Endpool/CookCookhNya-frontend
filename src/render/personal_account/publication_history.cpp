@@ -6,9 +6,9 @@
 
 #include <cstddef>
 #include <format>
-
+#include <ranges>
 namespace cookcookhnya::render::personal_account {
-
+using namespace std::views;
 void renderRequestHistory(UserId userId,
                           size_t pageNo,
                           size_t numOfInstances,
@@ -20,9 +20,15 @@ void renderRequestHistory(UserId userId,
     const std::size_t maxShownItems = 20;
     auto history = moderationApi.getAllPublicationRequests(userId, maxShownItems, pageNo * numOfInstances);
 
-    std::string toPrint = utils::utf8str(u8"ℹ️История запросов на публикацию ваших рецептов и ингредиентов\n\n\n");
-    for (auto& req : history) {
-        toPrint += std::format("*{}* статус: {} ", req.name, utils::to_string(req.status));
+    std::string toPrint = utils::utf8str(u8"ℹ️История запросов на публикацию ваших рецептов и ингредиентов\n\n");
+    for (auto& req : history | reverse) {
+        std::string rcpIngRender;
+        if (req.requestType == "recipe")
+            rcpIngRender = utils::utf8str(u8"📖");
+        else
+            rcpIngRender = utils::utf8str(u8"🥬");
+        toPrint += std::format(
+            "{} {}: *{}* статус: {} ", rcpIngRender, req.requestType, req.name, utils::to_string(req.status));
         if (req.reason.has_value())
             toPrint += std::format("по причине: {} ", req.reason.value());
         toPrint += std::format("запрос создан: {} ", utils::to_string(req.created));

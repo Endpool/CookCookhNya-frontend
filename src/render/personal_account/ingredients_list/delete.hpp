@@ -5,6 +5,6 @@
 
 namespace cookcookhnya::render::personal_account::ingredients {
 
-void renderCustomIngredientsList(bool toBeEdited, UserId userId, ChatId chatId, BotRef bot, api::IngredientsApiRef api);
+void renderCustomIngredientDeletion(UserId userId, ChatId chatId, BotRef bot, api::IngredientsApiRef api);
 
 } // namespace cookcookhnya::render::personal_account::ingredients
