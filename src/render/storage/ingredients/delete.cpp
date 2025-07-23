@@ -19,7 +19,7 @@ std::vector<TgBot::InlineKeyboardButton::Ptr> constructNavigationButtons(std::si
     auto forward = makeCallbackButton(u8"▶️", "next");
     auto backward = makeCallbackButton(u8"◀️", "prev");
     auto dont_handle = makeCallbackButton(u8"ㅤ", "dont_handle");
-    auto page = makeCallbackButton(std::format("{} из {}", (pageNo + 1), (maxPageNum + 1)), "dont_handle");
+    auto page = makeCallbackButton(std::format("{} из {}", (pageNo + 1), maxPageNum), "dont_handle");
     if (pageNo == maxPageNum) {
         buttons.push_back(backward);
         buttons.push_back(page);
