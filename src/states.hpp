@@ -32,6 +32,12 @@ struct Pagination {
     std::size_t totalItems;
 };
 
+struct SelectableShoppingListItem : api::models::shopping_list::ShoppingListItem {
+    bool selected = false;
+    SelectableShoppingListItem(api::models::shopping_list::ShoppingListItem item) // NOLINT(*explicit*)
+        : ShoppingListItem{std::move(item)} {}
+};
+
 } // namespace helpers
 
 struct MainMenu {};
@@ -161,12 +167,8 @@ struct RecipeIngredientsSearch {
 };
 
 struct ShoppingListView { // NOLINT(*member-init) // Strange. Flags only this struct due to ItemsDb
-    struct SelectableItem : api::models::shopping_list::ShoppingListItem {
-        bool selected = false;
-        SelectableItem(api::models::shopping_list::ShoppingListItem item) // NOLINT(*explicit*)
-            : ShoppingListItem{std::move(item)} {}
-    };
-    using ItemsDb = utils::FastSortedDb<SelectableItem, &SelectableItem::ingredientId>;
+    using ItemsDb =
+        utils::FastSortedDb<helpers::SelectableShoppingListItem, &helpers::SelectableShoppingListItem::ingredientId>;
 
     ItemsDb items;
     bool canBuy;

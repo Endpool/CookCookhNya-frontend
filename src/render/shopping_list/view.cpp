@@ -15,7 +15,7 @@ using namespace std::views;
 
 void renderShoppingList(const states::ShoppingListView& state, UserId userId, ChatId chatId, BotRef bot) {
     auto items = state.items.getValues();
-    const bool anySelected = std::ranges::any_of(items, &states::ShoppingListView::SelectableItem::selected);
+    const bool anySelected = std::ranges::any_of(items, &states::helpers::SelectableShoppingListItem::selected);
 
     InlineKeyboardBuilder keyboard{3 + ((items.size() / 2) + 1)}; // add, remove and/or buy, list (n/2), back
 

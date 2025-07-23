@@ -44,7 +44,7 @@ void handleShoppingListViewCQ(
     }
 
     if (cq.data == "remove") {
-        using SelectableItem = ShoppingListView::SelectableItem;
+        using SelectableItem = states::helpers::SelectableShoppingListItem;
         auto toDelete = state.items.getValues() | filter(&SelectableItem::selected) |
                         views::transform(&SelectableItem::ingredientId) | to<std::vector>();
 
@@ -57,7 +57,7 @@ void handleShoppingListViewCQ(
     }
 
     if (cq.data == "buy") {
-        using SelectableItem = ShoppingListView::SelectableItem;
+        using SelectableItem = states::helpers::SelectableShoppingListItem;
         auto toBuy = state.items.getValues() | filter(&SelectableItem::selected) |
                      views::transform(&SelectableItem::ingredientId) | to<std::vector>();
         if (storages.size() == 1) {
