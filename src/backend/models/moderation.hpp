@@ -13,10 +13,9 @@ namespace cookcookhnya::api::models::moderation {
 struct PublicationRequest {
     std::string name;
     std::string requestType;
-    PublicationRequestStatus status = PublicationRequestStatus::NO_REQUEST;
+    PublicationRequestStatusStruct status;
     std::chrono::system_clock::time_point created;
     std::optional<std::chrono::system_clock::time_point> updated;
-    std::optional<std::string> reason;
 
     friend PublicationRequest tag_invoke(boost::json::value_to_tag<PublicationRequest>, const boost::json::value& j);
 };

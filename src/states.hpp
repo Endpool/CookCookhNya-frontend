@@ -187,6 +187,7 @@ struct CustomRecipePublicationHistory {
     api::RecipeId recipeId;
     std::size_t pageNo;
     std::string recipeName;
+    std::string errorReport;
 };
 
 struct RecipesSearch {
