@@ -61,7 +61,7 @@ int main(int argc, char* argv[]) {
                                                       storageIngredientsDeletionCQHandler,
                                                       suggestedRecipeListCQHandler,
                                                       cookingPlanningCQHandler,
-                                                      recipeStorageAdditionCQHandler,
+                                                      cookingPlanningStorageAdditionCQHandler,
                                                       shoppingListCreationCQHandler,
                                                       shoppingListViewCQHandler,
                                                       personalAccountMenuCQHandler,

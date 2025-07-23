@@ -121,7 +121,7 @@ struct CookingPlanning {
     api::RecipeId recipeId;
 };
 
-struct RecipeStorageAddition {
+struct CookingPlanningStorageAddition {
     CookingPlanning prevState;
 };
 
@@ -229,7 +229,7 @@ using State = std::variant<MainMenu,
                            CustomRecipeView,
                            CustomRecipeIngredientsSearch,
                            CustomRecipesList,
-                           RecipeStorageAddition,
+                           CookingPlanningStorageAddition,
                            RecipeIngredientsSearch,
                            CustomRecipePublicationHistory,
                            TotalPublicationHistory,

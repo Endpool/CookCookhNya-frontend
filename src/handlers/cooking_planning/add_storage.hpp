@@ -5,7 +5,7 @@
 
 namespace cookcookhnya::handlers::cooking_planning {
 
-void handleRecipeStorageAdditionCQ(
-    RecipeStorageAddition& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, api::ApiClientRef api);
+void handleCookingPlanningStorageAdditionCQ(
+    CookingPlanningStorageAddition& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, api::ApiClientRef api);
 
 } // namespace cookcookhnya::handlers::cooking_planning

@@ -20,8 +20,8 @@ namespace cookcookhnya::handlers::cooking_planning {
 using namespace render::cooking_planning;
 using namespace api::models::storage;
 
-void handleRecipeStorageAdditionCQ(
-    RecipeStorageAddition& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, api::ApiClientRef api) {
+void handleCookingPlanningStorageAdditionCQ(
+    CookingPlanningStorageAddition& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, api::ApiClientRef api) {
     bot.answerCallbackQuery(cq.id);
     const std::string& data = cq.data;
     auto chatId = cq.message->chat->id;

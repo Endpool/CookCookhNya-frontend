@@ -143,7 +143,8 @@ using storageIngredientsDeletionCQHandler = Handler<Events::CallbackQuery{}, han
 
 // RecipeView
 using cookingPlanningCQHandler = Handler<Events::CallbackQuery{}, cooking_planning::handleCookingPlanningCQ>;
-using recipeStorageAdditionCQHandler = Handler<Events::CallbackQuery{}, handleRecipeStorageAdditionCQ>;
+using cookingPlanningStorageAdditionCQHandler =
+    Handler<Events::CallbackQuery{}, handleCookingPlanningStorageAdditionCQ>;
 using shoppingListCreationCQHandler = Handler<Events::CallbackQuery{}, handleShoppingListCreationCQ>;
 
 // Shopping list

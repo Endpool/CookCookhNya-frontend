@@ -68,7 +68,7 @@ void handleCookingPlanningCQ(
                                  chatId,
                                  bot,
                                  api);
-        stateManager.put(RecipeStorageAddition{.prevState = std::move(state)});
+        stateManager.put(CookingPlanningStorageAddition{.prevState = std::move(state)});
         return;
     }
 }
