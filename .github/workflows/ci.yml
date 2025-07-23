@@ -65,8 +65,8 @@ jobs:
           key: ${{ runner.os }}-clang-tidy-${{ github.ref }}-${{ github.run_id }}
           restore-keys: |
             ${{ runner.os }}-clang-tidy-${{ github.ref }}-
-            # ${{ runner.os }}-clang-tidy-refs/heads/dev
-            # ${{ runner.os }}-clang-tidy-refs/heads/main
+            ${{ runner.os }}-clang-tidy-refs/heads/dev
+            ${{ runner.os }}-clang-tidy-refs/heads/main
       
       - name: Copy original cache file if exists
         run: |
