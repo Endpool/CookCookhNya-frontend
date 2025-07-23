@@ -7,7 +7,6 @@
 #include "utils/u8format.hpp"
 #include "utils/utils.hpp"
 
-
 #include <boost/url/url.hpp>
 #include <tgbot/types/InlineKeyboardButton.h>
 
@@ -45,7 +44,8 @@ void renderShareLinkMemberAddition(
     const std::string botAlias = bot.getUnderlying().getMe()->username;
     const api::InvitationId hash = storageApi.inviteMember(userId, storageId);
     const std::string storageUrl = std::format("https://t.me/{}?start=invite_{}", botAlias, hash);
-    const std::string shareText = utils::u8format("{} **{}** {}", u8"Нажми на ссылку, чтобы стать участником хранилища 🍱", storage.name, "в CookCookhNya!");
+    const std::string shareText = utils::u8format(
+        "{} **{}** {}", u8"Нажми на ссылку, чтобы стать участником хранилища 🍱", storage.name, "в CookCookhNya!");
 
     boost::urls::url url{"https://t.me/share/url"};
     url.params().append({"url", storageUrl});

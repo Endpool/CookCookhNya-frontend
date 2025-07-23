@@ -71,7 +71,7 @@ constructMessage(std::vector<api::models::ingredient::Ingredient>& selectedIngre
         else
             buttonRows += 2; // + back + navig
     } else {
-        if (ingSize <= numOfIngredientsOnPage) {
+        if (ingSize <= numOfIngredientsOnPage && pageNo == 0) {
             if (withoutPutToShoppingListButton)
                 buttonRows += 2; // + back + delete
             else
