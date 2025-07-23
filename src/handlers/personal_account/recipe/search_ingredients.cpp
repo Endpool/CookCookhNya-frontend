@@ -14,7 +14,6 @@
 
 #include <algorithm>
 #include <cstddef>
-#include <functional>
 #include <optional>
 #include <ranges>
 #include <string>
@@ -42,22 +41,22 @@ void updateSearch(CustomRecipeIngredientsSearch& state,
                   tg_types::UserId userId,
                   api::IngredientsApiRef api) {
     state.pageNo = isQueryChanged ? 0 : state.pageNo;
+
     auto response = api.searchForRecipe(
-        userId, state.recipeId, state.query, threshhold, numOfIngredientsOnPage, state.pageNo * numOfIngredientsOnPage);
-    if (response.found != state.totalFound || !std::ranges::equal(response.page,
-                                                                  state.searchItems,
-                                                                  std::ranges::equal_to{},
-                                                                  &IngredientSearchForRecipeItem::id,
-                                                                  &IngredientSearchForRecipeItem::id)) {
-        state.searchItems = std::move(response.page);
-        state.totalFound = response.found;
-        if (auto mMessageId = message::getMessageId(userId)) {
-            if (state.totalFound != 0) {
-                renderRecipeIngredientsSearch(state, numOfIngredientsOnPage, userId, userId, bot);
-                return;
-            }
+        userId, state.recipeId, state.query, numOfIngredientsOnPage, state.pageNo * numOfIngredientsOnPage, threshhold);
+    const auto idGetter = &IngredientSearchForRecipeItem::id;
+    if (std::ranges::equal(response.page, state.searchItems, {}, idGetter, idGetter))
+        return;
+
+    state.searchItems = std::move(response.page);
+    state.totalFound = response.found;
+    if (auto mMessageId = message::getMessageId(userId)) {
+        if (state.totalFound != 0) {
+            renderRecipeIngredientsSearch(state, numOfIngredientsOnPage, userId, userId, bot);
+            return;
         }
     }
+
     if (state.totalFound == 0)
         renderSuggestIngredientCustomisation(state, userId, userId, bot);
 }

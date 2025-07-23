@@ -21,7 +21,7 @@ using namespace api::models::moderation;
 
 std::pair<std::vector<Ingredient>, std::string> renderCustomRecipe(
     bool toBeEdited, UserId userId, ChatId chatId, api::RecipeId recipeId, BotRef bot, api::RecipesApiRef recipesApi) {
-    auto recipeDetails = recipesApi.get(userId, recipeId);
+    auto recipeDetails = recipesApi.getSuggested(userId, recipeId);
 
     std::vector<api::models::ingredient::Ingredient> ingredients;
 

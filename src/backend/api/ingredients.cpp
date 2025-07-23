@@ -54,9 +54,9 @@ void IngredientsApi::deleteMultipleFromStorage(UserId user,
 IngredientSearchForStorageResponse IngredientsApi::searchForStorage(UserId user,
                                                                     StorageId storage,
                                                                     std::string query,
-                                                                    std::size_t threshold,
                                                                     std::size_t count,
-                                                                    std::size_t offset) const {
+                                                                    std::size_t offset,
+                                                                    unsigned threshold) const {
     return jsonGetAuthed<IngredientSearchForStorageResponse>(user,
                                                              "/ingredients-for-storage",
                                                              {{"query", std::move(query)},
@@ -70,9 +70,9 @@ IngredientSearchForStorageResponse IngredientsApi::searchForStorage(UserId user,
 IngredientSearchResponse IngredientsApi::search(UserId user,
                                                 PublicityFilterType filter,
                                                 std::string query,
-                                                std::size_t threshold,
                                                 std::size_t count,
-                                                std::size_t offset) const {
+                                                std::size_t offset,
+                                                unsigned threshold) const {
     return jsonGetAuthed<IngredientSearchResponse>(user,
                                                    "/ingredients",
                                                    {{"query", std::move(query)},
@@ -85,7 +85,7 @@ IngredientSearchResponse IngredientsApi::search(UserId user,
 // GET /ingredients
 IngredientList
 IngredientsApi::getList(UserId user, PublicityFilterType filter, std::size_t count, std::size_t offset) const {
-    auto result = search(user, filter, "", 0, count, offset);
+    auto result = search(user, filter, "", count, offset, 0);
     return {.page = std::move(result.page), .found = result.found};
 }
 
@@ -117,12 +117,8 @@ void IngredientsApi::deleteFromRecipe(UserId user, RecipeId recipe, IngredientId
 }
 
 // GET /ingredients-for-recipe
-IngredientSearchForRecipeResponse IngredientsApi::searchForRecipe(UserId user,
-                                                                  RecipeId recipe,
-                                                                  std::string query,
-                                                                  std::size_t threshold,
-                                                                  std::size_t count,
-                                                                  std::size_t offset) const {
+IngredientSearchForRecipeResponse IngredientsApi::searchForRecipe(
+    UserId user, RecipeId recipe, std::string query, std::size_t count, std::size_t offset, unsigned threshold) const {
     return jsonGetAuthed<IngredientSearchForRecipeResponse>(user,
                                                             "/ingredients-for-recipe",
                                                             {{"query", std::move(query)},

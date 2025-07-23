@@ -17,10 +17,10 @@ RUN conan profile detect \
 RUN conan install --requires=boost/1.83.0 --build=missing
 
 WORKDIR /deps
-RUN wget https://github.com/Makcal/TgBotStater/archive/refs/tags/v0.4.1.tar.gz -O tgbotstater.tar.gz \
+RUN wget https://github.com/Makcal/TgBotStater/archive/refs/tags/v0.4.2.tar.gz -O tgbotstater.tar.gz \
  && tar -xf tgbotstater.tar.gz \
  && rm tgbotstater.tar.gz \
- && cd TgBotStater-0.4.1 \
+ && cd TgBotStater-0.4.2 \
  && conan create . --build=missing
 
 WORKDIR /app

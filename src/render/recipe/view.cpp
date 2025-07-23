@@ -1,80 +1,52 @@
 #include "view.hpp"
 
-#include "backend/api/api.hpp"
 #include "backend/id_types.hpp"
 #include "backend/models/recipe.hpp"
 #include "message_tracker.hpp"
 #include "render/common.hpp"
-#include "states.hpp"
-#include "utils/utils.hpp"
+#include "utils/u8format.hpp"
 
-#include <cstddef>
+#include <boost/url/url.hpp>
+
 #include <format>
 #include <string>
 #include <utility>
-#include <vector>
 
 namespace cookcookhnya::render::recipe {
 
-using namespace api::models::recipe;
-using IngredientAvailability = states::RecipeView::IngredientAvailability;
-using AvailabilityType = states::RecipeView::AvailabilityType;
-
-textGenInfo recipeView(const std::vector<IngredientAvailability>& inStoragesAvailability,
-                       api::RecipeId recipeId,
-                       UserId userId,
-                       api::ApiClientRef api) {
-    auto recipeIngredients = api.getRecipesApi().get(userId, recipeId);
-
-    bool isIngredientNotAvailable = false;
-    bool isIngredientIsOtherStorages = false;
-    std::string& recipeName = recipeIngredients.name;
-    auto text = std::format("{} Ингредиенты для *{}* \n\n", utils::utf8str(u8"📖"), recipeName);
-
-    for (const auto& availability : inStoragesAvailability) {
-        if (availability.available == AvailabilityType::AVAILABLE) {
-            text += "`[+]` " + availability.ingredient.name + "\n";
-        } else if (availability.available == AvailabilityType::OTHER_STORAGES) {
-            text += "`[?]` " + availability.ingredient.name + "\n";
-            isIngredientIsOtherStorages = true;
-        } else {
-            text += "`[ ]` " + availability.ingredient.name + "\n";
-            isIngredientNotAvailable = true;
-        }
-    }
-    if (recipeIngredients.link)
-        text += utils::utf8str(u8"\n🌐 Источник: ") + *recipeIngredients.link;
-
-    return {.text = text,
-            .isIngredientNotAvailable = isIngredientNotAvailable,
-            .isIngredientIsOtherStorages = isIngredientIsOtherStorages};
-}
-
-void renderRecipeView(std::vector<IngredientAvailability>& inStoragesAvailability,
-                      api::RecipeId recipeId,
+void renderRecipeView(const api::models::recipe::RecipeDetails& recipe,
+                      const api::RecipeId& recipeId,
                       UserId userId,
                       ChatId chatId,
-                      BotRef bot,
-                      api::ApiClientRef api) {
-    auto textGen = recipeView(inStoragesAvailability, recipeId, userId, api);
-    const std::size_t buttonRows = textGen.isIngredientNotAvailable ? 3 : 2;
-    InlineKeyboard keyboard(buttonRows);
+                      BotRef bot) {
+    std::string text = utils::u8format("{} *{}*\n\n{}", u8"📖 Рецепт", recipe.name, u8"Ингредиенты:\n");
+    for (const auto& ing : recipe.ingredients)
+        text += utils::u8format("{} {}\n", u8"•", ing.name);
+    if (recipe.link)
+        text += utils::u8format("\n{}: {}\n", u8"🌐 Источник", *recipe.link);
+    if (recipe.creator)
+        text += utils::u8format("\n{}: {}\n", u8"👤 Автор", recipe.creator->fullName);
 
-    keyboard[0].push_back(makeCallbackButton(u8"🧑‍🍳 Готовить", "start_cooking"));
+    InlineKeyboardBuilder keyboard{2}; // share, back
 
-    if (textGen.isIngredientIsOtherStorages) {
-        keyboard[0].push_back(makeCallbackButton(u8"?", "add_storages"));
-    }
-    if (textGen.isIngredientNotAvailable) {
-        keyboard[1].push_back(makeCallbackButton(u8"📝 Составить список продуктов", "shopping_list"));
-    }
+    auto shareButton = std::make_shared<TgBot::InlineKeyboardButton>();
+    shareButton->text = utils::utf8str(u8"📤 Поделиться");
+    const std::string botAlias = bot.getUnderlying().getMe()->username;
+    const std::string recipeUrl = std::format("https://t.me/{}?start=recipe_{}", botAlias, recipeId);
+    const std::string shareText = utils::u8format("{} **{}**", u8"Хочу поделиться с тобой рецептом", recipe.name);
 
-    keyboard[buttonRows - 1].push_back(makeCallbackButton(u8"↩️ Назад", "back_from_recipe_view"));
+    boost::urls::url url{"https://t.me/share/url"};
+    url.params().append({"url", recipeUrl});
+    url.params().append({"text", shareText});
+    shareButton->url = url.buffer();
 
-    auto messageId = message::getMessageId(userId);
-    if (messageId) {
-        // Only on difference between function above
-        bot.editMessageText(textGen.text, chatId, *messageId, makeKeyboardMarkup(std::move(keyboard)), "Markdown");
+    keyboard << std::move(shareButton) << NewRow{} << makeCallbackButton(u8"↩️ Назад", "back");
+
+    if (auto mMessageId = message::getMessageId(userId))
+        bot.editMessageText(text, chatId, *mMessageId, std::move(keyboard), "Markdown");
+    else {
+        auto messageId = bot.sendMessage(chatId, text, std::move(keyboard), "Markdown")->messageId;
+        message::addMessageId(userId, messageId);
     }
 }
 

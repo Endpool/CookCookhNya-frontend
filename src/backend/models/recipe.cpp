@@ -1,5 +1,6 @@
-#include "backend/models/recipe.hpp"
-#include "utils/serialization.hpp"
+#include "recipe.hpp"
+
+#include "utils/parsing.hpp"
 
 #include <boost/json/conversion.hpp>
 #include <boost/json/value.hpp>
@@ -17,6 +18,17 @@ RecipeSummary tag_invoke(json::value_to_tag<RecipeSummary> /*tag*/, const json::
     return {
         .id = value_to<decltype(RecipeSummary::id)>(j.at("recipeId")),
         .name = value_to<decltype(RecipeSummary::name)>(j.at("name")),
+    };
+}
+
+RecipeDetails tag_invoke(json::value_to_tag<RecipeDetails> /*tag*/, const json::value& j) {
+    return {
+        .ingredients = value_to<decltype(RecipeDetails::ingredients)>(j.at("ingredients")),
+        .name = value_to<decltype(RecipeDetails::name)>(j.at("name")),
+        .link = value_to<decltype(RecipeDetails::link)>(j.at("sourceLink")),
+        // Deal with optionals using ternary operator
+        .creator = j.as_object().if_contains("creator") ? value_to<decltype(RecipeDetails::creator)>(j.at("creator"))
+                                                        : std::nullopt,
     };
 }
 
@@ -50,14 +62,15 @@ IngredientInRecipe tag_invoke(json::value_to_tag<IngredientInRecipe> /*tag*/, co
     };
 }
 
-RecipeDetails tag_invoke(json::value_to_tag<RecipeDetails> /*tag*/, const json::value& j) {
+SuggestedRecipeDetails tag_invoke(json::value_to_tag<SuggestedRecipeDetails> /*tag*/, const json::value& j) {
     return {
-        .ingredients = value_to<decltype(RecipeDetails::ingredients)>(j.at("ingredients")),
-        .name = value_to<decltype(RecipeDetails::name)>(j.at("name")),
-        .link = value_to<decltype(RecipeDetails::link)>(j.at("sourceLink")),
+        .ingredients = value_to<decltype(SuggestedRecipeDetails::ingredients)>(j.at("ingredients")),
+        .name = value_to<decltype(SuggestedRecipeDetails::name)>(j.at("name")),
+        .link = value_to<decltype(SuggestedRecipeDetails::link)>(j.at("sourceLink")),
         // Deal with optionals using ternary operator
-        .creator = j.as_object().if_contains("creator") ? value_to<decltype(RecipeDetails::creator)>(j.at("creator"))
-                                                        : std::nullopt,
+        .creator = j.as_object().if_contains("creator")
+                       ? value_to<decltype(SuggestedRecipeDetails::creator)>(j.at("creator"))
+                       : std::nullopt,
         .moderationStatus = j.as_object().if_contains("moderationStatus")
                                 ? value_to<PublicationRequestStatus>(j.at("moderationStatus"))
                                 : PublicationRequestStatus::NO_REQUEST,

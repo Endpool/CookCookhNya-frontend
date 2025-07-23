@@ -20,7 +20,7 @@
 
 namespace cookcookhnya::states {
 
-namespace detail {
+namespace helpers {
 
 struct StorageIdMixin {
     api::StorageId storageId;
@@ -32,11 +32,14 @@ struct Pagination {
     std::size_t totalItems;
 };
 
-} // namespace detail
+} // namespace helpers
 
 struct MainMenu {};
 
 struct PersonalAccountMenu {};
+struct TotalPublicationHistory {
+    std::size_t pageNo;
+};
 
 struct CustomIngredientsList {};
 struct CustomIngredientCreationEnterName {};
@@ -62,13 +65,13 @@ struct CustomIngredientPublish {};
 struct StorageList {};
 struct StorageCreationEnterName {};
 
-struct StorageView : detail::StorageIdMixin {};
-struct StorageDeletion : detail::StorageIdMixin {};
-struct StorageMemberView : detail::StorageIdMixin {};
-struct StorageMemberAddition : detail::StorageIdMixin {};
-struct StorageMemberDeletion : detail::StorageIdMixin {};
+struct StorageView : helpers::StorageIdMixin {};
+struct StorageDeletion : helpers::StorageIdMixin {};
+struct StorageMemberView : helpers::StorageIdMixin {};
+struct StorageMemberAddition : helpers::StorageIdMixin {};
+struct StorageMemberDeletion : helpers::StorageIdMixin {};
 
-struct StorageIngredientsList : detail::StorageIdMixin {
+struct StorageIngredientsList : helpers::StorageIdMixin {
     using IngredientsDb = utils::FastSortedDb<api::models::ingredient::Ingredient>;
 
     IngredientsDb storageIngredients;
@@ -82,7 +85,7 @@ struct StorageIngredientsList : detail::StorageIdMixin {
         : StorageIdMixin{storageId}, storageIngredients{std::forward<R>(ingredients)}, inlineQuery(std::move(iq)) {}
 };
 
-struct StorageIngredientsDeletion : detail::StorageIdMixin {
+struct StorageIngredientsDeletion : helpers::StorageIdMixin {
     std::vector<api::models::ingredient::Ingredient> selectedIngredients;
     std::vector<api::models::ingredient::Ingredient> storageIngredients;
     bool addedToShopList;
@@ -97,7 +100,7 @@ struct SuggestedRecipesList {
     std::size_t pageNo;
     bool fromStorage;
 };
-struct RecipeView {
+struct SuggestedRecipeView {
     enum struct AvailabilityType : std::uint8_t { NOT_AVAILABLE, AVAILABLE, OTHER_STORAGES };
 
     struct IngredientAvailability {
@@ -113,11 +116,11 @@ struct RecipeView {
 };
 
 struct RecipeStorageAddition {
-    RecipeView prevState;
+    SuggestedRecipeView prevState;
 };
 
 struct ShoppingListCreation {
-    RecipeView prevState;
+    SuggestedRecipeView prevState;
     std::vector<api::models::ingredient::Ingredient> selectedIngredients;
     std::vector<api::models::ingredient::Ingredient> allIngredients;
 };
@@ -176,7 +179,7 @@ struct ShoppingListStorageSelectionToBuy {
 struct ShoppingListIngredientSearch {
     ShoppingListView prevState;
     std::string query;
-    detail::Pagination pagination;
+    helpers::Pagination pagination;
     std::vector<api::models::ingredient::Ingredient> page;
 };
 
@@ -186,8 +189,15 @@ struct CustomRecipePublicationHistory {
     std::string recipeName;
 };
 
-struct TotalPublicationHistory {
-    std::size_t pageNo;
+struct RecipesSearch {
+    std::string query;
+    helpers::Pagination pagination;
+    std::vector<api::models::recipe::RecipeSummary> page;
+};
+
+struct RecipeView {
+    std::optional<RecipesSearch> prevState;
+    api::models::recipe::RecipeDetails recipe;
 };
 
 using State = std::variant<MainMenu,
@@ -208,7 +218,7 @@ using State = std::variant<MainMenu,
                            StorageIngredientsDeletion,
                            StoragesSelection,
                            SuggestedRecipesList,
-                           RecipeView,
+                           SuggestedRecipeView,
                            ShoppingListCreation,
                            ShoppingListView,
                            ShoppingListStorageSelectionToBuy,
@@ -220,7 +230,9 @@ using State = std::variant<MainMenu,
                            RecipeIngredientsSearch,
                            CustomRecipePublicationHistory,
                            TotalPublicationHistory,
-                           ShoppingListIngredientSearch>;
+                           ShoppingListIngredientSearch,
+                           RecipesSearch,
+                           RecipeView>;
 
 using StateManager = tg_stater::StateProxy<tg_stater::MemoryStateStorage<State>>;
 

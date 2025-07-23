@@ -46,9 +46,9 @@ void handleShoppingListIngredientSearchCQ(
         auto result = api.getIngredientsApi().search(userId,
                                                      PublicityFilterType::All,
                                                      state.query,
-                                                     searchThreshold,
                                                      searchPageSize,
-                                                     searchPageSize * state.pagination.pageNo);
+                                                     searchPageSize * state.pagination.pageNo,
+                                                     searchThreshold);
         state.page = result.page;
         renderShoppingListIngredientSearch(state, searchPageSize, userId, chatId, bot);
         return;
@@ -78,7 +78,7 @@ void handleShoppingListIngredientSearchIQ(ShoppingListIngredientSearch& state,
         return;
     }
 
-    auto result = api.search(userId, PublicityFilterType::All, iq.query, searchThreshold, searchPageSize, 0);
+    auto result = api.search(userId, PublicityFilterType::All, iq.query, searchPageSize, 0, searchThreshold);
     state.query = iq.query;
     state.pagination.pageNo = 0;
     state.pagination.totalItems = result.found;

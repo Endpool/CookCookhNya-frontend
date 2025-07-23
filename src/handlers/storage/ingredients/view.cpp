@@ -17,7 +17,6 @@
 
 #include <algorithm>
 #include <cstddef>
-#include <functional>
 #include <optional>
 #include <string>
 #include <string_view>
@@ -47,22 +46,21 @@ void updateSearch(StorageIngredientsList& state,
     auto response = api.searchForStorage(userId,
                                          state.storageId,
                                          state.inlineQuery,
-                                         threshhold,
                                          numOfIngredientsOnPage,
-                                         state.pageNo * numOfIngredientsOnPage);
-    if (response.found != state.totalFound || !std::ranges::equal(response.page,
-                                                                  state.searchItems,
-                                                                  std::ranges::equal_to{},
-                                                                  &IngredientSearchForStorageItem::id,
-                                                                  &IngredientSearchForStorageItem::id)) {
-        state.searchItems = std::move(response.page);
-        state.totalFound = response.found;
-        if (auto mMessageId = message::getMessageId(userId))
-            renderIngredientsListSearch(state, userId, userId, bot);
-    }
+                                         state.pageNo * numOfIngredientsOnPage,
+                                         threshhold);
+    const auto idGetter = &IngredientSearchForStorageItem::id;
+    if (std::ranges::equal(response.page, state.searchItems, {}, idGetter, idGetter))
+        return;
+
+    state.searchItems = std::move(response.page);
+    state.totalFound = response.found;
+    if (auto mMessageId = message::getMessageId(userId))
+        renderIngredientsListSearch(state, userId, userId, bot);
     if (state.totalFound == 0)
         renderSuggestIngredientCustomisation(state, userId, userId, bot);
 }
+
 } // namespace
 
 void handleStorageIngredientsListCQ(
@@ -100,14 +98,15 @@ void handleStorageIngredientsListCQ(
         return;
     }
 
-    if (cq.data.starts_with("ingredient_")) {
-        const std::string ingredientName{std::string_view{cq.data}.substr("ingredient_"sv.size())};
+    if (cq.data.starts_with("create_ingredient")) {
+        const std::string ingredientName = state.inlineQuery;
         renderCustomIngredientConfirmation(true, ingredientName, userId, chatId, bot, api);
         stateManager.put(CustomIngredientConfirmation{ingredientName, std::nullopt, std::nullopt, state.storageId});
     }
 
-    if (cq.data != "dont_handle") {
-        auto mIngredient = utils::parseSafe<api::IngredientId>(cq.data);
+    if (cq.data.starts_with("ingredient_")) {
+        auto mIngredient =
+            utils::parseSafe<api::IngredientId>(std::string_view{cq.data}.substr("ingredient_"sv.size()));
         if (!mIngredient)
             return;
         auto it = std::ranges::find(state.searchItems, *mIngredient, &IngredientSearchForStorageItem::id);
@@ -141,6 +140,7 @@ void handleStorageIngredientsListIQ(StorageIngredientsList& state,
         updateSearch(state, true, bot, userId, api);
     }
     // Cache is not disabled on Windows and Linux desktops. Works on Android and Web
+    // Not answer to disable cache
     // bot.answerInlineQuery(iq.id, {}, 0);
 }
 
