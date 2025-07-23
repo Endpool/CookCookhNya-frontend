@@ -44,7 +44,6 @@ void handleStartCmd(MessageRef m, BotRef bot, SMRef stateManager, api::ApiClient
         return;
     }
     const std::string_view payload = std::string_view{m.text}.substr("/start "sv.size());
-
     if (payload.starts_with("invite_")) {
         const std::string_view hash = payload.substr("invite_"sv.size());
         auto storage = api.getStoragesApi().activate(userId, api::InvitationId{hash});
