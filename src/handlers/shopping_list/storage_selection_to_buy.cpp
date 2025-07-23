@@ -25,7 +25,7 @@ void handleShoppingListStorageSelectionToBuyCQ(ShoppingListStorageSelectionToBuy
 
     if (cq.data == "back") {
         renderShoppingList(state.prevState, userId, chatId, bot);
-        stateManager.put(std::move(state.prevState));
+        stateManager.put(auto{std::move(state.prevState)});
         return;
     }
 
@@ -40,7 +40,7 @@ void handleShoppingListStorageSelectionToBuyCQ(ShoppingListStorageSelectionToBuy
     for (auto& id : state.selectedIngredients)
         state.prevState.items.remove(id);
     renderShoppingList(state.prevState, userId, chatId, bot);
-    stateManager.put(std::move(state.prevState));
+    stateManager.put(auto{std::move(state.prevState)});
 }
 
 } // namespace cookcookhnya::handlers::shopping_list
