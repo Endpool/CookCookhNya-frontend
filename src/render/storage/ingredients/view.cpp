@@ -84,7 +84,7 @@ void renderSuggestIngredientCustomisation(const states::StorageIngredientsList& 
     const std::string text = utils::utf8str(u8"📝 Продолжите редактирование запроса или объявите личный ингредиент");
 
     auto searchButton = std::make_shared<TgBot::InlineKeyboardButton>();
-    searchButton->text = utils::utf8str(u8"✏️ Редактировать");
+    searchButton->text = utils::utf8str(u8"🛒 Редактировать");
     searchButton->switchInlineQueryCurrentChat = "";
     keyboard[0].push_back(std::move(searchButton));
     // Mark as ingredient

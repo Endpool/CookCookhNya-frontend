@@ -51,9 +51,10 @@ void handleRecipeCustomViewCQ(
 
     if (data == "publish") {
         auto history = api.getRecipesApi().getRecipeRequestHistory(userId, state.recipeId);
-        renderPublicationHistory(userId, chatId, state.recipeName, history, bot);
+        std::string temp;
+        renderPublicationHistory(userId, chatId, state.recipeName, temp, history, bot);
         stateManager.put(CustomRecipePublicationHistory{
-            .recipeId = state.recipeId, .pageNo = state.pageNo, .recipeName = state.recipeName});
+            .recipeId = state.recipeId, .pageNo = state.pageNo, .recipeName = state.recipeName, .errorReport = ""});
         bot.answerCallbackQuery(cq.id);
         return;
     }

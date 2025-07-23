@@ -35,13 +35,18 @@ std::pair<std::vector<Ingredient>, std::string> renderCustomRecipe(
         ingredients.push_back({.id = it.id, .name = it.name});
     }
 
-    toPrint += "\n🌐 [Статус проверки] " + utils::to_string(recipeDetails.moderationStatus);
+    toPrint += "\n🌐 [Статус проверки] " + utils::to_string(recipeDetails.moderationStatus.status);
 
     keyboard << makeCallbackButton(u8"🚮 Удалить", "delete") << NewRow{};
-    keyboard << makeCallbackButton(u8"✏️ Редактировать", "change") << NewRow{};
+    // Allow to edit recipe only if no request was made or it was rejected
+    if (recipeDetails.moderationStatus.status == PublicationRequestStatus::NO_REQUEST ||
+        recipeDetails.moderationStatus.status == PublicationRequestStatus::REJECTED) {
+        keyboard << makeCallbackButton(u8"✏️ Редактировать", "change") << NewRow{};
+    }
+
     // Show publish button only iff the status is not emty AND not rejected
-    if (recipeDetails.moderationStatus == PublicationRequestStatus::NO_REQUEST ||
-        recipeDetails.moderationStatus == PublicationRequestStatus::REJECTED) {
+    if (recipeDetails.moderationStatus.status == PublicationRequestStatus::NO_REQUEST ||
+        recipeDetails.moderationStatus.status == PublicationRequestStatus::REJECTED) {
         keyboard << makeCallbackButton(u8"📢 Опубликовать", "publish") << NewRow{};
     } else {
         keyboard << makeCallbackButton(u8"📢 История публикаций", "publish") << NewRow{};

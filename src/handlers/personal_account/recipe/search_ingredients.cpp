@@ -44,21 +44,25 @@ void updateSearch(CustomRecipeIngredientsSearch& state,
 
     auto response = api.searchForRecipe(
         userId, state.recipeId, state.query, numOfIngredientsOnPage, state.pageNo * numOfIngredientsOnPage, threshhold);
+
+    state.totalFound = response.found;
+    if (state.totalFound == 0) {
+        renderSuggestIngredientCustomisation(state, userId, userId, bot);
+        return;
+    }
+
     const auto idGetter = &IngredientSearchForRecipeItem::id;
     if (std::ranges::equal(response.page, state.searchItems, {}, idGetter, idGetter))
         return;
 
     state.searchItems = std::move(response.page);
-    state.totalFound = response.found;
+
     if (auto mMessageId = message::getMessageId(userId)) {
         if (state.totalFound != 0) {
             renderRecipeIngredientsSearch(state, numOfIngredientsOnPage, userId, userId, bot);
             return;
         }
     }
-
-    if (state.totalFound == 0)
-        renderSuggestIngredientCustomisation(state, userId, userId, bot);
 }
 
 } // namespace

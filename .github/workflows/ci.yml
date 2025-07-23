@@ -1,3 +1,4 @@
+
 name: ci pipeline for frontend
 
 on:
@@ -23,7 +24,6 @@ jobs:
         working-directory: .
         run: |
           make build-release
-
   clang-format-check:
     runs-on: ubuntu-latest
     needs: build
@@ -40,7 +40,6 @@ jobs:
         run: |
           find src -type f \( -name '*.hpp' -or -name '*.cpp' \) \
             -exec clang-format-19 --dry-run --Werror {} \+
-
   clang-tidy-check:
     runs-on: ubuntu-latest
     needs: build
@@ -65,15 +64,14 @@ jobs:
           key: ${{ runner.os }}-clang-tidy-${{ github.ref }}-${{ github.run_id }}
           restore-keys: |
             ${{ runner.os }}-clang-tidy-${{ github.ref }}-
-            ${{ runner.os }}-clang-tidy-refs/heads/dev
-            ${{ runner.os }}-clang-tidy-refs/heads/main
+            ${{ runner.os }}-clang-tidy-refs/heads/dev-
+            ${{ runner.os }}-clang-tidy-refs/heads/main-
       
       - name: Copy original cache file if exists
         run: |
           if [ -f .clang-tidy-cache.json ]; then
             cp .clang-tidy-cache.json .clang-tidy-cache.json.orig
           fi
-
       - name: Create clang-tidy cache script
         run: |
           cat > run-clang-tidy-cached.sh << 'EOF'
@@ -151,7 +149,6 @@ jobs:
       - name: Run clang-tidy with caching
         run: |
           bash ./run-clang-tidy-cached.sh
-
       - name: Check if cache file changed
         id: cache-changed
         run: |
@@ -167,7 +164,6 @@ jobs:
             echo "No original cache file, assuming changed"
             echo "changed=true" >> $GITHUB_OUTPUT
           fi
-
       - name: Debug cache state
         run: |
           echo "Cache hit: ${{ steps.cache-restore.outputs.cache-hit }}"
@@ -178,7 +174,6 @@ jobs:
           else
             echo "No cache file found"
           fi
-
       - name: Save clang-tidy cache
         if: always() && steps.cache-changed.outputs.changed == 'true'
         uses: actions/cache/save@v4

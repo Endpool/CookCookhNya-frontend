@@ -28,9 +28,9 @@ void renderRequestHistory(UserId userId,
         else
             rcpIngRender = utils::utf8str(u8"🥬");
         toPrint += std::format(
-            "{} {}: *{}* статус: {} ", rcpIngRender, req.requestType, req.name, utils::to_string(req.status));
-        if (req.reason.has_value())
-            toPrint += std::format("по причине: {} ", req.reason.value());
+            "{} {}: *{}* статус: {} ", rcpIngRender, req.requestType, req.name, utils::to_string(req.status.status));
+        if (req.status.reason.has_value())
+            toPrint += std::format("по причине: {} ", req.status.reason.value());
         toPrint += std::format("запрос создан: {} ", utils::to_string(req.created));
         if (req.updated.has_value()) {
             toPrint += std::format("последенее обновление: {}", utils::to_string(req.updated.value()));

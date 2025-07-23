@@ -4,8 +4,10 @@
 #include "backend/id_types.hpp"
 #include "message_tracker.hpp"
 #include "render/common.hpp"
+#include "utils/u8format.hpp"
 #include "utils/utils.hpp"
 
+#include <boost/url/url.hpp>
 #include <tgbot/types/InlineKeyboardButton.h>
 
 #include <cstddef>
@@ -39,11 +41,16 @@ void renderShareLinkMemberAddition(
 
     auto inviteButton = std::make_shared<TgBot::InlineKeyboardButton>();
     inviteButton->text = utils::utf8str(u8"📤 Поделиться");
+    const std::string botAlias = bot.getUnderlying().getMe()->username;
     const api::InvitationId hash = storageApi.inviteMember(userId, storageId);
-    const std::string telegramBotAlias = bot.getUnderlying().getMe()->username;
-    const std::string inviteText = "Нажми на ссылку, чтобы стать участником хранилища 🍱**" + storage.name +
-                                   "** в CookCookhNya!\nhttps://t.me/" + telegramBotAlias + "?start=invite_" + hash;
-    inviteButton->url = "https://t.me/share/url?url=" + inviteText;
+    const std::string storageUrl = std::format("https://t.me/{}?start=invite_{}", botAlias, hash);
+    const std::string shareText = utils::u8format(
+        "{} **{}** {}", u8"Нажми на ссылку, чтобы стать участником хранилища 🍱", storage.name, "в CookCookhNya!");
+
+    boost::urls::url url{"https://t.me/share/url"};
+    url.params().append({"url", storageUrl});
+    url.params().append({"text", shareText});
+    inviteButton->url = url.buffer();
 
     keyboard[0].push_back(std::move(inviteButton));
     keyboard[1].push_back(makeCallbackButton(u8"↩️ Назад", "back"));
