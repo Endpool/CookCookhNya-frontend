@@ -49,6 +49,11 @@ void updateSearch(StorageIngredientsList& state,
                                          numOfIngredientsOnPage,
                                          state.pageNo * numOfIngredientsOnPage,
                                          threshhold);
+    state.totalFound = response.found;
+    if (state.totalFound == 0) {
+        renderSuggestIngredientCustomisation(state, userId, userId, bot);
+        return;
+    }
     const auto idGetter = &IngredientSearchForStorageItem::id;
     if (std::ranges::equal(response.page, state.searchItems, {}, idGetter, idGetter))
         return;
@@ -57,8 +62,6 @@ void updateSearch(StorageIngredientsList& state,
     state.totalFound = response.found;
     if (auto mMessageId = message::getMessageId(userId))
         renderIngredientsListSearch(state, userId, userId, bot);
-    if (state.totalFound == 0)
-        renderSuggestIngredientCustomisation(state, userId, userId, bot);
 }
 
 } // namespace
