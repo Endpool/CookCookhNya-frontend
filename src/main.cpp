@@ -91,7 +91,7 @@ int main(int argc, char* argv[]) {
                              path);
         } else {
             bot.start(std::move(tgBot));
-        }
+        } // pipidastr
     } catch (std::exception& e) {
         std::cout << e.what() << '\n';
         return 1;
