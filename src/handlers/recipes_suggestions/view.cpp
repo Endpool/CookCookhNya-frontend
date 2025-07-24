@@ -8,13 +8,13 @@
 #include "render/main_menu/view.hpp"
 #include "render/recipes_suggestions/view.hpp"
 #include "render/storage/view.hpp"
-#include "render/storages_selection/view.hpp"
 #include "utils/ingredients_availability.hpp"
 #include "utils/parsing.hpp"
 
 #include <optional>
 #include <stdexcept>
 #include <string>
+#include <string_view>
 #include <utility>
 #include <variant>
 #include <vector>
@@ -22,12 +22,12 @@
 namespace cookcookhnya::handlers::recipes_suggestions {
 
 using namespace render::recipes_suggestions;
-using namespace render::select_storages;
 using namespace render::storage;
 using namespace render::cooking_planning;
 using namespace render::main_menu;
 using namespace api::models::storage;
 using namespace std::views;
+using namespace std::literals;
 
 void handleSuggestedRecipesListCQ(
     SuggestedRecipesList& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, api::ApiClientRef api) {
@@ -56,7 +56,7 @@ void handleSuggestedRecipesListCQ(
     }
 
     if (data.starts_with("recipe_")) {
-        auto recipeId = utils::parseSafe<api::RecipeId>(data.substr(sizeof("recipe_") - 1));
+        auto recipeId = utils::parseSafe<api::RecipeId>(std::string_view{data}.substr("recipe_"sv.size()));
         if (!recipeId)
             return;
 
@@ -64,8 +64,10 @@ void handleSuggestedRecipesListCQ(
             utils::inStoragesAvailability(state.getStorageIds(), *recipeId, userId, api);
 
         renderCookingPlanning(inStorage, *recipeId, userId, chatId, bot, api);
-        stateManager.put(CookingPlanning{
-            .prevState = std::move(state), .addedStorages = {}, .availability = inStorage, .recipeId = *recipeId});
+        stateManager.put(CookingPlanning{.prevState = std::move(state),
+                                         .addedStorages = {},
+                                         .availability = std::move(inStorage),
+                                         .recipeId = *recipeId});
         return;
     }
 

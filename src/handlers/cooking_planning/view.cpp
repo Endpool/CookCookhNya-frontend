@@ -72,7 +72,7 @@ void handleCookingPlanningCQ(
             state.availability |
             transform([](const auto& ia) { return SelectableIngredient{{ia.ingredient.id, ia.ingredient.name}}; }) |
             to<std::vector>();
-        std::optional<api::StorageId> theOnlyStorage = getTheOnlyStorage(state);
+        const std::optional<api::StorageId> theOnlyStorage = getTheOnlyStorage(state);
         renderIngredientsSpending(ingredients, theOnlyStorage.has_value(), userId, chatId, bot);
         CookingIngredientsSpending newState{
             .prevState = std::move(state), .storageId = theOnlyStorage, .ingredients = std::move(ingredients)};
