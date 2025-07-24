@@ -25,8 +25,8 @@ using states::StorageList;
 
 using states::TotalPublicationHistory;
 
-using states::RecipeStorageAddition;
-using states::SuggestedRecipeView;
+using states::CookingPlanning;
+using states::CookingPlanningStorageAddition;
 
 using states::StorageCreationEnterName;
 using states::StorageDeletion;
@@ -56,6 +56,8 @@ using states::CustomRecipeView;
 using states::RecipesSearch;
 
 using states::RecipeView;
+
+using states::CookingIngredientsSpending;
 
 // Type aliases
 using BotRef = const TgBot::Api&;

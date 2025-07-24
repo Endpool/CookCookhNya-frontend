@@ -9,6 +9,7 @@
 #include "utils/parsing.hpp"
 
 #include <optional>
+#include <utility>
 
 namespace cookcookhnya::handlers::storages_list {
 
@@ -38,7 +39,8 @@ void handleStorageListCQ(
     auto storageId = utils::parseSafe<api::StorageId>(cq.data);
     if (storageId) {
         renderStorageView(*storageId, cq.from->id, chatId, bot, api);
-        stateManager.put(StorageView{*storageId});
+        std::string storageName = api.getStoragesApi().get(userId, *storageId).name;
+        stateManager.put(StorageView{*storageId, std::move(storageName)});
     }
 }
 

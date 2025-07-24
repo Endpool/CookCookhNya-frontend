@@ -7,8 +7,11 @@
 #include <cstddef>
 #include <format>
 #include <ranges>
+
 namespace cookcookhnya::render::personal_account {
+
 using namespace std::views;
+
 void renderRequestHistory(UserId userId,
                           size_t pageNo,
                           size_t numOfInstances,
@@ -22,26 +25,20 @@ void renderRequestHistory(UserId userId,
 
     std::string toPrint = utils::utf8str(u8"ℹ️История запросов на публикацию ваших рецептов и ингредиентов\n\n");
     for (auto& req : history | reverse) {
-        std::string rcpIngRender;
-        if (req.requestType == "recipe")
-            rcpIngRender = utils::utf8str(u8"📖");
-        else
-            rcpIngRender = utils::utf8str(u8"🥬");
-        toPrint += std::format(
-            "{} {}: *{}* статус: {} ", rcpIngRender, req.requestType, req.name, utils::to_string(req.status.status));
+        std::string emoji = utils::utf8str(req.requestType == "recipe" ? u8"📖" : u8"🥬");
+        toPrint += std::format("{} *{}*\nСтатус: {}\n", emoji, req.name, utils::to_string(req.status.status));
         if (req.status.reason.has_value())
-            toPrint += std::format("по причине: {} ", req.status.reason.value());
-        toPrint += std::format("запрос создан: {} ", utils::to_string(req.created));
+            toPrint += std::format("По причине: {}\n", req.status.reason.value());
+        toPrint += std::format("Запрос создан: {}\n", utils::to_string(req.created));
         if (req.updated.has_value()) {
-            toPrint += std::format("последенее обновление: {}", utils::to_string(req.updated.value()));
+            toPrint += std::format("Последенее обновление: {}\n", utils::to_string(req.updated.value()));
         }
         toPrint += "\n\n";
     }
 
     keyboard << makeCallbackButton(u8"↩️ Назад", "back");
-    auto messageId = message::getMessageId(userId);
-    if (messageId) {
+    if (auto messageId = message::getMessageId(userId))
         bot.editMessageText(toPrint, chatId, *messageId, std::move(keyboard), "Markdown");
-    }
 }
+
 } // namespace cookcookhnya::render::personal_account

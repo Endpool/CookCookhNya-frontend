@@ -22,8 +22,8 @@ target_sources(main PRIVATE
     src/handlers/personal_account/view.cpp
     src/handlers/personal_account/publication_history.cpp
 
-    src/handlers/suggested_recipe/add_storage.cpp
-    src/handlers/suggested_recipe/view.cpp
+    src/handlers/cooking_planning/add_storage.cpp
+    src/handlers/cooking_planning/view.cpp
 
     src/handlers/recipes_suggestions/view.cpp
 
@@ -50,4 +50,6 @@ target_sources(main PRIVATE
     src/handlers/recipes_search/view.cpp
 
     src/handlers/recipe/view.cpp
+
+    src/handlers/cooking/ingredients_spending.cpp
 )

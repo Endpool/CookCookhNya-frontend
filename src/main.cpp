@@ -60,8 +60,8 @@ int main(int argc, char* argv[]) {
                                                       storageIngredientsListIQHandler,
                                                       storageIngredientsDeletionCQHandler,
                                                       suggestedRecipeListCQHandler,
-                                                      suggestedRecipeViewCQHandler,
-                                                      recipeStorageAdditionCQHandler,
+                                                      cookingPlanningCQHandler,
+                                                      cookingPlanningStorageAdditionCQHandler,
                                                       shoppingListCreationCQHandler,
                                                       shoppingListViewCQHandler,
                                                       personalAccountMenuCQHandler,
@@ -78,7 +78,8 @@ int main(int argc, char* argv[]) {
                                                       shoppingListIngredientSearchIQHandler,
                                                       recipesSearchCQHandler,
                                                       recipesSearchIQHandler,
-                                                      recipeViewCQHandler>
+                                                      recipeViewCQHandler,
+                                                      cookingIngredientsSpendingCQHandler>
             bot{{}, {ApiClient{utils::getenvWithError("API_URL")}}};
 
         TgBot::Bot tgBot{utils::getenvWithError("BOT_TOKEN")}; // sdf
@@ -90,7 +91,7 @@ int main(int argc, char* argv[]) {
                              path);
         } else {
             bot.start(std::move(tgBot));
-        }
+        } // pipidastr
     } catch (std::exception& e) {
         std::cout << e.what() << '\n';
         return 1;

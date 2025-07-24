@@ -59,7 +59,8 @@ void handleRecipesSearchCQ(
             return;
         auto recipe = api.getRecipesApi().get(userId, *mRecipeId);
         renderRecipeView(recipe, *mRecipeId, userId, chatId, bot);
-        stateManager.put(RecipeView{.prevState = {std::move(state)}, .recipe = std::move(recipe)});
+        stateManager.put(
+            RecipeView{.prevState = {std::move(state)}, .recipe = std::move(recipe), .recipeId = *mRecipeId});
         return;
     }
 }

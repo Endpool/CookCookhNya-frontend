@@ -1,8 +1,8 @@
 #include "view.hpp"
 
 #include "backend/api/recipes.hpp"
+#include "backend/id_types.hpp"
 #include "backend/models/recipe.hpp"
-#include "backend/models/storage.hpp"
 #include "message_tracker.hpp"
 #include "render/common.hpp"
 #include "render/pagination.hpp"
@@ -11,7 +11,6 @@
 #include <cstddef>
 #include <format>
 #include <memory>
-#include <ranges>
 #include <string>
 #include <vector>
 
@@ -24,7 +23,6 @@ namespace cookcookhnya::render::recipes_suggestions {
 using namespace api::models::storage;
 using namespace api::models::recipe;
 using namespace std::views;
-using std::ranges::to;
 
 namespace {
 
@@ -42,7 +40,7 @@ constructKeyboard(std::size_t pageNo, std::size_t pageSize, RecipesListWithIngre
 
 } // namespace
 
-void renderRecipesSuggestion(std::vector<StorageSummary>& storages,
+void renderRecipesSuggestion(const std::vector<api::StorageId>& storages,
                              std::size_t pageNo,
                              UserId userId,
                              ChatId chatId,
@@ -50,9 +48,8 @@ void renderRecipesSuggestion(std::vector<StorageSummary>& storages,
                              api::RecipesApiRef recipesApi) {
     const std::size_t numOfRecipesOnPage = 5;
 
-    auto storagesIds = storages | transform(&StorageSummary::id) | to<std::vector>();
     auto recipesList =
-        recipesApi.getSuggestedRecipes(userId, storagesIds, numOfRecipesOnPage, pageNo * numOfRecipesOnPage);
+        recipesApi.getSuggestedRecipes(userId, storages, numOfRecipesOnPage, pageNo * numOfRecipesOnPage);
 
     const std::string text =
         utils::utf8str(recipesList.found > 0 ? u8"🔪 Рецепты подобранные специально для вас"

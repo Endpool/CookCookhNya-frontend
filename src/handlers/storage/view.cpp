@@ -51,11 +51,8 @@ void handleStorageViewCQ(
     }
 
     if (cq.data == "wanna_eat") {
-        auto storageDetails = api.getStoragesApi().get(userId, state.storageId);
-        const StorageSummary storage = {.id = state.storageId, .name = storageDetails.name};
-        std::vector storages = {storage};
-        renderRecipesSuggestion(storages, 0, userId, chatId, bot, api);
-        stateManager.put(SuggestedRecipesList{.selectedStorages = storages, .pageNo = 0, .fromStorage = true});
+        renderRecipesSuggestion({state.storageId}, 0, userId, chatId, bot, api);
+        stateManager.put(SuggestedRecipesList{.prevState = state, .pageNo = 0});
         return;
     }
 

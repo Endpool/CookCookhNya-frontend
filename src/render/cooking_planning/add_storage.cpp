@@ -8,7 +8,6 @@
 #include "render/common.hpp"
 #include "states.hpp"
 #include "utils/utils.hpp"
-#include "view.hpp"
 
 #include <algorithm>
 #include <cstddef>
@@ -17,14 +16,22 @@
 #include <utility>
 #include <vector>
 
-namespace cookcookhnya::render::suggested_recipe {
+namespace cookcookhnya::render::cooking_planning {
 
 using namespace api::models::recipe;
 using namespace api::models::storage;
-using IngredientAvailability = states::SuggestedRecipeView::IngredientAvailability;
-using AvailabilityType = states::SuggestedRecipeView::AvailabilityType;
+using IngredientAvailability = states::CookingPlanning::IngredientAvailability;
+using AvailabilityType = states::CookingPlanning::AvailabilityType;
 
-TextGenInfo storageAdditionView(const std::vector<IngredientAvailability>& inStoragesAvailability,
+namespace {
+
+struct CookingInfo {
+    std::string renderText;
+    bool isIngredientNotAvailable;
+    bool isIngredientInOtherStorages;
+};
+
+CookingInfo storageAdditionView(const std::vector<IngredientAvailability>& inStoragesAvailability,
                                 const std::vector<StorageSummary>& selectedStorages,
                                 api::RecipeId recipeId,
                                 UserId userId,
@@ -61,10 +68,12 @@ TextGenInfo storageAdditionView(const std::vector<IngredientAvailability>& inSto
     if (recipe.link)
         text += utils::utf8str(u8"\n🌐 Источник: ") + *recipe.link;
 
-    return {.text = text,
+    return {.renderText = text,
             .isIngredientNotAvailable = isIngredientNotAvailable,
-            .isIngredientIsOtherStorages = isIngredientIsOtherStorages};
+            .isIngredientInOtherStorages = isIngredientIsOtherStorages};
 }
+
+} // namespace
 
 void renderStoragesSuggestion(const std::vector<IngredientAvailability>& inStoragesAvailability,
                               const std::vector<StorageSummary>& selectedStorages,
@@ -107,7 +116,8 @@ void renderStoragesSuggestion(const std::vector<IngredientAvailability>& inStora
 
     auto messageId = message::getMessageId(userId);
     if (messageId) {
-        bot.editMessageText(textGen.text, chatId, *messageId, makeKeyboardMarkup(std::move(keyboard)), "Markdown");
+        bot.editMessageText(
+            textGen.renderText, chatId, *messageId, makeKeyboardMarkup(std::move(keyboard)), "Markdown");
     }
 }
-} // namespace cookcookhnya::render::suggested_recipe
+} // namespace cookcookhnya::render::cooking_planning

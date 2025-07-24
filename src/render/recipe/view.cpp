@@ -27,7 +27,7 @@ void renderRecipeView(const api::models::recipe::RecipeDetails& recipe,
     if (recipe.creator)
         text += utils::u8format("\n{}: {}\n", u8"👤 Автор", recipe.creator->fullName);
 
-    InlineKeyboardBuilder keyboard{2}; // share, back
+    InlineKeyboardBuilder keyboard{3}; // cook, share, back
 
     auto shareButton = std::make_shared<TgBot::InlineKeyboardButton>();
     shareButton->text = utils::utf8str(u8"📤 Поделиться");
@@ -40,7 +40,8 @@ void renderRecipeView(const api::models::recipe::RecipeDetails& recipe,
     url.params().append({"text", shareText});
     shareButton->url = url.buffer();
 
-    keyboard << std::move(shareButton) << NewRow{} << makeCallbackButton(u8"↩️ Назад", "back");
+    keyboard << makeCallbackButton(u8"🧑‍🍳 Хочу приготовить", "cook") << NewRow{}
+             << std::move(shareButton) << NewRow{} << makeCallbackButton(u8"↩️ Назад", "back");
 
     if (auto mMessageId = message::getMessageId(userId))
         bot.editMessageText(text, chatId, *mMessageId, std::move(keyboard), "Markdown");
