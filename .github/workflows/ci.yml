@@ -55,7 +55,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install --no-install-recommends -y clang-tidy-19 parallel
           echo "/usr/lib/llvm-19/bin" >> $GITHUB_PATH
-  
+
       - name: Restore clang-tidy cache
         id: cache-restore
         uses: actions/cache/restore@v4
@@ -66,12 +66,13 @@ jobs:
             ${{ runner.os }}-clang-tidy-${{ github.ref }}-
             ${{ runner.os }}-clang-tidy-refs/heads/dev-
             ${{ runner.os }}-clang-tidy-refs/heads/main-
-      
+
       - name: Copy original cache file if exists
         run: |
           if [ -f .clang-tidy-cache.json ]; then
             cp .clang-tidy-cache.json .clang-tidy-cache.json.orig
           fi
+
       - name: Create clang-tidy cache script
         run: |
           cat > run-clang-tidy-cached.sh << 'EOF'
