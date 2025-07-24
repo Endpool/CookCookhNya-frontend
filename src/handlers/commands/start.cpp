@@ -50,7 +50,7 @@ void handleStartCmd(MessageRef m, BotRef bot, SMRef stateManager, api::ApiClient
         if (storage) {
             renderMainMenu(false, storage->name, userId, chatId, bot, api);
         } else {
-            std::optional<std::optional<std::string>> resp = std::optional<std::string>(std::nullopt);
+            const std::optional<std::optional<std::string>> resp{std::in_place, std::nullopt};
             renderMainMenu(false, resp, userId, chatId, bot, api);
         }
     }

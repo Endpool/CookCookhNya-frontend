@@ -14,7 +14,7 @@ namespace cookcookhnya::render::main_menu {
 using namespace tg_types;
 
 void renderMainMenu(bool toBeEdited,
-                    std::optional<std::optional<std::string>> inviteStorage,
+                    const std::optional<std::optional<std::string>>& inviteStorage,
                     UserId userId,
                     ChatId chatId,
                     BotRef bot,
