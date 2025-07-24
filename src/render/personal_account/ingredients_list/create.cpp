@@ -1,5 +1,7 @@
 #include "create.hpp"
 
+#include "backend/api/ingredients.hpp"
+#include "backend/api/publicity_filter.hpp"
 #include "backend/models/ingredient.hpp"
 #include "message_tracker.hpp"
 #include "render/common.hpp"
@@ -12,23 +14,27 @@
 
 namespace cookcookhnya::render::personal_account::ingredients {
 
+const std::size_t pageSize = 5;
+const unsigned threshold = 70;
+
 void renderCustomIngredientCreation(UserId userId, ChatId chatId, BotRef bot) {
     InlineKeyboard keyboard(1);
     keyboard[0].push_back(makeCallbackButton(u8"↩️ Назад", "back"));
     auto text = utils::utf8str(u8"🥦 Введите новое имя ингредиента");
     auto messageId = message::getMessageId(userId);
     if (messageId) {
-        bot.editMessageText(text, chatId, *messageId, "", "", nullptr, makeKeyboardMarkup(std::move(keyboard)));
+        bot.editMessageText(text, chatId, *messageId, makeKeyboardMarkup(std::move(keyboard)));
     }
 }
 
 void renderCustomIngredientConfirmation(
-    std::string ingredientName, UserId userId, ChatId chatId, BotRef bot, IngredientsApiRef api) {
-    InlineKeyboard keyboard(2);
+    bool toBeEdited, std::string ingredientName, UserId userId, ChatId chatId, BotRef bot, api::IngredientsApiRef api) {
+    InlineKeyboard keyboard{2};
     keyboard[0].push_back(makeCallbackButton(u8"▶️ Подтвердить", "confirm"));
     keyboard[1].push_back(makeCallbackButton(u8"↩️ Назад", "back"));
 
-    auto similarIngredients = api.search(userId, std::move(ingredientName), 70, 5, 0).page; // NOLINT(*magic-numbers*)
+    auto similarIngredients =
+        api.search(userId, PublicityFilterType::All, std::move(ingredientName), pageSize, 0, threshold).page;
 
     std::string text;
     if (!similarIngredients.empty()) {
@@ -44,8 +50,15 @@ void renderCustomIngredientConfirmation(
     } else {
         text = utils::utf8str(u8"Вы уверены, что хотите добавить новый ингредиент?");
     }
-    auto message = bot.sendMessage(chatId, text, nullptr, nullptr, makeKeyboardMarkup(std::move(keyboard)));
-    message::addMessageId(userId, message->messageId);
+
+    if (toBeEdited) {
+        if (auto messageId = message::getMessageId(userId))
+            bot.editMessageText(text, chatId, *messageId, makeKeyboardMarkup(std::move(keyboard)));
+
+    } else {
+        auto message = bot.sendMessage(chatId, text, makeKeyboardMarkup(std::move(keyboard)));
+        message::addMessageId(userId, message->messageId);
+    }
 }
 
 } // namespace cookcookhnya::render::personal_account::ingredients

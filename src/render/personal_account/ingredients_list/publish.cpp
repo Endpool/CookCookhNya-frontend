@@ -1,41 +1,51 @@
 #include "publish.hpp"
 
-#include "backend/api/common.hpp"
+#include "backend/models/ingredient.hpp"
+#include "backend/models/publication_request_status.hpp"
+
+#include "backend/api/ingredients.hpp"
 #include "message_tracker.hpp"
 #include "render/common.hpp"
-#include "utils/to_string.hpp"
 #include "utils/utils.hpp"
 
-#include <cstddef>
 #include <format>
-#include <string>
+#include <ranges>
 #include <utility>
+#include <vector>
 
 namespace cookcookhnya::render::personal_account::ingredients {
 
-using namespace tg_types;
+using namespace std::views;
 
-void renderCustomIngredientPublication(UserId userId, ChatId chatId, BotRef bot, IngredientsApiRef api) {
-    auto ingredientsResp = api.search(userId, "", 0, 1000, 0, filterType::Custom); // NOLINT (*magic*)
+void renderCustomIngredientPublication(UserId userId, ChatId chatId, BotRef bot, api::IngredientsApiRef api) {
+    const std::size_t numOfIng = 500;
+    auto ingredientsResp = api.customIngredientsSearch(userId, "", 0, numOfIng);
+
     // TODO: make pagination for ingredients
-    auto ingredients = ingredientsResp.page;
-    const std::size_t buttonRows = ((ingredients.size() + 1) / 2) + 1;
-    InlineKeyboard keyboard(buttonRows);
-    for (std::size_t i = 0; i < ingredients.size(); i++) {
-        if (i % 2 == 0)
-            keyboard[(i / 2)].reserve(2);
-        keyboard[(i / 2)].push_back(
-            makeCallbackButton("• " + ingredients[i].name, utils::to_string(ingredients[i].id)));
+    std::vector<api::models::ingredient::CustomIngredient> ingredients;
+    for (const auto& ing : ingredientsResp.page) {
+        if (ing.moderationStatus == api::models::moderation::PublicationRequestStatus::NO_REQUEST) {
+            ingredients.push_back(ing);
+        }
     }
 
-    keyboard[buttonRows - 1].push_back(makeCallbackButton(u8"↩️ Назад", "back"));
+    InlineKeyboardBuilder keyboard{ingredients.size() + 1};
+    for (auto chunk : ingredients | chunk(2)) {
+        keyboard.reserveInRow(2);
+        for (const auto& i : chunk) {
+            keyboard << makeCallbackButton("• " + i.name, utils::to_string(i.id));
+        }
+        keyboard << NewRow{};
+    }
 
-    auto text = std::format(
-        "{} Какой ингредиент вы хотите предложить для добавления в CookCookNya? (Все предложения проходят проверку)\n ",
-        utils::utf8str(u8"📥"));
+    keyboard << makeCallbackButton(u8"↩️ Назад", "back");
+
+    auto text = std::format("{} Какой ингредиент вы хотите предложить для добавления в CookCookhNya? (Все предложения "
+                            "проходят проверку)\n ",
+                            utils::utf8str(u8"📥"));
     auto messageId = message::getMessageId(userId);
     if (messageId) {
-        bot.editMessageText(text, chatId, *messageId, "", "", nullptr, makeKeyboardMarkup(std::move(keyboard)));
+        bot.editMessageText(text, chatId, *messageId, std::move(keyboard));
     }
 }
 

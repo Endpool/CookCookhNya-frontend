@@ -4,143 +4,50 @@
 #include "backend/models/recipe.hpp"
 #include "message_tracker.hpp"
 #include "render/common.hpp"
-#include "utils/utils.hpp"
+#include "utils/u8format.hpp"
 
-#include <algorithm>
-#include <cstddef>
+#include <boost/url/url.hpp>
+
 #include <format>
 #include <string>
-#include <unordered_set>
 #include <utility>
-#include <vector>
 
 namespace cookcookhnya::render::recipe {
 
-textGenInfo textGen(const std::vector<api::StorageId>& storageIds,
-                    const api::models::recipe::RecipeDetails& recipeIngredients,
-                    UserId userId,
-                    ApiClient api) { // will return needed text and some additional elements
-
-    // Get two api's from apiClient
-    auto storageApi = api.getStoragesApi();
-    const std::unordered_set<api::StorageId> storageIdSet(storageIds.begin(), storageIds.end());
-
-    std::unordered_set<api::StorageId> suggestedStorageIds;
-    std::vector<std::string> foundInStoragesStrings;
-
-    auto ingredients = recipeIngredients.ingredients;
-
-    const std::string recipeName = recipeIngredients.name;
-    auto toPrint = std::format("{} Ингредиенты для *{}* \n\n", utils::utf8str(u8"📖"), recipeName);
-    std::vector<std::string> variants = {
-        "\n", " и ", ", "}; // difference is 0 -> last, difference is 1 -> предпоследний.
-
-    bool isContains = false;
-    bool isSuggestionMade = false;
-    bool isIngredientNotWritten = true;
-    bool isAtLeastOneIngredientLack = false;
-    size_t counterOfSuggestion = 0;
-    for (auto& ingredient : ingredients) { // Iterate through each ingredient
-        isIngredientNotWritten = true;
-        isContains = false;
-        if (ingredient.inStorages.empty()) {
-            toPrint += std::format("`[ ]` {}\n", ingredient.name);
-            isAtLeastOneIngredientLack = true;
-            continue;
-        }
-
-        for (size_t j = 0; j < ingredient.inStorages.size();
-             j++) { // Iterate through each storage where ingredient is present
-            if (storageIdSet.contains(
-                    ingredient.inStorages[j])) { // If it contains then ingredient is in chosen storages
-                toPrint += std::format("`[+]` {}\n", ingredient.name);
-                isContains = true;
-                break;
-            }
-        }
-
-        if (isContains) {
-            continue;
-        }
-
-        for (size_t j = 0; j < ingredient.inStorages.size();
-             j++) { // Iterate through each storage where ingredient is present
-            isSuggestionMade = true;
-            if (isIngredientNotWritten) {
-                toPrint += std::format("`[?]` {}\n", ingredient.name);
-                isIngredientNotWritten = false;
-
-                foundInStoragesStrings.emplace_back(""); // New place for string for suggestion
-
-                if (ingredient.inStorages.size() == 1) {
-
-                    foundInStoragesStrings[counterOfSuggestion] += utils::utf8str(u8" *Найдено в хранилище: ");
-                } else {
-                    foundInStoragesStrings[counterOfSuggestion] += utils::utf8str(u8" *Найдено в хранилищах: ");
-                }
-            }
-            auto storage = storageApi.get(userId, ingredient.inStorages[j]);
-
-            suggestedStorageIds.insert(ingredient.inStorages[j]); // Keep set of storages which will be suggested
-            foundInStoragesStrings[counterOfSuggestion] += // I felt myself genious after writing that line of code
-                                                           // (here is one for, if-else and if technically)
-                std::format("\"{}\"{}",
-                            storage.name,
-                            variants[std::min(variants.size() - 1, ingredient.inStorages.size() - j - 1)]);
-        }
-        counterOfSuggestion++; // If here then suggesiton was made
-    }
-    toPrint += "\n🌐 [Источник](" + recipeIngredients.link + ")";
-    return {.text = toPrint,
-            .isSuggestionMade = isSuggestionMade,
-            .suggestedStorageIds = suggestedStorageIds,
-            .foundInStoragesStrings = foundInStoragesStrings,
-            .isAtLeastOneIngredientLack =
-                isAtLeastOneIngredientLack}; // Many info may be needed from that function to make right markup
-}
-
-void renderRecipeView(const std::vector<api::StorageId>& storageIds,
-                      api::RecipeId recipeId,
+void renderRecipeView(const api::models::recipe::RecipeDetails& recipe,
+                      const api::RecipeId& recipeId,
                       UserId userId,
                       ChatId chatId,
-                      BotRef bot,
-                      ApiClient api) {
+                      BotRef bot) {
+    std::string text = utils::u8format("{} *{}*\n\n{}", u8"📖 Рецепт", recipe.name, u8"Ингредиенты:\n");
+    for (const auto& ing : recipe.ingredients)
+        text += utils::u8format("{} {}\n", u8"•", ing.name);
+    if (recipe.link)
+        text += utils::u8format("\n{}: {}\n", u8"🌐 Источник", *recipe.link);
+    if (recipe.creator)
+        text += utils::u8format("\n{}: {}\n", u8"👤 Автор", recipe.creator->fullName);
 
-    auto recipesApi = api.getRecipesApi();
-    auto recipeIngredients = recipesApi.getIngredientsInRecipe(userId, recipeId);
-    const textGenInfo text = textGen(storageIds, recipeIngredients, userId, api);
+    InlineKeyboardBuilder keyboard{3}; // cook, share, back
 
-    const bool isSuggestionMade = text.isSuggestionMade;
-    auto suggestedStorageIds = text.suggestedStorageIds;
-    auto toPrint = text.text;
-    const bool isAtLeastOneIngredientLack = text.isAtLeastOneIngredientLack;
+    auto shareButton = std::make_shared<TgBot::InlineKeyboardButton>();
+    shareButton->text = utils::utf8str(u8"📤 Поделиться");
+    const std::string botAlias = bot.getUnderlying().getMe()->username;
+    const std::string recipeUrl = std::format("https://t.me/{}?start=recipe_{}", botAlias, recipeId);
+    const std::string shareText = utils::u8format("{} **{}**", u8"Хочу поделиться с тобой рецептом", recipe.name);
 
-    // if there is no lacking ingredients then there is no need to show field of shopping list
-    const size_t buttonRows = isAtLeastOneIngredientLack ? 3 : 2;
-    InlineKeyboard keyboard(buttonRows);
+    boost::urls::url url{"https://t.me/share/url"};
+    url.params().append({"url", recipeUrl});
+    url.params().append({"text", shareText});
+    shareButton->url = url.buffer();
 
-    keyboard[0].push_back(makeCallbackButton(u8"🧑‍🍳 Готовить",
-                                             "start_cooking")); // Add needed info for next states!
+    keyboard << makeCallbackButton(u8"🧑‍🍳 Хочу приготовить", "cook") << NewRow{}
+             << std::move(shareButton) << NewRow{} << makeCallbackButton(u8"↩️ Назад", "back");
 
-    if (isSuggestionMade) {
-        std::string dataForSuggestion = "?";
-        for (auto id : suggestedStorageIds) {
-            dataForSuggestion += std::format("{} ", id);
-        }
-        keyboard[0].push_back(makeCallbackButton(u8"?", dataForSuggestion));
-    }
-
-    if (isAtLeastOneIngredientLack) {
-        keyboard[1].push_back(makeCallbackButton(u8"📝 Составить список продуктов",
-                                                 "make_product_list")); // Add needed info for next states!
-    }
-
-    keyboard[buttonRows - 1].push_back(makeCallbackButton(u8"↩️ Назад", "back_from_recipe_view"));
-
-    auto messageId = message::getMessageId(userId);
-    if (messageId) {
-        // Only on difference between function above
-        bot.editMessageText(toPrint, chatId, *messageId, makeKeyboardMarkup(std::move(keyboard)));
+    if (auto mMessageId = message::getMessageId(userId))
+        bot.editMessageText(text, chatId, *mMessageId, std::move(keyboard), "Markdown");
+    else {
+        auto messageId = bot.sendMessage(chatId, text, std::move(keyboard), "Markdown")->messageId;
+        message::addMessageId(userId, messageId);
     }
 }
 

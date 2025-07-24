@@ -33,14 +33,19 @@ int main(int argc, char* argv[]) {
     }
 
     try {
-        Setup<State, Dependencies<ApiClient>>::Stater<startCmdHandler,
-                                                      noStateHandler,
+        Setup<State, Dependencies<ApiClient>>::Stater<noStateHandler,
+                                                      startCmdHandler,
+                                                      myStoragesCmdHandler,
+                                                      shoppingListCmdHandler,
+                                                      wannaEatCmdHandler,
+                                                      personalAccountCmdHandler,
                                                       mainMenuCQHandler,
                                                       customIngredientsListCQHandler,
                                                       customIngredientCreationEnterNameMsgHandler,
                                                       customIngredientCreationEnterNameCQHandler,
                                                       customIngredientConfirmationCQHandler,
                                                       customIngredientPublishCQHandler,
+                                                      handleCustomIngredientDeletionCQHandler,
                                                       storageListCQHandler,
                                                       storageCreationEnterNameMsgHandler,
                                                       storageCreationEnterNameCQHandler,
@@ -53,9 +58,10 @@ int main(int argc, char* argv[]) {
                                                       storageSelectionCQHandler,
                                                       storageIngredientsListCQHandler,
                                                       storageIngredientsListIQHandler,
+                                                      storageIngredientsDeletionCQHandler,
                                                       suggestedRecipeListCQHandler,
-                                                      recipeViewCQHandler,
-                                                      recipeStorageAdditionCQHandler,
+                                                      cookingPlanningCQHandler,
+                                                      cookingPlanningStorageAdditionCQHandler,
                                                       shoppingListCreationCQHandler,
                                                       shoppingListViewCQHandler,
                                                       personalAccountMenuCQHandler,
@@ -64,10 +70,19 @@ int main(int argc, char* argv[]) {
                                                       createCustomRecipeCQHandler,
                                                       recipeCustomViewCQHandler,
                                                       customRecipeIngredientsSearchCQHandler,
-                                                      customRecipeIngredientsSearchIQHandler>
+                                                      customRecipeIngredientsSearchIQHandler,
+                                                      shoppingListStorageSelectionToBuyCQHandler,
+                                                      customRecipePublicationHistoryCQHandler,
+                                                      totalPublicationHistoryCQHandler,
+                                                      shoppingListIngredientSearchCQHandler,
+                                                      shoppingListIngredientSearchIQHandler,
+                                                      recipesSearchCQHandler,
+                                                      recipesSearchIQHandler,
+                                                      recipeViewCQHandler,
+                                                      cookingIngredientsSpendingCQHandler>
             bot{{}, {ApiClient{utils::getenvWithError("API_URL")}}};
 
-        TgBot::Bot tgBot{utils::getenvWithError("BOT_TOKEN")};
+        TgBot::Bot tgBot{utils::getenvWithError("BOT_TOKEN")}; // sdf
         if (useWebhook) {
             const std::string path = "/"s + utils::getenvWithError("WEBHOOK_SECRET"); // NOLINT(*include*)
             bot.startWebhook(std::move(tgBot),
@@ -76,7 +91,7 @@ int main(int argc, char* argv[]) {
                              path);
         } else {
             bot.start(std::move(tgBot));
-        }
+        } // pipidastr
     } catch (std::exception& e) {
         std::cout << e.what() << '\n';
         return 1;

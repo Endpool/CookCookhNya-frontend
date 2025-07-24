@@ -1,10 +1,11 @@
 #pragma once
 
-#include "backend/api/ingredients.hpp"
-#include "backend/api/recipes.hpp"
-#include "backend/api/shopping_lists.hpp"
-#include "backend/api/storages.hpp"
-#include "backend/api/users.hpp"
+#include "ingredients.hpp"
+#include "moderation.hpp"
+#include "recipes.hpp"
+#include "shopping_lists.hpp"
+#include "storages.hpp"
+#include "users.hpp"
 
 #include <httplib.h>
 
@@ -20,13 +21,16 @@ class ApiClient {
     IngredientsApi ingredients;
     RecipesApi recipes;
     ShoppingListApi shoppingList;
+    ModerationApi moderation;
 
   public:
     explicit ApiClient(const std::string& apiAddress)
-        : api{apiAddress}, users{api}, storages{api}, ingredients{api}, recipes{api}, shoppingList{api} {}
+        : api{apiAddress}, users{api}, storages{api}, ingredients{api}, recipes{api}, shoppingList{api},
+          moderation{api} {}
     ApiClient(const ApiClient&) = delete;
     ApiClient(ApiClient&& other) noexcept
-        : api{std::move(other.api)}, users{api}, storages{api}, ingredients{api}, recipes{api}, shoppingList{api} {}
+        : api{std::move(other.api)}, users{api}, storages{api}, ingredients{api}, recipes{api}, shoppingList{api},
+          moderation{api} {}
     ApiClient& operator=(const ApiClient&) = delete;
     ApiClient& operator=(ApiClient&& other) noexcept {
         if (&other == this)
@@ -37,6 +41,7 @@ class ApiClient {
         ingredients = IngredientsApi{api};
         recipes = RecipesApi{api};
         shoppingList = ShoppingListApi{api};
+        moderation = ModerationApi{api};
         return *this;
     }
     ~ApiClient() = default;
@@ -80,6 +85,16 @@ class ApiClient {
     operator const ShoppingListApi&() const { // NOLINT(*-explicit-*)
         return shoppingList;
     }
+
+    [[nodiscard]] const ModerationApi& getModerationApi() const {
+        return moderation;
+    }
+
+    operator const ModerationApi&() const { // NOLINT(*-explicit-*)
+        return moderation;
+    }
 };
+
+using ApiClientRef = const api::ApiClient&;
 
 } // namespace cookcookhnya::api

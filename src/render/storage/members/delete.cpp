@@ -1,5 +1,6 @@
 #include "delete.hpp"
 
+#include "backend/api/storages.hpp"
 #include "backend/id_types.hpp"
 #include "message_tracker.hpp"
 #include "render/common.hpp"
@@ -14,11 +15,11 @@
 namespace cookcookhnya::render::storage::members {
 
 void renderStorageMemberDeletion(
-    const api::StorageId& storageId, UserId userId, ChatId chatId, BotRef bot, StorageApiRef storageApi) {
+    const api::StorageId& storageId, UserId userId, ChatId chatId, BotRef bot, api::StorageApiRef storageApi) {
     auto storage = storageApi.get(userId, storageId);
 
     auto members = storageApi.getStorageMembers(userId, storageId);
-    const unsigned int buttonRows = members.size();
+    const std::size_t buttonRows = members.size();
     InlineKeyboard keyboard(buttonRows);
     keyboard[0].push_back(makeCallbackButton(u8"↩️ Назад", "cancel_member_deletion"));
     size_t k = 1;

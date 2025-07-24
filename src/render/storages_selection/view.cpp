@@ -1,51 +1,61 @@
 #include "view.hpp"
 
-#include "backend/id_types.hpp"
+#include "backend/api/storages.hpp"
+#include "backend/models/storage.hpp"
 #include "message_tracker.hpp"
 #include "render/common.hpp"
-#include "utils/to_string.hpp"
+#include "states.hpp"
 #include "utils/utils.hpp"
 
 #include <algorithm>
 #include <cstddef>
 #include <format>
+#include <ranges>
 #include <string>
 #include <utility>
 #include <vector>
 
 namespace cookcookhnya::render::select_storages {
 
+using api::models::storage::StorageSummary;
+using states::StoragesSelection;
 using namespace tg_types;
+using namespace std::views;
 
-void renderStorageSelection(const std::vector<api::StorageId>& selected_storages,
-                            UserId userId,
-                            ChatId chatId,
-                            BotRef bot,
-                            StorageApiRef storageApi) {
-    auto storages = storageApi.getStoragesList(userId);
-    const std::size_t buttonRows = ((storages.size() + 1) / 2) + 1;
-    InlineKeyboard keyboard(buttonRows);
+void renderStorageSelection(
+    const StoragesSelection& state, UserId userId, ChatId chatId, BotRef bot, api::StorageApiRef storageApi) {
+    const auto& selectedStorages = state.selectedStorages;
+    auto allStorages = storageApi.getStoragesList(userId);
 
-    for (std::size_t i = 0; i < storages.size(); ++i) {
-        if (i % 2 == 0)
-            keyboard[i / 2].reserve(2);
-        const bool isSelected = std::ranges::find(selected_storages, storages[i].id) != selected_storages.end();
+    const std::size_t buttonRows = ((allStorages.size() + 1) / 2) + 1; // ceil(storagesCount / 2) and back
+    InlineKeyboardBuilder keyboard{buttonRows};
 
-        std::string emoji = utils::utf8str(isSelected ? u8"[ + ]" : u8"[ᅠ]");
-        const char* actionPrefix = isSelected ? "in__" : "out_";
-        const std::string text = std::format("{} {}", emoji, storages[i].name);
-        const std::string data = actionPrefix + utils::to_string(storages[i].id);
-        keyboard[i / 2].push_back(makeCallbackButton(text, data));
+    for (auto chunk : allStorages | chunk(2)) {
+        keyboard.reserveInRow(2);
+        for (auto& storage : chunk) {
+            const bool isSelected = std::ranges::contains(selectedStorages, storage.id, &StorageSummary::id);
+            std::string emoji = utils::utf8str(isSelected ? u8"[ + ]" : u8"[ᅠ]");
+            const char* actionPrefix = isSelected ? "+" : "-";
+            const std::string text = std::format("{} {}", emoji, storage.name);
+            const std::string data = actionPrefix + utils::to_string(storage.id);
+            keyboard << makeCallbackButton(text, data);
+        }
+        keyboard << NewRow{};
     }
-    keyboard[buttonRows - 1].reserve(2);
-    keyboard[buttonRows - 1].push_back(makeCallbackButton(u8"↩️ Назад", "cancel"));
-    if (!selected_storages.empty()) {
-        keyboard[buttonRows - 1].push_back(makeCallbackButton(u8"▶️ Подтвердить", "confirm"));
-    }
+
+    keyboard.reserveInRow(2);
+    keyboard << makeCallbackButton(u8"↩️ Назад", "cancel");
+    if (!selectedStorages.empty())
+        keyboard << makeCallbackButton(u8"▶️ Подтвердить", "confirm");
+
     auto text = utils::utf8str(u8"🍱 Откуда брать продукты?");
     auto messageId = message::getMessageId(userId);
     if (messageId)
-        bot.editMessageText(text, chatId, *messageId, makeKeyboardMarkup(std::move(keyboard)));
+        bot.editMessageText(text, chatId, *messageId, std::move(keyboard).build());
+    else {
+        auto message = bot.sendMessage(chatId, text, std::move(keyboard).build());
+        message::addMessageId(userId, message->messageId);
+    }
 }
 
 } // namespace cookcookhnya::render::select_storages

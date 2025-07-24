@@ -3,8 +3,10 @@
 #include "uuid.hpp"
 
 #include <charconv>
+#include <chrono>
 #include <optional>
 #include <stdexcept>
+#include <string>
 #include <string_view>
 #include <system_error>
 
@@ -33,5 +35,7 @@ T parse(std::string_view s) noexcept(false) {
 
 template <>
 Uuid parse<Uuid>(std::string_view s) noexcept(false);
+
+std::chrono::system_clock::time_point parseIsoTime(std::string s);
 
 } // namespace cookcookhnya::utils

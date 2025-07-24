@@ -1,16 +1,12 @@
 #pragma once
 
-#include "backend/id_types.hpp"
+#include "backend/api/storages.hpp"
 #include "render/common.hpp"
-
-#include <vector>
+#include "states.hpp"
 
 namespace cookcookhnya::render::select_storages {
 
-void renderStorageSelection(const std::vector<api::StorageId>& selected_storages,
-                            UserId userId,
-                            ChatId chatId,
-                            BotRef bot,
-                            StorageApiRef storageApi);
+void renderStorageSelection(
+    const states::StoragesSelection& state, UserId userId, ChatId chatId, BotRef bot, api::StorageApiRef storageApi);
 
 } // namespace cookcookhnya::render::select_storages

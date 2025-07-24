@@ -19,6 +19,7 @@ struct UpdateUserInfoBody {
 
 struct UserDetails {
     tg_types::UserId userId;
+    // Note: current backend doesn't have alias field (19.07.2025)
     std::optional<std::string> alias;
     std::string fullName;
 

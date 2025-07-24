@@ -1,15 +1,15 @@
 #include "view.hpp"
 
-#include "backend/api/storages.hpp"
-#include "backend/id_types.hpp"
+#include "backend/api/api.hpp"
 #include "handlers/common.hpp"
 #include "render/personal_account/view.hpp"
+#include "render/recipes_search/view.hpp"
 #include "render/recipes_suggestions/view.hpp"
 #include "render/shopping_list/view.hpp"
 #include "render/storages_list/view.hpp"
 #include "render/storages_selection/view.hpp"
 
-#include <iterator>
+#include <utility>
 #include <vector>
 
 namespace cookcookhnya::handlers::main_menu {
@@ -19,35 +19,50 @@ using namespace render::recipes_suggestions;
 using namespace render::select_storages;
 using namespace render::shopping_list;
 using namespace render::personal_account;
+using namespace render::recipes_search;
+using namespace std::views;
 
-void handleMainMenuCQ(MainMenu& /*unused*/, CallbackQueryRef cq, BotRef& bot, SMRef stateManager, ApiClientRef api) {
+void handleMainMenuCQ(MainMenu& state, CallbackQueryRef cq, BotRef& bot, SMRef stateManager, api::ApiClientRef api) {
     bot.answerCallbackQuery(cq.id);
     auto userId = cq.from->id;
     auto chatId = cq.message->chat->id;
     auto storages = api.getStoragesApi().getStoragesList(userId);
+
     if (cq.data == "storage_list") {
         renderStorageList(true, userId, chatId, bot, api);
         stateManager.put(StorageList{});
         return;
     }
+
     if (cq.data == "wanna_eat") {
         if (storages.size() == 1) {
-            auto storageId = {storages[0].id};
-            renderRecipesSuggestion(storageId, 0, userId, chatId, bot, api);
-            stateManager.put(SuggestedRecipeList{.pageNo = 0, .storageIds = storageId, .fromStorage = false});
+            renderRecipesSuggestion({storages[0].id}, 0, userId, chatId, bot, api);
+            stateManager.put(SuggestedRecipesList{
+                .prevState = SuggestedRecipesList::FromMainMenuData{state, std::move(storages[0])}, .pageNo = 0});
             return;
         }
         renderStorageSelection({}, userId, chatId, bot, api);
-        stateManager.put(StoragesSelection{.storageIds = std::vector<api::StorageId>{}});
+        stateManager.put(StoragesSelection{.prevState = state, .selectedStorages = {}});
         return;
     }
+
     if (cq.data == "shopping_list") {
+        const bool canBuy = !storages.empty();
         auto items = api.getShoppingListApi().get(userId);
-        stateManager.put(
-            ShoppingListView{{{std::make_move_iterator(items.begin()), std::make_move_iterator(items.end())}}});
-        renderShoppingList(std::get<ShoppingListView>(*stateManager.get()).items.getAll(), userId, chatId, bot);
+
+        auto newState = ShoppingListView{.items = std::move(items), .canBuy = canBuy};
+        renderShoppingList(newState, userId, chatId, bot);
+        stateManager.put(std::move(newState));
         return;
     }
+
+    if (cq.data == "recipes_search") {
+        auto newState = RecipesSearch{};
+        renderRecipesSearch(newState.pagination, newState.page, userId, chatId, bot);
+        stateManager.put(std::move(newState));
+        return;
+    }
+
     if (cq.data == "personal_account") {
         renderPersonalAccountMenu(userId, chatId, bot);
         stateManager.put(PersonalAccountMenu{});

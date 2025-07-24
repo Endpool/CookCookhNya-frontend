@@ -27,7 +27,7 @@ build/Release/CMakeCache.txt: conanfile.txt
 build-debug: build/Debug/CMakeCache.txt
 	cmake --build --preset=conan-debug
 build-debug-j5: build/Release/CMakeCache.txt
-	cmake --build . --preset=conan-debug -- -j5
+	cmake --build . --preset=conan-debug -- -j2
 build-release: build/Release/CMakeCache.txt
 	cmake --build --preset=conan-release
 

@@ -1,77 +1,63 @@
 #include "view.hpp"
 
+#include "backend/api/api.hpp"
 #include "backend/id_types.hpp"
 #include "handlers/common.hpp"
-#include "render/recipe/add_storage.hpp"
-#include "render/recipes_suggestions/view.hpp"
-#include "render/shopping_list/create.hpp"
+#include "render/cooking_planning/view.hpp"
+#include "render/main_menu/view.hpp"
+#include "render/recipes_search/view.hpp"
+#include "render/storages_selection/view.hpp"
+#include "states.hpp"
+#include "utils/ingredients_availability.hpp"
 
-#include <string>
-#include <unordered_set>
+#include <optional>
+#include <utility>
 #include <vector>
 
 namespace cookcookhnya::handlers::recipe {
 
-using namespace render::recipes_suggestions;
-using namespace render::shopping_list;
-using namespace render::recipe;
+using namespace render::recipes_search;
+using namespace render::cooking_planning;
+using namespace render::select_storages;
+using namespace render::main_menu;
 
-void handleRecipeViewCQ(RecipeView& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
-    std::string data = cq.data;
-    auto chatId = cq.message->chat->id;
+void handleRecipeViewCQ(RecipeView& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, api::ApiClientRef api) {
+    bot.answerCallbackQuery(cq.id);
     auto userId = cq.from->id;
+    auto chatId = cq.message->chat->id;
 
-    if (data == "start_cooking") {
-        // TODO: add state of begginig of cooking
-        return;
-    }
-    if (data == "make_product_list") {
-        // Next lines of code is necessary preparation for making product list. Need to re-verify products which are
-        // certanly not in storage
-        // Besides we exactly need ingredient Ids, as then it will be sent on backend
-        const std::unordered_set<api::StorageId> storageIdsSet(state.storageIds.begin(), state.storageIds.end());
-        auto recipesApi = api.getRecipesApi();
-
-        auto ingredients = recipesApi.getIngredientsInRecipe(userId, state.recipeId).ingredients;
-        std::vector<api::IngredientId> ingredientIds;
-        bool isHavingIngredient = false;
-
-        for (auto& ingredient : ingredients) { // Iterate through each ingredient
-            isHavingIngredient = false;
-            for (const api::StorageId storage : ingredient.inStorages) {
-                // Then for this ingredient one of possible storages already selected
-                if (storageIdsSet.contains(storage)) {
-                    isHavingIngredient = true;
-                    break; // No need to iterate further
-                }
-            }
-            if (!isHavingIngredient) {
-                ingredientIds.push_back(ingredient.id);
-            }
+    if (cq.data == "back") {
+        if (auto& prevState = state.prevState) {
+            renderRecipesSearch(prevState->pagination, prevState->page, userId, chatId, bot);
+            stateManager.put(auto{std::move(*prevState)});
+        } else {
+            renderMainMenu(true, std::nullopt, userId, chatId, bot, api);
+            stateManager.put(MainMenu{});
         }
-        renderShoppingListCreation(ingredientIds, userId, chatId, bot, api);
-        stateManager.put(ShoppingListCreation{.storageIdsFrom = state.storageIds,
-                                              .recipeIdFrom = state.recipeId,
-                                              .ingredientIdsInList = ingredientIds,
-                                              .fromStorage = state.fromStorage,
-                                              .pageNo = state.pageNo});
-        bot.answerCallbackQuery(cq.id);
-        return;
-    }
-    if (data == "back_from_recipe_view") {
-        renderRecipesSuggestion(state.storageIds, state.pageNo, userId, chatId, bot, api);
-        stateManager.put(SuggestedRecipeList{
-            .pageNo = state.pageNo, .storageIds = state.storageIds, .fromStorage = state.fromStorage});
-        bot.answerCallbackQuery(cq.id);
         return;
     }
 
-    if (data[0] == '?') {
-        renderStoragesSuggestion(state.storageIds, state.recipeId, userId, chatId, bot, api);
-        stateManager.put(RecipeStorageAddition{.storageIds = state.storageIds,
-                                               .recipeId = state.recipeId,
-                                               .fromStorage = state.fromStorage,
-                                               .pageNo = state.pageNo});
+    if (cq.data == "cook") {
+        auto storages = api.getStoragesApi().getStoragesList(userId);
+        if (storages.size() <= 1) {
+            std::vector<api::StorageId> storagesIds;
+            if (!storages.empty())
+                storagesIds.push_back(storages[0].id);
+
+            const api::RecipeId recipeId = state.recipeId;
+            auto availability = utils::inStoragesAvailability(storagesIds, recipeId, userId, api);
+
+            renderCookingPlanning(availability, recipeId, userId, chatId, bot, api);
+            stateManager.put(
+                CookingPlanning{.prevState = CookingPlanning::FromRecipeViewData{std::move(state), std::move(storages)},
+                                .addedStorages = {},
+                                .availability = std::move(availability),
+                                .recipeId = recipeId});
+            return;
+        }
+        StoragesSelection newState{.prevState = std::move(state), .selectedStorages = {}};
+        renderStorageSelection(newState, userId, chatId, bot, api);
+        stateManager.put(std::move(newState));
         return;
     }
 }

@@ -1,62 +1,70 @@
 #include "create.hpp"
 
+#include "backend/api/api.hpp"
 #include "backend/id_types.hpp"
+#include "backend/models/ingredient.hpp"
 #include "handlers/common.hpp"
-#include "render/recipe/view.hpp"
+#include "render/cooking_planning/view.hpp"
 #include "render/shopping_list/create.hpp"
 #include "utils/parsing.hpp"
 
+#include <algorithm>
 #include <string>
+#include <utility>
+#include <vector>
 
 namespace cookcookhnya::handlers::shopping_list {
 
 using namespace render::shopping_list;
-using namespace render::recipe;
+using namespace render::cooking_planning;
 
 void handleShoppingListCreationCQ(
-    ShoppingListCreation& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, ApiClientRef api) {
-    std::string data = cq.data;
+    ShoppingListCreation& state, CallbackQueryRef cq, BotRef bot, SMRef stateManager, api::ApiClientRef api) {
+    const std::string& data = cq.data;
     auto chatId = cq.message->chat->id;
     auto userId = cq.from->id;
 
     if (data == "back") {
-        renderRecipeView(state.storageIdsFrom, state.recipeIdFrom, userId, chatId, bot, api);
-        stateManager.put(RecipeView{.storageIds = state.storageIdsFrom,
-                                    .recipeId = state.recipeIdFrom,
-                                    .fromStorage = state.fromStorage,
-                                    .pageNo = state.pageNo});
+        renderCookingPlanning(state.prevState.availability, state.prevState.recipeId, userId, chatId, bot, api);
+        stateManager.put(auto{std::move(state.prevState)});
         bot.answerCallbackQuery(cq.id);
         return;
     }
+
     if (data == "confirm") {
-        // Put ingredients in list
         auto shoppingApi = api.getShoppingListApi();
-        shoppingApi.put(userId, state.ingredientIdsInList);
-
-        // Return to previous state
-        renderRecipeView(state.storageIdsFrom, state.recipeIdFrom, userId, chatId, bot, api);
-        stateManager.put(RecipeView{.storageIds = state.storageIdsFrom,
-                                    .recipeId = state.recipeIdFrom,
-                                    .fromStorage = state.fromStorage,
-                                    .pageNo = state.pageNo});
+        std::vector<api::IngredientId> putIds;
+        putIds.reserve(state.selectedIngredients.size());
+        for (const auto& ingredient : state.selectedIngredients) {
+            putIds.push_back(ingredient.id);
+        }
+        shoppingApi.put(userId, putIds);
+        renderCookingPlanning(state.prevState.availability, state.prevState.recipeId, userId, chatId, bot, api);
+        stateManager.put(auto{std::move(state.prevState)});
         bot.answerCallbackQuery(cq.id);
         return;
     }
-    if (data[0] == 'i') {
-        auto newIngredientIdStr =
-            data.substr(1, data.size()); // Here we got all selected storages and new one as last in string
-        auto ingredientIdToRemove = utils::parseSafe<api::IngredientId>(newIngredientIdStr);
-        // Remove ingredient which was chosen
-        if (ingredientIdToRemove) {
-            for (auto ingredientId = state.ingredientIdsInList.begin(); ingredientId < state.ingredientIdsInList.end();
-                 ingredientId++) {
-                if (*ingredientId == *ingredientIdToRemove) {
-                    state.ingredientIdsInList.erase(ingredientId);
-                }
-            }
-        }
 
-        renderShoppingListCreation(state.ingredientIdsInList, userId, chatId, bot, api);
+    if (data[0] == '+') {
+        auto newIngredientIdStr = data.substr(1, data.size());
+        auto newIngredientId = utils::parseSafe<api::IngredientId>(newIngredientIdStr);
+        if (newIngredientId) {
+            auto ingredient = api.getIngredientsApi().get(userId, *newIngredientId);
+            state.selectedIngredients.push_back(ingredient);
+        }
+        renderShoppingListCreation(state.selectedIngredients, state.allIngredients, userId, chatId, bot);
+        return;
+    }
+
+    if (data[0] == '-') {
+        auto newIngredientIdStr = data.substr(1, data.size());
+        auto newIngredientId = utils::parseSafe<api::IngredientId>(newIngredientIdStr);
+        if (newIngredientId) {
+            state.selectedIngredients.erase(std::ranges::find(
+                state.selectedIngredients, *newIngredientId, &api::models::ingredient::Ingredient::id));
+        }
+        renderShoppingListCreation(state.selectedIngredients, state.allIngredients, userId, chatId, bot);
+        return;
     }
 }
 } // namespace cookcookhnya::handlers::shopping_list

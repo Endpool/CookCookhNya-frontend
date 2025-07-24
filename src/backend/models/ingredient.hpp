@@ -1,11 +1,13 @@
 #pragma once
 
 #include "backend/id_types.hpp"
+#include "backend/models/publication_request_status.hpp"
 
 #include <boost/json/conversion.hpp>
 #include <boost/json/value.hpp>
 
 #include <cstddef>
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -16,6 +18,15 @@ struct Ingredient {
     std::string name;
 
     friend Ingredient tag_invoke(boost::json::value_to_tag<Ingredient>, const boost::json::value& j);
+};
+
+struct CustomIngredient {
+    IngredientId id;
+    std::string name;
+    moderation::PublicationRequestStatus moderationStatus = moderation::PublicationRequestStatus::NO_REQUEST;
+    std::optional<std::string> reason = std::nullopt;
+
+    friend CustomIngredient tag_invoke(boost::json::value_to_tag<CustomIngredient>, const boost::json::value& j);
 };
 
 struct IngredientCreateBody {
@@ -64,6 +75,21 @@ struct IngredientSearchResponse {
 
     friend IngredientSearchResponse tag_invoke(boost::json::value_to_tag<IngredientSearchResponse>,
                                                const boost::json::value& j);
+};
+
+struct IngredientList {
+    std::vector<Ingredient> page;
+    std::size_t found;
+
+    friend IngredientList tag_invoke(boost::json::value_to_tag<IngredientList>, const boost::json::value& j);
+};
+
+struct CustomIngredientList {
+    std::vector<CustomIngredient> page;
+    std::size_t found;
+
+    friend CustomIngredientList tag_invoke(boost::json::value_to_tag<CustomIngredientList>,
+                                           const boost::json::value& j);
 };
 
 } // namespace cookcookhnya::api::models::ingredient
