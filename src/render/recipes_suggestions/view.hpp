@@ -1,7 +1,7 @@
 #pragma once
 
 #include "backend/api/recipes.hpp"
-#include "backend/models/storage.hpp"
+#include "backend/id_types.hpp"
 #include "render/common.hpp"
 
 #include <cstddef>
@@ -11,7 +11,7 @@ namespace cookcookhnya::render::recipes_suggestions {
 
 using namespace tg_types;
 
-void renderRecipesSuggestion(std::vector<api::models::storage::StorageSummary>& storages,
+void renderRecipesSuggestion(const std::vector<api::StorageId>& storages,
                              std::size_t pageNo,
                              UserId userId,
                              ChatId chatId,

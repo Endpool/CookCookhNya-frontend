@@ -9,7 +9,7 @@
 
 namespace cookcookhnya::render::cooking_planning {
 
-void renderCookingPlanning(std::vector<states::CookingPlanning::IngredientAvailability>& inStoragesAvailability,
+void renderCookingPlanning(const std::vector<states::CookingPlanning::IngredientAvailability>& inStoragesAvailability,
                            api::RecipeId recipeId,
                            UserId userId,
                            ChatId chatId,

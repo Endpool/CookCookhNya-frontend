@@ -40,14 +40,27 @@ void handleCookingPlanningStorageAdditionCQ(
             const StorageSummary newStorage = {.id = *newStorageId, .name = newStorageDetails.name};
             state.prevState.addedStorages.push_back(newStorage);
             utils::addStorage(state.prevState.availability, newStorage);
+
+            using StoragesList = std::vector<StorageSummary>;
+            auto selectedStorages = state.prevState.getStorages();
+            const StoragesList* selectedStoragesPtr = nullptr;
+            // very optimized decision! (no)
+            if (auto* storagesVal = std::get_if<StoragesList>(&selectedStorages))
+                selectedStoragesPtr = storagesVal;
+            else if (auto* storagesRef = std::get_if<std::reference_wrapper<StoragesList>>(&selectedStorages))
+                selectedStoragesPtr = &storagesRef->get();
+            else
+                return;
+
             renderStoragesSuggestion(state.prevState.availability,
-                                     state.prevState.prevState.selectedStorages,
+                                     *selectedStoragesPtr,
                                      state.prevState.addedStorages,
                                      state.prevState.recipeId,
                                      userId,
                                      chatId,
                                      bot,
                                      api);
+            return;
         }
     }
 
@@ -59,14 +72,27 @@ void handleCookingPlanningStorageAdditionCQ(
             state.prevState.addedStorages.erase(std::ranges::find(
                 state.prevState.addedStorages, newStorageId, &api::models::storage::StorageSummary::id));
             utils::deleteStorage(state.prevState.availability, newStorage);
+
+            using StoragesList = std::vector<StorageSummary>;
+            auto selectedStorages = state.prevState.getStorages();
+            const StoragesList* selectedStoragesPtr = nullptr;
+            // very optimized decision! (no)
+            if (auto* storagesVal = std::get_if<StoragesList>(&selectedStorages))
+                selectedStoragesPtr = storagesVal;
+            else if (auto* storagesRef = std::get_if<std::reference_wrapper<StoragesList>>(&selectedStorages))
+                selectedStoragesPtr = &storagesRef->get();
+            else
+                return;
+
             renderStoragesSuggestion(state.prevState.availability,
-                                     state.prevState.prevState.selectedStorages,
+                                     *selectedStoragesPtr,
                                      state.prevState.addedStorages,
                                      state.prevState.recipeId,
                                      userId,
                                      chatId,
                                      bot,
                                      api);
+            return;
         }
     }
 }

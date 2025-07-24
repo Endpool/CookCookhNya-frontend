@@ -20,17 +20,16 @@ using namespace api::models::storage;
 using namespace tg_types;
 using IngredientAvailability = states::CookingPlanning::IngredientAvailability;
 using AvailabilityType = states::CookingPlanning::AvailabilityType;
-using namespace std::views;
-using namespace std::ranges;
+using std::ranges::to;
 
-std::vector<IngredientAvailability> inStoragesAvailability(std::vector<StorageSummary>& selectedStorages,
+std::vector<IngredientAvailability> inStoragesAvailability(const std::vector<StorageId>& selectedStorages,
                                                            RecipeId recipeId,
                                                            UserId userId,
                                                            const api::ApiClient& api) {
     auto allStorages = api.getStoragesApi().getStoragesList(userId);
     auto recipe = api.getRecipesApi().getSuggested(userId, recipeId);
 
-    auto selectedStoragesSet = selectedStorages | views::transform(&StorageSummary::id) | to<std::unordered_set>();
+    auto selectedStoragesSet = selectedStorages | to<std::unordered_set>();
 
     std::unordered_map<StorageId, StorageSummary> allStoragesMap;
     for (const auto& storage : allStorages) {

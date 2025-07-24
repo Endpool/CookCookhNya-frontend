@@ -11,7 +11,7 @@
 namespace cookcookhnya::utils {
 
 std::vector<states::CookingPlanning::IngredientAvailability>
-inStoragesAvailability(std::vector<api::models::storage::StorageSummary>& selectedStorages,
+inStoragesAvailability(const std::vector<api::StorageId>& selectedStorages,
                        api::RecipeId recipeId,
                        tg_types::UserId userId,
                        const api::ApiClient& api);

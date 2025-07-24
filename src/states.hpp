@@ -8,11 +8,14 @@
 #include "utils/fast_sorted_db.hpp"
 #include "utils/utils.hpp"
 
+#include <expected>
+#include <functional>
 #include <tg_stater/state_storage/common.hpp>
 #include <tg_stater/state_storage/memory.hpp>
 
 #include <cstddef>
 #include <optional>
+#include <ranges>
 #include <string>
 #include <utility>
 #include <variant>
@@ -48,6 +51,18 @@ struct SelectableIngredient : api::models::ingredient::Ingredient {
 
 struct MainMenu {};
 
+struct RecipesSearch {
+    std::string query;
+    helpers::Pagination pagination;
+    std::vector<api::models::recipe::RecipeSummary> page;
+};
+
+struct RecipeView {
+    std::optional<RecipesSearch> prevState;
+    api::models::recipe::RecipeDetails recipe;
+    api::RecipeId recipeId;
+};
+
 struct PersonalAccountMenu {};
 struct TotalPublicationHistory {
     std::size_t pageNo;
@@ -61,7 +76,6 @@ struct CustomIngredientConfirmation {
     // All optionals are for "back" from this menu, so this state won't erase all info
     std::optional<api::RecipeId> recipeFrom;
     std::optional<std::vector<api::models::ingredient::Ingredient>> ingredients;
-
     std::optional<api::StorageId> storageFrom;
 
     explicit CustomIngredientConfirmation(
@@ -77,7 +91,9 @@ struct CustomIngredientPublish {};
 struct StorageList {};
 struct StorageCreationEnterName {};
 
-struct StorageView : helpers::StorageIdMixin {};
+struct StorageView : helpers::StorageIdMixin {
+    std::string name;
+};
 struct StorageDeletion : helpers::StorageIdMixin {};
 struct StorageMemberView : helpers::StorageIdMixin {};
 struct StorageMemberAddition : helpers::StorageIdMixin {};
@@ -105,26 +121,71 @@ struct StorageIngredientsDeletion : helpers::StorageIdMixin {
 };
 
 struct StoragesSelection {
+    std::variant<MainMenu, RecipeView> prevState;
     std::vector<api::models::storage::StorageSummary> selectedStorages;
 };
 struct SuggestedRecipesList {
-    std::vector<api::models::storage::StorageSummary> selectedStorages;
+  private:
+    using StorageSummary = api::models::storage::StorageSummary;
+
+  public:
+    using FromMainMenuData = std::pair<MainMenu, StorageSummary>;
+    std::variant<FromMainMenuData, StoragesSelection, StorageView> prevState;
     std::size_t pageNo;
-    bool fromStorage;
+
+    [[nodiscard]] std::vector<api::StorageId> getStorageIds() const {
+        if (const auto* prevState_ = std::get_if<StorageView>(&prevState))
+            return {prevState_->storageId};
+
+        if (const auto* prevState_ = std::get_if<SuggestedRecipesList::FromMainMenuData>(&prevState))
+            return {prevState_->second.id};
+
+        if (const auto* prevState_ = std::get_if<StoragesSelection>(&prevState))
+            return prevState_->selectedStorages | std::views::transform(&StorageSummary::id) |
+                   std::ranges::to<std::vector>();
+        return {};
+    }
+
+    [[nodiscard]] std::variant<std::reference_wrapper<std::vector<StorageSummary>>, std::vector<StorageSummary>>
+    getStorages() const {
+        if (const auto* prevState_ = std::get_if<StorageView>(&prevState))
+            return std::vector{StorageSummary{.id = prevState_->storageId, .name = prevState_->name}};
+        if (const auto* prevState_ = std::get_if<SuggestedRecipesList::FromMainMenuData>(&prevState))
+            return std::vector{prevState_->second};
+        if (const auto* prevState_ = std::get_if<StoragesSelection>(&prevState))
+            return std::ref(prevState_->selectedStorages);
+        return std::vector<StorageSummary>{};
+    }
 };
 struct CookingPlanning {
+  private:
+    using StorageSummary = api::models::storage::StorageSummary;
+
+  public:
     enum struct AvailabilityType : std::uint8_t { NOT_AVAILABLE, AVAILABLE, OTHER_STORAGES };
 
     struct IngredientAvailability {
         cookcookhnya::api::models::recipe::IngredientInRecipe ingredient;
         AvailabilityType available = AvailabilityType::NOT_AVAILABLE;
-        std::vector<api::models::storage::StorageSummary> storages;
+        std::vector<StorageSummary> storages;
     };
 
-    SuggestedRecipesList prevState;
-    std::vector<api::models::storage::StorageSummary> addedStorages;
+    using FromRecipeViewData = std::pair<RecipeView, std::vector<StorageSummary>>;
+
+    std::variant<SuggestedRecipesList, FromRecipeViewData> prevState;
+    std::vector<StorageSummary> addedStorages;
     std::vector<IngredientAvailability> availability;
     api::RecipeId recipeId;
+
+    [[nodiscard]] std::variant<std::reference_wrapper<std::vector<StorageSummary>>, std::vector<StorageSummary>>
+    getStorages() const {
+        if (const auto* prevState_ = std::get_if<SuggestedRecipesList>(&prevState))
+            return prevState_->getStorages();
+        if (const auto* prevState_ = std::get_if<CookingPlanning::FromRecipeViewData>(&prevState)) {
+            return std::ref(prevState_->second);
+        }
+        return std::vector<StorageSummary>{};
+    }
 };
 
 struct CookingPlanningStorageAddition {
@@ -196,17 +257,6 @@ struct CustomRecipePublicationHistory {
     std::size_t pageNo;
     std::string recipeName;
     std::string errorReport;
-};
-
-struct RecipesSearch {
-    std::string query;
-    helpers::Pagination pagination;
-    std::vector<api::models::recipe::RecipeSummary> page;
-};
-
-struct RecipeView {
-    std::optional<RecipesSearch> prevState;
-    api::models::recipe::RecipeDetails recipe;
 };
 
 struct CookingIngredientsSpending { // NOLINT(*member-init)

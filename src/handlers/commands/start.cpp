@@ -61,7 +61,7 @@ void handleStartCmd(MessageRef m, BotRef bot, SMRef stateManager, api::ApiClient
         auto recipe = api.getRecipesApi().get(userId, *mRecipeId);
         message::deleteMessageId(userId);
         renderRecipeView(recipe, *mRecipeId, userId, chatId, bot);
-        stateManager.put(RecipeView{.prevState = std::nullopt, .recipe = std::move(recipe)});
+        stateManager.put(RecipeView{.prevState = std::nullopt, .recipe = std::move(recipe), .recipeId = *mRecipeId});
         return;
     }
 };

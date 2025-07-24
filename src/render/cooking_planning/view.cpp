@@ -64,7 +64,7 @@ CookingInfo recipeView(const std::vector<IngredientAvailability>& inStoragesAvai
 
 } // namespace
 
-void renderCookingPlanning(std::vector<IngredientAvailability>& inStoragesAvailability,
+void renderCookingPlanning(const std::vector<IngredientAvailability>& inStoragesAvailability,
                            api::RecipeId recipeId,
                            UserId userId,
                            ChatId chatId,
