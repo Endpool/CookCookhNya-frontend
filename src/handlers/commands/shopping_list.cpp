@@ -21,7 +21,7 @@ void handleShoppingListCmd(MessageRef m, BotRef bot, SMRef stateManager, api::Ap
     auto newState = ShoppingListView{.items = std::move(items), .canBuy = hasStorages};
     message::deleteMessageId(userId);
     renderShoppingList(newState, userId, m.chat->id, bot);
-    stateManager.put(newState);
+    stateManager.put(std::move(newState));
 };
 
 } // namespace cookcookhnya::handlers::commands
