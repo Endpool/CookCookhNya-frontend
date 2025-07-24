@@ -57,6 +57,8 @@ using states::RecipesSearch;
 
 using states::RecipeView;
 
+using states::CookingIngredientsSpending;
+
 // Type aliases
 using BotRef = const TgBot::Api&;
 using SMRef = const states::StateManager&;

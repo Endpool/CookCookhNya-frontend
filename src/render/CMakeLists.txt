@@ -44,4 +44,6 @@ target_sources(main PRIVATE
     src/render/recipes_search/view.cpp
 
     src/render/recipe/view.cpp
+
+    src/render/cooking/ingredients_spending.cpp
 )

@@ -50,4 +50,6 @@ target_sources(main PRIVATE
     src/handlers/recipes_search/view.cpp
 
     src/handlers/recipe/view.cpp
+
+    src/handlers/cooking/ingredients_spending.cpp
 )

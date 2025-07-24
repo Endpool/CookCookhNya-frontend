@@ -53,6 +53,8 @@
 
 #include "recipe/view.hpp"
 
+#include "cooking/ingredients_spending.hpp"
+
 #include <tg_stater/handler/event.hpp>
 #include <tg_stater/handler/handler.hpp>
 
@@ -74,6 +76,7 @@ using namespace handlers::storages_selection;
 using namespace handlers::recipes_suggestions;
 using namespace handlers::recipes_search;
 using namespace handlers::recipe;
+using namespace handlers::cooking;
 
 using namespace tg_stater;
 
@@ -141,7 +144,7 @@ using storageIngredientsListIQHandler = Handler<Events::InlineQuery{}, handleSto
 // StorageIngredientsDeletion
 using storageIngredientsDeletionCQHandler = Handler<Events::CallbackQuery{}, handleStorageIngredientsDeletionCQ>;
 
-// RecipeView
+// Cooking planning
 using cookingPlanningCQHandler = Handler<Events::CallbackQuery{}, cooking_planning::handleCookingPlanningCQ>;
 using cookingPlanningStorageAdditionCQHandler =
     Handler<Events::CallbackQuery{}, handleCookingPlanningStorageAdditionCQ>;
@@ -176,5 +179,8 @@ using recipesSearchIQHandler = Handler<Events::InlineQuery{}, handleRecipesSearc
 
 // Recipe
 using recipeViewCQHandler = Handler<Events::CallbackQuery{}, handlers::recipe::handleRecipeViewCQ>;
+
+// Cooking
+using cookingIngredientsSpendingCQHandler = Handler<Events::CallbackQuery{}, handleCookingIngredientsSpendingCQ>;
 
 } // namespace cookcookhnya::handlers::bot_handlers

@@ -38,6 +38,12 @@ struct SelectableShoppingListItem : api::models::shopping_list::ShoppingListItem
         : ShoppingListItem{std::move(item)} {}
 };
 
+struct SelectableIngredient : api::models::ingredient::Ingredient {
+    bool selected = false;
+    SelectableIngredient(api::models::ingredient::Ingredient item) // NOLINT(*explicit*)
+        : Ingredient{std::move(item)} {}
+};
+
 } // namespace helpers
 
 struct MainMenu {};
@@ -203,6 +209,12 @@ struct RecipeView {
     api::models::recipe::RecipeDetails recipe;
 };
 
+struct CookingIngredientsSpending { // NOLINT(*member-init)
+    CookingPlanning prevState;
+    std::optional<api::StorageId> storageId;
+    std::vector<helpers::SelectableIngredient> ingredients;
+};
+
 using State = std::variant<MainMenu,
                            PersonalAccountMenu,
                            CustomIngredientsList,
@@ -235,7 +247,8 @@ using State = std::variant<MainMenu,
                            TotalPublicationHistory,
                            ShoppingListIngredientSearch,
                            RecipesSearch,
-                           RecipeView>;
+                           RecipeView,
+                           CookingIngredientsSpending>;
 
 using StateManager = tg_stater::StateProxy<tg_stater::MemoryStateStorage<State>>;
 
