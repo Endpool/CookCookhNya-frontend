@@ -71,7 +71,7 @@ void handleCookingPlanningCQ(
         return;
     }
 
-    if (data == "back_from_recipe_view") {
+    if (data == "back") {
         renderRecipesSuggestion(state.prevState.selectedStorages, state.prevState.pageNo, userId, chatId, bot, api);
         stateManager.put(auto{std::move(state.prevState)});
         return;

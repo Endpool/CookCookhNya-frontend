@@ -6,9 +6,11 @@
 #include "message_tracker.hpp"
 #include "render/common.hpp"
 #include "states.hpp"
+#include "utils/u8format.hpp"
 #include "utils/utils.hpp"
 
-#include <cstddef>
+#include <boost/url/url.hpp>
+
 #include <format>
 #include <string>
 #include <utility>
@@ -20,7 +22,16 @@ using namespace api::models::recipe;
 using IngredientAvailability = states::CookingPlanning::IngredientAvailability;
 using AvailabilityType = states::CookingPlanning::AvailabilityType;
 
-TextGenInfo recipeView(const std::vector<IngredientAvailability>& inStoragesAvailability,
+namespace {
+
+struct CookingInfo {
+    std::string renderText;
+    std::string recipeName;
+    bool isIngredientNotAvailable;
+    bool isIngredientInOtherStorages;
+};
+
+CookingInfo recipeView(const std::vector<IngredientAvailability>& inStoragesAvailability,
                        api::RecipeId recipeId,
                        UserId userId,
                        api::ApiClientRef api) {
@@ -45,10 +56,13 @@ TextGenInfo recipeView(const std::vector<IngredientAvailability>& inStoragesAvai
     if (recipeIngredients.link)
         text += utils::utf8str(u8"\n🌐 Источник: ") + *recipeIngredients.link;
 
-    return {.text = text,
+    return {.renderText = text,
+            .recipeName = recipeName,
             .isIngredientNotAvailable = isIngredientNotAvailable,
-            .isIngredientIsOtherStorages = isIngredientIsOtherStorages};
+            .isIngredientInOtherStorages = isIngredientIsOtherStorages};
 }
+
+} // namespace
 
 void renderCookingPlanning(std::vector<IngredientAvailability>& inStoragesAvailability,
                            api::RecipeId recipeId,
@@ -56,25 +70,35 @@ void renderCookingPlanning(std::vector<IngredientAvailability>& inStoragesAvaila
                            ChatId chatId,
                            BotRef bot,
                            api::ApiClientRef api) {
-    auto textGen = recipeView(inStoragesAvailability, recipeId, userId, api);
-    const std::size_t buttonRows = textGen.isIngredientNotAvailable ? 3 : 2;
-    InlineKeyboard keyboard(buttonRows);
+    auto cookingInfo = recipeView(inStoragesAvailability, recipeId, userId, api);
+    InlineKeyboardBuilder keyboard{4}; // Cook + add storages, shopping list, share, back
 
-    keyboard[0].push_back(makeCallbackButton(u8"🧑‍🍳 Готовить", "start_cooking"));
+    keyboard << makeCallbackButton(u8"🧑‍🍳 Готовить", "start_cooking");
+    if (cookingInfo.isIngredientInOtherStorages)
+        keyboard << makeCallbackButton(u8"?", "add_storages");
+    keyboard << NewRow{};
 
-    if (textGen.isIngredientIsOtherStorages) {
-        keyboard[0].push_back(makeCallbackButton(u8"?", "add_storages"));
-    }
-    if (textGen.isIngredientNotAvailable) {
-        keyboard[1].push_back(makeCallbackButton(u8"📝 Составить список продуктов", "shopping_list"));
-    }
+    if (cookingInfo.isIngredientNotAvailable)
+        keyboard << makeCallbackButton(u8"📝 Составить список продуктов", "shopping_list") << NewRow{};
 
-    keyboard[buttonRows - 1].push_back(makeCallbackButton(u8"↩️ Назад", "back_from_recipe_view"));
+    auto shareButton = std::make_shared<TgBot::InlineKeyboardButton>();
+    shareButton->text = utils::utf8str(u8"📤 Поделиться");
+    const std::string botAlias = bot.getUnderlying().getMe()->username;
+    const std::string recipeUrl = std::format("https://t.me/{}?start=recipe_{}", botAlias, recipeId);
+    const std::string shareText =
+        utils::u8format("{} **{}**", u8"Хочу поделиться с тобой рецептом", cookingInfo.recipeName);
+
+    boost::urls::url url{"https://t.me/share/url"};
+    url.params().append({"url", recipeUrl});
+    url.params().append({"text", shareText});
+    shareButton->url = url.buffer();
+
+    keyboard << std::move(shareButton) << NewRow{} << makeCallbackButton(u8"↩️ Назад", "back");
 
     auto messageId = message::getMessageId(userId);
     if (messageId) {
         // Only on difference between function above
-        bot.editMessageText(textGen.text, chatId, *messageId, makeKeyboardMarkup(std::move(keyboard)), "Markdown");
+        bot.editMessageText(cookingInfo.renderText, chatId, *messageId, std::move(keyboard), "Markdown");
     }
 }
 
