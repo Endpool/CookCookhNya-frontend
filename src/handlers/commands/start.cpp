@@ -47,11 +47,12 @@ void handleStartCmd(MessageRef m, BotRef bot, SMRef stateManager, api::ApiClient
     if (payload.starts_with("invite_")) {
         const std::string_view hash = payload.substr("invite_"sv.size());
         auto storage = api.getStoragesApi().activate(userId, api::InvitationId{hash});
-        if (!storage)
-            return;
-        renderMainMenu(false, storage->name, userId, chatId, bot, api);
-        stateManager.put(MainMenu{});
-        return;
+        if (storage) {
+            renderMainMenu(false, storage->name, userId, chatId, bot, api);
+        } else {
+            std::optional<std::optional<std::string>> resp = std::optional<std::string>(std::nullopt);
+            renderMainMenu(false, resp, userId, chatId, bot, api);
+        }
     }
 
     if (payload.starts_with("recipe_")) {
