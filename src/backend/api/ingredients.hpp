@@ -30,8 +30,7 @@ class IngredientsApi : ApiBase {
     void putToStorage(UserId user, StorageId storage, IngredientId ingredient) const;
     void deleteFromStorage(UserId user, StorageId storage, IngredientId ingredient) const;
 
-    void
-    deleteMultipleFromStorage(UserId user, StorageId storage, const std::vector<IngredientId>& ingredients = {}) const;
+    void deleteMultipleFromStorage(UserId user, StorageId storage, const std::vector<IngredientId>& ingredients) const;
 
     [[nodiscard]] models::ingredient::IngredientSearchForStorageResponse
     searchForStorage(UserId user,

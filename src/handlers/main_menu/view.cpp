@@ -1,8 +1,6 @@
 #include "view.hpp"
 
 #include "backend/api/api.hpp"
-#include "backend/api/storages.hpp"
-#include "backend/models/storage.hpp"
 #include "handlers/common.hpp"
 #include "render/personal_account/view.hpp"
 #include "render/recipes_search/view.hpp"
@@ -24,8 +22,7 @@ using namespace render::personal_account;
 using namespace render::recipes_search;
 using namespace std::views;
 
-void handleMainMenuCQ(
-    MainMenu& /*unused*/, CallbackQueryRef cq, BotRef& bot, SMRef stateManager, api::ApiClientRef api) {
+void handleMainMenuCQ(MainMenu& state, CallbackQueryRef cq, BotRef& bot, SMRef stateManager, api::ApiClientRef api) {
     bot.answerCallbackQuery(cq.id);
     auto userId = cq.from->id;
     auto chatId = cq.message->chat->id;
@@ -39,13 +36,13 @@ void handleMainMenuCQ(
 
     if (cq.data == "wanna_eat") {
         if (storages.size() == 1) {
-            std::vector<api::models::storage::StorageSummary> storage = {storages[0]};
-            renderRecipesSuggestion(storage, 0, userId, chatId, bot, api);
-            stateManager.put(SuggestedRecipesList{.selectedStorages = storage, .pageNo = 0, .fromStorage = false});
+            renderRecipesSuggestion({storages[0].id}, 0, userId, chatId, bot, api);
+            stateManager.put(SuggestedRecipesList{
+                .prevState = SuggestedRecipesList::FromMainMenuData{state, std::move(storages[0])}, .pageNo = 0});
             return;
         }
         renderStorageSelection({}, userId, chatId, bot, api);
-        stateManager.put(StoragesSelection{.selectedStorages = std::vector<api::models::storage::StorageSummary>{}});
+        stateManager.put(StoragesSelection{.prevState = state, .selectedStorages = {}});
         return;
     }
 

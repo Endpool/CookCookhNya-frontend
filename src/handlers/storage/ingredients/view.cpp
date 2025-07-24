@@ -74,7 +74,8 @@ void handleStorageIngredientsListCQ(
 
     if (cq.data == "back") {
         renderStorageView(state.storageId, userId, chatId, bot, api);
-        stateManager.put(StorageView{state.storageId});
+        std::string storageName = api.getStoragesApi().get(userId, state.storageId).name;
+        stateManager.put(StorageView{state.storageId, std::move(storageName)});
         return;
     }
 

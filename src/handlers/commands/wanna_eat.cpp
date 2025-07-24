@@ -10,12 +10,15 @@
 #include "utils/utils.hpp"
 
 #include <optional>
+#include <utility>
+#include <vector>
 
 namespace cookcookhnya::handlers::commands {
 
 using namespace render::select_storages;
 using namespace render::main_menu;
 using namespace render::recipes_suggestions;
+using namespace std::views;
 
 void handleWannaEatCmd(MessageRef m, BotRef bot, SMRef stateManager, api::ApiClientRef api) {
     auto storages = api.getStoragesApi().getStoragesList(m.from->id);
@@ -25,15 +28,12 @@ void handleWannaEatCmd(MessageRef m, BotRef bot, SMRef stateManager, api::ApiCli
         stateManager.put(MainMenu{});
     } else if (storages.size() == 1) {
         message::deleteMessageId(m.from->id);
-        renderRecipesSuggestion({storages}, 0, m.from->id, m.chat->id, bot, api);
+        renderRecipesSuggestion({storages[0].id}, 0, m.from->id, m.chat->id, bot, api);
         stateManager.put(SuggestedRecipesList{
-            .selectedStorages = storages,
-            .pageNo = 0,
-            .fromStorage = false,
-        });
+            .prevState = SuggestedRecipesList::FromMainMenuData{{}, std::move(storages[0])}, .pageNo = 0});
     } else {
         message::deleteMessageId(m.from->id);
-        auto newState = StoragesSelection{};
+        auto newState = StoragesSelection{.prevState = MainMenu{}, .selectedStorages = {}};
         renderStorageSelection(newState, m.from->id, m.chat->id, bot, api);
         stateManager.put(newState);
     }

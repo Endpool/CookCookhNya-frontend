@@ -7,6 +7,7 @@
 #include "states.hpp"
 #include "utils/utils.hpp"
 
+#include <cstddef>
 #include <string>
 
 namespace cookcookhnya::render::recipes_search {
@@ -30,7 +31,8 @@ void renderRecipesSearch(const states::helpers::Pagination& pagination,
     auto makeRecipeButton = [](const RecipeSummary& r) {
         return makeCallbackButton(utils::utf8str(u8"🔖 ") + r.name, "recipe_" + utils::to_string(r.id));
     };
-    keyboard << constructPagination(pagination.pageNo, page.size(), pagination.totalItems, page, makeRecipeButton);
+    const std::size_t pageSize = 5;
+    keyboard << constructPagination(pagination.pageNo, pageSize, pagination.totalItems, page, makeRecipeButton);
 
     keyboard << makeCallbackButton(u8"↩️ Назад", "back");
 
